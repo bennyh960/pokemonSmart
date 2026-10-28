@@ -43,9 +43,9 @@ export function initStoryEngine(sm: StateMachine): void {
 // Auto-gate service map registry
 // ---------------------------------------------------------------------------
 
-type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym' | 'library' | 'lab';
+type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym' | 'lab';
 /** Services with one gate per building (own pass + overrides); the others share one gate (one pass for all). */
-const PER_MAP_GATE_SERVICES: readonly AutoGateService[] = ['gym', 'library', 'lab'];
+const PER_MAP_GATE_SERVICES: readonly AutoGateService[] = ['gym', 'lab'];
 const _autoGateMapRegistry = new Map<string, { service: AutoGateService; gateId: string }>();
 
 export interface AutoGateMapOverride {
@@ -89,7 +89,6 @@ const AUTO_GATE_IDS: Record<AutoGateService, string> = {
   pokecenter: 'auto-pokecenter',
   pokemarket: 'auto-pokemarket',
   gym: 'auto-gym', // we can use auto and also use gate guard as regular
-  library: 'auto-library',
   lab: 'auto-lab',
 };
 

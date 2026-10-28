@@ -111,7 +111,6 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
           onOutcome={onOutcome}
           carePokemonUuid={fromPicker ? undefined : launch.carePokemonUuid}
           gate={fromPicker ? undefined : launch.gate}
-          ladder={fromPicker ? undefined : launch.ladder}
         />
       )}
     </Root>

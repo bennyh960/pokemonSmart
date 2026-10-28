@@ -79,7 +79,7 @@ Shared layer in `src/minigames/english/` — use it, don't copy it:
   `say` (how it sounds, Hebrew letters + niqqud). `wordsFor(themes, tier)`, `THEME_NAMES` (Hebrew category hints).
 - `LearnFirst.tsx` — wrap a mode's play area: the round's never-met words are shown as cards first. Every English mode uses it.
 - `ladder.ts` — the English ladder (steps of games; ladder rounds earn points by stars, `STAR_POINTS`, and a full
-  bar climbs a step — saved in `unown-words` data `ladder`). Library gates and the Word Board play `ladderRound()`;
+  bar climbs a step — saved in `unown-words` data `ladder`). The Word Board plays `ladderRound()`;
   NPC pickers lock English games above the child's step. A new English game must be added to a ladder step (a test checks).
 - `learning.ts` + `useWords.ts` — one learning record per word for all modes (`pickWords()` favours new + missed words;
   known = right on 3 different days). Saved in `pd.miniGames['unown-words'].data.words`.
@@ -93,10 +93,11 @@ Shared layer in `src/minigames/english/` — use it, don't copy it:
 
 ## Where games are played
 
-- `category` on the def decides it: libraries play an `english` game, labs a `logic` game (`global-gate-config.ts`);
+- `category` on the def decides it: lab entry gates play a `logic` game (`global-gate-config.ts`); libraries have no
+  gate — English is played by choice at the Word Board;
   NPC hosts use `"miniGame": { "category": … }` or `{ "gameIds": [...] }`. A new game of a category joins automatically.
-- Care rounds and lab gates play a fixed level from the trainer rank (`levelForRank()` in progress.ts); library gates
-  and the Word Board play the English ladder step instead.
+- Care rounds and lab gates play a fixed level from the trainer rank (`levelForRank()` in progress.ts); the Word Board
+  plays the English ladder step instead.
 
 ## Care rounds
 

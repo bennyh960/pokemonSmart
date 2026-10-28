@@ -84,7 +84,6 @@ export const AUTO_GATE_COOLDOWNS = {
   pokecenter: 30 * 60 * 1000, // 30 minutes
   pokemarket: 15 * 60 * 1000, // 15 minutes
   gym: 90 * 60 * 1000, // 60 minutes (use gym when preparing for badge)
-  library: 30 * 60 * 1000,
   lab: 30 * 60 * 1000,
 } as const;
 
@@ -166,18 +165,8 @@ export const VERIFICATION_DIALOGUES = {
   ],
 };
 
-/** Libraries and labs play a mini-game instead — one line is shown on its intro card. */
+/** Labs play a mini-game instead — one line is shown on its intro card. */
 export const MINI_GAME_GATE_LINES = {
-  library: [
-    {
-      en: "NULL-X glitches can't read! Show the Unown you can.",
-      he: 'תקלות של NULL-X לא יודעות לקרוא! הראה לאנאון שאתה כן.',
-    },
-    {
-      en: 'The books are locked against NULL-X. Read your way in!',
-      he: 'הספרים נעולים בפני NULL-X. קרא את הדרך פנימה!',
-    },
-  ],
   lab: [
     {
       en: 'Only a real trainer can think it through. Solve the puzzle to come in!',
@@ -311,17 +300,8 @@ registerAutoGateMap(MapId.DIVIDIA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.DIVI
 registerAutoGateMap(MapId.FRACTALIS_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.FRACTALIS_GYM]);
 registerAutoGateMap(MapId.SYMMETRIKA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.SYMMETRIKA_GYM]);
 
-// Libraries + labs — a mini-game instead of questions (the level follows the trainer rank)
-registerGate({
-  id: 'auto-library',
-  title: { en: 'Library Reading Check', he: 'בדיקת קריאה בספרייה' },
-  triggerType: 'auto-library',
-  questionSetIds: [],
-  reopenCooldownMs: AUTO_GATE_COOLDOWNS.library,
-  sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 0 },
-  miniGame: { category: 'english', ladder: 'english' },
-});
-
+// Labs — a mini-game instead of questions (the level follows the trainer rank).
+// Libraries have no entry gate: kids play English at the Word Board because they want to.
 registerGate({
   id: 'auto-lab',
   title: { en: 'Lab Logic Check', he: 'בדיקת היגיון במעבדה' },
@@ -331,11 +311,6 @@ registerGate({
   sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 0 },
   miniGame: { category: 'logic' },
 });
-
-registerAutoGateMap(MapId.SUMVILLE_LIBRARY, 'library');
-registerAutoGateMap(MapId.MINUSBURG_LIBRARY, 'library');
-registerAutoGateMap(MapId.MULTIPLIA_LIBRARY, 'library');
-registerAutoGateMap(MapId.PERCENTILE_LIBRARY, 'library');
 
 registerAutoGateMap(MapId.SUMVILLE_LAB, 'lab');
 registerAutoGateMap(MapId.PERCENTILE_LAB, 'lab');

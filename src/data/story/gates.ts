@@ -17,7 +17,6 @@ export type GateTriggerType =
   | 'auto-pokecenter'
   | 'auto-pokemarket'
   | 'auto-gym-entrance'
-  | 'auto-library'
   | 'auto-lab';
 
 /** A single reward granted on successful pass of a session. */
@@ -106,7 +105,7 @@ export interface QuestionGateDef {
   sessionConfig: GateSessionConfig;
 
   /**
-   * Play a mini-game instead of answering questions (libraries, labs). Pass = finish with ≥1★.
+   * Play a mini-game instead of answering questions (labs). Pass = finish with ≥1★.
    * `questionSetIds` and `sessionConfig` are ignored; prizes are the mini-game's own.
    */
   miniGame?: GateMiniGame;
@@ -116,8 +115,6 @@ export interface QuestionGateDef {
 export interface GateMiniGame extends MiniGameChoice {
   /** Fixed level. Omitted → set by the trainer rank (`levelForRank`). */
   level?: number;
-  /** Pick game + level from a learning ladder instead (libraries: what the child knows in English). */
-  ladder?: 'english';
 }
 
 /** Registered gate definitions keyed by ID. Populated by registerGate(). */
@@ -130,8 +127,8 @@ export function getGate(id: string): QuestionGateDef | undefined {
   }
 
   if (GATES[id]) return GATES[id];
-  // Per-map IDs like 'auto-gym-minusburg/gym' or 'auto-library-sumville/library' fall back to the base config
-  const baseMatch = id.match(/^(auto-(?:gym|library|lab))-/);
+  // Per-map IDs like 'auto-gym-minusburg/gym' or 'auto-lab-sumville/lab' fall back to the base config
+  const baseMatch = id.match(/^(auto-(?:gym|lab))-/);
   // console.warn(`Gate with ID '${id}' - baseMatch =`, baseMatch);
   if (baseMatch) return GATES[baseMatch[1]];
   return undefined;

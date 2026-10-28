@@ -2071,8 +2071,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     // Play map music
     audio.playMusic(currentMapData.music || 'town3');
 
-    // First library with a Word Board: the librarian shows it (before map-enter, so the entry gate waits;
-    // a story scene on this entry replaces it and the intro comes next time)
+    // First library with a Word Board: the librarian shows it (a story scene on this entry replaces it
+    // and the intro comes next time)
     if (
       hasActiveGame() &&
       !getPlayerData().flags[FLAGS.ENGLISH_BOARD_INTRO_DONE] &&

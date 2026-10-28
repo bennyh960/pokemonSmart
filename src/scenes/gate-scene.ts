@@ -39,8 +39,6 @@ import { MINI_GAME_GATE_LINES, VERIFICATION_DIALOGUES } from '../data/story/glob
 import type { QuestionGateDef } from '../data/story/gates.js';
 import { startMiniGame, getMiniGame, resolveMiniGames } from '../minigames/index.js';
 import { levelForRank } from '../minigames/progress.js';
-import { ladderRound } from '../minigames/english/ladder.js';
-import type { MiniGameId } from '../minigames/types.js';
 import { getTrainerRank } from '../systems/trainer-rank.js';
 import { leaveBuilding } from './overworld.js';
 import { getItem } from '../data/items.js';
@@ -170,20 +168,12 @@ export function createGateScene(
   function _launchMiniGame(gate: QuestionGateDef): void {
     const cfg = gate.miniGame!;
     const pd = getPlayerData();
-    let round: { gameId: MiniGameId; level: number };
-    if (cfg.ladder === 'english') {
-      // English follows what the child knows, never the trainer rank
-      round = ladderRound(pd.miniGames ?? {}, Math.random);
-    } else {
-      const ids = resolveMiniGames(cfg);
-      const gameId = ids[Math.floor(Math.random() * ids.length)];
-      round = { gameId, level: cfg.level ?? levelForRank(getTrainerRank(pd).index, getMiniGame(gameId)) };
-    }
-    const lines = gate.triggerType === 'auto-lab' ? MINI_GAME_GATE_LINES.lab : MINI_GAME_GATE_LINES.library;
-    startMiniGame(round.gameId, {
-      level: round.level,
+    const ids = resolveMiniGames(cfg);
+    const gameId = ids[Math.floor(Math.random() * ids.length)];
+    const lines = MINI_GAME_GATE_LINES.lab;
+    startMiniGame(gameId, {
+      level: cfg.level ?? levelForRank(getTrainerRank(pd).index, getMiniGame(gameId)),
       gate: { intro: lines[Math.floor(Math.random() * lines.length)] },
-      ladder: cfg.ladder === 'english',
       onFinish: (outcome) => {
         overlayRunning = false;
         miniGamePassed = !!outcome?.cleared;

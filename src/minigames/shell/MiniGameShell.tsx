@@ -51,8 +51,6 @@ interface Props {
   gate?: StartMiniGameOptions['gate'];
   /** Word Board round on this ladder step: board prizes instead of level prizes (english/board.ts). */
   board?: { stepIndex: number; intro: string; onPlayAgain: () => void };
-  /** English ladder round (library gate; a board round always is one): stars earn ladder points. */
-  ladder?: boolean;
 }
 
 export function MiniGameShell({
@@ -64,7 +62,6 @@ export function MiniGameShell({
   carePokemonUuid,
   gate,
   board,
-  ladder,
 }: Props) {
   const { t, locale } = useI18n();
   const [pd, mutate] = usePlayerData();
@@ -163,7 +160,8 @@ export function MiniGameShell({
       rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board });
       if (care && careMon) rec.prizes = carePrizes(care, careMon, rec.stars);
       if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft));
-      if (ladder || board) {
+      // A board round is an English ladder round: its stars earn ladder points
+      if (board) {
         const { gained, leveledUp } = addLadderPoints(draft.miniGames, rec.stars);
         rec.ladder = { gained, newLevel: leveledUp ? ladderStep(draft.miniGames) + 1 : undefined };
       }

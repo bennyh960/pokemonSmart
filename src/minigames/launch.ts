@@ -23,12 +23,10 @@ export interface StartMiniGameOptions {
   /** Care round for this party Pokémon (uuid): fixed level, no level picker, clearing it heals the Pokémon. */
   carePokemonUuid?: string;
   /**
-   * Building gate round (library / lab): plays `level` even if locked, no level picker, normal prizes.
+   * Building gate round (lab): plays `level` even if locked, no level picker, normal prizes.
    * `intro` replaces the level picker on the intro card; once cleared there is no "Play again".
    */
   gate?: { intro: Bilingual };
-  /** An English ladder round (library gate): its stars earn ladder points (english/ladder.ts). */
-  ladder?: boolean;
 }
 
 export interface MiniGameLaunch extends StartMiniGameOptions {

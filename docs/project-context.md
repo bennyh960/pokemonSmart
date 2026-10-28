@@ -28,13 +28,12 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Legendary gates (Elite birds/dogs, Master Mewtwo/Lugia/Ho-Oh, Legendary Mew): place blocker NPCs (`blocker` + `despawnAfter: rank-<id>`) once those maps exist; replace the "TBD" hint in the rank-up call
 
 ## Mini-games (`feature/mini-games`, design: `docs/stories/mini-games.md`)
-- [ ] Games are reached in the world: libraries (English), labs (logic), wild care rounds. Admin only: start menu → Actions → Mini Games
+- [ ] Games are reached in the world: libraries (English, by choice — Word Board + NPC hosts), labs (logic entry gate), wild care rounds. Admin only: start menu → Actions → Mini Games
 - [ ] Section A built, **not playtested**: Snack Attack family (Snorlax, Bulbasaur, Charmander, Squirtle, Pikachu lines) + overworld care trigger (`games/snack-attack/`, `minigames/care.ts`, design §3b). Check each skin's look, the trigger rate (10/20/50% per step by HP, 100-step cooldown) and that Squirtle's levels 4–5 stay fair with more rocks (`SNACK_TUNE=1` tune test)
-- [ ] Library + lab gates built, **not playtested** (`docs/stories/building-gates.md` → QA). Replay the lab/library story scenes (Multiplia library, Percentile lab, Algorithma lab intro) from admin snapshots — the gate must not interrupt them
+- [ ] Lab gates built, **not playtested** (`docs/stories/building-gates.md` → QA). Replay the lab story scenes (Percentile lab, Algorithma lab intro) from admin snapshots — the gate must not interrupt them
 - [ ] English rework built, **not playtested** (`docs/stories/library-english.md` → QA, Round 2 too): 7 English games, English ladder, learn-first cards, Word Dex. A Hebrew speaker should review `src/data/english-words.json` — the `he` words and the `say` pronunciations (niqqud) were written by Claude
 - [ ] Word Board built, **not playtested** (`docs/stories/english-board.md`). **Place the board:** in the tileset editor give a library board tile interact type `english-board` (every placed copy of that tile becomes a board). Then check the librarian intro walk, prize odds/balance, and the rare-Pokémon prize at the top level
 - [ ] Free-play hosts only in 3 libraries (Sumville, Multiplia, Percentile). Minusburg library, Sumville lab, Percentile lab, Algorithma lab have none — add an NPC with `"miniGame": { "category": "english" | "logic" }` in the editor (the editor has no field for it yet — edit the JSON)
-- [ ] Library entry gate (`auto-library` in `global-gate-config.ts`) is now redundant — English is played at the Word Board. Decide: remove it, or replace it with a different (logic) check that isn't the lab's
 - [ ] More games later: labs have only Poké-Doku (logic) — add logic games, maybe with their own ladder/board like English
 - [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.5 MB, mostly JSON data)
 
