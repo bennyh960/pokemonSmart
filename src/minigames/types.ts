@@ -122,6 +122,8 @@ export interface MiniGameLevel<C = unknown> {
   rewards: MiniGameLevelRewards;
   /** Fewest stars that earn a prize on this level (default 1). */
   prizeStars?: Stars;
+  /** 3★ wins on this level that open the next one. Omitted → `UNLOCK_STARS` stars once. */
+  unlockWins?: number;
   config: C;
 }
 
@@ -244,6 +246,8 @@ export interface MiniGameLevelProgress {
   stars: Stars;
   best: number;
   clears: number;
+  /** 3★ rounds won (missing in older saves — see `threeStarWins`). */
+  threeStars?: number;
 }
 
 export interface MiniGameProgress {

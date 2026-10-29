@@ -790,6 +790,7 @@
   "minigames.prize.care": "All better!",
   "minigames.care.prizeRow": "Every {stars} win — one of these:",
   "minigames.prize.firstStars": "First {stars} prize!",
+  "minigames.unlockWins": "Win level {n} with ★★★ {need} times to open",
   "minigames.pickLevel": "Select difficulty level",
   "minigames.prize.bonus": "Lucky find!",
   "minigames.prize.board": "Word Board prize!",

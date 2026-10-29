@@ -115,6 +115,11 @@ export interface QuestionGateDef {
 export interface GateMiniGame extends MiniGameChoice {
   /** Fixed level. Omitted → set by the trainer rank (`levelForRank`). */
   level?: number;
+  /**
+   * Chance (0..1) that a hurt party Pokémon with a care game (`findHurtCareGame`) plays it here instead —
+   * a care round: the player picks the level, a clear heals it and opens the gate.
+   */
+  careChance?: number;
 }
 
 /** Registered gate definitions keyed by ID. Populated by registerGate(). */

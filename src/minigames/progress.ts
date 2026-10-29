@@ -1,7 +1,8 @@
 /**
  * Mini-game progress — pure logic over `pd.miniGames` (no React, no audio, no saving).
  *
- *   - level N+1 unlocks with ≥ UNLOCK_STARS on level N; level 1 is always open
+ *   - level N+1 unlocks with ≥ UNLOCK_STARS on level N — or, when level N sets `unlockWins`, with that many 3★
+ *     wins on it; level 1 is always open
  *   - recordResult() keeps the best stars / score, counts clears and picks the prizes:
  *       firstClear — once, the first clear with the level's `prizeStars` (default 1★)
  *       threeStar  — once, the first time the level reaches 3★
@@ -65,15 +66,33 @@ export function getLevelProgress(
   return save[gameId]?.levels[levelNumber] ?? EMPTY_LEVEL;
 }
 
-export function isLevelUnlocked(save: MiniGamesSave, gameId: MiniGameId, levelNumber: number): boolean {
+/** 3★ rounds won on a level (older saves only know whether it ever got 3★). */
+export function threeStarWins(lp: Readonly<MiniGameLevelProgress>): number {
+  return lp.threeStars ?? (lp.stars === 3 ? 1 : 0);
+}
+
+/** How far level `levelNumber` is toward opening the next one: best stars, or 3★ wins when it sets `unlockWins`. */
+export function unlockProgress(
+  save: MiniGamesSave,
+  def: AnyMiniGameDef,
+  levelNumber: number,
+): { kind: 'stars' | 'wins'; have: number; need: number } {
+  const lp = getLevelProgress(save, def.id, levelNumber);
+  const wins = def.levels.find((l) => l.number === levelNumber)?.unlockWins;
+  if (wins) return { kind: 'wins', have: Math.min(wins, threeStarWins(lp)), need: wins };
+  return { kind: 'stars', have: lp.stars, need: UNLOCK_STARS };
+}
+
+export function isLevelUnlocked(save: MiniGamesSave, def: AnyMiniGameDef, levelNumber: number): boolean {
   if (levelNumber <= 1) return true;
-  return getLevelProgress(save, gameId, levelNumber - 1).stars >= UNLOCK_STARS;
+  const p = unlockProgress(save, def, levelNumber - 1);
+  return p.have >= p.need;
 }
 
 /** Highest unlocked level number of a game. */
 export function highestUnlockedLevel(save: MiniGamesSave, def: AnyMiniGameDef): number {
   let best = def.levels[0]?.number ?? 1;
-  for (const lvl of def.levels) if (isLevelUnlocked(save, def.id, lvl.number)) best = lvl.number;
+  for (const lvl of def.levels) if (isLevelUnlocked(save, def, lvl.number)) best = lvl.number;
   return best;
 }
 
@@ -170,12 +189,13 @@ export function recordResult(
   const stars = clampStars(result.stars);
   const score = Math.max(0, Math.floor(result.score));
   const cleared = stars >= 1;
-  const wasUnlocked = isLevelUnlocked(save, def.id, levelNumber + 1);
+  const wasUnlocked = isLevelUnlocked(save, def, levelNumber + 1);
 
   const level: MiniGameLevelProgress = {
     stars: Math.max(previous.stars, stars) as Stars,
     best: Math.max(previous.best, score),
     clears: previous.clears + (cleared ? 1 : 0),
+    threeStars: threeStarWins(previous) + (stars === 3 ? 1 : 0),
   };
   game.levels[levelNumber] = level;
   game.lastPlayed = now.toISOString();
@@ -197,7 +217,7 @@ export function recordResult(
 
   const hasNext = def.levels.some((l) => l.number === levelNumber + 1);
   const unlockedLevel =
-    hasNext && !wasUnlocked && isLevelUnlocked(save, def.id, levelNumber + 1) ? levelNumber + 1 : undefined;
+    hasNext && !wasUnlocked && isLevelUnlocked(save, def, levelNumber + 1) ? levelNumber + 1 : undefined;
 
   return {
     previous,

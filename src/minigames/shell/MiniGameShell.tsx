@@ -68,12 +68,11 @@ export function MiniGameShell({
   const save = pd.miniGames ?? {};
   const reduced = useReducedMotion();
 
-  // Care round: the hurt Pokémon plays, the player picks any level (the trainer rank pre-selects one),
-  // clearing it heals the Pokémon once
+  // Care round: the hurt Pokémon plays, the player picks one of the open levels, clearing it heals the Pokémon once
   const careMon = def.care && carePokemonUuid ? pd.party.find((p) => p.uuid === carePokemonUuid) : undefined;
   const care = careMon ? def.care : undefined;
-  // Gate / board rounds play the caller's level: no level picker
-  const fixedLevel = !!gate || !!board;
+  // Gate / board rounds play the caller's level: no level picker (a care round at a gate keeps its picker)
+  const fixedLevel = (!!gate && !care) || !!board;
   // Care, gate or board: once cleared it can't be replayed from here
   const fixed = !!care || fixedLevel;
   const [fixedDone, setFixedDone] = useState(false);
@@ -82,10 +81,10 @@ export function MiniGameShell({
   const [levelNumber, setLevelNumber] = useState(() =>
     fixedLevel && initialLevel && def.levels.some((l) => l.number === initialLevel)
       ? initialLevel
-      : fixed
+      : fixedLevel
         ? levelForRank(getTrainerRank(pd).index, def)
         : initialLevel &&
-            isLevelUnlocked(save, def.id, initialLevel) &&
+            isLevelUnlocked(save, def, initialLevel) &&
             def.levels.some((l) => l.number === initialLevel)
           ? initialLevel
           : highestUnlockedLevel(save, def),
@@ -180,7 +179,7 @@ export function MiniGameShell({
   }
 
   const nextLevel = def.levels.find((l) => l.number === level.number + 1);
-  const canNext = !fixed && !!nextLevel && isLevelUnlocked(save, def.id, nextLevel.number);
+  const canNext = !fixed && !!nextLevel && isLevelUnlocked(save, def, nextLevel.number);
   // A board round always plays again from the board (the next round follows the ladder)
   const playAgain = board ? board.onPlayAgain : fixedDone ? undefined : () => startRound();
   const Game = def.Component;
@@ -206,7 +205,6 @@ export function MiniGameShell({
               : (gate?.intro[locale] ?? board?.intro)
           }
           fixedLevel={fixedLevel}
-          allOpen={!!care}
           prizes={care ? 'care' : board ? 'none' : 'level'}
         />
       ) : (

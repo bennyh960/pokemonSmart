@@ -4,7 +4,8 @@
  *   trigger: a party Pokémon at half HP or less (not fainted), whose evolution line has a game with `care`,
  *            standing on a tile of that game's habitat whose encounter filter allows the Pokémon's types.
  *            Chance per step grows as HP drops (CARE_CHANCE_BY_HP), at most once every CARE_COOLDOWN_STEPS steps.
- *   level:   picked by the player (all open; the trainer rank pre-selects one — `levelForRank()` in progress.ts).
+ *   level:   picked by the player from the open levels.
+ *   lab:     a lab gate can also ask a hurt Pokémon to play (`findHurtCareGame`, `careChance` on the gate's miniGame).
  *   prizes:  clearing the round restores the Pokémon; every win with the level's `prizeStars` also pays the
  *            level's prize (`firstClear`, `threeStar` at 3★) — each time, not once.
  *
@@ -57,6 +58,23 @@ function careGameOf(pokemon: Pokemon, games: readonly CareMatch['def'][]): CareM
   return games.find((d) => evolutionLine(d.care.lineOf).includes(pokemon.id));
 }
 
+/** The most hurt party Pokémon (highest care chance) that has one of `careGames` and passes `allows`. */
+function mostHurt(
+  party: readonly Pokemon[],
+  careGames: readonly CareMatch['def'][],
+  allows: (p: Pokemon) => boolean = () => true,
+): CareMatch | null {
+  let best: CareMatch | null = null;
+  for (const pokemon of party) {
+    const chance = careChance(pokemon);
+    if (chance === 0 || !allows(pokemon)) continue;
+    if (best && chance <= careChance(best.pokemon)) continue;
+    const def = careGameOf(pokemon, careGames);
+    if (def) best = { def, pokemon };
+  }
+  return best;
+}
+
 /** The most hurt party Pokémon (highest care chance) whose care game can start on this tile. */
 export function findCareGame(
   party: readonly Pokemon[],
@@ -65,15 +83,15 @@ export function findCareGame(
 ): CareMatch | null {
   if (!tile.encounterTypes || !tile.category) return null;
   const careGames = games.filter(hasCare).filter((d) => d.care.habitat.includes(tile.category!));
-  let best: CareMatch | null = null;
-  for (const pokemon of party) {
-    const chance = careChance(pokemon);
-    if (chance === 0 || !tileAllowsTypes(tile.encounterTypes, pokemon.types)) continue;
-    if (best && chance <= careChance(best.pokemon)) continue;
-    const def = careGameOf(pokemon, careGames);
-    if (def) best = { def, pokemon };
-  }
-  return best;
+  return mostHurt(party, careGames, (p) => tileAllowsTypes(tile.encounterTypes!, p.types));
+}
+
+/** The most hurt party Pokémon (HP low enough to ask, see `careChance`) that has a care game — anywhere (labs). */
+export function findHurtCareGame(
+  party: readonly Pokemon[],
+  games: readonly AnyMiniGameDef[] = MINI_GAME_LIST,
+): CareMatch | null {
+  return mostHurt(party, games.filter(hasCare));
 }
 
 /** Admin: the first party Pokémon that has a care game, ignoring HP, tile, chance and cooldown. */

@@ -12,6 +12,7 @@ import {
   carePrizes,
   evolutionLine,
   findCareGame,
+  findHurtCareGame,
   forceCareGame,
   resetCareCooldown,
   rollCareTrigger,
@@ -119,6 +120,12 @@ describe('care games', () => {
     const levels = TRAINER_RANKS.map((_, i) => levelForRank(i, def));
     for (let i = 1; i < levels.length; i++) expect(levels[i]).toBeGreaterThanOrEqual(levels[i - 1]);
     expect(new Set(levels).size).toBe(Math.min(TRAINER_RANKS.length, def.levels.length));
+  });
+
+  it('labs: the most hurt Pokémon with a care game, on any tile; healthy parties get none', () => {
+    expect(findHurtCareGame([mon(143, 45), mon(9, 20)])?.def.id).toBe('squirtle-swim');
+    expect(findHurtCareGame([mon(143, 60), mon(150, 10)])).toBeNull();
+    expect(findHurtCareGame([mon(143, 0)])).toBeNull();
   });
 
   it('admin force ignores HP and tile, but needs a Pokémon with a care game', () => {

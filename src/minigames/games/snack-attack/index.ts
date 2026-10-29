@@ -245,6 +245,8 @@ function snackGame(data: SnackGameData): MiniGameDef<SnackConfig> {
       goal: goalOf(config.ops),
       rewards: levelRewards(i),
       prizeStars: 2,
+      // Level N opens level N+1 after N wins with 3★
+      unlockWins: i + 1,
       config: { ...config, ...data.configOverride },
     })),
     Component,

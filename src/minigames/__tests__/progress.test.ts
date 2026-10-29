@@ -4,6 +4,8 @@ import {
   getLevelProgress,
   highestUnlockedLevel,
   isLevelUnlocked,
+  threeStarWins,
+  unlockProgress,
   localDateKey,
   recordResult,
   replayPrizesLeft,
@@ -41,15 +43,15 @@ const DAY2 = new Date(2026, 9, 28, 0, 1, 0);
 describe('mini-game unlocks', () => {
   it('level 1 is always open, level N+1 needs 2 stars on N', () => {
     const save: MiniGamesSave = {};
-    expect(isLevelUnlocked(save, 'poke-doku', 1)).toBe(true);
-    expect(isLevelUnlocked(save, 'poke-doku', 2)).toBe(false);
+    expect(isLevelUnlocked(save, def, 1)).toBe(true);
+    expect(isLevelUnlocked(save, def, 2)).toBe(false);
 
     recordResult(save, def, 1, { stars: 1, score: 10 }, { now: DAY1 });
-    expect(isLevelUnlocked(save, 'poke-doku', 2)).toBe(false);
+    expect(isLevelUnlocked(save, def, 2)).toBe(false);
 
     const out = recordResult(save, def, 1, { stars: 2, score: 20 }, { now: DAY1 });
     expect(out.unlockedLevel).toBe(2);
-    expect(isLevelUnlocked(save, 'poke-doku', 2)).toBe(true);
+    expect(isLevelUnlocked(save, def, 2)).toBe(true);
     expect(highestUnlockedLevel(save, def)).toBe(2);
   });
 
@@ -62,13 +64,35 @@ describe('mini-game unlocks', () => {
   });
 });
 
+describe('3★-win unlocks (`unlockWins`)', () => {
+  const winsDef = { ...def, levels: def.levels.map((l) => ({ ...l, unlockWins: l.number })) };
+
+  it('level N+1 needs N 3★ wins on level N — 2★ rounds never count', () => {
+    const save: MiniGamesSave = {};
+    recordResult(save, winsDef, 1, { stars: 2, score: 1 }, { now: DAY1 });
+    expect(isLevelUnlocked(save, winsDef, 2)).toBe(false);
+    expect(recordResult(save, winsDef, 1, { stars: 3, score: 1 }, { now: DAY1 }).unlockedLevel).toBe(2);
+
+    recordResult(save, winsDef, 2, { stars: 3, score: 1 }, { now: DAY1 });
+    expect(unlockProgress(save, winsDef, 2)).toEqual({ kind: 'wins', have: 1, need: 2 });
+    expect(isLevelUnlocked(save, winsDef, 3)).toBe(false);
+    expect(recordResult(save, winsDef, 2, { stars: 3, score: 1 }, { now: DAY1 }).unlockedLevel).toBe(3);
+  });
+
+  it('an older save without the count still credits its one 3★', () => {
+    const save: MiniGamesSave = { 'poke-doku': { levels: { 1: { stars: 3, best: 10, clears: 1 } } } };
+    expect(threeStarWins(getLevelProgress(save, 'poke-doku', 1))).toBe(1);
+    expect(isLevelUnlocked(save, winsDef, 2)).toBe(true);
+  });
+});
+
 describe('recordResult bookkeeping', () => {
-  it('keeps best stars and score, counts clears', () => {
+  it('keeps best stars and score, counts clears and 3★ wins', () => {
     const save: MiniGamesSave = {};
     recordResult(save, def, 1, { stars: 3, score: 50 }, { now: DAY1 });
     recordResult(save, def, 1, { stars: 1, score: 80 }, { now: DAY1 });
     recordResult(save, def, 1, { stars: 0, score: 999 }, { now: DAY1 });
-    expect(getLevelProgress(save, 'poke-doku', 1)).toEqual({ stars: 3, best: 999, clears: 2 });
+    expect(getLevelProgress(save, 'poke-doku', 1)).toEqual({ stars: 3, best: 999, clears: 2, threeStars: 1 });
     expect(save['poke-doku']?.lastPlayed).toBe(DAY1.toISOString());
     expect(totalStars(save, def)).toEqual({ stars: 3, max: 9 });
   });

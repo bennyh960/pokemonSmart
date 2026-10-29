@@ -789,6 +789,7 @@
   "minigames.prize.care": "הכול בסדר!",
   "minigames.care.prizeRow": "בכל ניצחון של {stars} — אחד מאלה:",
   "minigames.prize.firstStars": "פרס {stars} ראשון!",
+  "minigames.unlockWins": "נצחו בשלב {n} עם ★★★ {need} פעמים כדי לפתוח",
   "minigames.pickLevel": "בחרו רמת קושי",
   "minigames.prize.bonus": "מציאה נדירה!",
   "minigames.prize.board": "פרס מלוח המילים!",

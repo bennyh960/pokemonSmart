@@ -37,7 +37,8 @@ import type { SessionResult } from '../systems/gate-overlay.js';
 import type { StoryAction } from '../data/story/events.js';
 import { MINI_GAME_GATE_LINES, VERIFICATION_DIALOGUES } from '../data/story/global-gate-config.js';
 import type { QuestionGateDef } from '../data/story/gates.js';
-import { startMiniGame, getMiniGame, resolveMiniGames } from '../minigames/index.js';
+import { startMiniGame, getMiniGame, resolveMiniGames, type MiniGameOutcome } from '../minigames/index.js';
+import { findHurtCareGame } from '../minigames/care.js';
 import { levelForRank } from '../minigames/progress.js';
 import { getTrainerRank } from '../systems/trainer-rank.js';
 import { leaveBuilding } from './overworld.js';
@@ -46,10 +47,7 @@ import { getGlobalAudio } from '../audio/audio-manager.js';
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
-export function createGateScene(
-  _input: unknown,
-  stateMachine: StateMachine,
-): Scene {
+export function createGateScene(_input: unknown, stateMachine: StateMachine): Scene {
   let gateId: string | null = null;
   let overlayRunning = false;
   let pendingResult: SessionResult | null = null;
@@ -140,17 +138,26 @@ export function createGateScene(
   // ── Overlay launcher ────────────────────────────────────────────────────────
 
   async function _launchOverlay(): Promise<void> {
-    if (!gateId) { overlayRunning = false; return; }
+    if (!gateId) {
+      overlayRunning = false;
+      return;
+    }
 
     const gate = getGate(gateId);
-    if (!gate) { overlayRunning = false; return; }
+    if (!gate) {
+      overlayRunning = false;
+      return;
+    }
 
     const cfg = gate.sessionConfig;
 
     const dialogues = _dialoguesFor(gate.triggerType);
 
     const appContainer = document.getElementById('app');
-    if (!appContainer) { overlayRunning = false; return; }
+    if (!appContainer) {
+      overlayRunning = false;
+      return;
+    }
 
     const result = await mountGateOverlay({
       gateId,
@@ -168,16 +175,25 @@ export function createGateScene(
   function _launchMiniGame(gate: QuestionGateDef): void {
     const cfg = gate.miniGame!;
     const pd = getPlayerData();
-    const ids = resolveMiniGames(cfg);
-    const gameId = ids[Math.floor(Math.random() * ids.length)];
     const lines = MINI_GAME_GATE_LINES.lab;
-    startMiniGame(gameId, {
-      level: cfg.level ?? levelForRank(getTrainerRank(pd).index, getMiniGame(gameId)),
+    const gateOpts = {
       gate: { intro: lines[Math.floor(Math.random() * lines.length)] },
-      onFinish: (outcome) => {
+      onFinish: (outcome: MiniGameOutcome | null) => {
         overlayRunning = false;
         miniGamePassed = !!outcome?.cleared;
       },
+    };
+    // Sometimes a hurt party Pokémon plays its own game (care round) instead
+    const care = cfg.careChance && Math.random() < cfg.careChance ? findHurtCareGame(pd.party) : null;
+    if (care) {
+      startMiniGame(care.def.id, { ...gateOpts, carePokemonUuid: care.pokemon.uuid });
+      return;
+    }
+    const ids = resolveMiniGames(cfg);
+    const gameId = ids[Math.floor(Math.random() * ids.length)];
+    startMiniGame(gameId, {
+      ...gateOpts,
+      level: cfg.level ?? levelForRank(getTrainerRank(pd).index, getMiniGame(gameId)),
     });
   }
 
@@ -272,9 +288,7 @@ export function createGateScene(
     fillRect(ctx, 0, 0, SCREEN_W, SCREEN_H, '#080816');
     fillRect(ctx, 0, 0, SCREEN_W, 2, '#00d4ff');
 
-    const titleText = gate
-      ? (locale === 'he' ? gate.title.he : gate.title.en)
-      : t('gate.ui.checkpoint');
+    const titleText = gate ? (locale === 'he' ? gate.title.he : gate.title.en) : t('gate.ui.checkpoint');
 
     drawText(ctx, titleText, SCREEN_W / 2, 20, {
       size: 8,
