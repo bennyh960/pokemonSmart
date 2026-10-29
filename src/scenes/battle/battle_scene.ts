@@ -766,6 +766,10 @@ export function createBattleScene(
   let enemySideState: BattleSideRuntimeState;
   let menu: ReturnType<typeof createBattleMenu>;
   let textBox: ReturnType<typeof createTextBox> | null = null;
+  // Holds the move animation (and its HP change) until the player has read the
+  // turn-start lines ("X is confused!") that open the move's text box
+  let turnIntroLineCount = 0;
+  let turnIntroBox: ReturnType<typeof createTextBox> | null = null;
   let selMove = 0;
   let flash: ReturnType<typeof createFlash> | null = null;
   let shake: ReturnType<typeof createShake> | null = null;
@@ -3751,6 +3755,9 @@ export function createBattleScene(
       return;
     }
 
+    turnIntroLineCount = turnEffectLines.length;
+    turnIntroBox = null;
+
     if (m.id === attackerBattleState.disabledMoveId || attackerBattleState.softLockedInMovesId?.includes(m.id)) {
       const msgs = [...turnEffectLines];
       msgs.push(
@@ -5311,7 +5318,14 @@ export function createBattleScene(
         }
         statusTurnFx = statusTurnFx.filter((effect) => effect.active);
       }
-      animationDirector.update(dt);
+      if (turnIntroLineCount > 0) {
+        turnIntroBox ??= textBox;
+        if (!turnIntroBox || textBox !== turnIntroBox || turnIntroBox.currentLine >= turnIntroLineCount) {
+          turnIntroLineCount = 0;
+          turnIntroBox = null;
+        }
+      }
+      if (turnIntroLineCount === 0) animationDirector.update(dt);
       updateHPBar(playerHpBar, dt);
       updateHPBar(enemyHpBar, dt);
       updatePopups(dt);
