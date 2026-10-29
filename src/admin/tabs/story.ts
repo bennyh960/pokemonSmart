@@ -12,6 +12,8 @@ import { getQuest } from '../../data/story/quests';
 import { FLAGS, FLAG_DESCRIPTIONS } from '../../data/story/flags';
 import type { CutsceneDef, CutsceneStep } from '../../data/story/cutscenes';
 import type { QuestDef } from '../../data/story/quests';
+import { ENGLISH_LADDER, ladderProgress, readLadder, setLadderStep } from '../../minigames/english/ladder';
+import { boardLockLeft, clearBoardLock, isBoardRoundOpen } from '../../minigames/english/board';
 
 // ── Vite glob imports ─────────────────────────────────────────────────────────
 
@@ -688,6 +690,66 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     return s.el;
   }
 
+  /** The English Word Board: jump to any ladder level, and reopen a board closed by leaving a round. */
+  function renderWordBoardSection(slot: number, pd: PlayerData): HTMLElement {
+    const s = section('Word Board (English ladder)');
+    const save = pd.miniGames ?? {};
+    const { step, points } = readLadder(save);
+    const progress = ladderProgress(save);
+    const lockLeft = boardLockLeft(save, Date.now());
+
+    const status = document.createElement('p');
+    status.className = 'text-muted';
+    status.textContent =
+      `Now: Level ${step + 1} — ${ENGLISH_LADDER[step].name.en}` +
+      (progress ? ` (${progress.have}/${progress.need} points)` : ' (top level)') +
+      (lockLeft > 0 ? ` · locked for ${Math.ceil(lockLeft / 60000)} min` : '') +
+      (isBoardRoundOpen(save) ? ' · a round is open' : '');
+    s.body.appendChild(status);
+
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
+    const levelSelect = document.createElement('select');
+    levelSelect.className = 'form-select';
+    ENGLISH_LADDER.forEach((st, i) => {
+      const o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = `Level ${i + 1} — ${st.name.en}`;
+      o.selected = i === step;
+      levelSelect.appendChild(o);
+    });
+    const pointsInput = document.createElement('input');
+    pointsInput.type = 'number';
+    pointsInput.min = '0';
+    pointsInput.className = 'form-input form-input--small';
+    pointsInput.value = String(points);
+    pointsInput.title = 'Points towards the next level';
+    const setBtn = document.createElement('button');
+    setBtn.className = 'btn btn-sm btn-primary';
+    setBtn.textContent = 'Set level';
+    setBtn.addEventListener('click', () => {
+      setLadderStep((pd.miniGames ??= {}), Number(levelSelect.value), Number(pointsInput.value) || 0);
+      saveGame(slot, pd, true);
+      render();
+    });
+    row.append(levelSelect, pointsInput, setBtn);
+
+    if (lockLeft > 0 || isBoardRoundOpen(save)) {
+      const unlockBtn = document.createElement('button');
+      unlockBtn.className = 'btn btn-sm';
+      unlockBtn.textContent = 'Open board';
+      unlockBtn.title = 'Clear the leave-early lock';
+      unlockBtn.addEventListener('click', () => {
+        clearBoardLock((pd.miniGames ??= {}));
+        saveGame(slot, pd, true);
+        render();
+      });
+      row.appendChild(unlockBtn);
+    }
+    s.body.appendChild(row);
+    return s.el;
+  }
+
   function render() {
     content.innerHTML = '';
     if (!selectedAct) return;
@@ -697,8 +759,9 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     const evts      = getStoryEvents().filter(e => act.eventIds.includes(e.id));
     const actRelevant = computeActRelevant(act, evts.map(e => e.id));
 
-    // ── 0. Snapshots (whole save, not act-specific) ──
+    // ── 0. Snapshots + Word Board (whole save, not act-specific) ──
     if (selectedSlot !== null) content.appendChild(renderSnapshotSection(selectedSlot));
+    if (selectedSlot !== null && playerData) content.appendChild(renderWordBoardSection(selectedSlot, playerData));
 
     // ── 1. Description ──
     if (act.description) {

@@ -17,6 +17,7 @@ import {
   boardPool,
   boardPrizes,
   boardStep,
+  clearBoardLock,
   DRAWN_RARITIES,
   epicOdds,
   finishBoardRound,
@@ -155,6 +156,15 @@ describe('Word Board leave lock', () => {
     finishBoardRound(save);
     leaveBoardRound(save, NOW);
     expect(boardLockLeft(save, NOW)).toBe(0);
+  });
+
+  it('clearBoardLock opens a closed board', () => {
+    const save: MiniGamesSave = {};
+    openBoardRound(save);
+    leaveBoardRound(save, NOW);
+    clearBoardLock(save);
+    expect(boardLockLeft(save, NOW)).toBe(0);
+    expect(isBoardRoundOpen(save)).toBe(false);
   });
 
   it('no round, no lock', () => {

@@ -260,8 +260,21 @@ export function addLadderPoints(
   let next: LadderState = { step: state.step, points: need ? state.points + gained : 0 };
   const leveledUp = !!need && next.points >= need;
   if (leveledUp) next = { step: state.step + 1, points: 0 };
-  (ensureGameProgress(save, WORDS_HOME).data ??= {}).ladder = next;
+  setLadderStep(save, next.step, next.points, ladder);
   return { gained, leveledUp };
+}
+
+/** Puts the child on `step` with `points` towards the next one, both clamped to the ladder (mutates `save`). */
+export function setLadderStep(
+  save: MiniGamesSave,
+  step: number,
+  points = 0,
+  ladder: readonly LadderStep[] = ENGLISH_LADDER,
+): void {
+  const s = Math.max(0, Math.min(ladder.length - 1, Math.floor(step)));
+  const need = ladder[s].pointsToNext;
+  const p = need ? Math.max(0, Math.min(need - 1, Math.floor(points))) : 0;
+  (ensureGameProgress(save, WORDS_HOME).data ??= {}).ladder = { step: s, points: p } satisfies LadderState;
 }
 
 /** First step that plays this game (-1 = not on the ladder). */

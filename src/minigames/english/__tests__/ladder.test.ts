@@ -19,6 +19,7 @@ import {
   ladderStep,
   PRACTICE_ODDS,
   roundStep,
+  setLadderStep,
   STAR_POINTS,
 } from '../ladder.js';
 import { createRng } from '../random.js';
@@ -75,6 +76,19 @@ describe('English ladder', () => {
     expect(ladderProgress(save)).toBeNull();
     expect(addLadderPoints(save, 3).leveledUp).toBe(false);
     expect(ladderStep(save)).toBe(top);
+  });
+
+  it('setLadderStep jumps to any step, clamped to the ladder and its bar', () => {
+    const save: MiniGamesSave = {};
+    setLadderStep(save, 2, 1);
+    expect(ladderStep(save)).toBe(2);
+    expect(ladderProgress(save)!.have).toBe(1);
+    setLadderStep(save, 0, 999);
+    expect(ladderProgress(save)!.have).toBe(ENGLISH_LADDER[0].pointsToNext! - 1);
+    setLadderStep(save, 999, 5);
+    expect(ladderStep(save)).toBe(ENGLISH_LADDER.length - 1);
+    setLadderStep(save, -3);
+    expect(ladderStep(save)).toBe(0);
   });
 
   it('a round plays a game of the step it picks; later games stay locked', () => {

@@ -183,6 +183,14 @@ export function leaveBoardRound(save: MiniGamesSave, now: number): void {
   data.boardLockedUntil = now + BOARD_LEAVE_LOCK_MS;
 }
 
+/** Opens a closed board and forgets an unfinished round (mutates `save`). */
+export function clearBoardLock(save: MiniGamesSave): void {
+  const data = save[WORDS_HOME]?.data;
+  if (!data) return;
+  delete data.boardRoundOpen;
+  delete data.boardLockedUntil;
+}
+
 /** Milliseconds until the board opens again (0 = open). */
 export function boardLockLeft(save: MiniGamesSave, now: number): number {
   const until = lockData(save).boardLockedUntil;
