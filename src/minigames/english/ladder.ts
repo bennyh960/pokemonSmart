@@ -69,7 +69,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', money(100)),
       prize('good', item('great-ball', 2)),
       prize('good', item('super-potion')),
-      prize('rare', item('rare-candy')),
+      prize('rare', item('ultra-ball')),
     ],
   },
   {
@@ -80,12 +80,12 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('poke-ball', 3)),
       prize('common', item('potion', 3)),
       prize('common', money(150)),
-      prize('good', item('great-ball', 5)),
-      prize('good', item('super-potion', 5)),
-      prize('good', item('revive', 3)),
-      prize('rare', item('rare-candy')),
+      prize('good', item('great-ball', 3)),
+      prize('good', item('super-potion', 2)),
+      prize('good', item('ether')),
+      prize('rare', item('max-potion')),
     ],
-    epic: [epic(vitaminPrize('epic'))],
+    epic: [epic(vitaminPrize('epic', 1))],
   },
   {
     name: { en: 'Colors', he: 'צבעים' },
@@ -95,10 +95,10 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('great-ball')),
       prize('common', item('super-potion')),
       prize('common', money(200)),
-      prize('good', item('great-ball', 3)),
-      prize('good', item('revive', 2)),
-      prize('good', money(500)),
-      prize('rare', item('rare-candy', 2)),
+      prize('good', item('great-ball', 2)),
+      prize('good', item('revive')),
+      prize('good', item('ether')),
+      prize('rare', item('elixir')),
       evolutionStonePrize('rare'),
     ],
   },
@@ -113,14 +113,15 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('great-ball', 2)),
       prize('common', item('super-potion', 2)),
       prize('common', money(250)),
-      prize('good', item('ultra-ball', 2)),
+      prize('good', item('ultra-ball')),
       prize('good', item('hyper-potion')),
-      prize('good', item('revive', 2)),
-      prize('rare', item('rare-candy', 2)),
+      prize('good', item('revive')),
+      prize('good', item('ether', 2)),
+      prize('rare', item('max-ether')),
       evolutionStonePrize('rare'),
       vitaminPrize('rare', 1),
     ],
-    epic: [epic(prize('epic', item('rare-candy', 4)))],
+    epic: [epic(prize('epic', item('max-elixir')))],
   },
   {
     name: { en: 'Pokémon types', he: 'סוגי פוקימון' },
@@ -131,13 +132,15 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('super-potion', 2)),
       prize('common', money(300)),
       prize('good', item('ultra-ball', 2)),
-      prize('good', item('hyper-potion', 2)),
-      prize('good', item('revive', 3)),
+      prize('good', item('hyper-potion')),
+      prize('good', item('revive', 2)),
+      prize('good', item('ether', 2)),
+      prize('rare', item('elixir')),
       evolutionStonePrize('rare'),
       tmPrize('rare'),
-      vitaminPrize('rare', 2),
+      vitaminPrize('rare', 1),
     ],
-    epic: [epic(prize('epic', item('rare-candy', 5)))],
+    epic: [epic(prize('epic', item('max-elixir', 2)))],
   },
   {
     name: { en: 'Animals & actions', he: 'חיות ופעולות' },
@@ -150,14 +153,16 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('ultra-ball')),
       prize('common', item('hyper-potion')),
       prize('common', money(400)),
-      prize('good', item('ultra-ball', 3)),
+      prize('good', item('ultra-ball', 2)),
       prize('good', item('max-revive')),
-      prize('good', item('full-heal', 3)),
+      prize('good', item('full-heal', 2)),
+      prize('good', item('elixir')),
+      prize('rare', item('rare-candy')),
       evolutionStonePrize('rare'),
       tmPrize('rare'),
-      vitaminPrize('rare', 3),
+      vitaminPrize('rare', 2),
     ],
-    epic: [epic(prize('epic', item('rare-candy', 5)))],
+    epic: [epic(prize('epic', item('rare-candy', 3)))],
   },
   {
     name: { en: 'Sounds & the Pokémon world', he: 'צלילים ועולם הפוקימון' },
@@ -172,15 +177,17 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('ultra-ball', 2)),
       prize('common', item('hyper-potion', 2)),
       prize('common', money(500)),
-      prize('good', item('ultra-ball', 4)),
-      prize('good', item('max-revive', 2)),
+      prize('good', item('ultra-ball', 3)),
+      prize('good', item('max-revive')),
       prize('good', item('max-potion')),
-      prize('rare', item('rare-candy', 3)),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      prize('rare', item('max-elixir')),
       evolutionStonePrize('rare'),
       tmPrize('rare'),
-      vitaminPrize('rare', 3),
+      vitaminPrize('rare', 2),
     ],
-    epic: [epic(prize('epic', item('rare-candy', 8)))],
+    epic: [epic(prize('epic', item('rare-candy', 3)))],
     rarePokemon: { ids: [TRAPINCH, FEEBAS, ABSOL, DEINO], chance: RARE_POKEMON_CHANCE },
   },
   {
@@ -196,15 +203,17 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       prize('common', item('ultra-ball', 3)),
       prize('common', item('max-potion')),
       prize('common', money(800)),
-      prize('good', item('max-revive', 2)),
+      prize('good', item('max-revive')),
       prize('good', item('full-restore')),
       prize('good', money(1500)),
-      prize('rare', item('rare-candy', 3)),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      prize('rare', item('max-elixir')),
       evolutionStonePrize('rare'),
       tmPrize('rare'),
-      vitaminPrize('rare', 3),
+      vitaminPrize('rare', 2),
     ],
-    epic: [epic(prize('epic', item('rare-candy', 8)))],
+    epic: [epic(prize('epic', item('rare-candy', 5)))],
     rarePokemon: { ids: 'all', chance: RARE_POKEMON_CHANCE },
   },
 ];
@@ -265,9 +274,26 @@ export function isOpenOnLadder(gameId: MiniGameId, save: MiniGamesSave): boolean
   return firstStepOf(gameId) <= ladderStep(save);
 }
 
-/** The round a library gate plays: one game of the current step. */
-export function ladderRound(save: MiniGamesSave, rng: Rng): { gameId: MiniGameId; level: number } {
-  const play = pick(rng, ENGLISH_LADDER[ladderStep(save)].play);
+/**
+ * Chance of each step a round plays, by distance below the current step: [current, 1 below, 2 below, 3 below].
+ * Lower steps keep coming back as practice. Steps below the first one give their chance to the current step.
+ */
+export const PRACTICE_ODDS: readonly number[] = [0.55, 0.2, 0.15, 0.1];
+
+/** The step a round plays: the current step or, as practice, one of the few below it (PRACTICE_ODDS). */
+export function roundStep(current: number, rng: Rng): number {
+  let r = rng();
+  for (let back = 1; back < PRACTICE_ODDS.length && back <= current; back++) {
+    r -= PRACTICE_ODDS[back];
+    if (r < 0) return current - back;
+  }
+  return current;
+}
+
+/** A Word Board round: one game of the step `roundStep()` picks (its prizes are that step's). */
+export function ladderRound(save: MiniGamesSave, rng: Rng): { gameId: MiniGameId; level: number; stepIndex: number } {
+  const stepIndex = roundStep(ladderStep(save), rng);
+  const play = pick(rng, ENGLISH_LADDER[stepIndex].play);
   const level = play.level === 'best' ? highestUnlockedLevel(save, getMiniGame(play.gameId)) : play.level;
-  return { gameId: play.gameId, level };
+  return { gameId: play.gameId, level, stepIndex };
 }

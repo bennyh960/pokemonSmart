@@ -1,7 +1,8 @@
 /**
  * The Word Board — the library tile where a child plays the English ladder as often as they like.
  *
- *   round:  one game of the child's current ladder step (`ladderRound()`), never the trainer rank.
+ *   round:  one game of the child's ladder step, or of a step below it as practice (`ladderRound()`), never the
+ *           trainer rank. Prizes are those of the step played.
  *   prizes: one prize per star. Each prize's rarity is drawn from RARITY_ODDS_BY_STARS (more stars → better odds),
  *           then one prize of that rarity from the step's pool (`LadderStep.prizes`). A rarity the pool lacks
  *           falls back to the next lower one.
@@ -9,6 +10,8 @@
  *           rare Pokémon the player doesn't own yet, `LadderStep.rarePokemon`) has its own chance, rolled once.
  *           An epic replaces one of the three prizes.
  *   city:   each library adds its own flavor to the step (`boardStep()`, board-cities.ts).
+ *   leave:  a drawn round stays open until it finishes. Leaving it before (back button, or closing the game
+ *           mid-round) closes the board for BOARD_LEAVE_LOCK_MS — no re-drawing a round until an easy one comes.
  *
  * Pure logic (no React, no audio, no saving).
  */
@@ -16,10 +19,11 @@
 import { getAllPokemon, getEvolutionChain } from '../../services/pokemon-data.js';
 import type { PlayerData } from '../../types/index.js';
 import { giftPokemon } from '../define.js';
-import { resolvePrize, type AwardedPrize } from '../progress.js';
-import type { Bilingual, MiniGamePrizeChoice, MiniGamePrizeDef, PrizeRarity, Stars } from '../types.js';
+import { ensureGameProgress, resolvePrize, type AwardedPrize } from '../progress.js';
+import type { Bilingual, MiniGamePrizeChoice, MiniGamePrizeDef, MiniGamesSave, PrizeRarity, Stars } from '../types.js';
 import { BOARD_CITIES } from './board-cities.js';
 import { ENGLISH_LADDER, MASTER_BALL_EPIC, type EpicPrize, type LadderStep } from './ladder.js';
+import { WORDS_HOME } from './useWords.js';
 
 export const RARITIES: readonly PrizeRarity[] = ['common', 'good', 'rare', 'epic'];
 
@@ -140,4 +144,47 @@ export function boardPrizes(
     prizes.push({ kind: 'board', ...resolvePrize(def, rng) });
   }
   return prizes;
+}
+
+/** How long the board stays closed after leaving a round before it finished. */
+export const BOARD_LEAVE_LOCK_MS = 15 * 60 * 1000;
+
+interface BoardLockData {
+  /** A round was drawn and hasn't finished yet. */
+  boardRoundOpen?: boolean;
+  /** Epoch ms until which the board is closed. */
+  boardLockedUntil?: number;
+}
+
+function lockData(save: MiniGamesSave): BoardLockData {
+  return (save[WORDS_HOME]?.data ?? {}) as BoardLockData;
+}
+
+/** Marks a drawn round as open (mutates `save`). */
+export function openBoardRound(save: MiniGamesSave): void {
+  (ensureGameProgress(save, WORDS_HOME).data ??= {}).boardRoundOpen = true;
+}
+
+/** A finished round, whatever its stars, closes cleanly (mutates `save`). */
+export function finishBoardRound(save: MiniGamesSave): void {
+  const data = save[WORDS_HOME]?.data;
+  if (data) delete data.boardRoundOpen;
+}
+
+export function isBoardRoundOpen(save: MiniGamesSave): boolean {
+  return !!lockData(save).boardRoundOpen;
+}
+
+/** Leaving a round that is still open closes the board for BOARD_LEAVE_LOCK_MS (mutates `save`; no open round → no-op). */
+export function leaveBoardRound(save: MiniGamesSave, now: number): void {
+  if (!isBoardRoundOpen(save)) return;
+  const data = ensureGameProgress(save, WORDS_HOME).data!;
+  delete data.boardRoundOpen;
+  data.boardLockedUntil = now + BOARD_LEAVE_LOCK_MS;
+}
+
+/** Milliseconds until the board opens again (0 = open). */
+export function boardLockLeft(save: MiniGamesSave, now: number): number {
+  const until = lockData(save).boardLockedUntil;
+  return typeof until === 'number' ? Math.max(0, until - now) : 0;
 }

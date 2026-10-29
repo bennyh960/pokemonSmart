@@ -1,6 +1,7 @@
 /**
  * Word Board prizes by library — each city's board adds its own flavor to the ladder step (`boardStep()` in board.ts):
- *   specialty:   one extra rare prize (Revives, Rare Candy, vitamins…) so every library feels a bit different
+ *   specialty:   one extra rare prize (Revives, PP items, vitamins…) so every library feels a bit different.
+ *                It joins every step, so never Rare Candy (the ladder keeps that for its higher steps).
  *   rarePokemon: the rare Pokémon this board gives on the steps that offer one (ids from BOARD_POKEMON, or 'all')
  *   masterBall:  the Master Ball is an epic prize on the top step only here
  * Keyed by the city folder of the library's map id ('percentile/library' → 'percentile').
@@ -28,17 +29,17 @@ const AXEW = 610;
 const DEINO = 633;
 
 export const BOARD_CITIES: Readonly<Record<string, BoardCity>> = {
-  sumville: { specialty: prize('rare', item('revive', 2)), rarePokemon: [RIOLU, AXEW] },
-  minusburg: { specialty: prize('rare', item('rare-candy', 2)), rarePokemon: [TRAPINCH, SPIRITOMB] },
-  multiplia: { specialty: vitaminPrize('rare', 2), rarePokemon: [BELDUM, ABSOL] },
+  sumville: { specialty: prize('rare', item('revive')), rarePokemon: [RIOLU, AXEW] },
+  minusburg: { specialty: prize('rare', item('ether', 2)), rarePokemon: [TRAPINCH, SPIRITOMB] },
+  multiplia: { specialty: vitaminPrize('rare', 1), rarePokemon: [BELDUM, ABSOL] },
   // The sea city
-  dividia: { specialty: prize('rare', item('max-revive')), rarePokemon: [FEEBAS, TRAPINCH] },
-  fractalis: { specialty: vitaminPrize('rare', 3), rarePokemon: [RIOLU, GIBLE] },
-  symmetrika: { specialty: prize('rare', item('rare-candy', 3)), rarePokemon: [ABSOL, BELDUM, SPIRITOMB] },
+  dividia: { specialty: prize('rare', item('revive')), rarePokemon: [FEEBAS, TRAPINCH] },
+  fractalis: { specialty: vitaminPrize('rare', 1), rarePokemon: [RIOLU, GIBLE] },
+  symmetrika: { specialty: prize('rare', item('elixir')), rarePokemon: [ABSOL, BELDUM, SPIRITOMB] },
   // Dragons
-  zeroville: { specialty: prize('rare', item('max-revive', 2)), rarePokemon: [BAGON, GIBLE, DEINO] },
-  percentile: { specialty: prize('rare', item('rare-candy', 3)), rarePokemon: 'all', masterBall: true },
-  algebria: { specialty: vitaminPrize('rare', 3), rarePokemon: 'all', masterBall: true },
+  zeroville: { specialty: prize('rare', item('max-revive')), rarePokemon: [BAGON, GIBLE, DEINO] },
+  percentile: { specialty: prize('rare', item('max-ether')), rarePokemon: 'all', masterBall: true },
+  algebria: { specialty: vitaminPrize('rare', 2), rarePokemon: 'all', masterBall: true },
 };
 
 /** The board flavor of the library on this map (undefined outside a known city). */

@@ -17,6 +17,8 @@ import {
   ladderProgress,
   ladderRound,
   ladderStep,
+  PRACTICE_ODDS,
+  roundStep,
   STAR_POINTS,
 } from '../ladder.js';
 import { createRng } from '../random.js';
@@ -75,11 +77,41 @@ describe('English ladder', () => {
     expect(ladderStep(save)).toBe(top);
   });
 
-  it('the gate plays a game of the current step; later games stay locked', () => {
+  it('a round plays a game of the step it picks; later games stay locked', () => {
     const s = onStep(2);
     const round = ladderRound(s, createRng(1));
-    expect(ENGLISH_LADDER[2].play.map((p) => p.gameId)).toContain(round.gameId);
+    expect(round.stepIndex).toBeLessThanOrEqual(2);
+    expect(ENGLISH_LADDER[round.stepIndex].play.map((p) => p.gameId)).toContain(round.gameId);
     expect(isOpenOnLadder('memory-match', s)).toBe(true);
     expect(isOpenOnLadder('word-catcher', s)).toBe(false);
+  });
+});
+
+describe('practice rounds', () => {
+  const at = (...values: number[]) => () => values.shift()!;
+
+  it('PRACTICE_ODDS sum to 1', () => {
+    expect(PRACTICE_ODDS.reduce((a, b) => a + b, 0)).toBeCloseTo(1);
+  });
+
+  it('picks the current step or one of the 3 below it by the odds', () => {
+    // [current 55%, -1 20%, -2 15%, -3 10%] laid out as -1, -2, -3, then current
+    expect(roundStep(4, at(0.1))).toBe(3);
+    expect(roundStep(4, at(0.25))).toBe(2);
+    expect(roundStep(4, at(0.4))).toBe(1);
+    expect(roundStep(4, at(0.5))).toBe(4);
+    expect(roundStep(4, at(0.99))).toBe(4);
+  });
+
+  it('missing lower steps give their chance to the current step', () => {
+    expect(roundStep(0, at(0.1))).toBe(0);
+    expect(roundStep(1, at(0.1))).toBe(0);
+    expect(roundStep(1, at(0.25))).toBe(1);
+  });
+
+  it('a practice round is played on the lower step', () => {
+    const round = ladderRound(onStep(4), at(0.1, 0));
+    expect(round.stepIndex).toBe(3);
+    expect(round.gameId).toBe(ENGLISH_LADDER[3].play[0].gameId);
   });
 });

@@ -6,9 +6,11 @@ import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import type { MiniGameLaunch, MiniGameOutcome } from '../launch.js';
 import { getMiniGame, MINI_GAME_LIST } from '../registry.js';
 import type { MiniGameId } from '../types.js';
+import { isBoardRoundOpen, openBoardRound } from '../english/board.js';
 import { EnglishBoard } from '../english/EnglishBoard.js';
-import { ENGLISH_LADDER, isOpenOnLadder, ladderRound, ladderStep } from '../english/ladder.js';
+import { ENGLISH_LADDER, isOpenOnLadder, ladderRound } from '../english/ladder.js';
 import { createRng } from '../english/random.js';
+import { LeaveRoundDialog } from '../english/LeaveRoundDialog.js';
 import { WordDex } from '../english/WordDex.js';
 import { GamePicker } from './GamePicker.js';
 import { MiniGameShell } from './MiniGameShell.js';
@@ -21,7 +23,10 @@ interface Props {
   onOutcome: (outcome: MiniGameOutcome) => void;
 }
 
-/** A Word Board round: a game of the child's ladder step. `n` remounts the shell for each new round. */
+/**
+ * A Word Board round: a game of the child's ladder step or, as practice, a step below it.
+ * `n` remounts the shell for each new round.
+ */
 interface BoardRound {
   gameId: MiniGameId;
   level: number;
@@ -29,23 +34,34 @@ interface BoardRound {
   n: number;
 }
 
-const BOARD_INTRO = { en: 'Level {n} — {name}. More stars = more prizes!', he: 'רמה {n} — {name}. יותר כוכבים = יותר פרסים!' };
+const BOARD_INTRO = {
+  en: 'Level {n} — {name}. More stars = more prizes!',
+  he: 'רמה {n} — {name}. יותר כוכבים = יותר פרסים!',
+};
 
 export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
   const { t, locale, isRTL } = useI18n();
-  const [pd] = usePlayerData();
+  const [pd, mutate] = usePlayerData();
   const fromPicker = launch.gameId === null;
   const [gameId, setGameId] = useState<MiniGameId | null>(launch.gameId);
   const lastPicked = useRef<MiniGameId | undefined>(undefined);
   const [dexOpen, setDexOpen] = useState(false);
   const [boardRound, setBoardRound] = useState<BoardRound | null>(null);
+  const [confirmLeave, setConfirmLeave] = useState(false);
   const games = launch.pickerIds ? MINI_GAME_LIST.filter((g) => launch.pickerIds!.includes(g.id)) : MINI_GAME_LIST;
   const back = `${isRTL ? '→' : '←'} ${t('minigames.back')}`;
 
   function playBoardRound() {
     const save = pd.miniGames ?? {};
-    const round = ladderRound(save, createRng((Date.now() ^ ((boardRound?.n ?? 0) + 1) * 2654435761) >>> 0));
-    setBoardRound({ ...round, stepIndex: ladderStep(save), n: (boardRound?.n ?? 0) + 1 });
+    const round = ladderRound(save, createRng((Date.now() ^ (((boardRound?.n ?? 0) + 1) * 2654435761)) >>> 0));
+    mutate((draft) => openBoardRound((draft.miniGames ??= {})));
+    setBoardRound({ ...round, n: (boardRound?.n ?? 0) + 1 });
+  }
+
+  // Back from a round that hasn't finished asks first; leaving locks the board (applied when it mounts again)
+  function leaveBoardRound() {
+    if (isBoardRoundOpen(pd.miniGames ?? {})) setConfirmLeave(true);
+    else setBoardRound(null);
   }
 
   if (dexOpen) {
@@ -60,22 +76,34 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
     return (
       <Root rtl={isRTL}>
         {boardRound ? (
-          <MiniGameShell
-            key={boardRound.n}
-            def={getMiniGame(boardRound.gameId)}
-            initialLevel={boardRound.level}
-            backLabel={back}
-            onBack={() => setBoardRound(null)}
-            onOutcome={onOutcome}
-            board={{
-              stepIndex: boardRound.stepIndex,
-              city: launch.boardCity,
-              intro: BOARD_INTRO[locale]
-                .replace('{n}', String(boardRound.stepIndex + 1))
-                .replace('{name}', ENGLISH_LADDER[boardRound.stepIndex].name[locale]),
-              onPlayAgain: playBoardRound,
-            }}
-          />
+          <>
+            <MiniGameShell
+              key={boardRound.n}
+              def={getMiniGame(boardRound.gameId)}
+              initialLevel={boardRound.level}
+              backLabel={back}
+              onBack={leaveBoardRound}
+              onOutcome={onOutcome}
+              board={{
+                stepIndex: boardRound.stepIndex,
+                city: launch.boardCity,
+                intro: BOARD_INTRO[locale]
+                  .replace('{n}', String(boardRound.stepIndex + 1))
+                  .replace('{name}', ENGLISH_LADDER[boardRound.stepIndex].name[locale]),
+                onPlayAgain: playBoardRound,
+              }}
+            />
+            {confirmLeave && (
+              <LeaveRoundDialog
+                theme={getMiniGame(boardRound.gameId).theme}
+                onStay={() => setConfirmLeave(false)}
+                onLeave={() => {
+                  setConfirmLeave(false);
+                  setBoardRound(null);
+                }}
+              />
+            )}
+          </>
         ) : (
           <EnglishBoard
             city={launch.boardCity}

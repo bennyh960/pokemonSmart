@@ -8,15 +8,21 @@ vi.mock('../../../services/pokemon-data.js', async (orig) => (await import('./mo
 
 import { getItem } from '../../../data/items.js';
 import { getPokemon } from '../../../services/pokemon-data.js';
-import type { DialogueReward } from '../../types.js';
+import type { DialogueReward, MiniGamesSave } from '../../types.js';
 import { BOARD_CITIES } from '../board-cities.js';
 import {
+  BOARD_LEAVE_LOCK_MS,
   BOARD_POKEMON,
+  boardLockLeft,
   boardPool,
   boardPrizes,
   boardStep,
   DRAWN_RARITIES,
   epicOdds,
+  finishBoardRound,
+  isBoardRoundOpen,
+  leaveBoardRound,
+  openBoardRound,
   RARITY_ODDS_BY_STARS,
   rarePokemonPrize,
 } from '../board.js';
@@ -127,5 +133,45 @@ describe('Word Board prizes', () => {
     expect(ids(new Set([RIOLU]))).not.toContain(RIOLU);
     expect(rarePokemonPrize(top, new Set(BOARD_POKEMON))).toBeNull();
     expect(rarePokemonPrize(ENGLISH_LADDER[0], none)).toBeNull();
+  });
+});
+
+describe('Word Board leave lock', () => {
+  const NOW = 1_000_000;
+
+  it('leaving an open round closes the board for BOARD_LEAVE_LOCK_MS', () => {
+    const save: MiniGamesSave = {};
+    openBoardRound(save);
+    expect(isBoardRoundOpen(save)).toBe(true);
+    leaveBoardRound(save, NOW);
+    expect(isBoardRoundOpen(save)).toBe(false);
+    expect(boardLockLeft(save, NOW)).toBe(BOARD_LEAVE_LOCK_MS);
+    expect(boardLockLeft(save, NOW + BOARD_LEAVE_LOCK_MS)).toBe(0);
+  });
+
+  it('a finished round never locks', () => {
+    const save: MiniGamesSave = {};
+    openBoardRound(save);
+    finishBoardRound(save);
+    leaveBoardRound(save, NOW);
+    expect(boardLockLeft(save, NOW)).toBe(0);
+  });
+
+  it('no round, no lock', () => {
+    const save: MiniGamesSave = {};
+    leaveBoardRound(save, NOW);
+    expect(boardLockLeft(save, NOW)).toBe(0);
+  });
+});
+
+describe('Rare Candy', () => {
+  const RARE_CANDY_FROM_STEP = 5; // "Level 6"
+  const hasCandy = (p: { reward?: DialogueReward; oneOf?: DialogueReward[] }) =>
+    [p.reward, ...(p.oneOf ?? [])].some((r) => r?.items?.some((i) => i.itemId === 'rare-candy'));
+
+  it('no board (any city) gives it below level 6', () => {
+    for (const city of [undefined, ...Object.keys(BOARD_CITIES)])
+      for (let i = 0; i < RARE_CANDY_FROM_STEP; i++)
+        expect(boardPool(boardStep(i, city), new Set()).some(hasCandy), `step ${i} ${city ?? ''}`).toBe(false);
   });
 });

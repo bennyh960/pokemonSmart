@@ -12,7 +12,7 @@ import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import { getTrainerRank } from '../../systems/trainer-rank.js';
 import { carePrizes } from '../care.js';
-import { boardPrizes, ownedSpecies } from '../english/board.js';
+import { boardPrizes, finishBoardRound, ownedSpecies } from '../english/board.js';
 import { addLadderPoints, ladderStep } from '../english/ladder.js';
 import { highestUnlockedLevel, isLevelUnlocked, levelForRank, recordResult, type RecordOutcome } from '../progress.js';
 import type { AnyMiniGameDef, MiniGameResult } from '../types.js';
@@ -164,6 +164,7 @@ export function MiniGameShell({
       if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft), Math.random, board.city);
       // A board round is an English ladder round: its stars earn ladder points
       if (board) {
+        finishBoardRound(draft.miniGames);
         const { gained, leveledUp } = addLadderPoints(draft.miniGames, rec.stars);
         rec.ladder = { gained, newLevel: leveledUp ? ladderStep(draft.miniGames) + 1 : undefined };
       }

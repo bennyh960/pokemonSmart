@@ -3,7 +3,7 @@
  * how stars turn into prizes, and every level's prizes by rarity (board.ts).
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInputLayer } from '../../engine/input/index.js';
 import { pokemonFrontSpriteUrl } from '../../systems/overworld-pokemon-anim.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
@@ -12,11 +12,14 @@ import { PrizeChip } from '../shell/PrizeChip.js';
 import { MgButton, RARITY_STYLE, themeBackground } from '../shell/ui.js';
 import type { Bilingual, MiniGameTheme, Stars } from '../types.js';
 import {
+  boardLockLeft,
   boardPool,
   boardStep,
   DRAWN_RARITIES,
   EPIC_STARS,
   epicOdds,
+  isBoardRoundOpen,
+  leaveBoardRound,
   ownedSpecies,
   RARITIES,
   RARITY_ODDS_BY_STARS,
@@ -31,6 +34,10 @@ const TEXT = {
   title: { en: 'Word Board', he: 'לוח המילים' },
   back: { en: 'Back', he: 'חזרה' },
   play: { en: 'Play!', he: 'שחקו!' },
+  locked: {
+    en: 'You left class early — the board opens again in {time}',
+    he: 'יצאתם מהשיעור באמצע — הלוח ייפתח שוב בעוד {time}',
+  },
   playMore: {
     en: 'Play as much as you like — 2 or 3 stars fill your bar!',
     he: 'משחקים כמה שרוצים — שניים או שלושה כוכבים ממלאים את הפס!',
@@ -61,9 +68,12 @@ interface Props {
 
 export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
   const { t, locale, isRTL } = useI18n();
-  const [pd] = usePlayerData();
+  const [pd, mutate] = usePlayerData();
   const save = pd.miniGames ?? {};
   const current = ladderStep(save);
+  const [now, setNow] = useState(Date.now);
+  const lockLeft = boardLockLeft(save, now);
+  const locked = lockLeft > 0;
   const owned = ownedSpecies(pd);
   const currentRef = useRef<HTMLDivElement>(null);
 
@@ -71,6 +81,22 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
   useEffect(() => {
     currentRef.current?.scrollIntoView({ block: 'nearest' });
   }, []);
+
+  // A round left before it finished (back button, or the game closed mid-round) closes the board
+  useEffect(() => {
+    if (isBoardRoundOpen(save)) mutate((draft) => leaveBoardRound((draft.miniGames ??= {}), Date.now()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, when the board opens
+  }, []);
+
+  useEffect(() => {
+    if (!locked) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [locked]);
+
+  const play = () => {
+    if (!locked) onPlay();
+  };
 
   useInputLayer({
     id: 'mg-english-board',
@@ -80,7 +106,7 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
       { code: 'Enter', action: 'play' },
       { code: 'Space', action: 'play' },
     ],
-    onAction: (action) => (action === 'play' ? onPlay() : onClose()),
+    onAction: (action) => (action === 'play' ? play() : onClose()),
   });
 
   return (
@@ -102,10 +128,23 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
           <LadderCard save={save} />
 
           <div className="flex flex-col items-center gap-2">
-            <MgButton theme={BOARD_THEME} variant="primary" glow onClick={onPlay} className="min-w-[220px] !py-4 !text-3xl">
-              ▶ {TEXT.play[locale]}
+            <MgButton
+              theme={BOARD_THEME}
+              variant="primary"
+              glow={!locked}
+              disabled={locked}
+              onClick={play}
+              className="min-w-[220px] !py-4 !text-3xl"
+            >
+              {locked ? '🔒' : '▶'} {TEXT.play[locale]}
             </MgButton>
-            <p className="text-center font-bold text-white/90">{TEXT.playMore[locale]}</p>
+            {locked ? (
+              <p className="text-center font-bold text-yellow-200">
+                {TEXT.locked[locale].replace('{time}', formatLockLeft(lockLeft))}
+              </p>
+            ) : (
+              <p className="text-center font-bold text-white/90">{TEXT.playMore[locale]}</p>
+            )}
             {city && <p className="text-center font-bold text-yellow-200">🎁 {TEXT.cityPrizes[locale]}</p>}
           </div>
 
@@ -207,4 +246,10 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
       </div>
     </div>
   );
+}
+
+/** m:ss, always left-to-right digits. */
+function formatLockLeft(ms: number): string {
+  const sec = Math.ceil(ms / 1000);
+  return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 }
