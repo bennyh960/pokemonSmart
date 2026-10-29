@@ -323,6 +323,30 @@ describe('BattleTemplates', () => {
     expect(q.steps.length).toBeGreaterThanOrEqual(2);
     expect(q.steps[0].en).toBeTruthy();
   });
+
+  it('AttackFormulaDamageTemplate: estimation answer moves off the pivot, one option per side', () => {
+    const t = new AttackFormulaDamageTemplate();
+    let seen = 0;
+    for (let i = 0; i < 300; i++) {
+      const q = t.build(MOCK_SNAPSHOT, grade3);
+      const m = q.question.en.match(/ATK = (\d+),\s+Power = (\d+),\s+DEF = (\d+)/);
+      if (!m) continue;
+      const [atk, power, def] = m.slice(1).map(Number);
+      const nearPower = Math.abs(def - power) <= 2;
+      const nearAtk = Math.abs(def - atk) <= 2;
+      if (nearPower === nearAtk) continue;
+      const pivot = nearPower ? atk : power;
+      if (def === power * 2 || def * 2 === power || def === atk * 2 || def * 2 === atk) continue;
+      seen++;
+      const answer = q.correctAnswer as number;
+      expect(answer).toBe(Math.round((atk * power) / def));
+      expect(answer).not.toBe(pivot);
+      const opts = (q.choices ?? []).map(Number);
+      const sameSide = opts.filter((v) => Math.sign(v - pivot) === Math.sign(answer - pivot) && Math.abs(v - pivot) <= Math.abs(answer - pivot) * 2);
+      expect(sameSide).toEqual([answer]);
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
 });
 
 // ─── Catch Templates ──────────────────────────────────────────────────────────

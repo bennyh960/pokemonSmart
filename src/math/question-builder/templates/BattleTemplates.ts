@@ -165,18 +165,18 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
     switch (strategy) {
       case 'def≈power': {
         // def = power ± delta  →  result ≈ atk
-        atk = this.randInt(2, Math.min(cap, 40));
-        power = this.randInt(4, Math.min(cap, 50));
-        const d1 = this.pickRandom([-2, -1, 1, 2]);
-        def = Math.max(1, power + d1);
+        const n = this._nearPair(Math.min(cap, 40), Math.min(cap, 50));
+        atk = n.pivot;
+        power = n.other;
+        def = n.def;
         break;
       }
       case 'def≈atk': {
         // def = atk ± delta  →  result ≈ power
-        atk = this.randInt(4, Math.min(cap, 50));
-        power = this.randInt(2, Math.min(cap, 40));
-        const d2 = this.pickRandom([-2, -1, 1, 2]);
-        def = Math.max(1, atk + d2);
+        const n = this._nearPair(Math.min(cap, 40), Math.min(cap, 50));
+        power = n.pivot;
+        atk = n.other;
+        def = n.def;
         break;
       }
       case 'def=power×2': {
@@ -212,6 +212,24 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
     return { attacker, defender, move, atk, def, power, strategy };
   }
 
+  /**
+   * Picks numbers for an estimation question: pivot × other ÷ def, def = other ± 1|2.
+   * The rounded answer must visibly move off the pivot (by at least 1) but stay
+   * "a bit" away (≤ 20% of pivot, min 2) — so 13 × 43 ÷ 41 ≈ 14, never a floored 13.
+   */
+  private _nearPair(maxPivot: number, maxOther: number): { pivot: number; other: number; def: number } {
+    for (let i = 0; i < 100; i++) {
+      const pivot = this.randInt(5, maxPivot);
+      const other = this.randInt(4, maxOther);
+      const def = other + this.pickRandom([-2, -1, 1, 2]);
+      const shift = Math.abs(Math.round((pivot * other) / def) - pivot);
+      if (shift >= 1 && shift <= Math.max(2, Math.round(pivot * 0.2)) && shift < pivot) {
+        return { pivot, other, def };
+      }
+    }
+    return { pivot: 20, other: 10, def: 9 }; // 20 × 10 ÷ 9 ≈ 22
+  }
+
   protected solve(params: TemplateParams, _config: ClassConfig): SolveResult {
     const attacker = params.attacker as QuestionPokemon;
     const defender = params.defender as QuestionPokemon;
@@ -220,7 +238,11 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
     const power = params.power as number;
     const strategy = params.strategy as string;
     const intermediate = atk * power;
-    const answer = Math.floor(intermediate / def);
+    // Estimation strategies round to the nearest whole number (13.6 → 14), so
+    // "a bit more than 13" is an option kids can actually see.
+    const approx = strategy === 'def≈power' || strategy === 'def≈atk';
+    const answer = approx ? Math.round(intermediate / def) : Math.floor(intermediate / def);
+    const eq = approx && intermediate % def !== 0 ? '≈' : '=';
 
     const hint = this._strategyHint(strategy, atk, power, def, answer);
 
@@ -232,8 +254,8 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
           he: `שלב 1 – התקפה × עוצמה: ${atk} × ${power} = ${intermediate}`,
         },
         {
-          en: `Step 2 – ÷ DEF: ${intermediate} ÷ ${def} = ${answer}`,
-          he: `שלב 2 – ÷ הגנה: ${intermediate} ÷ ${def} = ${answer}`,
+          en: `Step 2 – ÷ DEF: ${intermediate} ÷ ${def} ${eq} ${answer}`,
+          he: `שלב 2 – ÷ הגנה: ${intermediate} ÷ ${def} ${eq} ${answer}`,
         },
       ],
       hint,
@@ -245,33 +267,17 @@ export class AttackFormulaDamageTemplate extends QuestionTemplate {
   /**
    * Builds distractors that are pedagogically meaningful per strategy.
    *
-   * For approximate strategies (def≈power / def≈atk):
-   *   - wrongDir  : mirror of the answer past the pivot (catches kids who reason in
-   *                 the wrong direction). Clamped to be at least 3 away from answer.
-   *   - moderate  : 10% of the answer further in the SAME direction as answer from
-   *                 pivot (catches kids who get the direction right but overshoot).
-   *   - far       : pivot × 2 (clear anchor far from the correct ballpark).
+   * For approximate strategies (def≈power / def≈atk) exactly ONE option is
+   * "a bit more/less than the pivot" — no second same-side option to argue about:
+   *   - pivot     : the "they cancel exactly" trap.
+   *   - wrongDir  : the answer mirrored past the pivot (right size, wrong direction).
+   *   - far       : pivot × 2 (clearly not "a bit").
    */
   private _distractors(strategy: string, atk: number, power: number, answer: number): number[] {
     const safe = (arr: number[]) =>
       [...new Set(arr.map(Math.round).filter((v) => v >= 1 && v !== answer))].slice(0, 3);
 
-    const approxCase = (pivot: number) => {
-      // Moderate: 10% of the answer further in the same direction as answer from pivot.
-      // Using the answer (not pivot) makes the gap proportional to what kids must judge.
-      // e.g. answer=66 → gap=7 → moderate=73; answer=111 → gap=11 → moderate=122.
-      const gap = Math.max(3, Math.round(answer * 0.1));
-      const moderate = answer >= pivot ? answer + gap : Math.max(1, answer - gap);
-
-      // WrongDir: goes in the OPPOSITE direction from moderate.
-      // Distance = 2×delta+1 (the exact mirror distance past pivot), min 3.
-      // This ensures wrongDir and moderate never collide regardless of delta.
-      const delta = Math.abs(answer - pivot);
-      const oppGap = Math.max(3, 2 * delta + 1);
-      const wrongDir = Math.max(1, moderate > answer ? answer - oppGap : answer + oppGap);
-
-      return safe([wrongDir, moderate, pivot * 2]);
-    };
+    const approxCase = (pivot: number) => safe([pivot, 2 * pivot - answer, pivot * 2]);
 
     if (strategy === 'def≈power') return approxCase(atk);
     if (strategy === 'def≈atk') return approxCase(power);
