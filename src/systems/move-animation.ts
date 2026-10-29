@@ -202,6 +202,7 @@ const ELECTROWEB_MOVES = ['electroweb'];
 const LIGHTNING_MOVES = ['thunderbolt', 'thunder', 'discharge', 'charge beam', 'zap cannon', 'supercell slam'];
 
 const EARTHQUAKE_MOVES = ['earthquake', 'magnitude', 'fissure'];
+const BODY_SLAM_MOVES = ['body slam'];
 
 const SMOKE_SCREEN_MOVES = ['smokescreen', 'smoke screen'];
 const MIST_MOVES = ['mist'];
@@ -794,6 +795,19 @@ export function getAttackAnimationProfile(move: MoveLike): AttackAnimationProfil
       shakeIntensity: isHydro ? 3.0 : 3.5,
       flashColor: '#60b8ff',
       variant: isHydro ? 'hydro-pump' : 'surf',
+    };
+  }
+
+  if (matchesAny(moveName, BODY_SLAM_MOVES)) {
+    return {
+      family: 'body-slam',
+      color,
+      accentColor: WHITE,
+      duration: 0.5, // shockwave after landing
+      impactTime: 0.5, // crouch + leap + fall before the landing
+      selfTarget: false,
+      shakeIntensity: 4,
+      flashColor,
     };
   }
 

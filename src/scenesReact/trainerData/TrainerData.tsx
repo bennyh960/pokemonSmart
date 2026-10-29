@@ -3,6 +3,7 @@ import { useInputLayer } from '../../engine/input';
 import { useI18n } from '../../ui-react/context/i18n-context';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { BADGES, hasBadge } from '../../data/badges';
+import { toAssetUrl } from '../../engine/asset-path';
 import { TRAINER_RANKS } from '../../data/trainer-ranks';
 import {
   describeActivePerks,
@@ -193,7 +194,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
               <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="text-4xl sm:text-5xl animate-pulse">
                 <img
-                  src={`/sprites/trainers/${pd.heroCharacterId}.png`}
+                  src={toAssetUrl(`sprites/trainers/${pd.heroCharacterId}.png`)}
                   alt="Trainer"
                   className="w-full h-full object-cover"
                 />

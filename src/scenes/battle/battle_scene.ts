@@ -590,7 +590,7 @@ function getTurnEffectLine(
     case 'fully-paralyzed':
       return getTurnStatusLine(name, event);
     case 'confused':
-      return t('battle.confused', { name });
+      return t('battle.isConfused', { name });
     case 'snapped-out':
       return t('battle.snappedOut', { name });
     case 'hurt-itself-confusion':
@@ -766,6 +766,10 @@ export function createBattleScene(
   let enemySideState: BattleSideRuntimeState;
   let menu: ReturnType<typeof createBattleMenu>;
   let textBox: ReturnType<typeof createTextBox> | null = null;
+  // Holds the move animation (and its HP change) until the player has read the
+  // turn-start lines ("X is confused!") that open the move's text box
+  let turnIntroLineCount = 0;
+  let turnIntroBox: ReturnType<typeof createTextBox> | null = null;
   let selMove = 0;
   let flash: ReturnType<typeof createFlash> | null = null;
   let shake: ReturnType<typeof createShake> | null = null;
@@ -2274,14 +2278,11 @@ export function createBattleScene(
 
     // We have several of disabling moves : disable move from oponnent, choice item , struggle
     // softLockedInMovesId for choice items ,disabledMoveId from disable move , and struggle used the disabledMoveIds
-    if (playerBattleState.softLockedInMovesId?.length) {
-      menu.disabledMoveIds = playerBattleState.softLockedInMovesId;
-    }
-    if (playerBattleState.disabledMoveId !== null && menu.disabledMoveIds.length > 0) {
-      menu.disabledMoveIds.push(playerBattleState.disabledMoveId);
-    } else if (playerBattleState.disabledMoveId !== null) {
-      menu.disabledMoveIds = [playerBattleState.disabledMoveId];
-    }
+    // Rebuilt from the runtime state every time so an expired lock/disable never lingers in the menu
+    menu.disabledMoveIds = [
+      ...(playerBattleState.softLockedInMovesId ?? []),
+      ...(playerBattleState.disabledMoveId !== null ? [playerBattleState.disabledMoveId] : []),
+    ];
 
     if (player.moves.every((m) => m.currentPp <= 0)) {
       menu.isStruggleMode = true;
@@ -3127,7 +3128,6 @@ export function createBattleScene(
           }),
         );
         playerBattleState.disabledMoveId = null;
-        menu.disabledMoveIds = menu.disabledMoveIds.filter((id) => id !== playerBattleState.disabledMoveId);
       }
     }
     if (enemyBattleState.disabledMoveTurnsRemaining > 0) {
@@ -3140,7 +3140,6 @@ export function createBattleScene(
           }),
         );
         enemyBattleState.disabledMoveId = null;
-        // menu.disabledMoveIds = menu.disabledMoveIds.filter((id) => id !== enemyBattleState.disabledMoveId);
       }
     }
 
@@ -3750,6 +3749,9 @@ export function createBattleScene(
       phaseTimer = 0;
       return;
     }
+
+    turnIntroLineCount = turnEffectLines.length;
+    turnIntroBox = null;
 
     if (m.id === attackerBattleState.disabledMoveId || attackerBattleState.softLockedInMovesId?.includes(m.id)) {
       const msgs = [...turnEffectLines];
@@ -5311,7 +5313,14 @@ export function createBattleScene(
         }
         statusTurnFx = statusTurnFx.filter((effect) => effect.active);
       }
-      animationDirector.update(dt);
+      if (turnIntroLineCount > 0) {
+        turnIntroBox ??= textBox;
+        if (!turnIntroBox || textBox !== turnIntroBox || turnIntroBox.currentLine >= turnIntroLineCount) {
+          turnIntroLineCount = 0;
+          turnIntroBox = null;
+        }
+      }
+      if (turnIntroLineCount === 0) animationDirector.update(dt);
       updateHPBar(playerHpBar, dt);
       updateHPBar(enemyHpBar, dt);
       updatePopups(dt);

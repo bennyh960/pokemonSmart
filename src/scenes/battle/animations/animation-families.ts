@@ -432,6 +432,69 @@ export const ANIMATION_FAMILIES: Record<string, (args: AnimationArgs) => void> =
     );
   },
 
+  'body-slam': (args) => {
+    const { attackerActor, defenderActor, attackerStart: a, defenderStart: d } = args;
+    // Land on top of the defender, slightly above its centre
+    const dx = (args.target.x - args.source.x) * 0.85;
+    const dy = args.target.y - args.source.y - 8;
+    const grow = 1.35;
+
+    args.animationDirector.play(
+      sequenceStep(
+        // Crouch to build up the jump
+        tweenActorStep(attackerActor, { scaleX: a.scaleX * 1.15, scaleY: a.scaleY * 0.8, y: a.y + 3 }, 0.12, 'easeOut'),
+        // Leap: rise and grow, stretched upward
+        tweenActorStep(
+          attackerActor,
+          { x: a.x + dx * 0.5, y: a.y + dy * 0.5 - 24, scaleX: a.scaleX * 1.2, scaleY: a.scaleY * grow },
+          0.22,
+          'easeOut',
+        ),
+        // Fall: drop onto the defender at full size
+        tweenActorStep(
+          attackerActor,
+          { x: a.x + dx, y: a.y + dy, scaleX: a.scaleX * grow, scaleY: a.scaleY * grow },
+          0.16,
+          'easeIn',
+        ),
+        callStep(() => {
+          args.onImpact();
+          if (!args.hitTarget) return;
+          args.context.attackFx = createAttackEffect({
+            kind: 'body-slam',
+            sourceX: args.source.x,
+            sourceY: args.source.y,
+            targetX: args.target.x,
+            targetY: args.target.y,
+            color: args.profile.color,
+            accentColor: args.profile.accentColor,
+            duration: args.profile.duration,
+            power: args.move.power,
+          });
+          args.context.shake = createShake(args.profile.shakeIntensity, 0.3);
+        }),
+        // Squash on landing — the defender gets flattened under the weight
+        parallelStep(
+          tweenActorStep(attackerActor, { scaleX: a.scaleX * 1.5, scaleY: a.scaleY * 1.1 }, 0.07, 'easeOut'),
+          args.hitTarget
+            ? tweenActorStep(
+                defenderActor,
+                { scaleX: d.scaleX * 1.2, scaleY: d.scaleY * 0.7, y: d.y + 6 },
+                0.07,
+                'easeOut',
+              )
+            : waitStep(0.07),
+        ),
+        waitStep(0.08),
+        // Bounce back home
+        parallelStep(
+          tweenActorStep(attackerActor, { ...a }, 0.3, 'easeInOut'),
+          args.hitTarget ? tweenActorStep(defenderActor, { ...d }, 0.22, 'easeOut') : waitStep(0.22),
+        ),
+      ),
+    );
+  },
+
   lunge: (args) => {
     if (args.hitCount <= 1) {
       playDefaultFamilyAnimation(args);

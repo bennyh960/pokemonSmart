@@ -1,10 +1,12 @@
+import { toAssetUrl } from '../engine/asset-path';
 import { getLocale } from '../i18n/i18n';
 import { getNature, getNatureDisplayName } from '../services/pokemon-data';
 import type { Pokemon } from '../types';
 import type { MajorStatusId } from '../types/battle-metadata';
 
+/** Resolved against the deploy base, so it works directly in an <img src>. */
 export const getPokemonSpriteUrl = (pokemonId: number, side: 'front' | 'back' = 'front'): string => {
-  return `/sprites/pokemon/${side}/${pokemonId}.png`;
+  return toAssetUrl(`sprites/pokemon/${side}/${pokemonId}.png`);
 };
 
 export const STATUS_LABEL: Record<MajorStatusId, { en: string; he: string; color: string }> = {

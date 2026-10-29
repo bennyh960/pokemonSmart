@@ -455,6 +455,7 @@
   "battle.statFell": "{name}'s {stat} fell!",
   "battle.statFellHarshly": "{name}'s {stat} fell harshly!",
   "battle.confused": "{name} became confused!",
+  "battle.isConfused": "{name} is confused!",
   "battle.snappedOut": "{name} snapped out of confusion!",
   "battle.hurtItselfConfusion": "{name} hurt itself in confusion!",
   "battle.flinched": "{name} flinched!",
