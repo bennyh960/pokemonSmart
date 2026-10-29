@@ -2278,14 +2278,11 @@ export function createBattleScene(
 
     // We have several of disabling moves : disable move from oponnent, choice item , struggle
     // softLockedInMovesId for choice items ,disabledMoveId from disable move , and struggle used the disabledMoveIds
-    if (playerBattleState.softLockedInMovesId?.length) {
-      menu.disabledMoveIds = playerBattleState.softLockedInMovesId;
-    }
-    if (playerBattleState.disabledMoveId !== null && menu.disabledMoveIds.length > 0) {
-      menu.disabledMoveIds.push(playerBattleState.disabledMoveId);
-    } else if (playerBattleState.disabledMoveId !== null) {
-      menu.disabledMoveIds = [playerBattleState.disabledMoveId];
-    }
+    // Rebuilt from the runtime state every time so an expired lock/disable never lingers in the menu
+    menu.disabledMoveIds = [
+      ...(playerBattleState.softLockedInMovesId ?? []),
+      ...(playerBattleState.disabledMoveId !== null ? [playerBattleState.disabledMoveId] : []),
+    ];
 
     if (player.moves.every((m) => m.currentPp <= 0)) {
       menu.isStruggleMode = true;
@@ -3131,7 +3128,6 @@ export function createBattleScene(
           }),
         );
         playerBattleState.disabledMoveId = null;
-        menu.disabledMoveIds = menu.disabledMoveIds.filter((id) => id !== playerBattleState.disabledMoveId);
       }
     }
     if (enemyBattleState.disabledMoveTurnsRemaining > 0) {
@@ -3144,7 +3140,6 @@ export function createBattleScene(
           }),
         );
         enemyBattleState.disabledMoveId = null;
-        // menu.disabledMoveIds = menu.disabledMoveIds.filter((id) => id !== enemyBattleState.disabledMoveId);
       }
     }
 
