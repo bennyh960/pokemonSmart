@@ -284,6 +284,7 @@ export type AttackEffectKind =
   | 'bite'
   | 'night-shade'
   | 'lunge'
+  | 'body-slam'
   | 'self-boost'
   | 'self-boost-cooler'
   | 'sound-based'
@@ -1171,6 +1172,63 @@ function renderMistVeilEffect(ctx: CanvasRenderingContext2D, effect: AttackEffec
 }
 function renderHazeClearEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
   renderCloudEffect(ctx, effect);
+}
+
+// --- Body Slam ---
+// Spawned on landing: flat ground shockwave, impact rays and dust puffs at the target
+function renderBodySlamEffect(ctx: CanvasRenderingContext2D, effect: AttackEffect): void {
+  const t = Math.max(0, Math.min(1, effect.timer / effect.duration));
+  const ps = getPowerScale(effect.power);
+  const cx = effect.targetX;
+  const groundY = effect.targetY + 14;
+  const fade = 1 - t;
+
+  ctx.save();
+
+  // Ground shockwave rings (flattened ellipses)
+  for (let i = 0; i < 2; i++) {
+    const rt = Math.max(0, t - i * 0.15) / (1 - i * 0.15);
+    if (rt <= 0) continue;
+    const rx = (8 + rt * 30) * ps;
+    ctx.globalAlpha = (1 - rt) * 0.85;
+    ctx.strokeStyle = i === 0 ? effect.accentColor : effect.color;
+    ctx.lineWidth = 3 - i;
+    ctx.beginPath();
+    ctx.ellipse(cx, groundY, rx, rx * 0.28, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Impact rays bursting from the landing point (first half only)
+  if (t < 0.5) {
+    const rt = t / 0.5;
+    ctx.globalAlpha = 1 - rt;
+    ctx.strokeStyle = effect.accentColor;
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 8; i++) {
+      const angle = (Math.PI * 2 * i) / 8 + Math.PI / 8;
+      const inner = (6 + rt * 10) * ps;
+      const outer = inner + (10 - rt * 6) * ps;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(angle) * inner, effect.targetY + Math.sin(angle) * inner * 0.7);
+      ctx.lineTo(cx + Math.cos(angle) * outer, effect.targetY + Math.sin(angle) * outer * 0.7);
+      ctx.stroke();
+    }
+  }
+
+  // Dust puffs kicked out sideways along the ground
+  ctx.fillStyle = '#d8c8a8';
+  for (let i = 0; i < 6; i++) {
+    const dir = i % 2 === 0 ? -1 : 1;
+    const spread = 0.6 + (i >> 1) * 0.35;
+    const px = cx + dir * t * 26 * spread * ps;
+    const py = groundY - Math.sin(t * Math.PI) * (4 + (i >> 1) * 3);
+    ctx.globalAlpha = fade * 0.7;
+    ctx.beginPath();
+    ctx.arc(px, py, 2 + t * 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
 }
 
 // --- Punch ---
@@ -2393,6 +2451,9 @@ export function renderAttackEffect(ctx: CanvasRenderingContext2D, effect: Attack
       break;
     case 'burst':
       renderBurstEffect(ctx, effect);
+      break;
+    case 'body-slam':
+      renderBodySlamEffect(ctx, effect);
       break;
     case 'sound-based':
       renderSoundBasedEffect(ctx, effect);

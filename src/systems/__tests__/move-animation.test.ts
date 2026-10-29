@@ -13,6 +13,17 @@ describe('getAttackAnimationProfile', () => {
     expect(profile.family).toBe('lunge');
   });
 
+  it('maps Body Slam to body-slam', () => {
+    const profile = getAttackAnimationProfile({
+      name: { en: 'Body Slam', he: 'מכת גוף' },
+      type: 'normal',
+      power: 85,
+      damageClass: 'physical',
+    });
+
+    expect(profile.family).toBe('body-slam');
+  });
+
   it('maps thunder moves to lightning', () => {
     const profile = getAttackAnimationProfile({
       name: { en: 'Thunderbolt', he: 'מכת ברק' },
