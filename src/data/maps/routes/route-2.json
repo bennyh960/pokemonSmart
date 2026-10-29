@@ -4902,11 +4902,6 @@
     },
     {
       "key": "flowerX",
-      "x": 16,
-      "y": 5
-    },
-    {
-      "key": "flowerX",
       "x": 33,
       "y": 13
     },
@@ -4958,7 +4953,7 @@
     {
       "key": "td1",
       "x": 24,
-      "y": 13
+      "y": 14
     },
     {
       "key": "st1s",
@@ -4989,6 +4984,31 @@
       "key": "st1s",
       "x": 52,
       "y": 6
+    },
+    {
+      "key": "td1",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "key": "item-ultra ball",
+      "x": 24,
+      "y": 12
+    },
+    {
+      "key": "item-pokeball",
+      "x": 48,
+      "y": 15
+    },
+    {
+      "key": "item-pokeball",
+      "x": 43,
+      "y": 7
+    },
+    {
+      "key": "item-pokeball",
+      "x": 20,
+      "y": 3
     }
   ],
   "objectLayer": [
