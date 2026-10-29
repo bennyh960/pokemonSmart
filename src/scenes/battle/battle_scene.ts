@@ -590,7 +590,7 @@ function getTurnEffectLine(
     case 'fully-paralyzed':
       return getTurnStatusLine(name, event);
     case 'confused':
-      return t('battle.confused', { name });
+      return t('battle.isConfused', { name });
     case 'snapped-out':
       return t('battle.snappedOut', { name });
     case 'hurt-itself-confusion':
