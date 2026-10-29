@@ -48,6 +48,10 @@ type SnackMath = Omit<SnackConfig, 'pace' | 'roundSeconds' | 'starScores'>;
 
 interface SnackLevelData {
   math: SnackMath;
+  /**
+   * 1★ ≈ 80% of careless-kid rounds · 2★ ≈ 90% and 3★ ≈ 70% of no-mistake rounds at a person's pace
+   * (KID / CAREFUL bots in __tests__/bots.ts; SNACK_TUNE=1 tune.test.ts prints the rates).
+   */
   starScores: SnackConfig['starScores'];
   /** New ★★ prizes of this level — the ★★ list also keeps every earlier level's. */
   adds: MiniGamePrizeDef[];
@@ -66,7 +70,7 @@ const ADD_SUB = { targetMin: 10, targetMax: 20, berryMin: 1, berryMax: 9 };
 const SNACK_LEVELS: readonly SnackLevelData[] = [
   {
     math: { ops: ['add'], targetMin: 5, targetMax: 10, berryMin: 1, berryMax: 5 },
-    starScores: [30, 100, 210],
+    starScores: [40, 80, 150],
     adds: [
       prize('common', item('poke-ball')),
       prize('common', item('potion')),
@@ -80,13 +84,13 @@ const SNACK_LEVELS: readonly SnackLevelData[] = [
   },
   {
     math: { ops: ['sub'], targetMin: 5, targetMax: 10, berryMin: 1, berryMax: 5 },
-    starScores: [60, 150, 340],
+    starScores: [60, 190, 250],
     adds: [prize('common', item('great-ball')), prize('common', item('super-potion'))],
     threeStar: { from: 1, times: 3 },
   },
   {
     math: { ops: ['add', 'sub'], ...ADD_SUB },
-    starScores: [30, 100, 250],
+    starScores: [30, 130, 180],
     adds: [
       prize('good', item('ultra-ball')),
       prize('good', item('hyper-potion')),
@@ -97,37 +101,37 @@ const SNACK_LEVELS: readonly SnackLevelData[] = [
   },
   {
     math: { ops: ['times'], targetMin: 0, targetMax: 0, berryMin: 1, berryMax: 5, maxTable: 5 },
-    starScores: [70, 280, 410],
+    starScores: [70, 280, 350],
     adds: [prize('good', item('max-potion')), xItemPrize('good')],
     threeStar: { from: 3, times: 3 },
   },
   {
     math: { ops: ['add', 'times'], ...ADD_SUB, maxTable: 5 },
-    starScores: [40, 170, 360],
+    starScores: [50, 150, 290],
     adds: [prize('rare', item('max-ether')), prize('rare', money(10000))],
     threeStar: { from: 1, times: 4 },
   },
   {
     math: { ops: ['sub', 'times'], ...ADD_SUB, maxTable: 6 },
-    starScores: [80, 290, 490],
+    starScores: [60, 270, 350],
     adds: [prize('rare', item('elixir')), prize('rare', money(15000))],
     threeStar: { from: 1, times: 4 },
   },
   {
     math: { ops: ['add', 'sub', 'times'], ...ADD_SUB, maxTable: 7 },
-    starScores: [60, 220, 440],
+    starScores: [60, 330, 430],
     adds: [prize('rare', item('max-elixir')), vitaminPrize('rare', 1)],
     threeStar: { from: 1, times: 5 },
   },
   {
     math: { ops: ['div'], targetMin: 0, targetMax: 0, berryMin: 1, berryMax: 9, maxTable: 5 },
-    starScores: [330, 1030, 1300],
+    starScores: [340, 1000, 1150],
     adds: [prize('epic', item('rare-candy')), prize('epic', money(20000))],
     threeStar: { from: 1, times: 5 },
   },
   {
     math: { ops: ['div', 'times'], targetMin: 0, targetMax: 0, berryMin: 1, berryMax: 9, maxTable: 7 },
-    starScores: [120, 640, 860],
+    starScores: [180, 570, 760],
     adds: [heldItemPrize('epic')],
     threeStar: { from: 1, times: 5 },
   },
@@ -141,7 +145,7 @@ const SNACK_LEVELS: readonly SnackLevelData[] = [
       maxTable: 10,
       feverOften: true,
     },
-    starScores: [90, 510, 730],
+    starScores: [90, 520, 680],
     adds: [],
     threeStar: [
       prize('epic', item('leftovers')),

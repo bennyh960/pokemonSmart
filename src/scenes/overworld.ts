@@ -8,12 +8,20 @@ import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
 import type { AudioManager } from '../audio/audio-manager.js';
-import { createTileMap, type TileMap, type TileMapData } from '../engine/tilemap.js';
+import { createTileMap, type PlacedObject, type TileMap, type TileMapData } from '../engine/tilemap.js';
 import { createCamera, type Camera } from '../engine/camera.js';
 import { clearScreen, fillRect, drawText } from '../engine/renderer.js';
 import { initHUD, updateHUD, setHUDTab, showHUD, hideHUD } from '../ui/hud-overlay.js';
 import { t, isRTL, getLocale, setLocale } from '../i18n/i18n.js';
-import { forceCareGame, rollCareTrigger, type CareMatch } from '../minigames/care.js';
+import {
+  careSpotFlag,
+  careSpotGame,
+  forceCareGame,
+  isCareSpotResting,
+  restCareSpot,
+  rollCareTrigger,
+  type CareMatch,
+} from '../minigames/care.js';
 import { openEnglishBoard, openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
 import { pathToFace } from '../systems/grid-path.js';
 import { FLAGS } from '../data/story/flags.js';
@@ -339,6 +347,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     hmName: string;
     slashProgress: number;
     pendingTileRemoval: (() => void) | null;
+    /** Runs when the animation ends (a care spot then starts its game). */
+    onDone?: () => void;
   }
   let hmAnim: HMAnimState | null = null;
   let pendingHMAction: (() => void) | null = null;
@@ -744,6 +754,37 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /**
+   * A care spot (interact tile): a party Pokémon with a care game pops out, the spot shakes, "something dropped out!"
+   * and its game starts. A finished round hides the spot for CARE_SPOT_REST_MS; leaving without finishing keeps it.
+   */
+  function startCareSpot(spot: PlacedObject): void {
+    const match = careSpotGame(getPlayerData().party);
+    if (!match) {
+      activeTextBox = createTextBox([t('careSpot.nobody')], isRTL());
+      return;
+    }
+    const name = getPokemonDisplayName(match.pokemon.id);
+    const flag = careSpotFlag(currentMapData?.id ?? '', spot.x, spot.y);
+    activeTextBox = createTextBox([t('careSpot.sniff', { name })], isRTL());
+    pendingHMAction = () =>
+      startHMAnimation('care-spot', match.pokemon, spot.x, spot.y, () => {
+        activeTextBox = createTextBox([t('careSpot.found', { name })], isRTL());
+        pendingHMAction = () =>
+          startMiniGame(match.def.id, {
+            carePokemonUuid: match.pokemon.uuid,
+            onFinish: (outcome) => {
+              if (!outcome || !hasActiveGame()) return;
+              restCareSpot(getPlayerData(), flag);
+              const objects = currentMapData?.objects;
+              const idx = objects?.indexOf(spot) ?? -1;
+              if (idx >= 0) objects!.splice(idx, 1);
+              autoSave();
+            },
+          });
+      });
+  }
+
   /** Show a Yes/No choice prompt. */
   function showChoice(callback: (idx: number) => void, options?: string[]): void {
     choiceState = {
@@ -1018,8 +1059,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       interactingNPC = null;
       if (hasActiveGame()) {
         const trainerQ = (trainer as unknown as Record<string, unknown>).questions as
-          | { count: number; types?: string[]; repeated?: boolean }
-          | undefined;
+          { count: number; types?: string[]; repeated?: boolean } | undefined;
         const flags = getPlayerData().flags;
 
         const runQuestionsOverlay = (onComplete: () => void) => {
@@ -1105,8 +1145,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       }
 
       const npcQ = (npc as unknown as Record<string, unknown>).questions as
-        | { count: number; types?: string[]; repeated?: boolean }
-        | undefined;
+        { count: number; types?: string[]; repeated?: boolean } | undefined;
       const rewardedFlag = npc.reward?.flag ?? `npc-${npc.id}-rewarded`;
       const alreadyRewarded = !!getPlayerData().flags[rewardedFlag];
 
@@ -1704,8 +1743,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     pokemon: import('../types/index.js').Pokemon,
     obsX: number,
     obsY: number,
+    onDone?: () => void,
   ): void {
     const flipSprite = player.facing === 'ArrowRight';
+    // A care spot: the Pokémon pops out in front of it (on the tile the player left) so the bush shaking stays visible
+    const careSpot = hmName === 'care-spot';
+    const frontVec = DIR_VECTORS[player.facing];
 
     // Try to step back one tile (opposite of facing)
     const faceVec = DIR_VECTORS[player.facing];
@@ -1739,25 +1782,28 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       playerFacing: player.facing,
       timer: 0,
       flipSprite,
-      spritePixelX: obsX * TILE_SIZE,
-      spritePixelY: obsY * TILE_SIZE,
+      spritePixelX: (careSpot && frontVec ? obsX - frontVec.dx : obsX) * TILE_SIZE,
+      spritePixelY: (careSpot && frontVec ? obsY - frontVec.dy : obsY) * TILE_SIZE,
       spriteAlpha: 0,
       flashAlpha: 0,
       hmName,
       slashProgress: 0,
-      pendingTileRemoval: () => {
-        // Remove the object from the map
-        if (currentMapData?.objects) {
-          const objIdx = currentMapData.objects.findIndex((o) => o.x === obsX && o.y === obsY);
-          if (objIdx >= 0) currentMapData.objects.splice(objIdx, 1);
-        }
-        // Persist the removal via flags so it survives map reload
-        if (hasActiveGame()) {
-          const pd = getPlayerData();
-          setFlag(pd, `${hmName}-${obsX}-${obsY}`);
-          autoSave();
-        }
-      },
+      onDone,
+      pendingTileRemoval: careSpot
+        ? null
+        : () => {
+            // Remove the object from the map
+            if (currentMapData?.objects) {
+              const objIdx = currentMapData.objects.findIndex((o) => o.x === obsX && o.y === obsY);
+              if (objIdx >= 0) currentMapData.objects.splice(objIdx, 1);
+            }
+            // Persist the removal via flags so it survives map reload
+            if (hasActiveGame()) {
+              const pd = getPlayerData();
+              setFlag(pd, `${hmName}-${obsX}-${obsY}`);
+              autoSave();
+            }
+          },
     };
 
     // Start loading sprite if not cached yet
@@ -1998,6 +2044,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // Guard by interactType so coordinate flags don't ghost-remove redesigned tiles at the same spot
         if (flags[`cut-${obj.x}-${obj.y}`] && def?.interactType?.id === 'cut') return false;
         if (flags[`strength-${obj.x}-${obj.y}`] && def?.interactType?.id === 'strength') return false;
+        if (
+          def?.interactType?.id === 'care-spot' &&
+          isCareSpotResting(getPlayerData(), careSpotFlag(mapId, obj.x, obj.y))
+        )
+          return false;
         return true;
       });
     }
@@ -2006,6 +2057,15 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (data.objects) data.objects = MovablePuzzle.filterObjects(data.objects);
 
     tileMap = createTileMap(data as TileMapData, tileset);
+    // A care spot shakes while its Pokémon sniffs it (HM anim 'action' phase)
+    tileMap.setObjectShake((o) =>
+      hmAnim?.hmName === 'care-spot' &&
+      hmAnim.phase === 'action' &&
+      o.x === hmAnim.obstacleX &&
+      o.y === hmAnim.obstacleY
+        ? Math.round(Math.sin(hmAnim.timer * 45) * 2)
+        : 0,
+    );
     setCurrentMapId(mapId);
 
     // Apply flagListeners for flags already set before this map loaded
@@ -2919,7 +2979,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           if (anim.timer >= 0.5) {
             anim.pendingTileRemoval?.();
             anim.pendingTileRemoval = null;
-            audio.playSFX(anim.hmName === 'surf' ? 'splash' : 'hit');
+            if (anim.hmName !== 'care-spot') audio.playSFX(anim.hmName === 'surf' ? 'splash' : 'hit');
             anim.phase = 'return';
             anim.timer = 0;
           }
@@ -2930,6 +2990,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
         } else if (animPhase === 'done') {
           hmAnim = null;
+          anim.onDone?.();
         }
         return;
       }
@@ -3493,8 +3554,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                   const pfd = trainer.postFlagDialogue;
                   if (pfd && pfd.dialogue.length > 0) {
                     const trainerQ = (trainer as unknown as Record<string, unknown>).questions as
-                      | { count: number; types?: string[]; repeated?: boolean }
-                      | undefined;
+                      { count: number; types?: string[]; repeated?: boolean } | undefined;
                     const showPFD = () => {
                       activeTextBox = createTextBox(resolveDialogue(pfd.dialogue, getLocale()), isRTL(), _trainerName);
                     };
@@ -3581,14 +3641,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         // Gate light: red = questions first, green = clock challenge to refill the pass
         {
           const vec = DIR_VECTORS[player.facing];
-          const light = vec && hasActiveGame() ? visibleGateLightAt(player.gridX + vec.dx, player.gridY + vec.dy) : undefined;
+          const light =
+            vec && hasActiveGame() ? visibleGateLightAt(player.gridX + vec.dx, player.gridY + vec.dy) : undefined;
           if (light) {
             const pass = getGatePass(light.gateId);
             if (pass.kind === 'timed') {
               setActiveGate(light.gateId);
               stateMachine.push('GATE_CLOCK');
             } else {
-              const key = pass.kind === 'forever' ? 'gateLight.forever' : light.guard ? 'gateLight.red' : 'gateLight.redDoor';
+              const key =
+                pass.kind === 'forever' ? 'gateLight.forever' : light.guard ? 'gateLight.red' : 'gateLight.redDoor';
               activeTextBox = createTextBox([t(key)], isRTL());
             }
             return;
@@ -3688,6 +3750,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                     pendingHMAction = () => {
                       startHMAnimation(capturedHmName, capturedHmUser, capturedTargetX, capturedTargetY);
                     };
+                    return;
+                  } else if (resolved.id === 'care-spot') {
+                    if (hasActiveGame()) startCareSpot(obj);
                     return;
                   } else if (resolved.id === 'english-board') {
                     if (hasActiveGame()) openEnglishBoard({ city: boardCityOf(currentMapData?.id) });
@@ -4257,7 +4322,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (!visibleGateLightAt(light.x, light.y)) continue;
         const lx = light.x * TILE_SIZE - camera.x;
         const ly = light.y * TILE_SIZE - camera.y;
-        renderables.push({ y: light.y * TILE_SIZE, render: () => drawGateLight(ctx, lx, ly, getGatePass(light.gateId)) });
+        renderables.push({
+          y: light.y * TILE_SIZE,
+          render: () => drawGateLight(ctx, lx, ly, getGatePass(light.gateId)),
+        });
       }
 
       renderables.sort(compareRenderables);
@@ -4351,6 +4419,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         const screenY = worldY - camera.y;
 
         if (hmAnim.pokemonSprite) {
+          const screenX = hmAnim.spritePixelX - camera.x;
+          const screenY = hmAnim.spritePixelY - camera.y;
           ctx.save();
           ctx.globalAlpha = hmAnim.spriteAlpha;
           const spriteSize = TILE_SIZE * 2;
@@ -4372,8 +4442,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           ctx.restore();
         }
 
-        // Draw effect during action and return phases
-        if (hmAnim.phase === 'action' || (hmAnim.phase === 'return' && hmAnim.slashProgress >= 1)) {
+        // Draw effect during action and return phases (a care spot just shakes — see setObjectShake)
+        if (
+          hmAnim.hmName !== 'care-spot' &&
+          (hmAnim.phase === 'action' || (hmAnim.phase === 'return' && hmAnim.slashProgress >= 1))
+        ) {
           const cx = screenX + TILE_SIZE / 2;
           const cy = screenY + TILE_SIZE / 2;
           if (hmAnim.hmName === 'cut') {
@@ -4396,7 +4469,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // Fly animation overlay
       if (flyAnim && flyAnim.spriteAlpha > 0 && flyAnim.pokemonSprite) {
         // player screen position
-        drawOverworldPokemon(ctx, flyAnim.pokemonSprite, psx, psy + flyAnim.spriteOffsetY, flyAnim.spriteScale, flyAnim.spriteAlpha);
+        drawOverworldPokemon(
+          ctx,
+          flyAnim.pokemonSprite,
+          psx,
+          psy + flyAnim.spriteOffsetY,
+          flyAnim.spriteScale,
+          flyAnim.spriteAlpha,
+        );
       }
 
       // Cutscene fx particles (fire / smoke / burst)

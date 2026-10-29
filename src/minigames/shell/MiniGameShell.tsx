@@ -71,8 +71,8 @@ export function MiniGameShell({
   // Care round: the hurt Pokémon plays, the player picks one of the open levels, clearing it heals the Pokémon once
   const careMon = def.care && carePokemonUuid ? pd.party.find((p) => p.uuid === carePokemonUuid) : undefined;
   const care = careMon ? def.care : undefined;
-  // Gate / board rounds play the caller's level: no level picker (a care round at a gate keeps its picker)
-  const fixedLevel = (!!gate && !care) || !!board;
+  // Gate / board rounds play the caller's level: no level picker
+  const fixedLevel = !!gate || !!board;
   // Care, gate or board: once cleared it can't be replayed from here
   const fixed = !!care || fixedLevel;
   const [fixedDone, setFixedDone] = useState(false);

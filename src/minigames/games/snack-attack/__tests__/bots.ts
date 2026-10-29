@@ -31,6 +31,8 @@ export interface BotProfile {
 export const KID: BotProfile = { think: 0.7, sloppy: 0.35, dodge: false };
 export const GOOD: BotProfile = { think: 0.35, sloppy: 0.1, dodge: true };
 export const SHARP: BotProfile = { think: 0.15, sloppy: 0, dodge: true };
+/** Never picks a wrong berry, but reacts like a person — the "I made no mistakes" player 3★ is tuned for. */
+export const CAREFUL: BotProfile = { think: 0.6, sloppy: 0, dodge: true };
 
 function landTime(b: Berry): number {
   return (MOUTH_Y - b.y) / b.vy;

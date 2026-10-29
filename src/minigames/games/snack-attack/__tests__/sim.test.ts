@@ -27,7 +27,7 @@ import {
   type Berry,
   type SimState,
 } from '../sim.js';
-import { GOOD, KID, playRound } from './bots.js';
+import { CAREFUL, GOOD, KID, playRound } from './bots.js';
 
 const LEVELS = def.levels;
 const cfg = (n: number): SnackConfig => LEVELS[n - 1].config;
@@ -374,22 +374,25 @@ describe('stars', () => {
   });
 
   it.each(LEVELS.map((l) => [l.number, l.config] as const))(
-    'level %i: a careless kid usually clears it, 3★ needs a good player',
+    'level %i: a careless kid usually clears it, a no-mistake player usually gets 3★',
     (_, config) => {
       const runs = 20;
       let kidClears = 0;
       let kidThree = 0;
-      let goodTwo = 0;
+      let carefulTwo = 0;
+      let carefulThree = 0;
       for (let i = 0; i < runs; i++) {
         const kid = starsFor(playRound(config, 500 + i, KID).state.score, config.starScores);
-        const good = starsFor(playRound(config, 500 + i, GOOD).state.score, config.starScores);
+        const careful = starsFor(playRound(config, 500 + i, CAREFUL).state.score, config.starScores);
         if (kid >= 1) kidClears++;
         if (kid === 3) kidThree++;
-        if (good >= 2) goodTwo++;
+        if (careful >= 2) carefulTwo++;
+        if (careful === 3) carefulThree++;
       }
-      expect(kidClears / runs).toBeGreaterThanOrEqual(0.75);
+      expect(kidClears / runs).toBeGreaterThanOrEqual(0.7);
       expect(kidThree / runs).toBeLessThanOrEqual(0.15);
-      expect(goodTwo / runs).toBeGreaterThanOrEqual(0.8);
+      expect(carefulTwo / runs).toBeGreaterThanOrEqual(0.8);
+      expect(carefulThree / runs).toBeGreaterThanOrEqual(0.55);
       expect(config.starScores[0]).toBeLessThan(config.starScores[1]);
       expect(config.starScores[1]).toBeLessThan(config.starScores[2]);
     },

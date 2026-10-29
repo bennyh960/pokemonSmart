@@ -13,6 +13,11 @@ import {
   evolutionLine,
   findCareGame,
   findHurtCareGame,
+  CARE_SPOT_REST_MS,
+  careSpotFlag,
+  careSpotGame,
+  isCareSpotResting,
+  restCareSpot,
   forceCareGame,
   resetCareCooldown,
   rollCareTrigger,
@@ -122,7 +127,26 @@ describe('care games', () => {
     expect(new Set(levels).size).toBe(Math.min(TRAINER_RANKS.length, def.levels.length));
   });
 
-  it('labs: the most hurt Pokémon with a care game, on any tile; healthy parties get none', () => {
+  it('care spots: any party Pokémon with a game plays (the most hurt first), healthy or not', () => {
+    expect(careSpotGame([mon(143, 100), mon(9, 20)])?.def.id).toBe('squirtle-swim');
+    expect(careSpotGame([mon(150, 10), mon(143, 100)])?.def.id).toBe('snorlax-snack');
+    expect(careSpotGame([mon(150, 10)])).toBeNull();
+  });
+
+  it('a used care spot rests for 30 minutes, then comes back', () => {
+    const pd = { flags: {}, flagTimestamps: {} } as unknown as PlayerData;
+    const flag = careSpotFlag('routes/route-1', 4, 7);
+    expect(isCareSpotResting(pd, flag)).toBe(false);
+    restCareSpot(pd, flag);
+    const at = pd.flagTimestamps[flag];
+    expect(isCareSpotResting(pd, flag, at + CARE_SPOT_REST_MS - 1)).toBe(true);
+    expect(isCareSpotResting(pd, flag, at + CARE_SPOT_REST_MS)).toBe(false);
+    pd.flagTimestamps[flag] = at - 1000;
+    restCareSpot(pd, flag); // played again later: the rest starts over
+    expect(pd.flagTimestamps[flag]).toBeGreaterThanOrEqual(at);
+  });
+
+  it('the most hurt Pokémon with a care game, on any tile; healthy parties get none', () => {
     expect(findHurtCareGame([mon(143, 45), mon(9, 20)])?.def.id).toBe('squirtle-swim');
     expect(findHurtCareGame([mon(143, 60), mon(150, 10)])).toBeNull();
     expect(findHurtCareGame([mon(143, 0)])).toBeNull();

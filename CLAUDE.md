@@ -32,7 +32,7 @@ A Pokemon Silver-style RPG where math and logic challenges drive combat. Set in 
 - **Starters:** Gen 1 — Bulbasaur, Charmander, Squirtle (8 moves each)
 - **Sprites:** PokeAPI (best quality available) for Pokemon battle sprites + DPP-style tileset PNG with JSON manifest (`src/data/tilesets/dpp.json`) for overworld tiles + custom character spritesheets (`src/data/sprites/characters.json`)
 - **Maps:** JSON files in `src/data/maps/` — tile grid + objects layer + NPCs + transitions. Registered in `src/systems/map-manager.ts`
-- **Interactive tiles:** Tileset tiles can have `category: 'interactive'` with `interactType: { id, args }`. Defaults in `src/data/interact-types.ts`, per-tile overrides in dpp.json, per-instance overrides on PlacedObject. Types: pc, sign, item, cut, strength
+- **Interactive tiles:** Tileset tiles can have `category: 'interactive'` with `interactType: { id, args }`. Defaults in `src/data/interact-types.ts`, per-tile overrides in dpp.json, per-instance overrides on PlacedObject. Types: pc, sign, item, cut, strength, gate, english-board, care-spot (a party Pokémon plays its mini-game there — `src/minigames/care.ts`)
 - **NPC dialogue:** Bilingual `{ en, he }[]` — resolved at runtime by locale. Legacy `string[]` auto-normalized on map load
 - **PC Storage:** 10 boxes × 30 slots in `PlayerData.boxes`. Scene at `src/scenes/pc.ts`, logic at `src/systems/pc-storage.ts`. Save migration v2
 - **Badges:** 8 gym badges defined in `src/data/badges.ts` with bilingual names, gym leader, city, type. Stored as bitmask in `pd.badges`

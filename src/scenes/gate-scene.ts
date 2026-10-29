@@ -37,8 +37,7 @@ import type { SessionResult } from '../systems/gate-overlay.js';
 import type { StoryAction } from '../data/story/events.js';
 import { MINI_GAME_GATE_LINES, VERIFICATION_DIALOGUES } from '../data/story/global-gate-config.js';
 import type { QuestionGateDef } from '../data/story/gates.js';
-import { startMiniGame, getMiniGame, resolveMiniGames, type MiniGameOutcome } from '../minigames/index.js';
-import { findHurtCareGame } from '../minigames/care.js';
+import { startMiniGame, getMiniGame, resolveMiniGames } from '../minigames/index.js';
 import { levelForRank } from '../minigames/progress.js';
 import { getTrainerRank } from '../systems/trainer-rank.js';
 import { leaveBuilding } from './overworld.js';
@@ -175,25 +174,16 @@ export function createGateScene(_input: unknown, stateMachine: StateMachine): Sc
   function _launchMiniGame(gate: QuestionGateDef): void {
     const cfg = gate.miniGame!;
     const pd = getPlayerData();
+    const ids = resolveMiniGames(cfg);
+    const gameId = ids[Math.floor(Math.random() * ids.length)];
     const lines = MINI_GAME_GATE_LINES.lab;
-    const gateOpts = {
+    startMiniGame(gameId, {
+      level: cfg.level ?? levelForRank(getTrainerRank(pd).index, getMiniGame(gameId)),
       gate: { intro: lines[Math.floor(Math.random() * lines.length)] },
-      onFinish: (outcome: MiniGameOutcome | null) => {
+      onFinish: (outcome) => {
         overlayRunning = false;
         miniGamePassed = !!outcome?.cleared;
       },
-    };
-    // Sometimes a hurt party Pokémon plays its own game (care round) instead
-    const care = cfg.careChance && Math.random() < cfg.careChance ? findHurtCareGame(pd.party) : null;
-    if (care) {
-      startMiniGame(care.def.id, { ...gateOpts, carePokemonUuid: care.pokemon.uuid });
-      return;
-    }
-    const ids = resolveMiniGames(cfg);
-    const gameId = ids[Math.floor(Math.random() * ids.length)];
-    startMiniGame(gameId, {
-      ...gateOpts,
-      level: cfg.level ?? levelForRank(getTrainerRank(pd).index, getMiniGame(gameId)),
     });
   }
 

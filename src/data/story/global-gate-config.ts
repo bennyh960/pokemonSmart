@@ -300,8 +300,7 @@ registerAutoGateMap(MapId.DIVIDIA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.DIVI
 registerAutoGateMap(MapId.FRACTALIS_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.FRACTALIS_GYM]);
 registerAutoGateMap(MapId.SYMMETRIKA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.SYMMETRIKA_GYM]);
 
-// Labs — a mini-game instead of questions (the level follows the trainer rank). A hurt party Pokémon that has a
-// Snack Attack game asks to play it instead 30% of the time (a care round — it heals and opens the door).
+// Labs — a mini-game instead of questions (the level follows the trainer rank).
 // Libraries have no entry gate: kids play English at the Word Board because they want to.
 registerGate({
   id: 'auto-lab',
@@ -310,7 +309,7 @@ registerGate({
   questionSetIds: [],
   reopenCooldownMs: AUTO_GATE_COOLDOWNS.lab,
   sessionConfig: { ...DEFAULT_SESSION_CONFIG, questionsRequired: 0 },
-  miniGame: { category: 'logic', careChance: 0.3 },
+  miniGame: { category: 'logic' },
 });
 
 registerAutoGateMap(MapId.SUMVILLE_LAB, 'lab');

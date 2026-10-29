@@ -138,7 +138,8 @@ Snorlax is hungry. Berries with numbers fall from a tree. Move Snorlax (← → 
 60-second rounds. Combo multiplier grows with each exact target; a Golden Berry starts 5s **Fever** (everything ×2, music speeds up).
 Rotten (grey) berries: −1 heart (3 hearts).
 
-Pick the level on the intro card ("Select difficulty level": 1 = Junior … 10 = Master, 2–9 just numbers).
+Pick the level on the intro card ("Select difficulty level": a 5×2 grid, 1 = Junior … 10 = Master, 2–9 just numbers).
+Level N opens level N+1 after **N wins with ★★★** (`unlockWins`; level 1 → 1 win … level 9 → 9 wins), shown as a bar.
 Speed: level 1 = 0.4 × top speed, rising evenly to the top speed at level 10 (`pace`, `speedOf()` in sim.ts).
 Prizes start at ★★ (`prizeStars: 2`): the ★★ list keeps every earlier level's prizes; ★★★ is the ★★ list with quantities
 multiplied, from the level shown. Care rounds pay on every win; the games menu pays once per level (first ★★, first ★★★).
@@ -180,10 +181,14 @@ Care prizes = the level prizes above, paid on every ★★/★★★ win (`careP
 line above, alive and at 50% HP or less, on an encounter tile of the game's habitat whose encounter filter allows its types →
 a chance per step that grows as HP drops — 40–50% HP: 10% · 30–40%: 20% · 30% or less: 50% (`CARE_CHANCE_BY_HP`; the most hurt Pokémon asks; cooldown 100 steps) it asks "Snorlax looks very hungry… Feed it?" → Yes starts the game with
 `startMiniGame(id, { carePokemonUuid })`. In a care round the Pokémon itself plays and the player **picks the level** — every
-level is open; the **trainer rank** pre-selects one (`levelForRank()`). The intro lists that level's ★★ and ★★★ prizes. Every win heals
+open level can be picked (the highest open one is pre-selected). The intro lists that level's ★★ and ★★★ prizes. Every win heals
 (`DialogueReward.restorePokemon`: full HP + status); ★★ / ★★★ also pays one of the level's prizes, every time.
 Stars/best still save.
 After a clear there is no "Play again"; a failed round can be retried.
+**Care spot** (interact type `care-spot`, set on a tile in the tileset editor): facing it and pressing A, a party Pokémon
+with one of these games (the most hurt first — HP doesn't matter here) pops out, the spot shakes, "Oh! Looks like something
+dropped out!" and its game starts as a care round. A finished round hides the spot for 30 minutes (flag
+`care-spot-<map>-<x>-<y>` + its timestamp); quitting before the end keeps it. Logic: `careSpotGame()` / `restCareSpot()` in care.ts.
 Admin: **C** in the overworld offers the care game of the first party Pokémon that has one (ignores HP, tile, chance, cooldown).
 
 ---

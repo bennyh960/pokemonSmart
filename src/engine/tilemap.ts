@@ -305,6 +305,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
   const flagListenerDefs = data.flagListeners ?? [];
   /** Extra runtime blocker set by the scene (e.g. gate lights) — checked before tiles. */
   let extraBlocker: ((gx: number, gy: number) => boolean) | null = null;
+  let objectShake: ((obj: PlacedObject) => number) | null = null;
 
   return {
     name,
@@ -397,6 +398,11 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
     /** Mark extra cells as solid at runtime (things drawn by the scene, not by the tileset). */
     setExtraBlocker(fn: ((gx: number, gy: number) => boolean) | null): void {
       extraBlocker = fn;
+    },
+
+    /** Draw placed objects shifted sideways by `fn(obj)` px (e.g. a bush shaking). null = none. */
+    setObjectShake(fn: ((obj: PlacedObject) => number) | null): void {
+      objectShake = fn;
     },
 
     isWalkable(gx: number, gy: number): boolean {
@@ -590,7 +596,7 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
         const effectiveZOffset = obj.zOffset ?? def.zOffset;
         const pixelX = obj.x * BASE;
         const pixelY = obj.y * BASE;
-        const drawX = Math.floor(pixelX - cameraX);
+        const baseDrawX = Math.floor(pixelX - cameraX);
         const drawY = Math.floor(pixelY - cameraY);
         const gridH = Math.max(1, Math.round(def.h / BASE));
 
@@ -599,6 +605,8 @@ export function createTileMap(data: TileMapData, tileset?: Tileset | null) {
           zOffset: effectiveZOffset,
           order: objIndex,
           render: () => {
+            const shakeX = objectShake?.(obj) ?? 0;
+            const drawX = baseDrawX + shakeX;
             if (def.cells) {
               // Grouped tile: draw each cell individually
               for (const cell of def.cells) {

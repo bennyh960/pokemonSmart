@@ -38,7 +38,7 @@ export interface InteractTypeRef {
 }
 
 /** All available interact type IDs. */
-export const INTERACT_TYPE_IDS = ['pc', 'sign', 'item', 'cut', 'strength', 'gate', 'english-board'] as const;
+export const INTERACT_TYPE_IDS = ['pc', 'sign', 'item', 'cut', 'strength', 'gate', 'english-board', 'care-spot'] as const;
 export type InteractTypeId = typeof INTERACT_TYPE_IDS[number];
 
 /** Default definitions for each interact type. */
@@ -83,6 +83,16 @@ const INTERACT_TYPES: Record<InteractTypeId, InteractTypeDef> = {
   'english-board': {
     id: 'english-board',
     label: { en: 'Word Board', he: 'לוח המילים' },
+    dialogue: [],
+    itemId: null, itemQty: null, flag: null, gateId: null,
+  },
+  /**
+   * A party Pokémon with a care game sniffs it out and plays (src/minigames/care.ts `careSpotGame`);
+   * a finished round hides it for 30 minutes.
+   */
+  'care-spot': {
+    id: 'care-spot',
+    label: { en: 'Rustling Spot', he: 'מקום מרשרש' },
     dialogue: [],
     itemId: null, itemQty: null, flag: null, gateId: null,
   },

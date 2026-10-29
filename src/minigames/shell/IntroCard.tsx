@@ -132,7 +132,7 @@ export function IntroCard({
         {!fixedLevel && (
           <section className="mg-glass rounded-3xl p-3 shadow-xl">
             <h2 className="mb-2 text-center text-base font-black text-white">{t('minigames.pickLevel')}</h2>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="mx-auto grid max-w-sm grid-cols-5 gap-2">
               {def.levels.map((l, i) => {
                 const lp = getLevelProgress(save, def.id, l.number);
                 const open = isOpen(l.number);

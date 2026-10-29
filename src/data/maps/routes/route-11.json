@@ -300,8 +300,15 @@
   "encounterTableId": "route-11",
   "movablePuzzle": {},
   "flagListeners": [],
-  "interactiveItems": {},
-  "outside": true,
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "hp-up"
+      }
+    ]
+  },
+  "outside": true
+,
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1br","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1br","g8c","g8c","g8c","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1b","wt1b","wt1b","wt1","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
@@ -1172,26 +1179,6 @@
     },
     {
       "key": "t4",
-      "x": 12,
-      "y": 5
-    },
-    {
-      "key": "t4",
-      "x": 10,
-      "y": 5
-    },
-    {
-      "key": "t4",
-      "x": 8,
-      "y": 5
-    },
-    {
-      "key": "t4",
-      "x": 6,
-      "y": 5
-    },
-    {
-      "key": "t4",
       "x": 4,
       "y": 5
     },
@@ -1548,11 +1535,6 @@
     {
       "key": "t8",
       "x": 28,
-      "y": 17
-    },
-    {
-      "key": "t8",
-      "x": 26,
       "y": 17
     },
     {
@@ -2984,6 +2966,76 @@
       "key": "g4",
       "x": 13,
       "y": 6
+    },
+    {
+      "key": "t4",
+      "x": 12,
+      "y": 5
+    },
+    {
+      "key": "t4",
+      "x": 10,
+      "y": 5
+    },
+    {
+      "key": "t4",
+      "x": 8,
+      "y": 5
+    },
+    {
+      "key": "t4",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "td1",
+      "x": 38,
+      "y": 2
+    },
+    {
+      "key": "td1",
+      "x": 42,
+      "y": 2
+    },
+    {
+      "key": "td1",
+      "x": 23,
+      "y": 16
+    },
+    {
+      "key": "t8",
+      "x": 26,
+      "y": 17
+    },
+    {
+      "key": "td1",
+      "x": 25,
+      "y": 16
+    },
+    {
+      "key": "td1",
+      "x": 27,
+      "y": 16
+    },
+    {
+      "key": "td1",
+      "x": 29,
+      "y": 16
+    },
+    {
+      "key": "td1",
+      "x": 31,
+      "y": 16
+    },
+    {
+      "key": "td1",
+      "x": 41,
+      "y": 15
+    },
+    {
+      "key": "item-generic",
+      "x": 41,
+      "y": 18
     }
   ],
   "objectLayer": [

@@ -99,13 +99,18 @@ Shared layer in `src/minigames/english/` — use it, don't copy it:
   gate — English is played by choice at the Word Board;
   NPC hosts use `"miniGame": { "category": … }` or `{ "gameIds": [...] }`. A new game of a category joins automatically.
 - Lab gates play a fixed level from the trainer rank (`levelForRank()` in progress.ts); care rounds let the player pick
-  any level (the rank pre-selects one); the Word Board plays the English ladder step instead.
+  an open level; the Word Board plays the English ladder step instead.
+- Unlocks: level N+1 opens with `UNLOCK_STARS` on level N, or — when level N sets `unlockWins` — after that many
+  3★ wins on it (`unlockProgress()`; the intro card shows it as a bar).
 
 ## Care rounds
 
 A def may set `care` (`MiniGameCare` in `types.ts`): a hurt party Pokémon of that evolution line, walking on a tile of
 its `habitat`, asks to play (`care.ts`, triggered from the overworld). The shell then uses that Pokémon (`pokemonId`
-prop) and opens every level to pick. Every win heals; every win with the level's `prizeStars` also pays the level's
+prop) and lets the player pick one of the open levels. Two ways in: a hurt Pokémon in the wild (grass / water, by HP),
+or a **care spot** — an object whose tile has interact type `care-spot`: any party Pokémon with a care game pops out,
+the spot shakes and the game starts (`careSpotGame()`); a finished round hides the spot for 30 minutes
+(`CARE_SPOT_REST_MS`, a timestamped flag), leaving without finishing keeps it. Every win heals; every win with the level's `prizeStars` also pays the level's
 prize (`firstClear`, or `threeStar` at 3★) — each time, not just once (`carePrizes()` in care.ts).
 
 ## Level prizes

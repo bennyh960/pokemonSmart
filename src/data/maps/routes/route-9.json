@@ -380,7 +380,8 @@
     "rain": 0.2,
     "sun": 0.2,
     "sandstorm": 0.1
-  },
+  }
+,
   "tiles": [
     ["mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","g2","g2","g2","g2","s1-5","s1-5","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave-eg","cave ladder 2","cave-eg","cave-eg","cave-eg","mtcb2","mtcb2","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","g2","g2","g2","g2","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5"],
@@ -3338,6 +3339,61 @@
       "key": "mtc1",
       "x": 50,
       "y": 15
+    },
+    {
+      "key": "td1",
+      "x": 4,
+      "y": 10
+    },
+    {
+      "key": "td1",
+      "x": 38,
+      "y": 15
+    },
+    {
+      "key": "td1",
+      "x": 53,
+      "y": 12
+    },
+    {
+      "key": "td1",
+      "x": 56,
+      "y": 8
+    },
+    {
+      "key": "td1",
+      "x": 43,
+      "y": 6
+    },
+    {
+      "key": "td1",
+      "x": 45,
+      "y": 9
+    },
+    {
+      "key": "td1",
+      "x": 43,
+      "y": 13
+    },
+    {
+      "key": "td1",
+      "x": 50,
+      "y": 13
+    },
+    {
+      "key": "td1",
+      "x": 22,
+      "y": 5
+    },
+    {
+      "key": "td1",
+      "x": 19,
+      "y": 10
+    },
+    {
+      "key": "td1",
+      "x": 15,
+      "y": 4
     }
   ],
   "objectLayer": [

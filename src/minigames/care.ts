@@ -5,7 +5,8 @@
  *            standing on a tile of that game's habitat whose encounter filter allows the Pokémon's types.
  *            Chance per step grows as HP drops (CARE_CHANCE_BY_HP), at most once every CARE_COOLDOWN_STEPS steps.
  *   level:   picked by the player from the open levels.
- *   lab:     a lab gate can also ask a hurt Pokémon to play (`findHurtCareGame`, `careChance` on the gate's miniGame).
+ *   spot:    a 'care-spot' interact tile starts a care round with any party Pokémon that has a game (`careSpotGame`);
+ *            a finished round hides the spot for CARE_SPOT_REST_MS (a timestamped flag — `restCareSpot`).
  *   prizes:  clearing the round restores the Pokémon; every win with the level's `prizeStars` also pays the
  *            level's prize (`firstClear`, `threeStar` at 3★) — each time, not once.
  *
@@ -14,6 +15,7 @@
 
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { tileAllowsTypes } from '../systems/encounter.js';
+import { setFlag } from '../systems/game-state.js';
 import type { PlayerData, Pokemon } from '../types/index.js';
 import { prizeStarsOf, resolvePrize, type AwardedPrize } from './progress.js';
 import { MINI_GAME_LIST } from './registry.js';
@@ -86,12 +88,46 @@ export function findCareGame(
   return mostHurt(party, careGames, (p) => tileAllowsTypes(tile.encounterTypes!, p.types));
 }
 
-/** The most hurt party Pokémon (HP low enough to ask, see `careChance`) that has a care game — anywhere (labs). */
+/** The most hurt party Pokémon (HP low enough to ask, see `careChance`) that has a care game — on any tile. */
 export function findHurtCareGame(
   party: readonly Pokemon[],
   games: readonly AnyMiniGameDef[] = MINI_GAME_LIST,
 ): CareMatch | null {
   return mostHurt(party, games.filter(hasCare));
+}
+
+// ── Care spots (interact tile 'care-spot') ──────────────────────────────────
+
+/** How long a spot stays hidden after a finished round. */
+export const CARE_SPOT_REST_MS = 30 * 60 * 1000;
+
+/** Who plays at a care spot: the most hurt Pokémon with a care game, else the first one with a game. */
+export function careSpotGame(
+  party: readonly Pokemon[],
+  games: readonly AnyMiniGameDef[] = MINI_GAME_LIST,
+): CareMatch | null {
+  return findHurtCareGame(party, games) ?? forceCareGame(party, games);
+}
+
+/** The flag that rests a spot (its timestamp says when). */
+export function careSpotFlag(mapId: string, x: number, y: number): string {
+  return `care-spot-${mapId}-${x}-${y}`;
+}
+
+/** True while a used spot is still resting (hidden). */
+export function isCareSpotResting(
+  pd: Pick<PlayerData, 'flags' | 'flagTimestamps'>,
+  flag: string,
+  now = Date.now(),
+): boolean {
+  const at = pd.flagTimestamps?.[flag];
+  return !!pd.flags[flag] && at !== undefined && now - at < CARE_SPOT_REST_MS;
+}
+
+/** A round was played at the spot: rest it from now (re-stamps the flag). */
+export function restCareSpot(pd: PlayerData, flag: string): void {
+  delete pd.flags[flag];
+  setFlag(pd, flag);
 }
 
 /** Admin: the first party Pokémon that has a care game, ignoring HP, tile, chance and cooldown. */
