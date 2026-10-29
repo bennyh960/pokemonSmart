@@ -2,8 +2,19 @@
 
 import { useMemo, type CSSProperties, type ReactNode } from 'react';
 import useGetPokemonSprite from '../../ui-react/hooks/useGetPokemonSprite.js';
-import type { MiniGameTheme, PrizeRarity } from '../types.js';
+import type { Locale } from '../../i18n/i18n.js';
+import type { MiniGameLevel, MiniGameTheme, PrizeRarity } from '../types.js';
 import { miniGameSfx } from './sfx.js';
+
+/** "Level 3", or "Level 1 · Junior" when the level has a name. */
+export function levelTitle(
+  t: (key: string, params?: Record<string, string | number>) => string,
+  level: Pick<MiniGameLevel, 'number' | 'name'>,
+  locale: Locale,
+): string {
+  const n = t('minigames.level', { n: level.number });
+  return level.name ? `${n} · ${level.name[locale]}` : n;
+}
 
 export function themeBackground(theme: MiniGameTheme): CSSProperties {
   return {

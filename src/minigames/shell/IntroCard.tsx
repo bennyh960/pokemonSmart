@@ -2,11 +2,18 @@
 
 import { useEffect, useRef } from 'react';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
-import { getLevelProgress, isLevelUnlocked, replayPrizesLeft, UNLOCK_STARS } from '../progress.js';
-import type { AnyMiniGameDef, MiniGamePrizeDef, MiniGamesSave } from '../types.js';
+import {
+  getLevelProgress,
+  isLevelUnlocked,
+  prizeStarsOf,
+  replayPrizesLeft,
+  slotPrizes,
+  UNLOCK_STARS,
+} from '../progress.js';
+import type { AnyMiniGameDef, MiniGamePrizeSlot, MiniGamesSave } from '../types.js';
 import { useMenuNav } from './hooks.js';
 import { PrizeChip } from './PrizeChip.js';
-import { MgButton, PokemonSprite, StarRow } from './ui.js';
+import { levelTitle, MgButton, PokemonSprite, StarRow } from './ui.js';
 
 interface Props {
   def: AnyMiniGameDef;
@@ -18,10 +25,14 @@ interface Props {
   backLabel: string;
   /** The Pokémon shown as the mascot (the care Pokémon in a care round). */
   pokemonId: number;
-  /** Fixed round (care / building gate): this line replaces the level picker (the level is fixed). */
-  fixedLine?: string;
-  /** False in a care round (it heals instead of giving level prizes). */
-  levelPrizes?: boolean;
+  /** Line shown above the levels (care / building gate / board). */
+  introLine?: string;
+  /** Building gate / board: the caller set the level — no level picker, never locked. */
+  fixedLevel?: boolean;
+  /** Care round: every level is open to pick. */
+  allOpen?: boolean;
+  /** Prizes shown for the selected level: its level prizes, its care-round prizes, or none. */
+  prizes?: 'level' | 'care' | 'none';
 }
 
 export function IntroCard({
@@ -33,8 +44,10 @@ export function IntroCard({
   onBack,
   backLabel,
   pokemonId,
-  fixedLine,
-  levelPrizes = true,
+  introLine,
+  fixedLevel = false,
+  allOpen = false,
+  prizes = 'level',
 }: Props) {
   const { t, locale } = useI18n();
   const levelIndex = Math.max(
@@ -44,14 +57,15 @@ export function IntroCard({
   const level = def.levels[levelIndex];
   const progress = getLevelProgress(save, def.id, level.number);
   // A fixed round's level is set by the caller — never locked
-  const unlocked = !!fixedLine || isLevelUnlocked(save, def.id, level.number);
+  const isOpen = (n: number) => fixedLevel || allOpen || isLevelUnlocked(save, def.id, n);
+  const unlocked = isOpen(level.number);
   const chipsRef = useRef<HTMLDivElement>(null);
 
   useMenuNav({
     id: `mg-intro-${def.id}`,
-    count: fixedLine ? 1 : def.levels.length,
-    index: fixedLine ? 0 : levelIndex,
-    onIndexChange: (i) => !fixedLine && onLevelChange(def.levels[i].number),
+    count: fixedLevel ? 1 : def.levels.length,
+    index: fixedLevel ? 0 : levelIndex,
+    onIndexChange: (i) => !fixedLevel && onLevelChange(def.levels[i].number),
     axis: 'both',
     onSelect: () => unlocked && onPlay(),
     onBack,
@@ -65,9 +79,22 @@ export function IntroCard({
     });
   }, [level.number]);
 
-  const toWin: { kind: string; prize: MiniGamePrizeDef }[] = [];
-  if (progress.clears === 0) toWin.push({ kind: 'firstClear', prize: level.rewards.firstClear });
-  if (progress.stars < 3) toWin.push({ kind: 'threeStar', prize: level.rewards.threeStar });
+  // Prizes still to win (level prizes) or paid on every win (care round), one row per star goal
+  const need = prizeStarsOf(level);
+  const stars = (n: number) => '★'.repeat(n);
+  const rows: { label: string; slot: MiniGamePrizeSlot }[] = [];
+  if (prizes === 'care') {
+    if (need < 3)
+      rows.push({ label: t('minigames.care.prizeRow', { stars: stars(need) }), slot: level.rewards.firstClear });
+    rows.push({ label: t('minigames.care.prizeRow', { stars: stars(3) }), slot: level.rewards.threeStar });
+  } else if (prizes === 'level') {
+    if (progress.stars < need)
+      rows.push({
+        label: need > 1 ? t('minigames.prize.firstStars', { stars: stars(need) }) : t('minigames.prize.firstClear'),
+        slot: level.rewards.firstClear,
+      });
+    if (progress.stars < 3) rows.push({ label: t('minigames.prize.threeStar'), slot: level.rewards.threeStar });
+  }
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
@@ -97,17 +124,19 @@ export function IntroCard({
           </div>
         </div>
 
-        {fixedLine && (
+        {introLine && (
           <p className="mg-pop-in mg-glass rounded-3xl px-5 py-4 text-center text-xl font-black text-white shadow-xl">
-            {fixedLine}
+            {introLine}
           </p>
         )}
 
+        {!fixedLevel && <h2 className="-mb-2 text-lg font-black text-white/90">{t('minigames.pickLevel')}</h2>}
+
         {/* Level chips */}
-        <div ref={chipsRef} className={`-mx-4 flex gap-3 overflow-x-auto px-4 pt-1 pb-3 ${fixedLine ? 'hidden' : ''}`}>
+        <div ref={chipsRef} className={`-mx-4 flex gap-3 overflow-x-auto px-4 pt-1 pb-3 ${fixedLevel ? 'hidden' : ''}`}>
           {def.levels.map((l, i) => {
             const lp = getLevelProgress(save, def.id, l.number);
-            const open = isLevelUnlocked(save, def.id, l.number);
+            const open = isOpen(l.number);
             const selected = l.number === level.number;
             return (
               <button
@@ -126,6 +155,7 @@ export function IntroCard({
                 aria-label={t('minigames.level', { n: l.number })}
               >
                 <span className="text-2xl font-black leading-none">{open ? l.number : '🔒'}</span>
+                {l.short && <span className="text-xs font-black leading-none">{l.short[locale]}</span>}
                 <StarRow stars={lp.stars} size="text-sm" />
               </button>
             );
@@ -135,9 +165,7 @@ export function IntroCard({
         {/* Selected level */}
         <div key={level.number} className="mg-slide-up mg-glass rounded-3xl p-5 text-white shadow-xl">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-2xl font-black">
-              {t('minigames.level', { n: level.number })} · {level.name[locale]}
-            </h2>
+            <h2 className="text-2xl font-black">{levelTitle(t, level, locale)}</h2>
             {progress.best > 0 && (
               <span className="text-sm font-bold text-white/85">{t('minigames.best', { score: progress.best })}</span>
             )}
@@ -148,13 +176,20 @@ export function IntroCard({
             <p className="mt-3 rounded-2xl bg-black/25 px-4 py-3 text-center text-lg font-black">
               🔒 {t('minigames.locked', { stars: UNLOCK_STARS, n: level.number - 1 })}
             </p>
-          ) : !levelPrizes ? null : (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {toWin.map(({ kind, prize }) => (
-                <PrizeChip key={kind} label={t(`minigames.prize.${kind}`)} prize={prize} />
+          ) : prizes === 'none' ? null : (
+            <div className="mt-3 flex flex-col gap-3">
+              {rows.map(({ label, slot }) => (
+                <div key={label}>
+                  <p className="text-sm font-bold text-white/85">{label}</p>
+                  <div className="mt-1.5 flex flex-wrap gap-2">
+                    {slotPrizes(slot).map((prize, i) => (
+                      <PrizeChip key={i} prize={prize} />
+                    ))}
+                  </div>
+                </div>
               ))}
-              {toWin.length === 0 && (
-                <span className="rounded-full bg-black/20 px-3 py-1 text-sm font-bold">
+              {prizes === 'level' && rows.length === 0 && (
+                <span className="self-start rounded-full bg-black/20 px-3 py-1 text-sm font-bold">
                   {t('minigames.replayLeft', { n: replayPrizesLeft(save, def.id, new Date()) })}
                 </span>
               )}

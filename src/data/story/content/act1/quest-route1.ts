@@ -3,14 +3,13 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * QUESTS:   main-act1-route1, main-act1-gate
  * GATES:    gate-route1-sumville (Route 1 → Sumville checkpoint)
- *           gate-sumville-route2 (Sumville → Route 2 checkpoint)
  *
  * STORY BEATS (in order):
  *   1. Player reaches Route 1 exit NPC → NULL-X intro cutscene (first warning)
  *   2. Player reaches the gate checkpoint → math questions (5 required)
  *   3. Gate cleared → quest advances to Sumville
  *
- * FLAGS SET: ACT1_NULLX_INTRO_SEEN, GATE_ROUTE1_PASS, GATE_SUMVILLE_ROUTE2_PASS
+ * FLAGS SET: ACT1_NULLX_INTRO_SEEN, GATE_ROUTE1_PASS
  * FLAGS READ: ACT0_COMPLETE, ACT1_NULLX_INTRO_SEEN, GATE_ROUTE1_PASS
  *
  * MAP IDs:  'route-1'   (NPC id: 'route1-exit-npc' placed near the gate)
@@ -38,12 +37,13 @@ registerQuest({
 });
 
 // ── Gates ─────────────────────────────────────────────────────────────────────
-// this gate is on sumvile placed but its ok we can write it here
+// The guard stands in Sumville (map sumville/sumville), guarding the Route 1 side.
+// Success actions run on every pass — the one-time quest step lives in evt-gate-route1-cleared.
 registerGate({
   id: 'gate-route1-sumville',
   title: { en: 'Route 1 Checkpoint', he: 'מחסום שביל 1' },
   description: {
-    en: 'The path to Sumville is locked. We must identify you are not NULL-X creators. Three questions will determine if you can pass. Choose wisely.',
+    en: 'The path Sumville-Route1 is locked. We must identify you are not NULL-X creators. Questions will determine if you can pass. Choose wisely.',
     he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
   },
   triggerType: 'route-checkpoint',
@@ -51,16 +51,11 @@ registerGate({
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
     questionsRequired: 5,
-    timeLimitPerQuestion: 120,
-    rewardThreshold: 0.8,
-    rewards: [{ type: 'money', amount: 500 }],
-    penaltyAmount: 1250,
+    inputQuestions: { count: 2 },
+    penaltyAmount: 150,
   },
-  reopenCooldownMs: 1000 * 60 * 15, // 15 min cooldown to retry if failed
-  successActions: [
-    { type: 'set-flag', flag: FLAGS.GATE_ROUTE1_PASS },
-    { type: 'set-quest', questId: 'main-act1-sumville' },
-  ],
+  reopenCooldownMs: 45 * 60 * 1000,
+  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_ROUTE1_PASS }],
 });
 
 // ── Cutscenes ─────────────────────────────────────────────────────────────────

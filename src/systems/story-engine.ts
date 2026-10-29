@@ -225,7 +225,11 @@ export async function fireStoryTrigger(trigger: StoryTrigger): Promise<void> {
 /** The player's pass for a gate: undefined = none, 0 = permanent, otherwise expiry (epoch ms). */
 export function getGatePassExpiry(gateId: string): number | undefined {
   if (!hasActiveGame()) return undefined;
-  return getPlayerData().story?.gateUnlocks[gateId];
+  const expiry = getPlayerData().story?.gateUnlocks[gateId];
+  // A permanent pass holds only while the gate is still permanent — a gate later given a
+  // cooldown locks again for saves that passed it back then.
+  if (expiry === 0 && GATES[gateId]?.reopenCooldownMs) return undefined;
+  return expiry;
 }
 
 /** Check if a gate is currently unlocked (timed pass still active). */

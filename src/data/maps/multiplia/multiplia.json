@@ -197,7 +197,7 @@
       "interactRange": 2,
       "gateId": "gate-route6-multiplia",
       "light": {
-        "x": 39,
+        "x": 38,
         "y": 2
       }
     },
@@ -10996,11 +10996,6 @@
       "key": "t4",
       "x": 19,
       "y": 40
-    },
-    {
-      "key": "f1-4",
-      "x": 38,
-      "y": 2
     },
     {
       "key": "f1-5",

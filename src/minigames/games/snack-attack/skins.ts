@@ -38,6 +38,7 @@ export interface SnackText {
   hintAdd: Bilingual;
   hintSub: Bilingual;
   hintTimes: Bilingual;
+  hintDiv: Bilingual;
 }
 
 /** The hazard is of this type: a Pokémon that has it eats the hazard for points instead (see sim `hazardFriendly`). */
@@ -89,12 +90,13 @@ export const SNORLAX_SKIN: SnackSkin = {
     hazard: { en: 'Yuck! Rotten!', he: 'איכס! רקוב!' },
     feverStart: { en: 'Golden Berry! FEVER!', he: 'פרי זהב! קדחת!' },
     hintMove: { en: '← → or drag {name}', he: '← → או לגרור את {name}' },
-    hintAdd: { en: 'Eat berries that add up to the belly number!', he: 'אוכלים פירות שמסתכמים במספר שעל הבטן!' },
+    hintAdd: { en: 'Eat berries that add up to the number at the top!', he: 'אוכלים פירות שמסתכמים במספר שלמעלה!' },
     hintSub: { en: 'Blue berries take away!', he: 'פירות כחולים מורידים!' },
     hintTimes: {
-      en: 'Eat 2 berries that multiply to the belly number!',
-      he: 'אוכלים 2 פירות שמכפלתם היא המספר שעל הבטן!',
+      en: 'Eat 2 berries that multiply to the number at the top!',
+      he: 'אוכלים 2 פירות שמכפלתם היא המספר שלמעלה!',
     },
+    hintDiv: { en: 'Eat the berry that divides the number!', he: 'אוכלים את הפרי שמחלק את המספר!' },
   },
 };
 
@@ -132,6 +134,7 @@ export const BULBASAUR_SKIN: SnackSkin = {
     hintAdd: { en: 'Catch sun drops that add up to the number!', he: 'תופסים טיפות שמש שמסתכמות במספר!' },
     hintSub: { en: 'Grey clouds take away!', he: 'עננים אפורים מורידים!' },
     hintTimes: { en: 'Catch 2 sun drops that multiply to the number!', he: 'תופסים 2 טיפות שמש שמכפלתן היא המספר!' },
+    hintDiv: { en: 'Catch the sun drop that divides the number!', he: 'תופסים את טיפת השמש שמחלקת את המספר!' },
   },
   // The whole Bulbasaur line is Poison: spores are a treat
   hazardFriend: {
@@ -178,6 +181,7 @@ export const CHARMANDER_SKIN: SnackSkin = {
     hintAdd: { en: 'Catch embers that add up to the number!', he: 'תופסים גחלים שמסתכמות במספר!' },
     hintSub: { en: 'Smoke puffs take away!', he: 'ענני עשן מורידים!' },
     hintTimes: { en: 'Catch 2 embers that multiply to the number!', he: 'תופסים 2 גחלים שמכפלתן היא המספר!' },
+    hintDiv: { en: 'Catch the ember that divides the number!', he: 'תופסים את הגחלת שמחלקת את המספר!' },
   },
 };
 
@@ -219,6 +223,7 @@ export const SQUIRTLE_SKIN: SnackSkin = {
     },
     hintSub: { en: 'Whirlpools take away!', he: 'מערבולות מורידות!' },
     hintTimes: { en: 'Grab 2 bubbles that multiply to the number!', he: 'תופסים 2 בועות שמכפלתן היא המספר!' },
+    hintDiv: { en: 'Grab the bubble that divides the number!', he: 'תופסים את הבועה שמחלקת את המספר!' },
   },
 };
 
@@ -257,6 +262,7 @@ export const PIKACHU_SKIN: SnackSkin = {
     hintAdd: { en: 'Catch bolts that add up to the number!', he: 'תופסים ברקים שמסתכמים במספר!' },
     hintSub: { en: 'Purple bolts take away!', he: 'ברקים סגולים מורידים!' },
     hintTimes: { en: 'Catch 2 bolts that multiply to the number!', he: 'תופסים 2 ברקים שמכפלתם היא המספר!' },
+    hintDiv: { en: 'Catch the bolt that divides the number!', he: 'תופסים את הברק שמחלק את המספר!' },
   },
 };
 
@@ -264,4 +270,5 @@ export const PIKACHU_SKIN: SnackSkin = {
 export const STR = {
   fever: { en: 'FEVER ×2', he: 'קדחת ×2' },
   takeAway: { en: 'Take away!', he: 'להוריד!' },
+  addUp: { en: 'Add up!', he: 'לחבר!' },
 } satisfies Record<string, Bilingual>;

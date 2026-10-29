@@ -7,11 +7,13 @@
  * state and returns the events of that frame (eat / burp / ache / rotten / fever…) for juice + HUD.
  *
  * Rules
- * - Every target has a start value (the belly) and a target. Berries move the belly by their value
- *   (blue berries are negative). Landing exactly on the target = BURP. Jumping past it = tummy ache
- *   (belly back to the start, combo 0). For "take away" targets (start above target) jumping below is the ache.
+ * - Every target has an op (config `ops`), a start value (the belly) and a target.
+ * - add / sub: berries move the belly by their value (blue berries are negative). Landing exactly on the
+ *   target = BURP. Jumping past it = tummy ache (belly back to the start, combo 0). For "take away" (sub)
+ *   targets the belly starts above the target and jumping below is the ache.
  * - times: the target is a product; eat 2 berries whose product is the target. A first berry that can't be one
  *   of the 2 factors, or a wrong second berry, is a tummy ache.
+ * - div: the belly starts at a product; eat the one berry that divides it down to the target. Any other is an ache.
  * - Rotten berries cost a heart, Golden berries start Fever (score ×2, faster spawns).
  *   With `hazardFriendly` (the player shares the hazard's type, e.g. a Poison Bulbasaur and poison spores)
  *   a rotten berry is a snack instead: points, no heart lost, the combo stays.
@@ -20,7 +22,7 @@
  * without passing it, or the missing factor) in the reachable upper part of the screen at all times.
  */
 
-import type { SnackConfig } from './config.js';
+import type { SnackConfig, SnackOp } from './config.js';
 
 // ── Tuning ──────────────────────────────────────────────────────────────────
 
@@ -43,11 +45,21 @@ const MAX_BERRIES = 7;
 /** Minimum time between two forced (solution) spawns. */
 const FORCED_GAP = 0.35;
 
-export const SPEEDS = {
-  slow: { fall: 0.2, spawn: 1.25, rotten: 0.07 },
-  medium: { fall: 0.26, spawn: 1.0, rotten: 0.1 },
-  fast: { fall: 0.3, spawn: 0.95, rotten: 0.12 },
-} as const;
+/** Top speed (pace 1): fall in screens/s, seconds between spawns, rotten chance per spawn. */
+const TOP_SPEED = { fall: 0.3, spawn: 0.95, rotten: 0.12 };
+/** The slowest pace a level uses, and its spawn gap / rotten chance (slow levels drop items a bit more often). */
+export const MIN_PACE = 0.4;
+const SLOWEST = { spawn: 1.5, rotten: 0.05 };
+
+/** Fall speed (pace × top) and spawn gap / rotten chance (eased between slowest and top) of a pace. */
+export function speedOf(pace: number): { fall: number; spawn: number; rotten: number } {
+  const k = Math.max(0, Math.min(1, (pace - MIN_PACE) / (1 - MIN_PACE)));
+  return {
+    fall: TOP_SPEED.fall * pace,
+    spawn: SLOWEST.spawn + (TOP_SPEED.spawn - SLOWEST.spawn) * k,
+    rotten: SLOWEST.rotten + (TOP_SPEED.rotten - SLOWEST.rotten) * k,
+  };
+}
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -80,7 +92,7 @@ export type SimEvent =
   | { type: 'hazard-snack'; berry: Berry; points: number }
   | { type: 'golden'; berry: Berry }
   | { type: 'fever-end' }
-  | { type: 'new-target'; target: number; start: number }
+  | { type: 'new-target'; op: SnackOp; target: number; start: number }
   | { type: 'game-over' };
 
 export interface SimOptions {
@@ -100,7 +112,9 @@ export interface SimState {
   facing: -1 | 1;
   /** The player moved during the last step (walk animation). */
   moving: boolean;
-  /** Belly value (add modes) — for times this is the product of the eaten factors (1 before any). */
+  /** The op of the current target. */
+  op: SnackOp;
+  /** Belly value (add / sub / div) — for times this is the product of the eaten factors (1 before any). */
   belly: number;
   start: number;
   target: number;
@@ -155,46 +169,49 @@ export function factorPairs(config: SnackConfig, target: number): [number, numbe
   return pairs;
 }
 
-/** The products a times level asks for: table 2..maxTable × 2..berryMax, inside targetMin..targetMax. */
+/** The products a times level asks for: table 2..maxTable × 2..berryMax. */
 export function timesTargets(config: SnackConfig): number[] {
   const maxTable = config.maxTable ?? config.berryMax;
   const set = new Set<number>();
-  for (let a = 2; a <= maxTable; a++) {
-    for (let b = 2; b <= config.berryMax; b++) {
-      const p = a * b;
-      if (p >= config.targetMin && p <= config.targetMax) set.add(p);
-    }
-  }
+  for (let a = 2; a <= maxTable; a++) for (let b = 2; b <= config.berryMax; b++) set.add(a * b);
   return [...set].sort((x, y) => x - y);
 }
 
-/** Picks the next { start, target } — never the same target twice in a row. */
+/** Picks the next { op, start, target } from the level's ops — never the same target twice in a row. */
 export function pickTarget(
   config: SnackConfig,
   rng: () => number,
   previous?: number,
-): { start: number; target: number } {
+): { op: SnackOp; start: number; target: number } {
   for (let tries = 0; tries < 20; tries++) {
+    const op = pick(rng, config.ops);
     let start = 0;
     let target: number;
-    if (config.math === 'times') {
+    if (op === 'times') {
       target = pick(rng, timesTargets(config));
       start = 1;
+    } else if (op === 'div') {
+      // start = divisor × target: the divisor (a small table) is the berry to catch
+      const divisor = randInt(rng, 2, config.maxTable ?? config.berryMax);
+      target = randInt(rng, 2, config.berryMax);
+      start = divisor * target;
     } else {
       target = randInt(rng, config.targetMin, config.targetMax);
-      // add-sub: half the targets start with a full belly — eat blue berries to come down to the target
-      if (config.math === 'add-sub' && rng() < 0.5) start = target + randInt(rng, 3, Math.min(12, config.berryMax * 2));
+      // sub: start with a full belly — eat blue berries to come down to the target
+      if (op === 'sub') start = target + randInt(rng, 3, Math.min(12, config.berryMax * 2));
     }
-    if (target !== previous || tries === 19) return { start, target };
+    if (target !== previous || tries === 19) return { op, start, target };
   }
   /* c8 ignore next */
-  return { start: 0, target: config.targetMin };
+  return { op: 'add', start: 0, target: config.targetMin };
 }
 
+type TargetView = Pick<SimState, 'config' | 'op' | 'belly' | 'start' | 'target' | 'factors'>;
+
 /** Signed berry values that are a correct next bite right now. */
-export function usefulValues(s: Pick<SimState, 'config' | 'belly' | 'start' | 'target' | 'factors'>): number[] {
+export function usefulValues(s: TargetView): number[] {
   const { config } = s;
-  if (config.math === 'times') {
+  if (s.op === 'times') {
     if (s.factors.length === 0) {
       const vals = new Set<number>();
       for (const [a, b] of factorPairs(config, s.target)) vals.add(a).add(b);
@@ -203,6 +220,7 @@ export function usefulValues(s: Pick<SimState, 'config' | 'belly' | 'start' | 't
     const need = s.target / s.factors[0];
     return Number.isInteger(need) && need >= config.berryMin && need <= config.berryMax ? [need] : [];
   }
+  if (s.op === 'div') return [s.start / s.target];
   const rest = s.target - s.belly;
   const sign = Math.sign(rest);
   const out: number[] = [];
@@ -211,16 +229,18 @@ export function usefulValues(s: Pick<SimState, 'config' | 'belly' | 'start' | 't
 }
 
 /** The value that finishes the target in one bite, if a berry can carry it. */
-export function finisherValue(s: Pick<SimState, 'config' | 'belly' | 'start' | 'target' | 'factors'>): number | null {
+export function finisherValue(s: TargetView): number | null {
   const vals = usefulValues(s);
-  if (s.config.math === 'times') return s.factors.length === 1 ? (vals[0] ?? null) : null;
+  if (s.op === 'times') return s.factors.length === 1 ? (vals[0] ?? null) : null;
+  if (s.op === 'div') return vals[0];
   const rest = s.target - s.belly;
   return vals.includes(rest) ? rest : null;
 }
 
-/** 0..1 — how full the meter is for the current target. */
-export function bellyFill(s: Pick<SimState, 'config' | 'belly' | 'start' | 'target' | 'factors'>): number {
-  if (s.config.math === 'times') return s.factors.length / 2;
+/** 0..1 — how far the current target is done. */
+export function bellyFill(s: TargetView): number {
+  if (s.op === 'times') return s.factors.length / 2;
+  if (s.op === 'div') return 0;
   const span = s.target - s.start;
   if (span === 0) return 1;
   return Math.max(0, Math.min(1, (s.belly - s.start) / span));
@@ -230,9 +250,10 @@ export function bellyFill(s: Pick<SimState, 'config' | 'belly' | 'start' | 'targ
 
 export function createSim(config: SnackConfig, seed: number, options: SimOptions = {}): SimState {
   const rng = mulberry32(seed);
-  const { start, target } = pickTarget(config, rng);
+  const { op, start, target } = pickTarget(config, rng);
   return {
     config,
+    op,
     hazardFriendly: options.hazardFriendly ?? false,
     rng,
     time: 0,
@@ -293,7 +314,7 @@ function spawnX(s: SimState): number {
 }
 
 function addBerry(s: SimState, kind: BerryKind, value: number): Berry {
-  const fall = SPEEDS[s.config.speed].fall * (s.config.fallScale ?? 1);
+  const fall = speedOf(s.config.pace).fall * (s.config.fallScale ?? 1);
   const ramp = 1 + Math.min(1, s.time / s.config.roundSeconds) * 0.15; // a little faster as the round goes on
   const berry: Berry = {
     id: s.nextId++,
@@ -312,10 +333,12 @@ function kindFor(value: number): BerryKind {
   return value < 0 ? 'minus' : 'normal';
 }
 
-/** A random distractor value (any value the level uses). */
+/** A random distractor value (any value the level uses): all minus on a take-away-only level. */
 function randomValue(s: SimState): number {
   const v = randInt(s.rng, s.config.berryMin, s.config.berryMax);
-  return s.config.math === 'add-sub' && s.rng() < 0.45 ? -v : v;
+  const { ops } = s.config;
+  if (!ops.includes('sub')) return v;
+  return ops.length === 1 || s.rng() < 0.45 ? -v : v;
 }
 
 /** Spawns one berry that is a correct next bite (the finisher half the time, when one exists). */
@@ -333,7 +356,7 @@ export function spawnRegular(s: SimState): Berry {
     s.goldenTimer = goldenDelay(s.config, s.rng);
     return addBerry(s, 'golden', 0);
   }
-  if (s.rng() < SPEEDS[s.config.speed].rotten * (s.config.hazardScale ?? 1)) return addBerry(s, 'rotten', 0);
+  if (s.rng() < speedOf(s.config.pace).rotten * (s.config.hazardScale ?? 1)) return addBerry(s, 'rotten', 0);
   if (s.rng() < 0.45) {
     const b = spawnUseful(s);
     if (b) return b;
@@ -345,12 +368,13 @@ export function spawnRegular(s: SimState): Berry {
 // ── Eating ──────────────────────────────────────────────────────────────────
 
 function nextTarget(s: SimState, events: SimEvent[]): void {
-  const { start, target } = pickTarget(s.config, s.rng, s.target);
+  const { op, start, target } = pickTarget(s.config, s.rng, s.target);
+  s.op = op;
   s.start = start;
   s.target = target;
   s.belly = start;
   s.factors = [];
-  events.push({ type: 'new-target', target, start });
+  events.push({ type: 'new-target', op, target, start });
 }
 
 function burp(s: SimState, berry: Berry, events: SimEvent[]): void {
@@ -394,7 +418,18 @@ export function eatBerry(s: SimState, berry: Berry, events: SimEvent[] = []): Si
     return events;
   }
 
-  if (s.config.math === 'times') {
+  if (s.op === 'div') {
+    if (berry.value !== s.start / s.target) {
+      ache(s, berry, events);
+      return events;
+    }
+    s.belly = s.target;
+    events.push({ type: 'eat', berry, belly: s.belly });
+    burp(s, berry, events);
+    return events;
+  }
+
+  if (s.op === 'times') {
     const ok = usefulValues(s).includes(berry.value);
     if (!ok) {
       ache(s, berry, events);
@@ -475,7 +510,7 @@ export function stepSim(s: SimState, dt: number, input: SimInput): SimEvent[] {
   s.spawnTimer -= dt * (s.fever > 0 ? 1 / FEVER_SPAWN_FACTOR : 1);
   const solvable = hasReachableSolution(s);
   if (s.spawnTimer <= 0) {
-    s.spawnTimer += SPEEDS[s.config.speed].spawn;
+    s.spawnTimer += speedOf(s.config.pace).spawn;
     // If nothing useful is falling, this spawn is the solution — never a wasted slot
     if (!solvable && spawnUseful(s)) s.lastForced = s.time;
     else if (s.berries.length < MAX_BERRIES) spawnRegular(s);

@@ -3,7 +3,7 @@
  *
  *   - level N+1 unlocks with ≥ UNLOCK_STARS on level N; level 1 is always open
  *   - recordResult() keeps the best stars / score, counts clears and picks the prizes:
- *       firstClear — once, the first clear (≥1★)
+ *       firstClear — once, the first clear with the level's `prizeStars` (default 1★)
  *       threeStar  — once, the first time the level reaches 3★
  *       replay     — a clear that earned neither, capped REPLAY_DAILY_CAP per game per day
  */
@@ -14,7 +14,9 @@ import type {
   DialogueReward,
   MiniGameId,
   MiniGameLevelProgress,
+  MiniGameLevel,
   MiniGamePrizeDef,
+  MiniGamePrizeSlot,
   MiniGameProgress,
   MiniGameResult,
   MiniGamesSave,
@@ -89,14 +91,26 @@ export function replayPrizesLeft(save: MiniGamesSave, gameId: MiniGameId, now: D
   return Math.max(0, REPLAY_DAILY_CAP - used);
 }
 
-/** Turns a prize def into a concrete reward (a random pick for `oneOf`). */
+/** Every prize of a slot (one prize, or a list to pick from). */
+export function slotPrizes(slot: MiniGamePrizeSlot): readonly MiniGamePrizeDef[] {
+  return Array.isArray(slot) ? slot : [slot as MiniGamePrizeDef];
+}
+
+/** Fewest stars that earn a prize on this level. */
+export function prizeStarsOf(level: Pick<MiniGameLevel, 'prizeStars'>): Stars {
+  return level.prizeStars ?? 1;
+}
+
+/** Turns a prize slot into a concrete reward (a random pick for a list, then for `oneOf`). */
 export function resolvePrize(
-  def: MiniGamePrizeDef,
+  slot: MiniGamePrizeSlot,
   rng: () => number = Math.random,
 ): {
   rarity: PrizeRarity;
   reward: DialogueReward;
 } {
+  const all = slotPrizes(slot);
+  const def = all[Math.min(all.length - 1, Math.floor(rng() * all.length))];
   if ('oneOf' in def) {
     const i = Math.min(def.oneOf.length - 1, Math.floor(rng() * def.oneOf.length));
     return { rarity: def.rarity, reward: def.oneOf[i] };
@@ -167,8 +181,9 @@ export function recordResult(
   game.lastPlayed = now.toISOString();
 
   const prizes: AwardedPrize[] = [];
-  if (cleared && options.levelPrizes !== false) {
-    if (previous.clears === 0) prizes.push({ kind: 'firstClear', ...resolvePrize(levelDef.rewards.firstClear, rng) });
+  const need = prizeStarsOf(levelDef);
+  if (stars >= need && options.levelPrizes !== false) {
+    if (previous.stars < need) prizes.push({ kind: 'firstClear', ...resolvePrize(levelDef.rewards.firstClear, rng) });
     if (stars === 3 && previous.stars < 3) {
       prizes.push({ kind: 'threeStar', ...resolvePrize(levelDef.rewards.threeStar, rng) });
     }

@@ -4,14 +4,14 @@
  * The skin (skins.ts) decides what falls, the scenery and the texts; `pokemonId` is the Pokémon playing.
  */
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react';
 import { getCharacterFrame, getWildPokemonCharacterId, type SpriteFrame } from '../../../engine/character-sprites.js';
 import { getPokemon, getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { anyKeyDown, useReducedMotion } from '../../shell/hooks.js';
 import { PokemonSprite } from '../../shell/ui.js';
 import type { MiniGameProps } from '../../types.js';
-import type { SnackConfig } from './config.js';
+import type { SnackConfig, SnackOp } from './config.js';
 import {
   BERRY_R,
   PLAYER_HALF_W,
@@ -24,7 +24,7 @@ import {
   type SimEvent,
   type SimState,
 } from './sim.js';
-import { STR, type ItemLook, type SceneryId, type SnackSkin } from './skins.js';
+import { STR, type ItemLook, type SceneryId, type SnackSkin, type SnackText } from './skins.js';
 import './snack-attack.css';
 
 const LEFT_KEYS = ['ArrowLeft', 'KeyA'];
@@ -33,6 +33,12 @@ const HINT_SECONDS = 4.5;
 /** The play field keeps a portrait-ish shape on wide screens so berries stay reachable. */
 const FIELD_ASPECT = 0.85;
 const FIELD_MAX_W = 640;
+const HINT_OF: Record<SnackOp, keyof SnackText> = {
+  add: 'hintAdd',
+  sub: 'hintSub',
+  times: 'hintTimes',
+  div: 'hintDiv',
+};
 
 interface Juice {
   eat: number;
@@ -152,7 +158,8 @@ export function SnackAttackGame({
         case 'eat': {
           setJuice((j) => ({ ...j, eat: j.eat + 1 }));
           const v = ev.berry.value;
-          if (s.config.math === 'times') h.floatText(`×${v}`, { ...mouth(), color: '#fde68a' });
+          if (s.op === 'times') h.floatText(`×${v}`, { ...mouth(), color: '#fde68a' });
+          else if (s.op === 'div') h.floatText(`÷${v}`, { ...mouth(), color: '#fde68a' });
           else h.floatText(v < 0 ? `−${-v}` : `+${v}`, { ...mouth(), color: v < 0 ? '#93c5fd' : '#fde68a' });
           fx.tap();
           break;
@@ -225,11 +232,11 @@ export function SnackAttackGame({
   const fever = sim.fever > 0;
   const fill = bellyFill(sim);
   const showHint = sim.time < HINT_SECONDS;
-  const hintLine =
-    config.math === 'times' ? skin.text.hintTimes : config.math === 'add-sub' ? skin.text.hintSub : skin.text.hintAdd;
-  const takeAway = sim.start > sim.target;
+  const hintLine = skin.text[HINT_OF[sim.op]];
   const lookOf = (b: Berry): ItemLook =>
-    b.kind === 'rotten' && hazardFriendly && friend ? { ...skin.items.rotten, decor: friend.decor } : skin.items[b.kind];
+    b.kind === 'rotten' && hazardFriendly && friend
+      ? { ...skin.items.rotten, decor: friend.decor }
+      : skin.items[b.kind];
 
   return (
     <div
@@ -257,21 +264,21 @@ export function SnackAttackGame({
             fever={fever}
             juice={juice}
             reduced={reduced}
-            takeAwayLabel={takeAway ? STR.takeAway[locale] : null}
           />
         </div>
       )}
 
-      {fever && (
-        <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-center">
+      <div className="pointer-events-none absolute inset-x-0 top-2 flex flex-col items-center gap-2">
+        <SumPanel sim={sim} fill={fill} fever={fever} juice={juice} reduced={reduced} />
+        {fever && (
           <div className="mg-pop-in rounded-full bg-yellow-300 px-5 py-1.5 text-lg font-black text-amber-900 shadow-lg">
             {STR.fever[locale]}
             <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-amber-900/20">
               <div className="h-full rounded-full bg-amber-600" style={{ width: `${(sim.fever / 5) * 100}%` }} />
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {showHint && (
         <div
@@ -371,7 +378,6 @@ interface PlayerViewProps {
   fever: boolean;
   juice: Juice;
   reduced: boolean;
-  takeAwayLabel: string | null;
 }
 
 const WALK_CYCLE = ['walk-1', 'stand', 'walk-2', 'stand'] as const;
@@ -423,10 +429,8 @@ function OverworldFrame({ frame, width }: { frame: SpriteFrame; width: number })
   );
 }
 
-function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced, takeAwayLabel }: PlayerViewProps) {
+function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced }: PlayerViewProps) {
   const w = PLAYER_HALF_W * 2 * fieldW * 1.6; // the sprite has transparent margins
-  const belly = sim.config.math === 'times' ? timesBubble(sim) : `${sim.belly}`;
-  const ringColor = fever ? '#facc15' : fill >= 1 ? '#22c55e' : '#f97316';
   // Each wrapper is keyed by its juice counter: remounting it replays its CSS animation
   const wobble = !reduced && juice.ache > 0 ? 'mg-snack-wobble' : '';
   return (
@@ -434,23 +438,6 @@ function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced, ta
       className="pointer-events-none absolute"
       style={{ left: sim.playerX * fieldW, top: PLAYER_Y * h, width: w, transform: 'translate(-50%, -50%)' }}
     >
-      {/* current belly count */}
-      <div className="absolute inset-x-0 flex justify-center" style={{ bottom: '92%' }}>
-        <div className="flex flex-col items-center">
-          {takeAwayLabel && (
-            <span className="mb-0.5 rounded-full bg-blue-600 px-2 text-xs font-black text-white shadow">
-              {takeAwayLabel}
-            </span>
-          )}
-          <span
-            key={`b${juice.eat}-${juice.ache}`}
-            className={`rounded-2xl bg-white px-3 py-0.5 text-xl font-black text-slate-800 shadow-lg ${reduced ? '' : 'mg-bump'}`}
-          >
-            {belly}
-          </span>
-        </div>
-      </div>
-
       <div key={`w${juice.ache}`} className={wobble}>
         <div key={`burp${juice.burp}`} className={!reduced && juice.burp > 0 ? 'mg-snack-bounce' : ''}>
           <div key={`eat${juice.eat}`} className={!reduced && juice.eat > 0 ? 'mg-snack-squash' : ''}>
@@ -465,25 +452,6 @@ function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced, ta
               }}
             >
               <PlayerSprite sim={sim} pokemonId={pokemonId} width={w} />
-              {/* target with a fill ring */}
-              <div
-                key={`t${juice.target}`}
-                className={`absolute left-1/2 flex items-center justify-center rounded-full ${reduced ? '' : 'mg-pop-in'}`}
-                style={{
-                  top: '58%',
-                  width: w * 0.42,
-                  height: w * 0.42,
-                  transform: 'translate(-50%, -50%)',
-                  background: `conic-gradient(${ringColor} ${fill * 360}deg, rgba(255,255,255,0.35) 0deg)`,
-                }}
-              >
-                <div
-                  className="flex items-center justify-center rounded-full bg-amber-50 font-black text-slate-800"
-                  style={{ width: '78%', height: '78%', fontSize: w * 0.17 }}
-                >
-                  {sim.target}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -492,9 +460,82 @@ function PlayerView({ sim, pokemonId, fieldW, h, fill, fever, juice, reduced, ta
   );
 }
 
-function timesBubble(sim: SimState): string {
-  if (sim.factors.length === 0) return '? × ?';
-  return `${sim.factors[0]} × ?`;
+/**
+ * The sum to solve, at the top of the field (never on the Pokémon):
+ * add / sub "7 → 12" under an "Add up!" / "Take away!" arrow, times "4 × ? = 24", div "24 ÷ ? = 6".
+ */
+function SumPanel({
+  sim,
+  fill,
+  fever,
+  juice,
+  reduced,
+}: {
+  sim: SimState;
+  fill: number;
+  fever: boolean;
+  juice: Juice;
+  reduced: boolean;
+}) {
+  const { locale } = useI18n();
+  const bump = reduced ? '' : 'mg-bump';
+  const now = (text: string) => (
+    <span key={`b${juice.eat}-${juice.ache}`} className={`inline-block rounded-xl bg-slate-100 px-2 ${bump}`}>
+      {text}
+    </span>
+  );
+  const goal = <span className="rounded-xl bg-amber-300 px-2 text-amber-950">{sim.target}</span>;
+  const q = <span className="text-slate-400">?</span>;
+
+  let label: { text: string; color: string } | null = null;
+  let sum: ReactNode;
+  if (sim.op === 'times') {
+    sum = (
+      <>
+        {sim.factors.length ? now(`${sim.factors[0]}`) : q} × {q} = {goal}
+      </>
+    );
+  } else if (sim.op === 'div') {
+    sum = (
+      <>
+        {now(`${sim.start}`)} ÷ {q} = {goal}
+      </>
+    );
+  } else {
+    const down = sim.op === 'sub';
+    label = down
+      ? { text: `${STR.takeAway[locale]} ⬇`, color: '#2563eb' }
+      : { text: `${STR.addUp[locale]} ⬆`, color: '#16a34a' };
+    sum = (
+      <>
+        {now(`${sim.belly}`)} → {goal}
+      </>
+    );
+  }
+  const barColor = fever ? '#facc15' : fill >= 1 ? '#22c55e' : '#f97316';
+  return (
+    <div
+      key={`t${juice.target}`}
+      className={`flex flex-col items-center rounded-3xl bg-white/90 px-4 py-1.5 shadow-xl ${reduced ? '' : 'mg-pop-in'}`}
+    >
+      {label && (
+        <span className="rounded-full px-3 text-sm font-black text-white" style={{ background: label.color }}>
+          {label.text}
+        </span>
+      )}
+      <div className="flex items-center gap-2 text-3xl font-black text-slate-800" dir="ltr">
+        {sum}
+      </div>
+      {label && (
+        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-300">
+          <div
+            className="h-full rounded-full transition-[width] duration-200"
+            style={{ width: `${fill * 100}%`, background: barColor }}
+          />
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Scenery({ id }: { id: SceneryId }) {

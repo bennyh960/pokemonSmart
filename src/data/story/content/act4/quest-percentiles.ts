@@ -2,10 +2,10 @@
  * ACT 4: Percentile — City of Statistics
  * ─────────────────────────────────────────────────────────────────────────────
  * QUESTS:   main-act4-percentile
- * GATES:    gate-percentile-entry, gate-percentile-route12 (3 light questions each, passed once — permanent)
+ * GATES:    gate-percentile-entry, gate-percentile-route12 (5 questions each, open 45 min per pass)
  *
  * STORY BEATS (in order):
- *   1. Player arrives from Route 11 → entry gate (one-time, easy)
+ *   1. Player arrives from Route 11 → entry gate
  *   2. First visit → "Explore Percentile" quest
  *   3. Town NPCs explain the Pokémon world through percentages
  *      (natures ±10%, catch chance, Leftovers ~6%), give items
@@ -38,7 +38,6 @@ registerQuest({
 
 // ── Gates ─────────────────────────────────────────────────────────────────────
 
-// Kept short on purpose: answered once, then open forever.
 registerGate({
   id: 'gate-percentile-entry',
   title: { en: 'Percentile City Gate', he: 'שער העיר פרסנטייל' },
@@ -46,7 +45,7 @@ registerGate({
   triggerType: 'city-entry',
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    questionsRequired: 3,
+    questionsRequired: 5,
     inputQuestions: { count: 1, types: ['+', '-'] },
     penaltyAmount: 200,
     rewards: [
@@ -54,7 +53,7 @@ registerGate({
       { type: 'item', itemId: 'ultra-ball', quantity: 2 },
     ],
   },
-  reopenCooldownMs: 0,
+  reopenCooldownMs: 45 * 60 * 1000,
 });
 
 registerGate({
@@ -64,7 +63,7 @@ registerGate({
   triggerType: 'city-exit',
   sessionConfig: {
     ...DEFAULT_SESSION_CONFIG,
-    questionsRequired: 3,
+    questionsRequired: 5,
     inputQuestions: { count: 1, types: ['×'] },
     penaltyAmount: 200,
     rewards: [
@@ -72,7 +71,7 @@ registerGate({
       { type: 'item', itemId: 'max-potion', quantity: 2 },
     ],
   },
-  reopenCooldownMs: 0,
+  reopenCooldownMs: 45 * 60 * 1000,
 });
 
 // ── Story Events ──────────────────────────────────────────────────────────────

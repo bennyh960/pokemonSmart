@@ -69,11 +69,14 @@ export interface MiniGamePrizeChoice {
 
 export type MiniGamePrizeDef = MiniGamePrize | MiniGamePrizeChoice;
 
+/** A prize, or a list of prizes to pick one from (each equally likely). */
+export type MiniGamePrizeSlot = MiniGamePrizeDef | readonly MiniGamePrizeDef[];
+
 export interface MiniGameLevelRewards {
-  /** Given once — the first time the level is cleared (≥1★). */
-  firstClear: MiniGamePrizeDef;
+  /** Given once — the first time the level is cleared with the level's `prizeStars`. */
+  firstClear: MiniGamePrizeSlot;
   /** Given once — the first time the level gets 3★. */
-  threeStar: MiniGamePrizeDef;
+  threeStar: MiniGamePrizeSlot;
   /** Small prize for a clear that earned nothing else. Capped per game per day. */
   replay: MiniGamePrizeDef;
 }
@@ -85,7 +88,8 @@ export type PrizeKind = keyof MiniGameLevelRewards | 'care' | 'bonus' | 'board';
 
 /**
  * A game that a hurt party Pokémon can ask for while walking in the wild (see `care.ts`).
- * Clearing the round restores that Pokémon instead of giving the level prizes.
+ * The player picks the level; clearing it restores that Pokémon, and every win with the level's `prizeStars`
+ * also pays the level's prize (`firstClear`, or `threeStar` at 3★) — not just the first time.
  */
 export interface MiniGameCare {
   /** Every species in this Pokémon's evolution line can trigger the game. */
@@ -98,8 +102,6 @@ export interface MiniGameCare {
   prompt: Bilingual;
   /** Intro card line in care mode, `{name}` = the Pokémon. */
   intro: Bilingual;
-  /** Rare extra prize: its chance at 3★; fewer stars get a share of it (`BONUS_SHARE_BY_STARS` in care.ts). */
-  bonus: { chanceAt3Stars: number; prize: MiniGamePrizeDef };
 }
 
 // ── Definitions ─────────────────────────────────────────────────────────────
@@ -111,10 +113,15 @@ export interface MiniGameCare {
 export interface MiniGameLevel<C = unknown> {
   /** 1-based level number. */
   number: number;
-  name: Bilingual;
+  /** Omitted → the level is shown by its number only. */
+  name?: Bilingual;
+  /** One word on the level chip ("Junior" / "Master"). */
+  short?: Bilingual;
   /** One short line shown on the intro card under the level name ("Tap the letter you hear!"). */
   goal?: Bilingual;
   rewards: MiniGameLevelRewards;
+  /** Fewest stars that earn a prize on this level (default 1). */
+  prizeStars?: Stars;
   config: C;
 }
 

@@ -8,6 +8,7 @@ vi.mock('../../auth/supabase-client.js', () => ({ supabase: {} }));
 
 import { MINI_GAME_LIST, getMiniGame } from '../registry.js';
 import { MINI_GAME_IDS, type DialogueReward, type MiniGamePrizeDef } from '../types.js';
+import { slotPrizes } from '../progress.js';
 import { getItem } from '../../data/items.js';
 import { getPokemon } from '../../services/pokemon-data.js';
 
@@ -26,8 +27,10 @@ describe('mini-game registry', () => {
     expect(def.levels.length).toBeGreaterThan(0);
     def.levels.forEach((lvl, i) => {
       expect(lvl.number).toBe(i + 1);
-      expect(lvl.name.en).toBeTruthy();
-      expect(lvl.name.he).toBeTruthy();
+      if (lvl.name) {
+        expect(lvl.name.en).toBeTruthy();
+        expect(lvl.name.he).toBeTruthy();
+      }
     });
     expect(def.name.he).toBeTruthy();
     expect(def.tagline.he).toBeTruthy();
@@ -36,7 +39,7 @@ describe('mini-game registry', () => {
 
   it.each(MINI_GAME_IDS)('%s: every prize is a real, non-empty reward', (id) => {
     for (const lvl of getMiniGame(id).levels) {
-      for (const prize of Object.values(lvl.rewards)) {
+      for (const prize of Object.values(lvl.rewards).flatMap((slot) => slotPrizes(slot))) {
         const rewards = rewardsOf(prize);
         expect(rewards.length).toBeGreaterThan(0);
         for (const r of rewards) {

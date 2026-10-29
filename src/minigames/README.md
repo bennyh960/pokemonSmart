@@ -98,14 +98,20 @@ Shared layer in `src/minigames/english/` — use it, don't copy it:
 - `category` on the def decides it: lab entry gates play a `logic` game (`global-gate-config.ts`); libraries have no
   gate — English is played by choice at the Word Board;
   NPC hosts use `"miniGame": { "category": … }` or `{ "gameIds": [...] }`. A new game of a category joins automatically.
-- Care rounds and lab gates play a fixed level from the trainer rank (`levelForRank()` in progress.ts); the Word Board
-  plays the English ladder step instead.
+- Lab gates play a fixed level from the trainer rank (`levelForRank()` in progress.ts); care rounds let the player pick
+  any level (the rank pre-selects one); the Word Board plays the English ladder step instead.
 
 ## Care rounds
 
 A def may set `care` (`MiniGameCare` in `types.ts`): a hurt party Pokémon of that evolution line, walking on a tile of
 its `habitat`, asks to play (`care.ts`, triggered from the overworld). The shell then uses that Pokémon (`pokemonId`
-prop), picks the level, hides the level picker and replaces the level prizes with the heal + rare bonus.
+prop) and opens every level to pick. Every win heals; every win with the level's `prizeStars` also pays the level's
+prize (`firstClear`, or `threeStar` at 3★) — each time, not just once (`carePrizes()` in care.ts).
+
+## Level prizes
+
+`firstClear` / `threeStar` are a prize or a list to draw one from (`MiniGamePrizeSlot`). `prizeStars` on a level
+(default 1) is the fewest stars that earn anything — Snack Attack uses 2, so a 1★ win pays nothing.
 Games always get `pokemonId` — draw that sprite, not a fixed one.
 
 ## Launching

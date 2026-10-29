@@ -31,7 +31,7 @@ export function StubGame({ level, hud, sfx, theme, paused, onFinish, onQuit }: M
         🚧
       </div>
       <h2 className="text-2xl font-black text-white drop-shadow">{t('minigames.stub.comingSoon')}</h2>
-      <p className="text-white/80">{level.name[locale]}</p>
+      <p className="text-white/80">{level.name?.[locale]}</p>
       <div className="flex flex-wrap justify-center gap-3">
         <button type="button" onClick={tapScore} className="mg-btn bg-white/20 text-white" dir="ltr">
           +10

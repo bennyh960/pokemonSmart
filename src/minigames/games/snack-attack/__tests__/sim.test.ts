@@ -7,8 +7,9 @@ vi.hoisted(() => {
 vi.mock('../../../../auth/supabase-client.js', () => ({ supabase: {} }));
 
 import { snorlaxSnack as def } from '../index.js';
-import type { SnackConfig } from '../config.js';
+import type { SnackConfig, SnackOp } from '../config.js';
 import {
+  MIN_PACE,
   MOUTH_Y,
   PLAYER_MAX_X,
   PLAYER_MIN_X,
@@ -36,7 +37,13 @@ function berry(value: number, kind: Berry['kind'] = value < 0 ? 'minus' : 'norma
   return { id: 999, kind, value, x, y: 0, vy: 0.3, tilt: 0 };
 }
 
-function withTarget(s: SimState, start: number, target: number): SimState {
+function withTarget(
+  s: SimState,
+  start: number,
+  target: number,
+  op: SnackOp = start > target ? 'sub' : 'add',
+): SimState {
+  s.op = op;
   s.start = start;
   s.belly = start;
   s.target = target;
@@ -49,38 +56,77 @@ describe('targets', () => {
     const rng = mulberry32(42);
     let prev: number | undefined;
     for (let i = 0; i < 300; i++) {
-      const { start, target } = pickTarget(config, rng, prev);
-      expect(target).toBeGreaterThanOrEqual(config.targetMin);
-      expect(target).toBeLessThanOrEqual(config.targetMax);
+      const { op, start, target } = pickTarget(config, rng, prev);
+      expect(config.ops).toContain(op);
       expect(target).not.toBe(prev);
-      if (config.math === 'times') {
+      if (op === 'times') {
         expect(start).toBe(1);
         expect(factorPairs(config, target).length).toBeGreaterThan(0);
-      } else if (config.math === 'add') {
-        expect(start).toBe(0);
+      } else if (op === 'div') {
+        const divisor = start / target;
+        expect(Number.isInteger(divisor)).toBe(true);
+        expect(divisor).toBeGreaterThanOrEqual(2);
+        expect(divisor).toBeLessThanOrEqual(config.maxTable!);
+        expect(target).toBeLessThanOrEqual(config.berryMax);
       } else {
-        expect(start === 0 || start > target).toBe(true);
+        expect(target).toBeGreaterThanOrEqual(config.targetMin);
+        expect(target).toBeLessThanOrEqual(config.targetMax);
+        if (op === 'add') expect(start).toBe(0);
+        else expect(start).toBeGreaterThan(target);
       }
       prev = target;
     }
   });
 
-  it('times targets follow the tables: L4 = 2..5 tables, L5 = up to 10×10', () => {
+  it('times targets follow the tables: L4 = up to 5×5, L10 = up to 10×10', () => {
     const l4 = timesTargets(cfg(4));
-    expect(Math.max(...l4)).toBe(50);
+    expect(Math.max(...l4)).toBe(25);
     expect(l4).toContain(4);
     expect(l4).not.toContain(49); // 7×7 is beyond the 5 table
-    const l5 = timesTargets(cfg(5));
-    expect(Math.max(...l5)).toBe(100);
-    expect(l5).toContain(49);
-    expect(l5).not.toContain(11); // prime > 10 has no table pair
+    const l10 = timesTargets(cfg(10));
+    expect(Math.max(...l10)).toBe(100);
+    expect(l10).toContain(49);
+    expect(l10).not.toContain(11); // prime > 10 has no table pair
   });
 
-  it('add-sub sometimes starts full (take-away targets)', () => {
+  it('levels ask exactly their ops: + → − → ± → × → +× → −× → ±× → ÷ → ÷× → all four', () => {
+    expect(LEVELS.map((l) => l.config.ops.join(''))).toEqual([
+      'add',
+      'sub',
+      'addsub',
+      'times',
+      'addtimes',
+      'subtimes',
+      'addsubtimes',
+      'div',
+      'divtimes',
+      'addsubtimesdiv',
+    ]);
     const rng = mulberry32(3);
-    const starts = Array.from({ length: 50 }, () => pickTarget(cfg(3), rng).start);
-    expect(starts.some((v) => v === 0)).toBe(true);
-    expect(starts.some((v) => v > 0)).toBe(true);
+    for (const l of LEVELS) {
+      const ops = new Set(Array.from({ length: 200 }, () => pickTarget(l.config, rng).op));
+      expect([...ops].sort()).toEqual([...l.config.ops].sort());
+    }
+  });
+
+  it('each level is faster than the one before, the last at top speed', () => {
+    const paces = LEVELS.map((l) => l.config.pace);
+    for (let i = 1; i < paces.length; i++) expect(paces[i]).toBeGreaterThan(paces[i - 1]);
+    expect(paces[0]).toBeCloseTo(MIN_PACE);
+    expect(paces[paces.length - 1]).toBe(1);
+  });
+
+  it('level 1 drops only plus berries, level 2 only minus ones', () => {
+    for (const [n, sign] of [
+      [1, 1],
+      [2, -1],
+    ] as const) {
+      const s = createSim(cfg(n), 4);
+      while (s.time < 20) {
+        stepSim(s, 1 / 30, NO_INPUT);
+        for (const b of s.berries) if (b.kind === 'normal' || b.kind === 'minus') expect(Math.sign(b.value)).toBe(sign);
+      }
+    }
   });
 });
 
@@ -99,7 +145,7 @@ describe('useful values', () => {
   });
 
   it('times: factors first, then the one partner', () => {
-    const s = withTarget(createSim(cfg(4), 1), 1, 12);
+    const s = withTarget(createSim(cfg(7), 1), 1, 12, 'times');
     expect(usefulValues(s).sort((a, b) => a - b)).toEqual([2, 3, 4, 6]);
     expect(finisherValue(s)).toBeNull();
     eatBerry(s, berry(3));
@@ -165,8 +211,19 @@ describe('eating', () => {
     expect(s.burps).toBe(1);
   });
 
+  it('div: only the divisor works — it burps in one bite, anything else is an ache', () => {
+    const s = withTarget(createSim(cfg(8), 1), 24, 6, 'div');
+    expect(usefulValues(s)).toEqual([4]);
+    expect(finisherValue(s)).toBe(4);
+    eatBerry(s, berry(3));
+    expect(s.aches).toBe(1);
+    expect(s.belly).toBe(24);
+    const events = eatBerry(s, berry(4));
+    expect(events.map((e) => e.type)).toEqual(['eat', 'burp', 'new-target']);
+  });
+
   it('times: a wrong first or second berry is an ache, the right pair burps', () => {
-    const s = withTarget(createSim(cfg(4), 1), 1, 12);
+    const s = withTarget(createSim(cfg(7), 1), 1, 12, 'times');
     eatBerry(s, berry(5));
     expect(s.aches).toBe(1);
     eatBerry(s, berry(6));
@@ -300,11 +357,11 @@ describe('solvable spawner', () => {
       }
       return { golden, rotten };
     };
-    const l4 = count(cfg(4));
-    const l5 = count(cfg(5));
-    expect(l4.rotten).toBeGreaterThan(0);
-    expect(l4.golden).toBeGreaterThan(0);
-    expect(l5.golden).toBeGreaterThan(l4.golden);
+    const l9 = count(cfg(9));
+    const l10 = count(cfg(10));
+    expect(l9.rotten).toBeGreaterThan(0);
+    expect(l9.golden).toBeGreaterThan(0);
+    expect(l10.golden).toBeGreaterThan(l9.golden);
   });
 });
 

@@ -9,7 +9,15 @@
  */
 
 import { getAllItems, type ItemDef } from '../data/items.js';
-import type { Bilingual, DialogueReward, MiniGameDef, MiniGamePrize, MiniGamePrizeChoice, PrizeRarity } from './types.js';
+import type {
+  Bilingual,
+  DialogueReward,
+  MiniGameDef,
+  MiniGamePrize,
+  MiniGamePrizeChoice,
+  MiniGamePrizeDef,
+  PrizeRarity,
+} from './types.js';
 
 /** Identity helper that keeps the game's config type `C` checked against its component. */
 export function defineMiniGame<C>(def: MiniGameDef<C>): MiniGameDef<C> {
@@ -68,7 +76,31 @@ export function vitaminPrize(rarity: PrizeRarity, maxQty = 3): MiniGamePrizeChoi
   return itemPrizeWhere(rarity, { en: 'Vitamin', he: 'ויטמין' }, (i) => i.effect.type === 'vitamin', maxQty);
 }
 
+/** One held item that works in battle (Leftovers, Choice Band…). */
+export function heldItemPrize(rarity: PrizeRarity): MiniGamePrizeChoice {
+  return itemPrizeWhere(
+    rarity,
+    { en: 'Held item', he: 'חפץ להחזקה' },
+    (i) => i.category === 'held' && i.effect.type === 'battle',
+  );
+}
+
+/** The same prize with every quantity (items and money) multiplied by `n`. */
+export function timesPrize<P extends MiniGamePrizeDef>(def: P, n: number): P {
+  const scale = (r: DialogueReward): DialogueReward => ({
+    ...r,
+    ...(r.money && { money: r.money * n }),
+    ...(r.items && { items: r.items.map((i) => ({ ...i, quantity: i.quantity * n })) }),
+  });
+  return 'oneOf' in def ? { ...def, oneOf: def.oneOf.map(scale) } : { ...def, reward: scale(def.reward) };
+}
+
 /** 1..maxQty of one battle X item (X Attack, X Speed…). */
 export function xItemPrize(rarity: PrizeRarity, maxQty = 1): MiniGamePrizeChoice {
-  return itemPrizeWhere(rarity, { en: 'Battle boost', he: 'חיזוק לקרב' }, (i) => i.effect.type === 'stat-boost', maxQty);
+  return itemPrizeWhere(
+    rarity,
+    { en: 'Battle boost', he: 'חיזוק לקרב' },
+    (i) => i.effect.type === 'stat-boost',
+    maxQty,
+  );
 }

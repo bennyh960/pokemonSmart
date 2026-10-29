@@ -18,7 +18,7 @@
       "fromY": 31,
       "toMapId": "shared/pokecenter-2",
       "light": {
-        "x": 25,
+        "x": 28,
         "y": 32
       }
     },
@@ -27,7 +27,7 @@
       "fromY": 31,
       "toMapId": "shared/mart-interior",
       "light": {
-        "x": 13,
+        "x": 12,
         "y": 32
       }
     },
@@ -150,7 +150,7 @@
       "spriteType": "gate-officer",
       "gateId": "gate-symetria-r8-1",
       "light": {
-        "x": 17,
+        "x": 20,
         "y": 35
       }
     },
@@ -237,7 +237,7 @@
       "spriteType": "gate-officer",
       "gateId": "gate-symetrica-route10",
       "light": {
-        "x": 19,
+        "x": 20,
         "y": 6
       }
     },

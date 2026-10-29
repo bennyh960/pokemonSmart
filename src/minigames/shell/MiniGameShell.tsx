@@ -25,7 +25,7 @@ import { PauseMenu } from './PauseMenu.js';
 import { PrizeReveal } from './PrizeReveal.js';
 import { Results } from './Results.js';
 import { miniGameSfx } from './sfx.js';
-import { Confetti, themeBackground } from './ui.js';
+import { Confetti, levelTitle, themeBackground } from './ui.js';
 import { useHud } from './useHud.js';
 
 type Phase = 'intro' | 'countdown' | 'play' | 'results' | 'prizes';
@@ -68,16 +68,19 @@ export function MiniGameShell({
   const save = pd.miniGames ?? {};
   const reduced = useReducedMotion();
 
-  // Care round: the hurt Pokémon plays, the trainer rank sets the level, clearing it heals the Pokémon once
+  // Care round: the hurt Pokémon plays, the player picks any level (the trainer rank pre-selects one),
+  // clearing it heals the Pokémon once
   const careMon = def.care && carePokemonUuid ? pd.party.find((p) => p.uuid === carePokemonUuid) : undefined;
   const care = careMon ? def.care : undefined;
-  // Fixed round (care, gate or board): no level picker, and once cleared it can't be replayed from here
-  const fixed = !!care || !!gate || !!board;
+  // Gate / board rounds play the caller's level: no level picker
+  const fixedLevel = !!gate || !!board;
+  // Care, gate or board: once cleared it can't be replayed from here
+  const fixed = !!care || fixedLevel;
   const [fixedDone, setFixedDone] = useState(false);
   const pokemonId = careMon?.id ?? def.mascotPokemonId;
 
   const [levelNumber, setLevelNumber] = useState(() =>
-    (gate || board) && initialLevel && def.levels.some((l) => l.number === initialLevel)
+    fixedLevel && initialLevel && def.levels.some((l) => l.number === initialLevel)
       ? initialLevel
       : fixed
         ? levelForRank(getTrainerRank(pd).index, def)
@@ -98,7 +101,7 @@ export function MiniGameShell({
   const playAreaRef = useRef<HTMLDivElement>(null);
   const gamePaused = paused || phase !== 'play';
   const { hud, state: hudState, reset: resetHud } = useHud(playAreaRef, def.theme, gamePaused, reduced);
-  const levelLabel = `${t('minigames.level', { n: level.number })} · ${level.name[locale]}`;
+  const levelLabel = levelTitle(t, level, locale);
 
   // Keep music quiet in the background so speech (letters, words) stays clear
   useEffect(() => {
@@ -158,7 +161,7 @@ export function MiniGameShell({
     mutate((draft) => {
       draft.miniGames ??= {};
       rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board });
-      if (care && careMon) rec.prizes = carePrizes(care, careMon, rec.stars);
+      if (care && careMon) rec.prizes = carePrizes(care, level, careMon, rec.stars);
       if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft), Math.random, board.city);
       // A board round is an English ladder round: its stars earn ladder points
       if (board) {
@@ -197,12 +200,14 @@ export function MiniGameShell({
           onBack={onBack}
           backLabel={backLabel}
           pokemonId={pokemonId}
-          fixedLine={
+          introLine={
             care && careMon
               ? care.intro[locale].replace('{name}', getPokemonDisplayName(careMon.id))
               : (gate?.intro[locale] ?? board?.intro)
           }
-          levelPrizes={!care && !board}
+          fixedLevel={fixedLevel}
+          allOpen={!!care}
+          prizes={care ? 'care' : board ? 'none' : 'level'}
         />
       ) : (
         <>

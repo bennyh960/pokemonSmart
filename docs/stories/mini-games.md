@@ -132,18 +132,29 @@ Generated puzzles (seeded, always a unique solution), so it never runs out.
 
 ## 3. Snorlax Snack Attack (arcade + math) — `snorlax-snack`
 
-Snorlax is hungry. Berries with numbers fall from a tree. Move Snorlax (← → / drag) to eat berries that add up
-**exactly** to the target number on its belly. Hit the target → "BURP!", points, new target. Go over → tummy ache, meter resets.
+Snorlax is hungry. Berries with numbers fall from a tree. Move Snorlax (← → / drag) to eat berries that reach the target
+**exactly**. The sum is shown in a panel at the top of the field (never on the Pokémon): `7 → 12` under "Add up! ⬆" /
+"Take away! ⬇", `4 × ? = 24`, `24 ÷ ? = 6`. Hit the target → "BURP!", points, new target. Go past it → tummy ache, meter resets.
 60-second rounds. Combo multiplier grows with each exact target; a Golden Berry starts 5s **Fever** (everything ×2, music speeds up).
 Rotten (grey) berries: −1 heart (3 hearts).
 
-| Lvl | Math | Targets | Berry values | Speed | First-clear | 3★ |
-|-----|------|---------|--------------|-------|-------------|----|
-| 1 | add | 5–10 | 1–5 | slow | Oran Berry ×5 | Potion ×3 |
-| 2 | add | 10–20 | 1–9 | medium | Sitrus Berry ×3 | Great Ball ×3 |
-| 3 | add + subtract (blue berries are −) | 10–20 | ±1–9 | medium | Ultra Ball ×2 | Rare Candy |
-| 4 | times: target = product, berries = factors (eat 2) | 2×–5× tables | 1–10 | fast | Rare Candy ×2 | Max Elixir |
-| 5 | times, all tables + Fever often | up to 10×10 | 1–10 | fast | Evolution stone | Master Ball |
+Pick the level on the intro card ("Select difficulty level": 1 = Junior … 10 = Master, 2–9 just numbers).
+Speed: level 1 = 0.4 × top speed, rising evenly to the top speed at level 10 (`pace`, `speedOf()` in sim.ts).
+Prizes start at ★★ (`prizeStars: 2`): the ★★ list keeps every earlier level's prizes; ★★★ is the ★★ list with quantities
+multiplied, from the level shown. Care rounds pay on every win; the games menu pays once per level (first ★★, first ★★★).
+
+| Lvl | Ops | New ★★ prizes | ★★★ |
+|-----|-----|---------------|-----|
+| 1 Junior | + | Poké Ball · Potion · status cure | lvl 1 ×3 |
+| 2 | − | Great Ball · Super Potion | lvl 1–2 ×3 |
+| 3 | + − | Ultra Ball · Hyper Potion · Full Heal · Ether | lvl 3 only ×3 |
+| 4 | × | Max Potion · X item | lvl 3–4 ×3 |
+| 5 | + × | Max Ether · 10,000 | lvl 1–5 ×4 |
+| 6 | − × | Elixir · 15,000 | lvl 1–6 ×4 |
+| 7 | + − × | Max Elixir · vitamin | lvl 1–7 ×5 |
+| 8 | ÷ | Rare Candy · 20,000 | lvl 1–8 ×5 |
+| 9 | ÷ × | held item that works in battle (Leftovers, Choice…) | lvl 1–9 ×5 |
+| 10 Master | + − × ÷ | (same as 9) | one of: Leftovers · vitamin ×10 · 50,000 · Master Ball · Max Elixir ×20 · Full Restore ×20 |
 
 - Stars by score thresholds per level (in the level table).
 - Juice: Snorlax's belly grows as the meter fills; berries squish; exact hit = belly bounce + confetti + `mg-correct` pitch climb.
@@ -151,27 +162,27 @@ Rotten (grey) berries: −1 heart (3 hearts).
 
 ### 3b. Snack Attack family + care trigger (built)
 One engine (`src/minigames/games/snack-attack/`: `sim.ts` rules · `skins.ts` look/texts · `index.ts` defs), five games
-with the same 5-level math table (`SNACK_LEVEL_CONFIGS`) and their own world, level names and prizes:
+with the same 10-level table (`SNACK_LEVELS` in index.ts: math, speed and prizes) and their own world:
 
-| Game id | Pokémon line | Falls / take-away / hazard / golden | Care habitat | After the heal | Rare bonus |
-|---|---|---|---|---|---|
-| `snorlax-snack` | Snorlax | berries / blue berries / rotten / golden berry | grass | **asleep** | 1–3 vitamins, 5/10/20% at 1/2/3★ |
-| `bulbasaur-sun` | Bulbasaur → Venusaur | sun drops / clouds / poison spore (**a treat** — the line is Poison: points, no heart lost) / rainbow | grass | cured | X item, 9/17.5/35% at 1/2/3★ |
-| `charmander-flame` | Charmander → Charizard | embers / smoke / water drop / gold flame | ground, mountain | cured | X item, 9/17.5/35% at 1/2/3★ |
-| `squirtle-swim` | Squirtle → Blastoise | bubbles / whirlpools / **rocks** (bigger, 1.5× more, river 1.12× faster) / shell | water (surfing) | cured | X item, 9/17.5/35% at 1/2/3★ |
-| `pikachu-charge` | Pichu → Raichu | bolts / purple bolts / mud ball / thunder star | grass, ground | cured | X item, 9/17.5/35% at 1/2/3★ |
+| Game id | Pokémon line | Falls / take-away / hazard / golden | Care habitat | After the heal |
+|---|---|---|---|---|
+| `snorlax-snack` | Snorlax | berries / blue berries / rotten / golden berry | grass | **asleep** |
+| `bulbasaur-sun` | Bulbasaur → Venusaur | sun drops / clouds / poison spore (**a treat** — the line is Poison: points, no heart lost) / rainbow | grass | cured |
+| `charmander-flame` | Charmander → Charizard | embers / smoke / water drop / gold flame | ground, mountain | cured |
+| `squirtle-swim` | Squirtle → Blastoise | bubbles / whirlpools / **rocks** (bigger, 1.5× more, river 1.12× faster) / shell | water (surfing) | cured |
+| `pikachu-charge` | Pichu → Raichu | bolts / purple bolts / mud ball / thunder star | grass, ground | cured |
 
 A skin's `hazardFriend` (type) turns its hazard into points for a Pokémon of that type. The player is drawn with its
 overworld walk animation when a `wild-pokemon` character sprite has its English name (Snorlax today), else its battle sprite.
-Bonus odds: `bonus.chanceAt3Stars` × `BONUS_SHARE_BY_STARS` (1★ ¼, 2★ ½, 3★ full).
+Care prizes = the level prizes above, paid on every ★★/★★★ win (`carePrizes()` in care.ts).
 
 **Care round** (`src/minigames/care.ts`, wired in `overworld.ts` before the wild-encounter roll): a party Pokémon of a
 line above, alive and at 50% HP or less, on an encounter tile of the game's habitat whose encounter filter allows its types →
 a chance per step that grows as HP drops — 40–50% HP: 10% · 30–40%: 20% · 30% or less: 50% (`CARE_CHANCE_BY_HP`; the most hurt Pokémon asks; cooldown 100 steps) it asks "Snorlax looks very hungry… Feed it?" → Yes starts the game with
-`startMiniGame(id, { carePokemonUuid })`. In a care round the Pokémon itself plays, the level comes from the **trainer rank** shown on the
-trainer details screen (`getTrainerRank(pd).index` → `careLevelForRank()`: Rookie L1 · Amateur/Pro L2 · Expert L3 ·
-Elite/Master L4 · Legendary L5, ignoring level unlocks — the level is never shown locked), the intro has no level picker, and a clear gives **no level
-prizes** — only the heal (`DialogueReward.restorePokemon`: full HP + status) plus the rare bonus. Stars/best still save.
+`startMiniGame(id, { carePokemonUuid })`. In a care round the Pokémon itself plays and the player **picks the level** — every
+level is open; the **trainer rank** pre-selects one (`levelForRank()`). The intro lists that level's ★★ and ★★★ prizes. Every win heals
+(`DialogueReward.restorePokemon`: full HP + status); ★★ / ★★★ also pays one of the level's prizes, every time.
+Stars/best still save.
 After a clear there is no "Play again"; a failed round can be retried.
 Admin: **C** in the overworld offers the care game of the first party Pokémon that has one (ignores HP, tile, chance, cooldown).
 

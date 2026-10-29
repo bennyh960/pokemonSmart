@@ -17,11 +17,11 @@ import {
   rollCareTrigger,
   type CareTile,
 } from '../care.js';
-import { levelForRank } from '../progress.js';
+import { levelForRank, slotPrizes } from '../progress.js';
 import { MINI_GAME_LIST, getMiniGame } from '../registry.js';
-import { getItem } from '../../data/items.js';
 import { getPokemon } from '../../services/pokemon-data.js';
 import type { PlayerData, Pokemon } from '../../types/index.js';
+import type { MiniGamePrizeSlot, Stars } from '../types.js';
 import { TRAINER_RANKS } from '../../data/trainer-ranks.js';
 
 function mon(id: number, hp: number, maxHp = 100): Pokemon {
@@ -37,7 +37,7 @@ const never = () => 0.999;
 describe('care games', () => {
   beforeEach(() => resetCareCooldown());
 
-  it('every care game has a real line, a habitat and real bonus items', () => {
+  it('every care game has a real line and a habitat', () => {
     const cares = MINI_GAME_LIST.filter((d) => d.care);
     expect(cares.map((d) => d.id)).toEqual([
       'snorlax-snack',
@@ -49,10 +49,6 @@ describe('care games', () => {
     for (const def of cares) {
       expect(getPokemon(def.care!.lineOf)).toBeDefined();
       expect(def.care!.habitat.length).toBeGreaterThan(0);
-      const bonus = def.care!.bonus.prize;
-      const rewards = 'oneOf' in bonus ? bonus.oneOf : [bonus.reward];
-      expect(rewards.length).toBeGreaterThan(0);
-      for (const r of rewards) for (const ri of r.items ?? []) expect(getItem(ri.itemId)).toBeDefined();
     }
   });
 
@@ -115,14 +111,14 @@ describe('care games', () => {
     expect(rollCareTrigger(pd, GRASS, always)).not.toBeNull();
   });
 
-  it('the trainer rank sets the level: lowest rank → level 1, highest → level 5', () => {
+  it('the trainer rank pre-selects the level: lowest rank → level 1, highest → level 10', () => {
     const def = getMiniGame('snorlax-snack');
     const top = TRAINER_RANKS.length - 1;
     expect(levelForRank(0, def)).toBe(1);
-    expect(levelForRank(top, def)).toBe(5);
+    expect(levelForRank(top, def)).toBe(10);
     const levels = TRAINER_RANKS.map((_, i) => levelForRank(i, def));
     for (let i = 1; i < levels.length; i++) expect(levels[i]).toBeGreaterThanOrEqual(levels[i - 1]);
-    expect(new Set(levels).size).toBe(5);
+    expect(new Set(levels).size).toBe(Math.min(TRAINER_RANKS.length, def.levels.length));
   });
 
   it('admin force ignores HP and tile, but needs a Pokémon with a care game', () => {
@@ -130,21 +126,50 @@ describe('care games', () => {
     expect(forceCareGame([mon(150, 100)])).toBeNull();
   });
 
-  it('a clear heals (Snorlax falls asleep); the bonus is rare and scales with stars', () => {
-    const snorlax = getMiniGame('snorlax-snack').care!;
-    expect(carePrizes(snorlax, { uuid: 'x' }, 0, always)).toEqual([]);
-    const [heal] = carePrizes(snorlax, { uuid: 'x' }, 1, never);
+  it('every win heals; ★★ adds the level ★★ prize, ★★★ its ★★★ prize — every time', () => {
+    const def = getMiniGame('snorlax-snack');
+    const snorlax = def.care!;
+    const l1 = def.levels[0];
+    const pay = (stars: Stars) => carePrizes(snorlax, l1, { uuid: 'x' }, stars, always);
+    expect(pay(0)).toEqual([]);
+    const [heal] = pay(1);
     expect(heal.reward.restorePokemon).toEqual({ uuid: 'x', status: 'sleep' });
-    expect(carePrizes(snorlax, { uuid: 'x' }, 3, never)).toHaveLength(1);
-    const lucky = carePrizes(snorlax, { uuid: 'x' }, 3, () => 0.05);
-    expect(lucky).toHaveLength(2);
-    expect(getItem(lucky[1].reward.items![0].itemId)?.effect.type).toBe('vitamin');
-    expect(lucky[1].reward.items![0].quantity).toBeLessThanOrEqual(3);
-    // 20% at 3★, 10% at 2★, 5% at 1★
-    expect(carePrizes(snorlax, { uuid: 'x' }, 3, () => 0.19)).toHaveLength(2);
-    expect(carePrizes(snorlax, { uuid: 'x' }, 2, () => 0.09)).toHaveLength(2);
-    expect(carePrizes(snorlax, { uuid: 'x' }, 2, () => 0.11)).toHaveLength(1);
-    expect(carePrizes(snorlax, { uuid: 'x' }, 1, () => 0.05)).toHaveLength(1);
+    expect(pay(1)).toHaveLength(1); // no prize on 1★
+    expect(pay(2)).toHaveLength(2);
+    expect(pay(2)[1].reward.items![0].quantity).toBe(1);
+    expect(pay(3)[1].reward.items![0].quantity).toBe(3); // level 1: ★★★ = the ★★ prizes ×3
+  });
+
+  it('the prize table: ★★ keeps every earlier level, ★★★ multiplies (level 3/4 skip the cheap ones)', () => {
+    const levels = getMiniGame('snorlax-snack').levels;
+    const ids = (slot: MiniGamePrizeSlot) =>
+      slotPrizes(slot).flatMap((p) =>
+        ('oneOf' in p ? p.oneOf : [p.reward]).flatMap((r) => r.items?.map((i) => i.itemId) ?? ['$']),
+      );
+    const qty = (slot: MiniGamePrizeSlot) =>
+      new Set(
+        slotPrizes(slot).flatMap((p) =>
+          ('oneOf' in p ? p.oneOf : [p.reward]).map((r) => r.items?.[0].quantity ?? r.money),
+        ),
+      );
+    expect(levels.every((l) => l.prizeStars === 2)).toBe(true);
+    expect(ids(levels[0].rewards.firstClear)).toEqual(expect.arrayContaining(['poke-ball', 'potion', 'antidote']));
+    expect(ids(levels[1].rewards.firstClear)).toEqual(
+      expect.arrayContaining(['poke-ball', 'great-ball', 'super-potion']),
+    );
+    expect(ids(levels[2].rewards.threeStar)).not.toContain('poke-ball');
+    expect(ids(levels[3].rewards.threeStar)).toEqual(expect.arrayContaining(['ultra-ball', 'max-potion']));
+    expect(ids(levels[3].rewards.threeStar)).not.toContain('great-ball');
+    expect(ids(levels[4].rewards.threeStar)).toContain('poke-ball');
+    expect(qty(levels[4].rewards.threeStar)).toEqual(new Set([4, 40000]));
+    expect(qty(levels[8].rewards.threeStar)).toContain(5);
+    expect(ids(levels[8].rewards.firstClear)).toContain('leftovers');
+    expect(ids(levels[9].rewards.firstClear)).toEqual(ids(levels[8].rewards.firstClear));
+    expect(ids(levels[9].rewards.threeStar)).toEqual(
+      expect.arrayContaining(['leftovers', 'master-ball', 'max-elixir', 'full-restore', '$']),
+    );
+    const vitamins = slotPrizes(levels[9].rewards.threeStar).find((p) => 'oneOf' in p && p.label?.en === 'Vitamin');
+    expect(vitamins && 'oneOf' in vitamins && vitamins.oneOf[0].items![0].quantity).toBe(10);
 
     const squirtle = getMiniGame('squirtle-swim').care!;
     expect(squirtle.statusAfter).toBeNull();

@@ -4,8 +4,9 @@
  *   trigger: a party Pokémon at half HP or less (not fainted), whose evolution line has a game with `care`,
  *            standing on a tile of that game's habitat whose encounter filter allows the Pokémon's types.
  *            Chance per step grows as HP drops (CARE_CHANCE_BY_HP), at most once every CARE_COOLDOWN_STEPS steps.
- *   level:   set by the trainer rank — `levelForRank()` in progress.ts.
- *   prizes:  clearing the round restores the Pokémon (+ a rare bonus). No level prizes.
+ *   level:   picked by the player (all open; the trainer rank pre-selects one — `levelForRank()` in progress.ts).
+ *   prizes:  clearing the round restores the Pokémon; every win with the level's `prizeStars` also pays the
+ *            level's prize (`firstClear`, `threeStar` at 3★) — each time, not once.
  *
  * Pure logic (no React, no audio, no saving) except the cooldown, which lives in memory only.
  */
@@ -13,9 +14,9 @@
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { tileAllowsTypes } from '../systems/encounter.js';
 import type { PlayerData, Pokemon } from '../types/index.js';
-import { resolvePrize, type AwardedPrize } from './progress.js';
+import { prizeStarsOf, resolvePrize, type AwardedPrize } from './progress.js';
 import { MINI_GAME_LIST } from './registry.js';
-import type { AnyMiniGameDef, MiniGameCare, Stars } from './types.js';
+import type { AnyMiniGameDef, MiniGameCare, MiniGameLevel, Stars } from './types.js';
 
 /** Chance per step by HP left (share of max HP, first row that fits). Above the last row → no trigger. */
 export const CARE_CHANCE_BY_HP: readonly { maxHpRatio: number; chance: number }[] = [
@@ -24,8 +25,6 @@ export const CARE_CHANCE_BY_HP: readonly { maxHpRatio: number; chance: number }[
   { maxHpRatio: 0.5, chance: 0.1 },
 ];
 export const CARE_COOLDOWN_STEPS = 100;
-/** Share of the bonus chance (`care.bonus.chanceAt3Stars`) by stars earned: more stars, much better odds. */
-export const BONUS_SHARE_BY_STARS: Readonly<Record<Stars, number>> = { 0: 0, 1: 0.25, 2: 0.5, 3: 1 };
 
 /** The tile the player just stepped on. */
 export interface CareTile {
@@ -106,9 +105,10 @@ export function rollCareTrigger(pd: PlayerData, tile: CareTile, rng: () => numbe
   return match;
 }
 
-/** Prizes of a finished care round: the heal, and sometimes the bonus. Nothing when not cleared. */
+/** Prizes of a finished care round: the heal, and by stars the level's prize. Nothing when not cleared. */
 export function carePrizes(
   care: MiniGameCare,
+  level: Pick<MiniGameLevel, 'rewards' | 'prizeStars'>,
   pokemon: Pick<Pokemon, 'uuid'>,
   stars: Stars,
   rng: () => number = Math.random,
@@ -121,6 +121,7 @@ export function carePrizes(
       reward: { restorePokemon: { uuid: pokemon.uuid, status: care.statusAfter } },
     },
   ];
-  if (rng() < care.bonus.chanceAt3Stars * BONUS_SHARE_BY_STARS[stars]) prizes.push({ kind: 'bonus', ...resolvePrize(care.bonus.prize, rng) });
+  if (stars === 3) prizes.push({ kind: 'bonus', ...resolvePrize(level.rewards.threeStar, rng) });
+  else if (stars >= prizeStarsOf(level)) prizes.push({ kind: 'bonus', ...resolvePrize(level.rewards.firstClear, rng) });
   return prizes;
 }

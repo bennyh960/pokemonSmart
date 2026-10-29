@@ -105,25 +105,6 @@ registerGate({
   ],
 });
 registerGate({
-  id: 'gate-route1-sumville',
-  title: { en: 'Route 1 Checkpoint', he: 'מחסום שביל 1' },
-  description: {
-    en: 'The path Sumville-Route1 is locked. We must identify you are not NULL-X creators. Questions will determine if you can pass. Choose wisely.',
-    he: 'הדרך לסאמוויל נעולה. עלינו לוודא שאינך יוצרי NULL-X. מספר שאלות יקבעו אם תוכל לעבור. בחר בחוכמה.',
-  },
-  triggerType: 'route-checkpoint',
-  questionSetIds: ['placeholder'],
-  sessionConfig: {
-    ...DEFAULT_SESSION_CONFIG,
-    questionsRequired: 2,
-    inputQuestions: { count: 2 },
-    penaltyAmount: 150,
-    // timeLimitPerQuestion: 30,
-  },
-  reopenCooldownMs: 15 * 60 * 1000,
-  successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
-});
-registerGate({
   id: 'gate-sumville-route2',
   title: { en: 'Route 2 Checkpoint', he: 'מחסום שביל 2' },
   description: {
@@ -139,7 +120,7 @@ registerGate({
     penaltyAmount: 150,
     // timeLimitPerQuestion: 30,
   },
-  reopenCooldownMs: 15 * 60 * 1000,
+  reopenCooldownMs: 45 * 60 * 1000,
   successActions: [{ type: 'set-flag', flag: FLAGS.GATE_SUMVILLE_ROUTE2_PASS }],
 });
 // THIS GATE IS FAKE _ THERE IS NO ENTRANCE TO SAFARI BUT DONT CARE FOR NOW
