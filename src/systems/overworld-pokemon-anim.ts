@@ -7,6 +7,7 @@
 
 import { loadImage, getCachedImage } from '../engine/sprite-loader.js';
 import { TILE_SIZE } from '../engine/config.js';
+import { getPokemonSpriteUrl } from '../utils/util.js';
 
 export type PokemonAnimMotion = 'fly' | 'surf' | 'walk';
 export type PathDir = 'up' | 'down' | 'left' | 'right';
@@ -41,8 +42,9 @@ export interface PokemonAnim {
   alpha: number;
 }
 
+/** Resolved against the deploy base, so it works directly in an <img src>. */
 export function pokemonFrontSpriteUrl(pokemonId: number): string {
-  return `/sprites/pokemon/front/${pokemonId}.png`;
+  return getPokemonSpriteUrl(pokemonId, 'front');
 }
 
 /** Returns the cached sprite if loaded, and calls onLoad once it finishes loading. */
