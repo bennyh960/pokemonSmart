@@ -15,6 +15,7 @@ import {
   createHPBar,
   updateHPBar,
   renderHPBar,
+  renderOpponentTypes,
   setHP,
   setXP,
   setDisplayedXP,
@@ -6194,6 +6195,7 @@ export function createBattleScene(
             }
           : undefined,
       );
+      renderOpponentTypes(ctx, enemy.types as PokemonType[]);
       renderHPBar(ctx, playerHpBar, playerParty ? { party: playerParty, totalSlots: 6 } : undefined);
 
       // ── Effects ──

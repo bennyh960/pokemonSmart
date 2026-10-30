@@ -13,6 +13,8 @@ import { getPokemonDisplayName } from '../services/pokemon-data.js';
 import { BTL, getPlayerBarHeight, getPlayerBarY, getHpColor, STATUS_PILL_COLORS } from '../data/battle-constants.js';
 import { getLocale, isRTL } from '../i18n/i18n.js';
 import { renderPartyBalls } from './battle-menu.js';
+import { drawTypeBadge, measureTypeBadge } from './type-badge.js';
+import type { PokemonType } from '../types/index.js';
 
 export interface HPBarState {
   currentHp: number;
@@ -286,6 +288,15 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, party
   if (statusCount > 0) {
     renderStatusPills(ctx, bar, B.x, B.y, B.w, 'left');
   }
+}
+
+/** Opponent's type badges, in the empty sky just left of its info panel. */
+export function renderOpponentTypes(ctx: CanvasRenderingContext2D, types: readonly PokemonType[]): void {
+  const B = BTL.OPP_BAR;
+  const gap = 2;
+  const totalW = types.reduce((w, t) => w + measureTypeBadge(ctx, t) + gap, 0);
+  let x = B.x - totalW;
+  for (const t of types) x += drawTypeBadge(ctx, t, x, B.y + 1) + gap;
 }
 
 function renderPlayerBar(ctx: CanvasRenderingContext2D, bar: HPBarState, partyBalls?: PartyBallState): void {

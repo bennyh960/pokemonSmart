@@ -19,6 +19,15 @@ function shortMaxChars(): number {
   return getLocale() === 'he' ? 4 : 3;
 }
 
+/** Width of a full-name badge for `type`, so callers can lay badges out before drawing. */
+export function measureTypeBadge(ctx: CanvasRenderingContext2D, type: PokemonType): number {
+  ctx.save();
+  ctx.font = `${BADGE_FONT_SIZE}px monospace`;
+  const textW = ctx.measureText(getTypeName(type)).width;
+  ctx.restore();
+  return textW + BADGE_PAD_X * 2;
+}
+
 /**
  * Draw a type badge with smart sizing.
  * @param ctx - Canvas rendering context
@@ -44,12 +53,7 @@ export function drawTypeBadge(
   if (mode === 'short') {
     label = fullName.length > maxChars ? fullName.slice(0, maxChars) : fullName;
   } else if (mode === 'auto' && maxWidth !== undefined) {
-    // Measure the full name to see if it fits
-    ctx.save();
-    ctx.font = `${BADGE_FONT_SIZE}px monospace`;
-    const fullW = ctx.measureText(fullName).width + BADGE_PAD_X * 2;
-    ctx.restore();
-    label = fullW > maxWidth ? fullName.slice(0, maxChars) : fullName;
+    label = measureTypeBadge(ctx, type) > maxWidth ? fullName.slice(0, maxChars) : fullName;
   } else {
     label = fullName;
   }
