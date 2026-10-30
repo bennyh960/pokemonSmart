@@ -11,6 +11,7 @@ import { getPokemon } from '../../../services/pokemon-data.js';
 import type { DialogueReward, MiniGamesSave } from '../../types.js';
 import { BOARD_CITIES } from '../board-cities.js';
 import {
+  badgesFor,
   BOARD_LEAVE_LOCK_MS,
   BOARD_POKEMON,
   boardLockLeft,
@@ -24,8 +25,10 @@ import {
   isBoardRoundOpen,
   leaveBoardRound,
   openBoardRound,
+  PREMIUM_BADGES,
   RARITY_ODDS_BY_STARS,
   rarePokemonPrize,
+  unlockedStep,
 } from '../board.js';
 import { ENGLISH_LADDER } from '../ladder.js';
 import { createRng } from '../random.js';
@@ -33,6 +36,7 @@ import { createRng } from '../random.js';
 const RIOLU = 447;
 const LUCARIO = 448;
 const none = new Set<number>();
+const ALL_BADGES = 8;
 
 function rewardsOf(step: (typeof ENGLISH_LADDER)[number]): DialogueReward[] {
   return boardPool(step, none).flatMap((p) => ('oneOf' in p ? p.oneOf : [p.reward]));
@@ -96,8 +100,8 @@ describe('Word Board prizes', () => {
     let pokemon = 0;
     for (let n = 0; n < ROUNDS; n++) {
       for (const stars of [1, 2] as const)
-        expect(boardPrizes(top, stars, none, rng, 'percentile').some((p) => p.rarity === 'epic')).toBe(false);
-      const prizes = boardPrizes(top, 3, none, rng, 'percentile');
+        expect(boardPrizes(top, stars, none, ALL_BADGES, rng, 'percentile').some((p) => p.rarity === 'epic')).toBe(false);
+      const prizes = boardPrizes(top, 3, none, ALL_BADGES, rng, 'percentile');
       expect(prizes.filter((p) => p.rarity === 'epic').length).toBeLessThanOrEqual(1);
       if (prizes.some((p) => p.reward.items?.some((i) => i.itemId === 'master-ball'))) masterBalls++;
       if (prizes.some((p) => p.reward.pokemon)) pokemon++;
@@ -106,14 +110,14 @@ describe('Word Board prizes', () => {
     expect(masterBalls / ROUNDS).toBeGreaterThan(0.017);
     expect(pokemon / ROUNDS).toBeLessThan(0.055);
     expect(pokemon / ROUNDS).toBeGreaterThan(0.045);
-  });
+  }, 30_000); // 120k simulated rounds
 
   it('one prize per star, none without a clear, rarities only from the level pool', () => {
     for (let i = 0; i < ENGLISH_LADDER.length; i++) {
       const rarities = new Set(boardPool(ENGLISH_LADDER[i], none).map((p) => p.rarity));
       for (const stars of [0, 1, 2, 3] as const) {
         for (let seed = 1; seed <= 20; seed++) {
-          const prizes = boardPrizes(i, stars, none, createRng(seed));
+          const prizes = boardPrizes(i, stars, none, ALL_BADGES, createRng(seed));
           expect(prizes).toHaveLength(stars);
           for (const p of prizes) {
             expect(p.kind).toBe('board');
@@ -134,6 +138,57 @@ describe('Word Board prizes', () => {
     expect(ids(new Set([RIOLU]))).not.toContain(RIOLU);
     expect(rarePokemonPrize(top, new Set(BOARD_POKEMON))).toBeNull();
     expect(rarePokemonPrize(ENGLISH_LADDER[0], none)).toBeNull();
+  });
+});
+
+describe('Word Board premium prizes', () => {
+  const isVitamin = (r: DialogueReward) => !!r.items?.some((i) => getItem(i.itemId)?.effect.type === 'vitamin');
+  const premiumOf = (r: DialogueReward): keyof typeof PREMIUM_BADGES | null =>
+    r.items?.some((i) => i.itemId === 'master-ball')
+      ? 'masterBall'
+      : r.pokemon
+        ? 'rarePokemon'
+        : r.items?.some((i) => i.itemId === 'rare-candy')
+          ? 'rareCandy'
+          : isVitamin(r)
+            ? 'vitamin'
+            : null;
+
+  it('each premium prize needs its badges; others need none', () => {
+    for (const city of [undefined, ...Object.keys(BOARD_CITIES)])
+      ENGLISH_LADDER.forEach((_, i) => {
+        for (const p of boardPool(boardStep(i, city), none)) {
+          const kinds = ('oneOf' in p ? p.oneOf : [p.reward]).map(premiumOf);
+          const need = Math.max(0, ...kinds.map((k) => (k ? PREMIUM_BADGES[k] : 0)));
+          expect(badgesFor(p), `${city} step ${i}`).toBe(need);
+        }
+      });
+  });
+
+  it('a player never wins a premium prize before having its badges', () => {
+    const top = ENGLISH_LADDER.length - 1;
+    for (let badges = 0; badges <= ALL_BADGES; badges++) {
+      const pool = boardPool(unlockedStep(boardStep(top, 'percentile'), badges), none);
+      expect(pool.every((p) => badgesFor(p) <= badges)).toBe(true);
+      const rng = createRng(badges + 1);
+      for (let n = 0; n < 2000; n++)
+        for (const p of boardPrizes(top, 3, none, badges, rng, 'percentile')) {
+          const kind = premiumOf(p.reward);
+          if (kind) expect(PREMIUM_BADGES[kind], kind).toBeLessThanOrEqual(badges);
+        }
+    }
+  });
+
+  it('a new player still gets one prize per star on every level', () => {
+    for (let i = 0; i < ENGLISH_LADDER.length; i++)
+      for (let seed = 1; seed <= 20; seed++)
+        expect(boardPrizes(i, 3, none, 0, createRng(seed), 'algebria')).toHaveLength(3);
+  });
+
+  it('all badges keep the Master Ball at its chance', () => {
+    const top = ENGLISH_LADDER.length - 1;
+    const step = boardStep(top, 'percentile');
+    expect(unlockedStep(step, ALL_BADGES)).toEqual(step);
   });
 });
 

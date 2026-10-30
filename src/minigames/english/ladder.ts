@@ -66,7 +66,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('poke-ball', 2)),
       prize('common', item('potion', 2)),
-      prize('common', money(100)),
+      prize('common', money(1000)),
       prize('good', item('great-ball', 2)),
       prize('good', item('super-potion')),
       prize('rare', item('ultra-ball')),
@@ -79,7 +79,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('poke-ball', 3)),
       prize('common', item('potion', 3)),
-      prize('common', money(150)),
+      prize('common', money(1500)),
       prize('good', item('great-ball', 3)),
       prize('good', item('super-potion', 2)),
       prize('good', item('ether')),
@@ -94,7 +94,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('great-ball')),
       prize('common', item('super-potion')),
-      prize('common', money(200)),
+      prize('common', money(2000)),
       prize('good', item('great-ball', 2)),
       prize('good', item('revive')),
       prize('good', item('ether')),
@@ -112,7 +112,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('great-ball', 2)),
       prize('common', item('super-potion', 2)),
-      prize('common', money(250)),
+      prize('common', money(2500)),
       prize('good', item('ultra-ball')),
       prize('good', item('hyper-potion')),
       prize('good', item('revive')),
@@ -130,7 +130,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('great-ball', 3)),
       prize('common', item('super-potion', 2)),
-      prize('common', money(300)),
+      prize('common', money(3000)),
       prize('good', item('ultra-ball', 2)),
       prize('good', item('hyper-potion')),
       prize('good', item('revive', 2)),
@@ -152,7 +152,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('ultra-ball')),
       prize('common', item('hyper-potion')),
-      prize('common', money(400)),
+      prize('common', money(4000)),
       prize('good', item('ultra-ball', 2)),
       prize('good', item('max-revive')),
       prize('good', item('full-heal', 2)),
@@ -176,7 +176,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('ultra-ball', 2)),
       prize('common', item('hyper-potion', 2)),
-      prize('common', money(500)),
+      prize('common', money(5000)),
       prize('good', item('ultra-ball', 3)),
       prize('good', item('max-revive')),
       prize('good', item('max-potion')),
@@ -202,10 +202,10 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     prizes: [
       prize('common', item('ultra-ball', 3)),
       prize('common', item('max-potion')),
-      prize('common', money(800)),
+      prize('common', money(8000)),
       prize('good', item('max-revive')),
       prize('good', item('full-restore')),
-      prize('good', money(1500)),
+      prize('good', money(15000)),
       prize('good', item('max-ether')),
       prize('rare', item('rare-candy')),
       prize('rare', item('max-elixir')),

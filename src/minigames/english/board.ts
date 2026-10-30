@@ -10,17 +10,28 @@
  *           rare Pokémon the player doesn't own yet, `LadderStep.rarePokemon`) has its own chance, rolled once.
  *           An epic replaces one of the three prizes.
  *   city:   each library adds its own flavor to the step (`boardStep()`, board-cities.ts).
+ *   badges: premium prizes (Master Ball, rare Pokémon, Rare Candy, vitamins) need gym badges (PREMIUM_BADGES).
+ *           With fewer, they are left out of the draw and shown locked on the board (`unlockedStep()`).
  *   leave:  a drawn round stays open until it finishes. Leaving it before (back button, or closing the game
  *           mid-round) closes the board for BOARD_LEAVE_LOCK_MS — no re-drawing a round until an easy one comes.
  *
  * Pure logic (no React, no audio, no saving).
  */
 
+import { getItem } from '../../data/items.js';
 import { getAllPokemon, getEvolutionChain } from '../../services/pokemon-data.js';
 import type { PlayerData } from '../../types/index.js';
 import { giftPokemon } from '../define.js';
 import { ensureGameProgress, resolvePrize, type AwardedPrize } from '../progress.js';
-import type { Bilingual, MiniGamePrizeChoice, MiniGamePrizeDef, MiniGamesSave, PrizeRarity, Stars } from '../types.js';
+import type {
+  Bilingual,
+  DialogueReward,
+  MiniGamePrizeChoice,
+  MiniGamePrizeDef,
+  MiniGamesSave,
+  PrizeRarity,
+  Stars,
+} from '../types.js';
 import { BOARD_CITIES } from './board-cities.js';
 import { ENGLISH_LADDER, MASTER_BALL_EPIC, type EpicPrize, type LadderStep } from './ladder.js';
 import { WORDS_HOME } from './useWords.js';
@@ -65,6 +76,36 @@ export function boardStep(stepIndex: number, city?: string): LadderStep {
     prizes: [...step.prizes, flavor.specialty],
     epic: top && flavor.masterBall ? [...(step.epic ?? []), MASTER_BALL_EPIC] : step.epic,
     rarePokemon: step.rarePokemon && { ...step.rarePokemon, ids: flavor.rarePokemon },
+  };
+}
+
+/** Gym badges a player needs before the board gives each premium prize. */
+export const PREMIUM_BADGES = { masterBall: 8, rarePokemon: 7, rareCandy: 6, vitamin: 5 } as const;
+
+const hasItem = (r: DialogueReward, test: (itemId: string) => boolean) => !!r.items?.some((i) => test(i.itemId));
+
+/** Which rewards are premium, strongest first (the first match counts). */
+const PREMIUM: readonly { badges: number; is: (r: DialogueReward) => boolean }[] = [
+  { badges: PREMIUM_BADGES.masterBall, is: (r) => hasItem(r, (id) => id === 'master-ball') },
+  { badges: PREMIUM_BADGES.rarePokemon, is: (r) => !!r.pokemon },
+  { badges: PREMIUM_BADGES.rareCandy, is: (r) => hasItem(r, (id) => id === 'rare-candy') },
+  { badges: PREMIUM_BADGES.vitamin, is: (r) => hasItem(r, (id) => getItem(id)?.effect.type === 'vitamin') },
+];
+
+/** Gym badges needed before the board gives this prize (0 = not premium). A choice needs the most of its options. */
+export function badgesFor(prize: MiniGamePrizeDef): number {
+  const rewards = 'reward' in prize ? [prize.reward] : prize.oneOf;
+  return Math.max(0, ...rewards.map((r) => PREMIUM.find((p) => p.is(r))?.badges ?? 0));
+}
+
+/** A step without the premium prizes `badges` gym badges don't open yet. */
+export function unlockedStep(step: LadderStep, badges: number): LadderStep {
+  const open = (p: MiniGamePrizeDef) => badgesFor(p) <= badges;
+  return {
+    ...step,
+    prizes: step.prizes.filter(open),
+    epic: step.epic?.filter((e) => open(e.prize)),
+    rarePokemon: badges >= PREMIUM_BADGES.rarePokemon ? step.rarePokemon : undefined,
   };
 }
 
@@ -121,16 +162,20 @@ export function rollEpic(epics: readonly EpicPrize[], rng: () => number): MiniGa
   return null;
 }
 
-/** Prizes of a finished board round on `stepIndex` in `city`'s library: one per star. Nothing when not cleared. */
+/**
+ * Prizes of a finished board round on `stepIndex` in `city`'s library for a player with `badges` gym badges:
+ * one per star. Nothing when not cleared.
+ */
 export function boardPrizes(
   stepIndex: number,
   stars: Stars,
   owned: ReadonlySet<number>,
+  badges: number,
   rng: () => number = Math.random,
   city?: string,
 ): AwardedPrize[] {
   if (stars < 1) return [];
-  const step = boardStep(stepIndex, city);
+  const step = unlockedStep(boardStep(stepIndex, city), badges);
   const prizes: AwardedPrize[] = [];
   const won = stars >= EPIC_STARS ? rollEpic(epicOdds(step, owned), rng) : null;
   if (won) prizes.push({ kind: 'board', ...resolvePrize(won, rng) });

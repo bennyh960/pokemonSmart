@@ -5,6 +5,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { getGlobalAudio } from '../../audio/audio-manager.js';
+import { countBadges } from '../../data/badges.js';
 import { useInputLayer } from '../../engine/input/index.js';
 import { getPokemonDisplayName } from '../../services/pokemon-data.js';
 import { grantReward } from '../../systems/rewards.js';
@@ -161,7 +162,14 @@ export function MiniGameShell({
       draft.miniGames ??= {};
       rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board });
       if (care && careMon) rec.prizes = carePrizes(care, level, careMon, rec.stars);
-      if (board) rec.prizes = boardPrizes(board.stepIndex, rec.stars, ownedSpecies(draft), Math.random, board.city);
+      if (board) rec.prizes = boardPrizes(
+          board.stepIndex,
+          rec.stars,
+          ownedSpecies(draft),
+          countBadges(draft.badges),
+          Math.random,
+          board.city,
+        );
       // A board round is an English ladder round: its stars earn ladder points
       if (board) {
         finishBoardRound(draft.miniGames);

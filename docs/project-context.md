@@ -34,6 +34,8 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] English rework built, **not playtested** (`docs/stories/library-english.md` → QA, Round 2 too): 7 English games, English ladder, learn-first cards, Word Dex. A Hebrew speaker should review `src/data/english-words.json` — the `he` words and the `say` pronunciations (niqqud) were written by Claude
 - [ ] Word Board built, **not playtested** (`docs/stories/english-board.md`). **Place the board:** in the tileset editor give a library board tile interact type `english-board` (every placed copy of that tile becomes a board). Then check the librarian intro walk, prize odds/balance, and the rare-Pokémon prize at the top level
 - [ ] English ladder made harder (2026-10-30, save v23 resets everyone to level 1): double points + every game of a level played 3× (1★+) to climb. Next: review the weak levels one by one with the user (kids enjoy the prizes but don't practice enough)
+- [ ] Word Board premium prizes need gym badges (2026-10-30, `PREMIUM_BADGES` in `english/board.ts`): vitamins 5, Rare Candy 6, rare Pokémon 7, Master Ball 8 — locked ones show `🔒 N🏅` on the board. Ladder money ×10. Playtest: does a 0-badge kid still enjoy the board, and does money ×10 break the shop economy?
+- [ ] Find the Pokémon (2026-10-30, not playtested): cards show stats (height/weight/speed/attack, the groups the level's clues can use) and types on type levels; wrong options are clearly off (`miss` margin in `find.ts`); levels 4–5 have a 1-word hint (hinted word saved as not known); on solve the full sentence + clue words are shown in Hebrew. Check the cards fit on a phone with 4 options
 - [ ] Free-play hosts only in 3 libraries (Sumville, Multiplia, Percentile). Minusburg library, Sumville lab, Percentile lab, Algorithma lab have none — add an NPC with `"miniGame": { "category": "english" | "logic" }` in the editor (the editor has no field for it yet — edit the JSON)
 - [ ] More games later: labs have only Poké-Doku (logic) — add logic games, maybe with their own ladder/board like English
 - [ ] Load-time / lazy-loading review postponed until the game strategy settles (main.js is 1.5 MB, mostly JSON data)
@@ -52,7 +54,6 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
 - [ ] Trainer "VS" intro scene before battle (old bug #8, `docs/bugs.md`)
-- [ ] `english/__tests__/board.test.ts` "epic: never below 3 stars…" fails on main (after the Word Board prize rebalance)
 
 ## Tech debt
 - [ ] `src/data/badges.ts` badge 8: leader is `???`, type/mathTopic still old placeholders — fill in when the Algebria gym is designed

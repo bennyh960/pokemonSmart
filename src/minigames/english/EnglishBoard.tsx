@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { countBadges } from '../../data/badges.js';
 import { useInputLayer } from '../../engine/input/index.js';
 import { pokemonFrontSpriteUrl } from '../../systems/overworld-pokemon-anim.js';
 import { useI18n } from '../../ui-react/context/i18n-context.js';
@@ -12,6 +13,7 @@ import { PrizeChip } from '../shell/PrizeChip.js';
 import { MgButton, RARITY_STYLE, themeBackground } from '../shell/ui.js';
 import type { Bilingual, MiniGameTheme, Stars } from '../types.js';
 import {
+  badgesFor,
   boardLockLeft,
   boardPool,
   boardStep,
@@ -21,6 +23,7 @@ import {
   isBoardRoundOpen,
   leaveBoardRound,
   ownedSpecies,
+  PREMIUM_BADGES,
   RARITIES,
   RARITY_ODDS_BY_STARS,
   rarePokemonPrize,
@@ -50,6 +53,10 @@ const TEXT = {
   here: { en: 'You are here!', he: 'אתם כאן!' },
   rareMon: { en: 'Pokémon you can win:', he: 'פוקימונים שאפשר לזכות בהם:' },
   epicOnly: { en: 'only, one per game:', he: 'בלבד, אחד במשחק:' },
+  badgeLock: {
+    en: '🔒 Special prizes open with gym badges 🏅 — win badges to unlock them!',
+    he: '🔒 פרסים מיוחדים נפתחים עם תגים 🏅 — נצחו במכונים ופתחו אותם!',
+  },
   cityPrizes: {
     en: "This library's board has its own special prizes — every city is different!",
     he: 'ללוח של הספרייה הזאת יש פרסים מיוחדים משלו — בכל עיר זה אחרת!',
@@ -75,6 +82,9 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
   const lockLeft = boardLockLeft(save, now);
   const locked = lockLeft > 0;
   const owned = ownedSpecies(pd);
+  const badges = countBadges(pd.badges);
+  /** "🔒 5🏅" on a premium prize the player's badges don't open yet. */
+  const badgeLock = (need: number) => (need > badges ? `🔒 ${need}🏅` : undefined);
   const currentRef = useRef<HTMLDivElement>(null);
 
   // Braces: newer browsers return a Promise from scrollIntoView, and an effect may only return a cleanup function
@@ -180,6 +190,9 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
 
           {/* Every level's prizes */}
           <h2 className="text-2xl font-black">🏆 {TEXT.levels[locale]}</h2>
+          {badges < PREMIUM_BADGES.masterBall && (
+            <p className="-mt-2 text-sm font-bold text-white/85">{TEXT.badgeLock[locale]}</p>
+          )}
           {ENGLISH_LADDER.map((_, i) => {
             const step = boardStep(i, city);
             const mon = rarePokemonPrize(step, owned);
@@ -215,20 +228,26 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
                           <span dir="ltr">{'★'.repeat(EPIC_STARS)}</span> {TEXT.epicOnly[locale]}
                         </span>
                       )}
-                      {ofRarity.map((p, k) => (
-                        <PrizeChip
-                          key={k}
-                          prize={p}
-                          label={chanceOf.has(p) ? `${Math.round(chanceOf.get(p)! * 100)}%` : undefined}
-                          icon={p === mon ? pokemonFrontSpriteUrl(mon.oneOf[0].pokemon!.id) : undefined}
-                        />
-                      ))}
+                      {ofRarity.map((p, k) => {
+                        const lock = badgeLock(badgesFor(p));
+                        return (
+                          <span key={k} className={lock ? 'opacity-60 grayscale' : undefined}>
+                            <PrizeChip
+                              prize={p}
+                              label={lock ?? (chanceOf.has(p) ? `${Math.round(chanceOf.get(p)! * 100)}%` : undefined)}
+                              icon={p === mon ? pokemonFrontSpriteUrl(mon.oneOf[0].pokemon!.id) : undefined}
+                            />
+                          </span>
+                        );
+                      })}
                     </div>
                   );
                 })}
                 {mon && (
                   <div className="mt-2 flex flex-wrap items-center gap-1">
-                    <span className="text-sm font-bold text-white/85">{TEXT.rareMon[locale]}</span>
+                    <span className="text-sm font-bold text-white/85">
+                      {badgeLock(PREMIUM_BADGES.rarePokemon)} {TEXT.rareMon[locale]}
+                    </span>
                     {mon.oneOf.map((r) => (
                       <img
                         key={r.pokemon!.id}
