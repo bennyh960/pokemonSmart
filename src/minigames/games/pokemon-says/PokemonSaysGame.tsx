@@ -6,7 +6,6 @@ import type { KeyBinding } from '../../../engine/input/react/types.js';
 import { getPokemonDisplayName } from '../../../services/pokemon-data.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../../ui-react/hooks/usePlayerData.js';
-import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
 import { createRng } from '../../english/random.js';
 import { LearnFirst } from '../../english/LearnFirst.js';
@@ -35,7 +34,7 @@ export function PokemonSaysGame(props: MiniGameProps<SaysConfig>) {
     return generateSays(props.level.config, createRng(seed), stats, todayKey(), speakers);
   });
   return (
-    <LearnFirst words={questions.map((q) => q.word)} theme={props.theme}>
+    <LearnFirst words={[...new Set(questions.map((q) => q.word))]} theme={props.theme}>
       <SaysPlay {...props} questions={questions} />
     </LearnFirst>
   );
@@ -113,7 +112,6 @@ function SaysPlay({
 
   const name = getPokemonDisplayName(q.pokemonId);
   const command = q.word.en.toUpperCase();
-  const hebrew = showHebrewHelp(cfg.hebrewHelp, locale, round.tally.questionMistakes);
 
   return (
     <div className="flex h-full flex-col items-center gap-3 overflow-y-auto px-3 pb-6 pt-3 sm:gap-4 sm:pt-5">
@@ -125,7 +123,6 @@ function SaysPlay({
             {name}, <span className="text-yellow-300">{command}!</span>
           </>
         }
-        he={hebrew ? `${name}, ${q.word.he}!` : undefined}
         onSpeak={speak}
         speakKey={speakKey}
         speakLabel={EN_TEXT.replay[locale]}
@@ -181,6 +178,11 @@ function SaysPlay({
                   <WordPic word={o} size="lg" />
                   <span className="min-h-[1.5rem] text-center text-base font-black">
                     {round.solved && isAnswer ? o.en : ''}
+                  </span>
+                  {/* Hebrew under every card on every level (icons alone are ambiguous), never in the prompt — a
+                      translated command would give the answer away */}
+                  <span dir="rtl" className="text-center text-sm font-bold opacity-80">
+                    {o.he}
                   </span>
                 </button>
               </span>

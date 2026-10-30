@@ -17,11 +17,13 @@ interface Props {
   onClose: () => void;
   /** Shown when the picker offers English games: opens the Word Dex. */
   onWordDex?: () => void;
+  /** A prize waits in the Word Dex: its button glows. */
+  dexPrize?: boolean;
   /** Why a game can't be played yet (shown on its card), or null when it's open. */
   lockOf?: (game: AnyMiniGameDef) => string | null;
 }
 
-export function GamePicker({ games, initialId, onPick, onClose, onWordDex, lockOf }: Props) {
+export function GamePicker({ games, initialId, onPick, onClose, onWordDex, dexPrize, lockOf }: Props) {
   const { t, locale } = useI18n();
   const [pd] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -60,8 +62,9 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex, lockO
           </div>
           <div className="flex items-center gap-2">
             {onWordDex && (
-              <MgButton theme={PICKER_THEME} variant="primary" onClick={onWordDex}>
+              <MgButton theme={PICKER_THEME} variant="primary" glow={dexPrize} onClick={onWordDex}>
                 📖 {t('minigames.wordDex')}
+                {dexPrize && ' 🎁'}
               </MgButton>
             )}
             <MgButton

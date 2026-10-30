@@ -133,6 +133,20 @@ export function Results({
             </p>
           )}
 
+          {outcome.dex && (outcome.dex.newCards > 0 || outcome.dex.prizeWaiting) && (
+            <p
+              className="mg-slide-up mt-3 rounded-2xl bg-black/20 px-4 py-2 font-black"
+              style={{ animationDelay: '1.9s' }}
+            >
+              {[
+                outcome.dex.newCards > 0 && `📖 ${t('minigames.results.dexCards', { n: outcome.dex.newCards })}`,
+                outcome.dex.prizeWaiting && `🎁 ${t('minigames.results.dexPrize')}`,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          )}
+
           <div className="mg-slide-up mt-6" style={{ animationDelay: '0.8s' }}>
             {outcome.prizes.length > 0 ? (
               <OpenPrizeButton theme={theme} onOpen={onOpenPrizes} />

@@ -782,6 +782,8 @@
   "minigames.results.ladderPoints": "+{n} נקודות לפס!",
   "minigames.results.ladderUp": "עליתם לרמה {n}!",
   "minigames.results.ladderNoPoints": "שני כוכבים או יותר ממלאים את הפס!",
+  "minigames.results.dexCards": "+{n} קלפים חדשים בספר המילים!",
+  "minigames.results.dexPrize": "פרס מחכה לכם בספר המילים!",
   "minigames.results.openPrize": "פתחו את הפרס!",
   "minigames.prize.firstClear": "פרס ניצחון ראשון!",
   "minigames.prize.threeStar": "פרס שלושה כוכבים!",

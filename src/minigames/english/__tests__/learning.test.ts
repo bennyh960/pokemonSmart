@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  FOCUS_WEIGHT,
   KNOWN_BOX,
   knownCount,
   markShown,
@@ -8,8 +9,10 @@ import {
   pickWords,
   readWordStats,
   recordAnswers,
+  setWordOfTheDay,
   wordOfTheDay,
   wordWeight,
+  type WordStats,
 } from '../learning.js';
 import { createRng } from '../random.js';
 import type { Word } from '../words.js';
@@ -95,9 +98,21 @@ describe('word learning', () => {
     expect(strongCount(s, ['b'])).toBe(0);
   });
 
-  it('word of the day is stable for a date and only tier 1–2', () => {
-    const pool = [word('a', 1), word('b', 2), word('c', 3)];
-    expect(wordOfTheDay(pool, '2026-10-28').id).toBe(wordOfTheDay(pool, '2026-10-28').id);
-    for (let d = 1; d <= 28; d++) expect(wordOfTheDay(pool, `2026-02-${d}`).tier).toBeLessThanOrEqual(2);
+  it('word of the day: a met word still being learned, stable all day once saved, asked first until right', () => {
+    const pool = [word('a', 1), word('b', 2), word('c', 3), word('d', 1)];
+    // nothing met yet: an easy word
+    for (let d = 1; d <= 28; d++) expect(wordOfTheDay(pool, {}, `2026-02-${d}`).tier).toBeLessThanOrEqual(2);
+    // met words: a learning one before a known one
+    const stats: WordStats = { c: { box: 1, seen: 1, right: 1 }, d: { box: 3, seen: 5, right: 5, known: true } };
+    for (let d = 1; d <= 28; d++) expect(wordOfTheDay(pool, stats, `2026-02-${d}`).id).toBe('c');
+    // saved: stays even after it becomes known
+    const saved = setWordOfTheDay(stats, 'c', 'd1');
+    expect(setWordOfTheDay({}, 'a', 'd1')).toEqual({}); // never saves an unmet word
+    const later = { ...saved, c: { ...saved.c, box: 3, known: true } };
+    expect(wordOfTheDay(pool, later, 'd1').id).toBe('c');
+    // boosted until answered right today
+    expect(wordWeight(saved.c, 'd1')).toBe(FOCUS_WEIGHT);
+    expect(wordWeight({ ...saved.c, rightDay: 'd1' }, 'd1')).toBeLessThan(FOCUS_WEIGHT);
+    expect(wordWeight(saved.c, 'd2')).toBeLessThan(FOCUS_WEIGHT);
   });
 });

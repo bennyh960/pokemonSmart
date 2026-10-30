@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { getPlayerBirthYear } from '../../data/story/global-gate-config.js';
 import { useReducedMotion } from '../shell/hooks.js';
 import type { FloatTextOptions, MiniGameHud, MiniGameResult, MiniGameSfx } from '../types.js';
 import type { WordAnswer } from './learning.js';
@@ -24,6 +25,8 @@ export interface WordRoundOptions {
   onFinish: (result: MiniGameResult) => void;
   /** Bank word ids a question teaches (recorded as right when answered with no mistake). */
   wordIdsOf: (index: number) => readonly string[];
+  /** Words of the current question the player was helped with (a hint) — recorded as not known yet. */
+  helpedWordIds?: () => readonly string[];
   /** Said when the answer is revealed (the word, again — repetition is learning). */
   onReveal?: (index: number) => void;
   revealMs?: number;
@@ -55,7 +58,8 @@ export function useWordRound(o: WordRoundOptions) {
   useEffect(() => o.hud.setScore(0), [o.hud]);
 
   function remember(right: boolean) {
-    for (const wordId of o.wordIdsOf(index)) answers.current.push({ wordId, right });
+    const helped = o.helpedWordIds?.() ?? [];
+    for (const wordId of o.wordIdsOf(index)) answers.current.push({ wordId, right: right && !helped.includes(wordId) });
   }
 
   /** A wrong tap: shake, soft boop, combo lost. */
@@ -106,7 +110,7 @@ export function useWordRound(o: WordRoundOptions) {
         finished.current = true;
         recordWords(answers.current);
         o.onFinish({
-          stars: starsForMistakes(tally.mistakes),
+          stars: starsForMistakes(tally.mistakes, o.total, new Date().getFullYear() - getPlayerBirthYear()),
           score: tally.score,
           extra: { mistakes: tally.mistakes, bestCombo: tally.bestCombo },
         });

@@ -28,7 +28,9 @@ import {
   RARITY_ODDS_BY_STARS,
   rarePokemonPrize,
 } from './board.js';
+import { dexPrizeWaiting } from './dex.js';
 import { ENGLISH_LADDER, ladderStep } from './ladder.js';
+import { todayKey } from './learning.js';
 import { LadderCard } from './LadderCard.js';
 
 export const BOARD_THEME: MiniGameTheme = { from: '#0e7490', to: '#7c3aed', accent: '#fde047', accentText: '#1e1b4b' };
@@ -86,6 +88,7 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
   /** "🔒 5🏅" on a premium prize the player's badges don't open yet. */
   const badgeLock = (need: number) => (need > badges ? `🔒 ${need}🏅` : undefined);
   const currentRef = useRef<HTMLDivElement>(null);
+  const dexPrize = dexPrizeWaiting(save, todayKey());
 
   // Braces: newer browsers return a Promise from scrollIntoView, and an effect may only return a cleanup function
   useEffect(() => {
@@ -127,8 +130,14 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
             {isRTL ? '→' : '←'} {TEXT.back[locale]}
           </MgButton>
           <h1 className="text-3xl font-black text-white drop-shadow sm:text-4xl">📋 {TEXT.title[locale]}</h1>
-          <MgButton theme={BOARD_THEME} onClick={onWordDex}>
+          <MgButton
+            theme={BOARD_THEME}
+            variant={dexPrize ? 'primary' : undefined}
+            glow={dexPrize}
+            onClick={onWordDex}
+          >
             📖 {t('minigames.wordDex')}
+            {dexPrize && ' 🎁'}
           </MgButton>
         </div>
       </div>

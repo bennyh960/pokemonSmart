@@ -4,6 +4,7 @@ import {
   POINTS_AFTER_MISTAKE,
   POINTS_FIRST_TRY,
   newTally,
+  starLimits,
   starsForMistakes,
   tallyQuestionDone,
   tallyWrong,
@@ -11,7 +12,20 @@ import {
 
 describe('English round scoring', () => {
   it('stars by mistakes', () => {
-    expect([0, 1, 2, 3, 4, 9].map(starsForMistakes)).toEqual([3, 3, 2, 2, 1, 1]);
+    expect([0, 1, 2, 3, 4, 9].map((m) => starsForMistakes(m))).toEqual([3, 3, 2, 2, 1, 1]);
+  });
+
+  it('allows more mistakes in long rounds and for younger kids', () => {
+    // a 30-question round at age 9: 3× the 10-question limits
+    expect(starLimits(30, 9)).toEqual({ three: 3, two: 9 });
+    // shorter rounds keep the 10-question limits
+    expect(starLimits(6, 9)).toEqual(starLimits(10, 9));
+    // younger → more room, older → less
+    expect(starLimits(10, 6).three).toBeGreaterThan(starLimits(10, 8).three);
+    expect(starLimits(10, 8).three).toBeGreaterThan(starLimits(10, 10).three);
+    expect(starLimits(10, 12).two).toBeLessThan(starLimits(10, 10).two);
+    expect(starsForMistakes(3, 24, 7)).toBe(3);
+    expect(starsForMistakes(3, 10, 11)).toBe(1);
   });
 
   it('combo grows on clean answers and resets on a mistake', () => {

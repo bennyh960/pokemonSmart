@@ -11,6 +11,9 @@ import { EnglishBoard } from '../english/EnglishBoard.js';
 import { ENGLISH_LADDER, isOpenOnLadder, ladderRound } from '../english/ladder.js';
 import { createRng } from '../english/random.js';
 import { LeaveRoundDialog } from '../english/LeaveRoundDialog.js';
+import { dexPrizeWaiting } from '../english/dex.js';
+import { todayKey } from '../english/learning.js';
+import { useWordOfTheDay } from '../english/useWords.js';
 import { WordDex } from '../english/WordDex.js';
 import { GamePicker } from './GamePicker.js';
 import { MiniGameShell } from './MiniGameShell.js';
@@ -49,6 +52,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
   const [dexOpen, setDexOpen] = useState(false);
   const [boardRound, setBoardRound] = useState<BoardRound | null>(null);
   const [confirmLeave, setConfirmLeave] = useState(false);
+  useWordOfTheDay(); // chosen as the games open, so their rounds can ask it
   const games = launch.pickerIds ? MINI_GAME_LIST.filter((g) => launch.pickerIds!.includes(g.id)) : MINI_GAME_LIST;
   const back = `${isRTL ? '→' : '←'} ${t('minigames.back')}`;
 
@@ -124,6 +128,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
         <GamePicker
           games={games}
           onWordDex={games.some((g) => g.category === 'english') ? () => setDexOpen(true) : undefined}
+          dexPrize={dexPrizeWaiting(pd.miniGames ?? {}, todayKey())}
           lockOf={(g) =>
             // In the world (an NPC's picker) English games follow the ladder; the admin picker opens everything
             launch.pickerIds && g.category === 'english' && !isOpenOnLadder(g.id, pd.miniGames ?? {})

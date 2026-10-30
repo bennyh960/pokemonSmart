@@ -5,9 +5,10 @@
  */
 
 import { giftPokemon, item, money, prize } from '../define.js';
-import type { MiniGamePrizeDef } from '../types.js';
-import { knownCount, type WordStats } from './learning.js';
-import type { Word } from './words.js';
+import type { MiniGamePrizeDef, MiniGamesSave } from '../types.js';
+import { knownCount, KNOWN_BOX, wordOfTheDay, type WordStats } from './learning.js';
+import { wordStatsOf, WORDS_HOME } from './useWords.js';
+import { getWords, type Word } from './words.js';
 
 const UNOWN = 201;
 
@@ -50,6 +51,21 @@ export function claimableMilestones(stats: WordStats, dex: DexData): DexMileston
 /** The word of the day was answered right today and its prize not yet taken. */
 export function wordOfDayClaimable(stats: WordStats, word: Word, dex: DexData, today: string): boolean {
   return stats[word.id]?.rightDay === today && dex.wordOfDayClaimed !== today;
+}
+
+/** A prize waits in the book (a milestone, or the word of the day answered right) — the 📖 button glows. */
+export function dexPrizeWaiting(save: MiniGamesSave, today: string): boolean {
+  const stats = wordStatsOf(save);
+  const dex = readDex(save[WORDS_HOME]?.data?.dex);
+  return (
+    claimableMilestones(stats, dex).length > 0 ||
+    wordOfDayClaimable(stats, wordOfTheDay(getWords(), stats, today), dex, today)
+  );
+}
+
+/** Days a learning word has filled out of the KNOWN_BOX it needs (a miss empties them). */
+export function cardDays(stats: WordStats, wordId: string): { have: number; need: number } {
+  return { have: Math.min(stats[wordId]?.box ?? 0, KNOWN_BOX), need: KNOWN_BOX };
 }
 
 export type DexCardState = 'known' | 'learning' | 'new';

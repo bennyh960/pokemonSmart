@@ -20,6 +20,8 @@ export interface FindConfig {
   clues: ClueKind[];
   maxTier: WordTier;
   hebrewHelp: HebrewHelp;
+  /** Clue words the player may ask to translate, per question (unset = none). */
+  hints?: number;
 }
 
 export interface FindPokemon {
@@ -29,6 +31,7 @@ export interface FindPokemon {
   height: number;
   weight: number;
   speed: number;
+  attack: number;
 }
 
 /** The game's Pokémon with the data the clues need (skips any without height / weight). */
@@ -36,29 +39,45 @@ export function findPool(): FindPokemon[] {
   return getAllPokemon().flatMap((p) =>
     p.height === undefined || p.weight === undefined
       ? []
-      : [{ id: p.id, types: p.types, height: p.height, weight: p.weight, speed: p.stats.speed }],
+      : [{ id: p.id, types: p.types, height: p.height, weight: p.weight, speed: p.stats.speed, attack: p.stats.attack }],
   );
 }
 
-/** An adjective clue: a bank word and the data test it stands for. */
+export type TraitGroup = 'size' | 'weight' | 'speed' | 'attack';
+
+/**
+ * An adjective clue: a bank word and the data test it stands for. The cards show the numbers,
+ * so a wrong option must be clearly off (`miss`), not just under the line.
+ */
 interface Trait {
   wordId: string;
-  group: 'size' | 'weight' | 'speed';
+  group: TraitGroup;
   test: (p: FindPokemon) => boolean;
+  miss: (p: FindPokemon) => boolean;
 }
 
 export const TRAITS: readonly Trait[] = [
-  { wordId: 'big', group: 'size', test: (p) => p.height >= 15 },
-  { wordId: 'small', group: 'size', test: (p) => p.height <= 5 },
-  { wordId: 'heavy', group: 'weight', test: (p) => p.weight >= 1000 },
-  { wordId: 'light', group: 'weight', test: (p) => p.weight <= 100 },
-  { wordId: 'fast', group: 'speed', test: (p) => p.speed >= 90 },
-  { wordId: 'slow', group: 'speed', test: (p) => p.speed <= 40 },
+  { wordId: 'big', group: 'size', test: (p) => p.height >= 15, miss: (p) => p.height <= 10 },
+  { wordId: 'small', group: 'size', test: (p) => p.height <= 5, miss: (p) => p.height >= 9 },
+  { wordId: 'heavy', group: 'weight', test: (p) => p.weight >= 1000, miss: (p) => p.weight <= 500 },
+  { wordId: 'light', group: 'weight', test: (p) => p.weight <= 100, miss: (p) => p.weight >= 250 },
+  { wordId: 'fast', group: 'speed', test: (p) => p.speed >= 90, miss: (p) => p.speed <= 65 },
+  { wordId: 'slow', group: 'speed', test: (p) => p.speed <= 40, miss: (p) => p.speed >= 65 },
+  { wordId: 'strong', group: 'attack', test: (p) => p.attack >= 100, miss: (p) => p.attack <= 70 },
 ];
+
+/** The stats a level's cards show — every trait group its clues can use, so the clue word must be read. */
+export function shownGroups(cfg: FindConfig): TraitGroup[] {
+  if (!cfg.clues.includes('adjective')) return [];
+  const groups = TRAITS.filter((t) => getWord(t.wordId)!.tier <= cfg.maxTier).map((t) => t.group);
+  return [...new Set(groups)];
+}
 
 export interface Clue {
   word: Word;
   test: (p: FindPokemon) => boolean;
+  /** Clearly does not fit (a wrong option must fail one clue this way). */
+  miss: (p: FindPokemon) => boolean;
 }
 
 export interface FindQuestion {
@@ -71,11 +90,12 @@ export interface FindQuestion {
 const MAX_TRIES = 200;
 
 function typeClue(w: Word): Clue {
-  return { word: w, test: (p) => p.types.includes(w.typeId!) };
+  const test = (p: FindPokemon) => p.types.includes(w.typeId!);
+  return { word: w, test, miss: (p) => !test(p) };
 }
 
 function traitClue(t: Trait): Clue {
-  return { word: getWord(t.wordId)!, test: t.test };
+  return { word: getWord(t.wordId)!, test: t.test, miss: t.miss };
 }
 
 /** Clues for one target, or null if it has too few traits for this level. */
@@ -129,7 +149,7 @@ export function generateFind(
     if (rng() * 5 > need + 1) continue;
     const others = shuffle(
       rng,
-      pokemon.filter((p) => p.id !== target.id && !clues.every((c) => c.test(p))),
+      pokemon.filter((p) => p.id !== target.id && clues.some((c) => c.miss(p))),
     ).slice(0, cfg.options - 1);
     if (others.length < cfg.options - 1) continue;
     const options = shuffle(rng, [target, ...others]);

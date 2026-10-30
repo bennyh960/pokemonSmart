@@ -10,7 +10,7 @@ import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../../ui-react/hooks/usePlayerData.js';
 import { showHebrewHelp } from '../../english/help.js';
 import { createRng } from '../../english/random.js';
-import { UnownTile, type TileState } from '../../english/UnownTile.js';
+import { letterHue, UnownTile, type TileState } from '../../english/UnownTile.js';
 import { EN_TEXT, ProgressDots, PromptBar } from '../../english/ui.js';
 import { useWordRound } from '../../english/useWordRound.js';
 import { ensureGameProgress } from '../../progress.js';
@@ -118,6 +118,8 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
 
   const prompt = promptFor(q);
   const showHebrew = showHebrewHelp(level.config.hebrewHelp, locale, round.tally.questionMistakes);
+  // Big & Small: every tile wears the shown letter's colour, so the colour can't tell which one matches
+  const hue = q.task === 'big-small' && q.show ? letterHue(q.show) : undefined;
   const tileState = (key: string, isAnswer: boolean): TileState => {
     if (round.solved) return isAnswer ? 'correct' : 'dim';
     return round.wrong?.key === key ? 'wrong' : 'idle';
@@ -140,13 +142,14 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
       >
         {q.optionKind === 'letter' ? (
           <>
-            {q.show && <UnownTile glyph={q.show} size="xl" state={round.solved ? 'correct' : 'idle'} />}
+            {q.show && <UnownTile glyph={q.show} size="xl" hue={hue} state={round.solved ? 'correct' : 'idle'} />}
             <div dir="ltr" className="flex flex-wrap justify-center gap-4 sm:gap-6">
               {q.options.map((o, i) => (
                 <UnownTile
                   key={o.key}
                   glyph={o.en}
                   size="lg"
+                  hue={hue}
                   delay={i * 70}
                   state={tileState(o.key, i === q.answer)}
                   shakeKey={round.wrong?.n}
@@ -172,7 +175,13 @@ export function UnownWordsGame({ level, runId, paused, hud, sfx, onFinish }: Min
                     <span className="mg-en-keyhint">{i + 1}</span>
                     <PokemonSprite id={o.pokemonId!} className="h-20 w-20 object-contain sm:h-28 sm:w-28" />
                     <span className="min-h-[1.5rem] text-center text-sm font-black leading-tight sm:text-base">
-                      {round.solved ? <FirstLetterWord word={o.en} /> : showHebrew ? <span dir="rtl">{o.he}</span> : ''}
+                      {round.solved || level.config.names === 'en' ? (
+                        <FirstLetterWord word={o.en} highlight={round.solved} />
+                      ) : showHebrew ? (
+                        <span dir="rtl">{o.he}</span>
+                      ) : (
+                        ''
+                      )}
                     </span>
                   </button>
                 </span>
@@ -192,10 +201,10 @@ function promptFor(q: Question): Bilingual {
   return PROMPTS[q.task];
 }
 
-function FirstLetterWord({ word }: { word: string }) {
+function FirstLetterWord({ word, highlight = true }: { word: string; highlight?: boolean }) {
   return (
     <span>
-      <span className="text-lg text-fuchsia-600">{word[0]}</span>
+      <span className={highlight ? 'text-lg text-fuchsia-600' : ''}>{word[0]}</span>
       {word.slice(1)}
     </span>
   );

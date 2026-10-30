@@ -15,7 +15,10 @@ import { getTrainerRank } from '../../systems/trainer-rank.js';
 import { carePrizes } from '../care.js';
 import { ambushPrizes, recordEnglishResult } from '../english/ambush.js';
 import { boardPrizes, finishBoardRound, ownedSpecies } from '../english/board.js';
+import { dexPrizeWaiting } from '../english/dex.js';
 import { addLadderPoints, ladderStep } from '../english/ladder.js';
+import { knownCount, todayKey } from '../english/learning.js';
+import { wordStatsOf } from '../english/useWords.js';
 import { highestUnlockedLevel, isLevelUnlocked, levelForRank, recordResult, type RecordOutcome } from '../progress.js';
 import type { AnyMiniGameDef, MiniGameResult } from '../types.js';
 import type { MiniGameOutcome, StartMiniGameOptions } from '../launch.js';
@@ -101,6 +104,8 @@ export function MiniGameShell({
   const [result, setResult] = useState<MiniGameResult | null>(null);
   const [outcome, setOutcome] = useState<RecordOutcome | null>(null);
   const finishedRun = useRef(-1);
+  /** Word Dex cards before the round (an English round tells the cards it added). */
+  const knownBefore = useRef(0);
 
   const playAreaRef = useRef<HTMLDivElement>(null);
   const gamePaused = paused || phase !== 'play';
@@ -147,6 +152,7 @@ export function MiniGameShell({
     setPaused(false);
     setResult(null);
     setOutcome(null);
+    knownBefore.current = knownCount(wordStatsOf(save));
     setRunId((r) => r + 1);
     setPhase('countdown');
   }
@@ -165,7 +171,14 @@ export function MiniGameShell({
     mutate((draft) => {
       draft.miniGames ??= {};
       rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board && !ambush });
-      if (def.category === 'english') recordEnglishResult(draft.miniGames, def.id, level.number, rec.stars);
+      if (def.category === 'english') {
+        recordEnglishResult(draft.miniGames, def.id, level.number, rec.stars);
+        // the game saved its words just before finishing
+        rec.dex = {
+          newCards: Math.max(0, knownCount(wordStatsOf(draft.miniGames)) - knownBefore.current),
+          prizeWaiting: dexPrizeWaiting(draft.miniGames, todayKey()),
+        };
+      }
       if (care && careMon) rec.prizes = carePrizes(care, level, careMon, rec.stars);
       if (ambush) rec.prizes = ambushPrizes(ambush.stepIndex, rec.stars, countBadges(draft.badges), Math.random);
       if (board) rec.prizes = boardPrizes(

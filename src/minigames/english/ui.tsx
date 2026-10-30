@@ -79,7 +79,7 @@ export function PromptBar({ en, he, onSpeak, speakKey, speakLabel }: PromptBarPr
 
 export function ProgressDots({ total, current, solved }: { total: number; current: number; solved: boolean }) {
   return (
-    <div className="flex gap-1.5" dir="ltr" aria-label={`${current + 1}/${total}`}>
+    <div className="flex max-w-md flex-wrap justify-center gap-1.5" dir="ltr" aria-label={`${current + 1}/${total}`}>
       {Array.from({ length: total }, (_, i) => {
         const done = i < current || (i === current && solved);
         return (

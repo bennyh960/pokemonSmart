@@ -148,6 +148,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     play: [
       { gameId: 'memory-match', level: 3 },
       { gameId: 'pokemon-says', level: 1 },
+      { gameId: 'pokemon-says', level: 2 },
     ],
     pointsToNext: 24,
     prizes: [
@@ -169,9 +170,11 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     name: { en: 'Sounds & the Pokémon world', he: 'צלילים ועולם הפוקימון' },
     play: [
       { gameId: 'unown-words', level: 3 },
+      { gameId: 'unown-words', level: 4 },
       { gameId: 'memory-match', level: 4 },
       { gameId: 'memory-match', level: 5 },
       { gameId: 'pokemon-colors', level: 3 },
+      { gameId: 'pokemon-says', level: 3 },
     ],
     pointsToNext: 30,
     prizes: [

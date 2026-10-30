@@ -4,7 +4,8 @@
  *   box 0–3   a right first-try answer moves the word up one box, at most once per day (repetition on
  *             different days is what makes a word stick); a wrong answer drops it back to box 0
  *   known     reached box KNOWN_BOX once — stays known (it's a Word Dex card) even if later missed
- *   picking   new words and words the player got wrong come often, known words come back now and then
+ *   picking   new words and words the player got wrong come often, known words come back now and then;
+ *             the word of the day (`focusDay` = today) comes first until it is answered right today
  *
  * Saved in `pd.miniGames['unown-words'].data.words` (the library's home game) — see useWords.ts.
  */
@@ -28,6 +29,8 @@ export interface WordStat {
   /** Day it was last answered right on the first try. */
   rightDay?: string;
   known?: boolean;
+  /** Day it was the word of the day (see wordOfTheDay). */
+  focusDay?: string;
 }
 
 export type WordStats = Record<string, WordStat>;
@@ -57,6 +60,7 @@ export function readWordStats(raw: unknown): WordStats {
       day: typeof s.day === 'string' ? s.day : undefined,
       rightDay: typeof s.rightDay === 'string' ? s.rightDay : undefined,
       known: s.known === true || undefined,
+      focusDay: typeof s.focusDay === 'string' ? s.focusDay : undefined,
     };
   }
   return out;
@@ -87,9 +91,13 @@ export function recordAnswers(stats: WordStats, answers: readonly WordAnswer[], 
   return out;
 }
 
+/** Weight of the word of the day until it's answered right today — far above the rest, so a round that can ask it does. */
+export const FOCUS_WEIGHT = 40;
+
 /** How much a word wants to be asked now (higher = sooner). */
 export function wordWeight(stat: WordStat | undefined, today: string): number {
   if (!stat) return 3; // new
+  if (stat.focusDay === today && stat.rightDay !== today) return FOCUS_WEIGHT; // word of the day, not yet right
   if (stat.box === 0) return 5; // missed / just met
   const fresh = stat.day === today;
   if (stat.box >= KNOWN_BOX) return fresh ? 0.3 : 1;
@@ -152,10 +160,25 @@ export function markShown(stats: WordStats, wordIds: readonly string[], today: s
   return out;
 }
 
-/** The same word all day for everyone (tier 1–2), from the date. */
-export function wordOfTheDay(words: readonly Word[], today: string): Word {
-  const pool = words.filter((w) => w.tier <= 2);
+/**
+ * The word of the day: once chosen it stays all day (`focusDay`, saved by setWordOfTheDay). Otherwise one the child
+ * has met but doesn't know yet (else any met word), from the date — so it can come up in the games they play.
+ * A child who met no word yet gets an easy (tier 1–2) word that isn't saved.
+ */
+export function wordOfTheDay(words: readonly Word[], stats: WordStats, today: string): Word {
+  const focused = words.find((w) => stats[w.id]?.focusDay === today);
+  if (focused) return focused;
+  const met = words.filter((w) => stats[w.id]);
+  const learning = met.filter((w) => !stats[w.id].known);
+  const pool = learning.length > 0 ? learning : met.length > 0 ? met : words.filter((w) => w.tier <= 2);
   let h = 0;
   for (const ch of today) h = (Math.imul(h, 31) + ch.charCodeAt(0)) >>> 0;
   return pool[h % pool.length];
+}
+
+/** Saves `wordId` as today's word (only a met word — a record is what makes a word "met"). */
+export function setWordOfTheDay(stats: WordStats, wordId: string, today: string): WordStats {
+  const s = stats[wordId];
+  if (!s || s.focusDay === today) return stats;
+  return { ...stats, [wordId]: { ...s, focusDay: today } };
 }

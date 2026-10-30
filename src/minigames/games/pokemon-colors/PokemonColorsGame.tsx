@@ -1,4 +1,8 @@
-/** Pokémon Colours — play area: "What color is Charmander?" → tap the colour (swatch + English + how it sounds). */
+/**
+ * Pokémon Colours — play area: "What color is Charmander?" → tap the colour word. The answer cards are text only
+ * (English + how it sounds + Hebrew help) — a swatch would let the child match the colour without reading. The
+ * colours are shown with their swatches once before the round (LearnFirst recap).
+ */
 
 import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useInputLayer } from '../../../engine/input/index.js';
@@ -9,7 +13,7 @@ import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
 import { LearnFirst } from '../../english/LearnFirst.js';
 import { createRng } from '../../english/random.js';
-import { EN_TEXT, ProgressDots, PromptBar, WordPic } from '../../english/ui.js';
+import { EN_TEXT, ProgressDots, PromptBar } from '../../english/ui.js';
 import { useWordRound } from '../../english/useWordRound.js';
 import { useWordStats } from '../../english/useWords.js';
 import { PokemonSprite } from '../../shell/ui.js';
@@ -33,7 +37,7 @@ export function PokemonColorsGame(props: MiniGameProps<ColorsConfig>) {
     return generateColors(props.level.config, createRng(seed), POKEMON, stats, todayKey());
   });
   return (
-    <LearnFirst words={colorWords(props.level.config)} theme={props.theme}>
+    <LearnFirst words={colorWords(props.level.config)} theme={props.theme} recap>
       <ColorsPlay {...props} questions={questions} />
     </LearnFirst>
   );
@@ -142,11 +146,15 @@ function ColorsPlay({
                   className={`mg-en-card flex w-full flex-col items-center gap-1 px-2 pb-3 pt-4 ${state}`}
                 >
                   <span className="mg-en-keyhint">{i + 1}</span>
-                  <WordPic word={o} size="md" />
-                  <span className="text-xl font-black leading-none">{o.en}</span>
+                  <span className="text-2xl font-black leading-none">{o.en}</span>
                   <span dir="rtl" className="text-base font-black text-fuchsia-600">
                     {o.say}
                   </span>
+                  {hebrew && (
+                    <span dir="rtl" className="text-sm font-bold opacity-80">
+                      {o.he}
+                    </span>
+                  )}
                 </button>
               </span>
             );

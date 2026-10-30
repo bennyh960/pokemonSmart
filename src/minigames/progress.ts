@@ -158,6 +158,8 @@ export interface RecordOutcome {
   prizes: AwardedPrize[];
   /** English ladder round only (set by the shell): points earned, and the new level number if the bar filled. */
   ladder?: { gained: number; newLevel?: number };
+  /** English round only (set by the shell): Word Dex cards collected in this round, and a prize waiting in the book. */
+  dex?: { newCards: number; prizeWaiting: boolean };
 }
 
 export interface RecordOptions {

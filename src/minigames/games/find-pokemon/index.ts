@@ -62,6 +62,7 @@ export default defineMiniGame<FindConfig>({
         clues: ['adjective', 'adjective'],
         maxTier: 2,
         hebrewHelp: 'after-mistake',
+        hints: 1,
       },
     },
     {
@@ -79,6 +80,7 @@ export default defineMiniGame<FindConfig>({
         clues: ['adjective', 'adjective', 'type'],
         maxTier: 3,
         hebrewHelp: 'never',
+        hints: 1,
       },
     },
   ],

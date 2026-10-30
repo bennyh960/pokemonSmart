@@ -23,12 +23,23 @@ interface Props {
   shakeKey?: number;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   ariaLabel?: string;
+  /** Colour override — by default each letter has its own hue (big and small share it). */
+  hue?: number;
 }
 
-export function UnownTile({ glyph, size = 'lg', state = 'idle', delay = 0, shakeKey = 0, onClick, ariaLabel }: Props) {
+export function UnownTile({
+  glyph,
+  size = 'lg',
+  state = 'idle',
+  delay = 0,
+  shakeKey = 0,
+  onClick,
+  ariaLabel,
+  hue = letterHue(glyph),
+}: Props) {
   const style = {
     '--uw-size': SIZES[size],
-    '--uw-hue': letterHue(glyph),
+    '--uw-hue': hue,
     '--uw-blink': `${(letterHue(glyph) % 7) * 0.6}s`,
   } as CSSProperties;
   const className = `mg-en-tile ${state === 'idle' ? '' : `is-${state}`}`;

@@ -30,6 +30,8 @@ describe('Find the Pokémon', () => {
           expect(q.options).toHaveLength(lvl.config.options);
           const fitting = q.options.filter((p) => q.clues.every((c) => c.test(p)));
           expect(fitting).toEqual([q.options[q.answer]]);
+          // The cards show the numbers — every wrong option is clearly off on some clue, never borderline
+          for (const p of q.options) if (p !== q.options[q.answer]) expect(q.clues.some((c) => c.miss(p))).toBe(true);
           for (const c of q.clues) expect(c.word.tier).toBeLessThanOrEqual(lvl.config.maxTier);
         }
       }

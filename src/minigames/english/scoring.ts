@@ -1,6 +1,7 @@
 /**
  * Scoring — pure.
- *   stars: 0–1 mistakes → 3★, 2–3 → 2★, more → 1★ (finishing always clears — kids keep going)
+ *   stars: by mistakes, allowed in proportion to the round's length and more for younger kids (STAR_MISTAKES_PER_10;
+ *          a 10-question round at age 9–10: 0–1 → 3★, 2–3 → 2★, more → 1★). Finishing always clears — kids keep going
  *   a question adds at most MISTAKE_CAP_PER_QUESTION mistakes (one hard word can't sink the round)
  *   points: 100 for a first-try answer, 50 after a mistake, +10 per combo step (capped)
  */
@@ -13,9 +14,31 @@ export const POINTS_AFTER_MISTAKE = 50;
 export const COMBO_BONUS = 10;
 export const COMBO_BONUS_MAX = 100;
 
-export function starsForMistakes(mistakes: number): Stars {
-  if (mistakes <= 1) return 3;
-  if (mistakes <= 3) return 2;
+/** Questions the mistake limits are given for; shorter rounds keep these limits. */
+export const STAR_ROUND_BASE = 10;
+
+/** Mistakes allowed per STAR_ROUND_BASE questions for 3★ / 2★, by the child's age (first band the age fits). */
+export const STAR_MISTAKES_PER_10: readonly { maxAge: number; three: number; two: number }[] = [
+  { maxAge: 6, three: 3, two: 6 },
+  { maxAge: 8, three: 2, two: 4 },
+  { maxAge: 10, three: 1, two: 3 },
+  { maxAge: Infinity, three: 1, two: 2 },
+];
+
+/** Age assumed when unknown (the old fixed rule). */
+export const DEFAULT_STAR_AGE = 9;
+
+/** Mistakes a round may have and still earn 3★ / 2★. */
+export function starLimits(questions: number, age = DEFAULT_STAR_AGE): { three: number; two: number } {
+  const band = STAR_MISTAKES_PER_10.find((b) => age <= b.maxAge)!;
+  const scale = Math.max(questions, STAR_ROUND_BASE) / STAR_ROUND_BASE;
+  return { three: Math.round(band.three * scale), two: Math.round(band.two * scale) };
+}
+
+export function starsForMistakes(mistakes: number, questions = STAR_ROUND_BASE, age = DEFAULT_STAR_AGE): Stars {
+  const limit = starLimits(questions, age);
+  if (mistakes <= limit.three) return 3;
+  if (mistakes <= limit.two) return 2;
   return 1;
 }
 

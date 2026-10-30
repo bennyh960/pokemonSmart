@@ -783,6 +783,8 @@
   "minigames.results.ladderPoints": "+{n} points on your bar!",
   "minigames.results.ladderUp": "You reached level {n}!",
   "minigames.results.ladderNoPoints": "2 stars or more fill your bar!",
+  "minigames.results.dexCards": "+{n} new cards in your Word Book!",
+  "minigames.results.dexPrize": "A prize is waiting in the Word Book!",
   "minigames.results.openPrize": "Open your prize!",
   "minigames.prize.firstClear": "First win prize!",
   "minigames.prize.threeStar": "3-star prize!",

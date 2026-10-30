@@ -53,6 +53,17 @@ export default defineMiniGame<UnownWordsConfig>({
       },
       config: { task: 'first-sound', questions: 8, hebrewHelp: 'always' },
     },
+    {
+      number: 4,
+      name: { en: 'Read the Name', he: 'קוראים את השם' },
+      goal: { en: 'Hear a letter — find the name that starts with it!', he: 'שומעים אות — מוצאים את השם שמתחיל בה!' },
+      rewards: {
+        firstClear: prize('rare', item('ultra-ball', 3)),
+        threeStar: prize('rare', item('rare-candy')),
+        replay: prize('common', money(250)),
+      },
+      config: { task: 'first-sound', questions: 8, hebrewHelp: 'always', names: 'en' },
+    },
   ],
   Component: UnownWordsGame,
 });

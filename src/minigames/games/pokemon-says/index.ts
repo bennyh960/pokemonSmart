@@ -23,7 +23,7 @@ export default defineMiniGame<SaysConfig>({
         threeStar: prize('common', item('potion', 3)),
         replay: prize('common', money(100)),
       },
-      config: { questions: 6, choices: 3, maxTier: 1, seconds: 0, hebrewHelp: 'always' },
+      config: { words: 4, repeats: 3, choices: 3, maxTier: 1, seconds: 0 },
     },
     {
       number: 2,
@@ -34,7 +34,7 @@ export default defineMiniGame<SaysConfig>({
         threeStar: prize('good', item('super-potion', 2)),
         replay: prize('common', money(150)),
       },
-      config: { questions: 8, choices: 4, maxTier: 1, seconds: 0, hebrewHelp: 'after-mistake' },
+      config: { words: 5, repeats: 3, choices: 4, maxTier: 1, seconds: 0 },
     },
     {
       number: 3,
@@ -45,18 +45,18 @@ export default defineMiniGame<SaysConfig>({
         threeStar: prize('rare', item('rare-candy')),
         replay: prize('common', money(200)),
       },
-      config: { questions: 8, choices: 4, maxTier: 2, seconds: 8, hebrewHelp: 'after-mistake' },
+      config: { words: 5, repeats: 4, choices: 4, maxTier: 2, seconds: 8 },
     },
     {
       number: 4,
       name: { en: 'Speedy', he: 'מהירים' },
-      goal: { en: 'English only, and faster!', he: 'רק אנגלית, ויותר מהר!' },
+      goal: { en: 'More words, and faster!', he: 'יותר מילים, ויותר מהר!' },
       rewards: {
         firstClear: evolutionStonePrize('rare'),
         threeStar: prize('rare', item('rare-candy', 2)),
         replay: prize('common', money(250)),
       },
-      config: { questions: 10, choices: 4, maxTier: 2, seconds: 6, hebrewHelp: 'never' },
+      config: { words: 6, repeats: 4, choices: 4, maxTier: 2, seconds: 6 },
     },
     {
       number: 5,
@@ -67,7 +67,7 @@ export default defineMiniGame<SaysConfig>({
         threeStar: prize('epic', item('max-elixir', 2)),
         replay: prize('common', money(300)),
       },
-      config: { questions: 10, choices: 6, maxTier: 3, seconds: 5, hebrewHelp: 'never' },
+      config: { words: 6, repeats: 5, choices: 6, maxTier: 3, seconds: 5 },
     },
   ],
   Component: PokemonSaysGame,

@@ -10,4 +10,6 @@ export interface UnownWordsConfig {
   hebrewHelp: HebrewHelp;
   /** Answer choices per question. */
   choices?: number;
+  /** First Sound: how the Pokémon cards are named before the answer — Hebrew (match by sound) or English (read it). */
+  names?: 'he' | 'en';
 }

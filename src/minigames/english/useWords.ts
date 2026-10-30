@@ -1,10 +1,20 @@
 /** Reads / saves the shared word progress of all English modes (see learning.ts). */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import { ensureGameProgress } from '../progress.js';
 import type { MiniGamesSave } from '../types.js';
-import { markShown, readWordStats, recordAnswers, todayKey, type WordAnswer, type WordStats } from './learning.js';
+import {
+  markShown,
+  readWordStats,
+  recordAnswers,
+  setWordOfTheDay,
+  todayKey,
+  wordOfTheDay,
+  type WordAnswer,
+  type WordStats,
+} from './learning.js';
+import { getWords, type Word } from './words.js';
 
 /** The library's home game keeps the word records of every English mode. */
 export const WORDS_HOME = 'unown-words';
@@ -35,4 +45,22 @@ export function useWordStats(): readonly [
   );
   const shown = useCallback((ids: readonly string[]) => update((s) => markShown(s, ids, todayKey())), [update]);
   return [wordStatsOf(pd.miniGames), record, shown] as const;
+}
+
+/** Today's word (learning.ts wordOfTheDay); saves the choice so it stays all day and the games ask it. */
+export function useWordOfTheDay(): Word {
+  const [pd, mutate] = usePlayerData();
+  const today = todayKey();
+  const stats = wordStatsOf(pd.miniGames);
+  const word = wordOfTheDay(getWords(), stats, today);
+  // only a met word is saved (see setWordOfTheDay)
+  const toSave = !!stats[word.id] && stats[word.id].focusDay !== today;
+  useEffect(() => {
+    if (!toSave) return;
+    mutate((draft) => {
+      const data = draft.miniGames?.[WORDS_HOME]?.data;
+      if (data?.words) data.words = setWordOfTheDay(readWordStats(data.words), word.id, today);
+    });
+  }, [toSave, word.id, today, mutate]);
+  return word;
 }

@@ -11,6 +11,7 @@ import { miniGameSfx } from '../shell/sfx.js';
 import { MgButton, RARITY_STYLE, themeBackground } from '../shell/ui.js';
 import type { Bilingual, MiniGamePrizeDef, MiniGameTheme } from '../types.js';
 import {
+  cardDays,
   cardState,
   claimableMilestones,
   DEX_MILESTONES,
@@ -20,9 +21,9 @@ import {
   type DexData,
 } from './dex.js';
 import { LadderCard } from './LadderCard.js';
-import { knownCount, todayKey, wordOfTheDay } from './learning.js';
+import { knownCount, todayKey, type WordStats } from './learning.js';
 import { WordPic } from './ui.js';
-import { wordStatsOf, WORDS_HOME } from './useWords.js';
+import { useWordOfTheDay, wordStatsOf, WORDS_HOME } from './useWords.js';
 import { getWords, THEME_NAMES, type Word, type WordTheme } from './words.js';
 
 const DEX_THEME: MiniGameTheme = { from: '#0f766e', to: '#4338ca', accent: '#fde047', accentText: '#1e1b4b' };
@@ -38,8 +39,8 @@ const TEXT = {
   words: { en: 'words', he: 'מילים' },
   back: { en: 'Back', he: 'חזרה' },
   howTo: {
-    en: 'Answer a word right on 3 different days to collect its card!',
-    he: 'ענו נכון על מילה ב-3 ימים שונים כדי לאסוף את הקלף שלה!',
+    en: 'Answer a word right on 3 different days to collect its card! ●●○ = 2 days done.',
+    he: 'ענו נכון על מילה ב-3 ימים שונים כדי לאסוף את הקלף שלה! ●●○ = עברו כבר 2 ימים.',
   },
 } satisfies Record<string, Bilingual>;
 
@@ -50,7 +51,7 @@ export function WordDex({ onBack }: { onBack: () => void }) {
   const dex = readDex(pd.miniGames?.[WORDS_HOME]?.data?.dex);
   const words = getWords();
   const today = todayKey();
-  const wotd = wordOfTheDay(words, today);
+  const wotd = useWordOfTheDay();
   const known = knownCount(stats);
   const [toast, setToast] = useState<string[] | null>(null);
 
@@ -179,7 +180,7 @@ export function WordDex({ onBack }: { onBack: () => void }) {
               </h2>
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-7">
                 {list.map((w) => (
-                  <DexCard key={w.id} word={w} state={cardState(stats, w.id)} />
+                  <DexCard key={w.id} word={w} stats={stats} />
                 ))}
               </div>
             </section>
@@ -190,7 +191,8 @@ export function WordDex({ onBack }: { onBack: () => void }) {
   );
 }
 
-function DexCard({ word, state }: { word: Word; state: ReturnType<typeof cardState> }) {
+function DexCard({ word, stats }: { word: Word; stats: WordStats }) {
+  const state = cardState(stats, word.id);
   if (state === 'new') {
     return (
       <div className="flex aspect-[3/4] items-center justify-center rounded-2xl bg-black/20 text-3xl font-black text-white/40">
@@ -204,7 +206,7 @@ function DexCard({ word, state }: { word: Word; state: ReturnType<typeof cardSta
       tabIndex={-1}
       onMouseDown={(e) => e.preventDefault()}
       onClick={() => miniGameSfx.word(word.en)}
-      className={`mg-en-card flex aspect-[3/4] flex-col items-center justify-center gap-1 p-1 ${state === 'learning' ? 'opacity-55' : ''}`}
+      className={`mg-en-card flex aspect-[3/4] flex-col items-center justify-center gap-1 p-1 ${state === 'learning' ? 'opacity-70' : ''}`}
       aria-label={word.en}
     >
       <WordPic word={word} size="sm" />
@@ -214,6 +216,17 @@ function DexCard({ word, state }: { word: Word; state: ReturnType<typeof cardSta
       <span dir="rtl" className="text-xs font-bold leading-tight text-indigo-900/70">
         {word.he}
       </span>
+      {state === 'learning' && <DayDots {...cardDays(stats, word.id)} />}
     </button>
+  );
+}
+
+/** ●●○ — days answered right out of the days a card needs. */
+function DayDots({ have, need }: { have: number; need: number }) {
+  return (
+    <span dir="ltr" className="text-sm leading-none tracking-widest text-fuchsia-600" aria-label={`${have}/${need}`}>
+      {'●'.repeat(have)}
+      {'○'.repeat(need - have)}
+    </span>
   );
 }

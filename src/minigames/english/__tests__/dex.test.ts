@@ -4,8 +4,18 @@ vi.hoisted(() => {
   (globalThis as Record<string, unknown>).window ??= globalThis;
 });
 vi.mock('../../../auth/supabase-client.js', () => ({ supabase: {} }));
+vi.mock('../../../services/pokemon-data.js', async (orig) => (await import('./moves-mock.js')).withMoves(orig));
 
-import { cardState, claimableMilestones, DEX_MILESTONES, readDex, wordOfDayClaimable } from '../dex.js';
+import {
+  cardDays,
+  cardState,
+  claimableMilestones,
+  DEX_MILESTONES,
+  dexPrizeWaiting,
+  readDex,
+  wordOfDayClaimable,
+} from '../dex.js';
+import { WORDS_HOME } from '../useWords.js';
 import type { WordStats } from '../learning.js';
 import type { Word } from '../words.js';
 
@@ -41,6 +51,20 @@ describe('Word Dex', () => {
     expect(cardState({}, 'jump')).toBe('new');
     expect(cardState({ jump: { box: 1, seen: 1, right: 1 } }, 'jump')).toBe('learning');
     expect(cardState(knownStats(1), 'w0')).toBe('known');
+  });
+
+  it('learning cards show their days: a miss empties them', () => {
+    expect(cardDays({ a: { box: 2, seen: 3, right: 2 } }, 'a')).toEqual({ have: 2, need: 3 });
+    expect(cardDays({ a: { box: 0, seen: 3, right: 2 } }, 'a').have).toBe(0);
+  });
+
+  it('a prize waits when a milestone is reached and not taken', () => {
+    const words: Record<string, { box: number; seen: number; right: number; known: boolean }> = {};
+    for (let i = 0; i < DEX_MILESTONES[0].known; i++) words[`w${i}`] = { box: 3, seen: 3, right: 3, known: true };
+    const save = { [WORDS_HOME]: { levels: {}, data: { words } } };
+    expect(dexPrizeWaiting(save, 'd1')).toBe(true);
+    const claimed = { [WORDS_HOME]: { levels: {}, data: { words, dex: { claimed: [DEX_MILESTONES[0].known] } } } };
+    expect(dexPrizeWaiting(claimed, 'd1')).toBe(false);
   });
 
   it('reads bad saved data safely', () => {
