@@ -1,8 +1,7 @@
 // Registers all quests/gates/cutscenes/events so runtime lookups work
 import '../../data/story/content/index';
 
-import { getSlotIndex, loadGame, saveGame } from '../../systems/save';
-import { initSavesFromCloud } from '../../auth/auth-service';
+import { loadGame, saveGame } from '../../systems/save';
 import { listSnapshots, addSnapshot, deleteSnapshot, restoreSnapshot, describeProgress } from '../snapshots';
 import type { PlayerData } from '../../types/index';
 import { GATES } from '../../data/story/gates';
@@ -12,8 +11,7 @@ import { getQuest } from '../../data/story/quests';
 import { FLAGS, FLAG_DESCRIPTIONS } from '../../data/story/flags';
 import type { CutsceneDef, CutsceneStep } from '../../data/story/cutscenes';
 import type { QuestDef } from '../../data/story/quests';
-import { ENGLISH_LADDER, ladderProgress, readLadder, setLadderStep } from '../../minigames/english/ladder';
-import { boardLockLeft, clearBoardLock, isBoardRoundOpen } from '../../minigames/english/board';
+import { addRow, makeTable, section, slotPicker } from '../dom';
 
 // ── Vite glob imports ─────────────────────────────────────────────────────────
 
@@ -259,45 +257,11 @@ function findNpcsAcrossMaps(npcIds: string[], extraMapIds: string[]): Map<string
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
 
-function section(title: string): { el: HTMLElement; body: HTMLElement } {
-  const el = document.createElement('div');
-  el.className = 'si-section';
-  const h = document.createElement('h3');
-  h.className = 'si-section-title';
-  h.textContent = title;
-  el.appendChild(h);
-  const body = document.createElement('div');
-  body.className = 'si-section-body';
-  el.appendChild(body);
-  return { el, body };
-}
-
 function subHeader(text: string): HTMLElement {
   const h = document.createElement('h4');
   h.className = 'si-sub-header';
   h.textContent = text;
   return h;
-}
-
-function makeTable(headers: string[]): HTMLTableElement {
-  const t = document.createElement('table');
-  t.className = 'si-table';
-  const thead = document.createElement('thead');
-  const tr = document.createElement('tr');
-  for (const h of headers) { const th = document.createElement('th'); th.textContent = h; tr.appendChild(th); }
-  thead.appendChild(tr); t.appendChild(thead); t.appendChild(document.createElement('tbody'));
-  return t;
-}
-
-function addRow(table: HTMLTableElement, cells: (string | HTMLElement)[]): HTMLTableRowElement {
-  const tr = document.createElement('tr');
-  for (const c of cells) {
-    const td = document.createElement('td');
-    if (typeof c === 'string') td.textContent = c; else td.appendChild(c);
-    tr.appendChild(td);
-  }
-  table.querySelector('tbody')!.appendChild(tr);
-  return tr;
 }
 
 function fmtTrigger(t: { type: string; [k: string]: unknown }): string {
@@ -545,9 +509,8 @@ function renderFlagSection(
 export function renderStoryTab(container: HTMLElement): (() => void) | void {
   const acts = buildActInfoList();
   let selectedAct: ActInfo | null = acts[0] ?? null;
-  let slots = getSlotIndex();
-  let selectedSlot: number | null = slots[0]?.slot ?? null;
-  let playerData: PlayerData | null = selectedSlot !== null ? loadGame(selectedSlot) : null;
+  let selectedSlot: number | null = null;
+  let playerData: PlayerData | null = null;
   let extraMapIds: string[] = [];
 
   container.innerHTML = '';
@@ -579,52 +542,15 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
   div1.style.cssText = 'width:1px;height:20px;background:#30363d;flex-shrink:0;';
   topBar.appendChild(div1);
 
-  const slotLabel = document.createElement('span');
-  slotLabel.className = 'si-topbar-label';
-  slotLabel.textContent = 'Slot:';
-  topBar.appendChild(slotLabel);
-
-  const slotSelect = document.createElement('select');
-  slotSelect.className = 'form-select';
-  slotSelect.style.minWidth = '240px';
-  topBar.appendChild(slotSelect);
-
-  const reloadBtn = document.createElement('button');
-  reloadBtn.className = 'btn btn-sm';
-  reloadBtn.textContent = '↺';
-  reloadBtn.title = 'Reload saves from the cloud';
-  topBar.appendChild(reloadBtn);
-
-  function rebuildSlotSelect() {
-    slotSelect.innerHTML = '';
-    if (!slots.length) {
-      const o = document.createElement('option');
-      o.textContent = 'No saves found'; o.disabled = true;
-      slotSelect.appendChild(o);
-    } else {
-      for (const s of slots) {
-        const o = document.createElement('option');
-        o.value = String(s.slot);
-        o.textContent = `Slot ${s.slot} — ${s.playerName} (${new Date(s.savedAt).toLocaleDateString()})`;
-        if (s.slot === selectedSlot) o.selected = true;
-        slotSelect.appendChild(o);
-      }
-    }
-  }
-  rebuildSlotSelect();
-
-  slotSelect.addEventListener('change', () => {
-    selectedSlot = Number(slotSelect.value);
-    playerData = loadGame(selectedSlot);
+  const picker = slotPicker((slot, pd) => {
+    selectedSlot = slot;
+    playerData = pd;
     render();
   });
-  reloadBtn.addEventListener('click', async () => {
-    await initSavesFromCloud().catch(() => {});
-    slots = getSlotIndex();
-    if (selectedSlot !== null) playerData = loadGame(selectedSlot);
-    rebuildSlotSelect();
-    render();
-  });
+  topBar.append(...picker.nodes);
+  selectedSlot = picker.slot();
+  playerData = selectedSlot !== null ? loadGame(selectedSlot) : null;
+
   actSelect.addEventListener('change', () => {
     selectedAct = acts.find(a => a.path === actSelect.value) ?? null;
     extraMapIds = [];
@@ -690,66 +616,6 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     return s.el;
   }
 
-  /** The English Word Board: jump to any ladder level, and reopen a board closed by leaving a round. */
-  function renderWordBoardSection(slot: number, pd: PlayerData): HTMLElement {
-    const s = section('Word Board (English ladder)');
-    const save = pd.miniGames ?? {};
-    const { step, points } = readLadder(save);
-    const progress = ladderProgress(save);
-    const lockLeft = boardLockLeft(save, Date.now());
-
-    const status = document.createElement('p');
-    status.className = 'text-muted';
-    status.textContent =
-      `Now: Level ${step + 1} — ${ENGLISH_LADDER[step].name.en}` +
-      (progress ? ` (${progress.have}/${progress.need} points)` : ' (top level)') +
-      (lockLeft > 0 ? ` · locked for ${Math.ceil(lockLeft / 60000)} min` : '') +
-      (isBoardRoundOpen(save) ? ' · a round is open' : '');
-    s.body.appendChild(status);
-
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
-    const levelSelect = document.createElement('select');
-    levelSelect.className = 'form-select';
-    ENGLISH_LADDER.forEach((st, i) => {
-      const o = document.createElement('option');
-      o.value = String(i);
-      o.textContent = `Level ${i + 1} — ${st.name.en}`;
-      o.selected = i === step;
-      levelSelect.appendChild(o);
-    });
-    const pointsInput = document.createElement('input');
-    pointsInput.type = 'number';
-    pointsInput.min = '0';
-    pointsInput.className = 'form-input form-input--small';
-    pointsInput.value = String(points);
-    pointsInput.title = 'Points towards the next level';
-    const setBtn = document.createElement('button');
-    setBtn.className = 'btn btn-sm btn-primary';
-    setBtn.textContent = 'Set level';
-    setBtn.addEventListener('click', () => {
-      setLadderStep((pd.miniGames ??= {}), Number(levelSelect.value), Number(pointsInput.value) || 0);
-      saveGame(slot, pd, true);
-      render();
-    });
-    row.append(levelSelect, pointsInput, setBtn);
-
-    if (lockLeft > 0 || isBoardRoundOpen(save)) {
-      const unlockBtn = document.createElement('button');
-      unlockBtn.className = 'btn btn-sm';
-      unlockBtn.textContent = 'Open board';
-      unlockBtn.title = 'Clear the leave-early lock';
-      unlockBtn.addEventListener('click', () => {
-        clearBoardLock((pd.miniGames ??= {}));
-        saveGame(slot, pd, true);
-        render();
-      });
-      row.appendChild(unlockBtn);
-    }
-    s.body.appendChild(row);
-    return s.el;
-  }
-
   function render() {
     content.innerHTML = '';
     if (!selectedAct) return;
@@ -759,9 +625,8 @@ export function renderStoryTab(container: HTMLElement): (() => void) | void {
     const evts      = getStoryEvents().filter(e => act.eventIds.includes(e.id));
     const actRelevant = computeActRelevant(act, evts.map(e => e.id));
 
-    // ── 0. Snapshots + Word Board (whole save, not act-specific) ──
+    // ── 0. Snapshots (whole save, not act-specific) ──
     if (selectedSlot !== null) content.appendChild(renderSnapshotSection(selectedSlot));
-    if (selectedSlot !== null && playerData) content.appendChild(renderWordBoardSection(selectedSlot, playerData));
 
     // ── 1. Description ──
     if (act.description) {

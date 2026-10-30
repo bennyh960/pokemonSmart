@@ -51,6 +51,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
 - [ ] Trainer "VS" intro scene before battle (old bug #8, `docs/bugs.md`)
+- [ ] `english/__tests__/board.test.ts` "epic: never below 3 stars…" fails on main (after the Word Board prize rebalance)
 
 ## Tech debt
 - [ ] `src/data/badges.ts` badge 8: leader is `???`, type/mathTopic still old placeholders — fill in when the Algebria gym is designed

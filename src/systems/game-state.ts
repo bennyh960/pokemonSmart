@@ -152,6 +152,7 @@ export function hasSavedGame(): boolean {
 export function startNewGame(): PlayerData {
   currentPlayerData = createNewPlayerData();
   currentSlot = null;
+  sandbox = false;
   return currentPlayerData;
 }
 
@@ -161,8 +162,19 @@ export function loadGameFromSlot(slot: number): PlayerData | null {
   if (data) {
     currentPlayerData = data;
     currentSlot = slot;
+    sandbox = false;
   }
   return data;
+}
+
+/** A sandbox game is never saved (admin mini-game preview plays on a throwaway copy of a save). */
+let sandbox = false;
+
+/** Play on `pd` without ever writing it to a slot. */
+export function startSandboxGame(pd: PlayerData): void {
+  currentPlayerData = pd;
+  currentSlot = null;
+  sandbox = true;
 }
 
 /** Save current player data to a specific slot and update the current slot. */
@@ -197,7 +209,7 @@ export function updateLastPokemonCenter(mapId: string, x: number, y: number): vo
 
 /** Auto-save the current game state to the current slot (or first free slot for new games). */
 export function autoSave(syncCloudForce?: boolean): void {
-  if (!currentPlayerData) return;
+  if (!currentPlayerData || sandbox) return;
   if (currentSlot === null) {
     const free = findFreeSlot();
     currentSlot = free !== null ? free : 0;

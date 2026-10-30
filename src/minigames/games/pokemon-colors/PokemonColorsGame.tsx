@@ -3,7 +3,7 @@
 import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import { useInputLayer } from '../../../engine/input/index.js';
 import type { KeyBinding } from '../../../engine/input/react/types.js';
-import { getAllPokemon, getPokemon } from '../../../services/pokemon-data.js';
+import { getPokemon } from '../../../services/pokemon-data.js';
 import { useI18n } from '../../../ui-react/context/i18n-context.js';
 import { showHebrewHelp } from '../../english/help.js';
 import { todayKey } from '../../english/learning.js';
@@ -14,9 +14,9 @@ import { useWordRound } from '../../english/useWordRound.js';
 import { useWordStats } from '../../english/useWords.js';
 import { PokemonSprite } from '../../shell/ui.js';
 import type { MiniGameProps } from '../../types.js';
-import { colorWords, generateColors, type ColorPokemon, type ColorQuestion, type ColorsConfig } from './colors.js';
+import { colorPool, colorWords, generateColors, type ColorQuestion, type ColorsConfig } from './colors.js';
 
-const POKEMON: ColorPokemon[] = getAllPokemon().flatMap((p) => (p.color ? [{ id: p.id, color: p.color }] : []));
+const POKEMON = colorPool();
 
 const KEYS: KeyBinding[] = [
   ...[1, 2, 3, 4, 5, 6].flatMap((n) => [

@@ -7,7 +7,7 @@ import type { HebrewHelp } from '../../english/help.js';
 import { pickWords, type WordStats } from '../../english/learning.js';
 import { pick, sample, shuffle, type Rng } from '../../english/random.js';
 import { getWord, type Word } from '../../english/words.js';
-import type { PokemonColor } from '../../../services/pokemon-data.js';
+import { getAllPokemon, type PokemonColor } from '../../../services/pokemon-data.js';
 
 export interface ColorsConfig {
   questions: number;
@@ -26,6 +26,11 @@ export interface ColorQuestion {
   pokemonId: number;
   answer: number;
   options: Word[];
+}
+
+/** The game's Pokémon that have a colour. */
+export function colorPool(): ColorPokemon[] {
+  return getAllPokemon().flatMap((p) => (p.color ? [{ id: p.id, color: p.color }] : []));
 }
 
 export function colorWords(cfg: ColorsConfig): Word[] {

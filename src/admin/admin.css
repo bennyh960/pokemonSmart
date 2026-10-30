@@ -652,3 +652,19 @@ body {
   color: #f85149;
   font-family: monospace;
 }
+
+/* ── English tab: question preview ── */
+.en-cards { display: flex; flex-direction: column; gap: 8px; }
+.en-card { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+.en-card-prompt { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; color: #e6edf3; }
+.en-card-num { min-width: 22px; height: 22px; border-radius: 11px; background: #21262d; color: #8b949e; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; }
+.en-card-options { display: flex; gap: 6px; flex-wrap: wrap; padding-left: 30px; }
+.en-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border: 1px solid #30363d; border-radius: 6px; background: #161b22; font-size: 13px; color: #e6edf3; }
+.en-chip--text { font-family: monospace; }
+.en-chip--ok { border-color: #3fb950; background: rgba(63,185,80,0.15); }
+.en-he { color: #8b949e; font-size: 11px; }
+.en-pic { width: 24px; height: 24px; image-rendering: pixelated; object-fit: contain; }
+.en-pic--mon { width: 40px; height: 40px; }
+.en-emoji { font-size: 18px; }
+.en-swatch { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #484f58; }
+.en-play-frame { width: 100%; aspect-ratio: 3 / 2; max-height: 80vh; border: 1px solid #30363d; border-radius: 6px; background: #000; }
