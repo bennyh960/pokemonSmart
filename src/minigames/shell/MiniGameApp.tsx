@@ -147,6 +147,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
           onOutcome={onOutcome}
           carePokemonUuid={fromPicker ? undefined : launch.carePokemonUuid}
           gate={fromPicker ? undefined : launch.gate}
+          ambush={fromPicker ? undefined : launch.ambush}
         />
       )}
     </Root>

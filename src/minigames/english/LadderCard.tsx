@@ -6,7 +6,7 @@
 import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { getMiniGame } from '../registry.js';
 import type { Bilingual, MiniGamesSave, Stars } from '../types.js';
-import { ENGLISH_LADDER, ladderProgress, ladderStep, PLAYS_TO_CLIMB, STAR_POINTS } from './ladder.js';
+import { ENGLISH_LADDER, ladderProgress, ladderStep, PLAY_MIN_STARS, PLAYS_TO_CLIMB, STAR_POINTS } from './ladder.js';
 
 const TEXT = {
   step: { en: 'Level', he: 'רמה' },
@@ -14,7 +14,10 @@ const TEXT = {
   nextStep: { en: 'To the next level:', he: 'לרמה הבאה:' },
   points: { en: 'points', he: 'נקודות' },
   topStep: { en: 'You reached the top level!', he: 'הגעתם לרמה הכי גבוהה!' },
-  playEach: { en: 'Play every game {n} times:', he: 'שחקו בכל משחק {n} פעמים:' },
+  playEach: {
+    en: 'Play every game {n} times with {stars} or more:',
+    he: 'שחקו בכל משחק {n} פעמים עם {stars} ומעלה:',
+  },
   level: { en: 'level', he: 'שלב' },
 } satisfies Record<string, Bilingual>;
 
@@ -50,7 +53,9 @@ export function LadderCard({ save }: { save: MiniGamesSave }) {
             />
           </div>
           <p className="mt-2 text-sm font-bold text-white/85">
-            {TEXT.playEach[locale].replace('{n}', String(PLAYS_TO_CLIMB))}
+            {TEXT.playEach[locale]
+              .replace('{n}', String(PLAYS_TO_CLIMB))
+              .replace('{stars}', '★'.repeat(PLAY_MIN_STARS))}
           </p>
           <ul className="mt-1 flex flex-wrap gap-2">
             {bar.plays.map(({ play, done }, i) => {

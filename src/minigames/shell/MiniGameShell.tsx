@@ -13,6 +13,7 @@ import { useI18n } from '../../ui-react/context/i18n-context.js';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import { getTrainerRank } from '../../systems/trainer-rank.js';
 import { carePrizes } from '../care.js';
+import { ambushPrizes, recordEnglishResult } from '../english/ambush.js';
 import { boardPrizes, finishBoardRound, ownedSpecies } from '../english/board.js';
 import { addLadderPoints, ladderStep } from '../english/ladder.js';
 import { highestUnlockedLevel, isLevelUnlocked, levelForRank, recordResult, type RecordOutcome } from '../progress.js';
@@ -50,6 +51,8 @@ interface Props {
   carePokemonUuid?: string;
   /** Building gate round (see launch.ts). */
   gate?: StartMiniGameOptions['gate'];
+  /** Unown ambush round (see launch.ts). */
+  ambush?: StartMiniGameOptions['ambush'];
   /** Word Board round on this ladder step: board prizes instead of level prizes (english/board.ts). */
   board?: { stepIndex: number; playIndex: number; city?: string; intro: string; onPlayAgain: () => void };
 }
@@ -62,6 +65,7 @@ export function MiniGameShell({
   onOutcome,
   carePokemonUuid,
   gate,
+  ambush,
   board,
 }: Props) {
   const { t, locale } = useI18n();
@@ -72,9 +76,9 @@ export function MiniGameShell({
   // Care round: the hurt Pokémon plays, the player picks one of the open levels, clearing it heals the Pokémon once
   const careMon = def.care && carePokemonUuid ? pd.party.find((p) => p.uuid === carePokemonUuid) : undefined;
   const care = careMon ? def.care : undefined;
-  // Gate / board rounds play the caller's level: no level picker
-  const fixedLevel = !!gate || !!board;
-  // Care, gate or board: once cleared it can't be replayed from here
+  // Gate / ambush / board rounds play the caller's level: no level picker
+  const fixedLevel = !!gate || !!ambush || !!board;
+  // Care, gate, ambush or board: once cleared it can't be replayed from here
   const fixed = !!care || fixedLevel;
   const [fixedDone, setFixedDone] = useState(false);
   const pokemonId = careMon?.id ?? def.mascotPokemonId;
@@ -160,8 +164,10 @@ export function MiniGameShell({
     let rec: RecordOutcome | null = null;
     mutate((draft) => {
       draft.miniGames ??= {};
-      rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board });
+      rec = recordResult(draft.miniGames, def, level.number, res, { levelPrizes: !care && !board && !ambush });
+      if (def.category === 'english') recordEnglishResult(draft.miniGames, def.id, level.number, rec.stars);
       if (care && careMon) rec.prizes = carePrizes(care, level, careMon, rec.stars);
+      if (ambush) rec.prizes = ambushPrizes(ambush.stepIndex, rec.stars, countBadges(draft.badges), Math.random);
       if (board) rec.prizes = boardPrizes(
           board.stepIndex,
           rec.stars,
@@ -211,10 +217,10 @@ export function MiniGameShell({
           introLine={
             care && careMon
               ? care.intro[locale].replace('{name}', getPokemonDisplayName(careMon.id))
-              : (gate?.intro[locale] ?? board?.intro)
+              : (gate?.intro[locale] ?? ambush?.intro[locale] ?? board?.intro)
           }
           fixedLevel={fixedLevel}
-          prizes={care ? 'care' : board ? 'none' : 'level'}
+          prizes={care ? 'care' : board || ambush ? 'none' : 'level'}
         />
       ) : (
         <>

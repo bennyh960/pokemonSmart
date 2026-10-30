@@ -797,6 +797,7 @@
   "minigames.pickLevel": "Select difficulty level",
   "minigames.prize.bonus": "Lucky find!",
   "minigames.prize.board": "Word Board prize!",
+  "admin.ambush.none": "Nothing to review yet — play some English first (ladder step 2+ or a played level).",
   "admin.care.none": "No Pokémon in the party has a care mini-game.",
   "minigames.prize.fullHp": "{name} feels great again!",
   "minigames.prize.fullHpAsleep": "{name} is full… and fast asleep! Zzz",

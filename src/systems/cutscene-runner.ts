@@ -253,6 +253,8 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
       const step = _steps[i];
       if (step.type === 'action') {
         ctx.executeStoryAction((step as { action: import('../data/story/events.js').StoryAction }).action);
+      } else if (step.type === 'run') {
+        step.run();
       } else if (step.type === 'start-scene') {
         // Transition scene must still happen (e.g. STARTER_SELECT)
         deactivateCutscene();
@@ -699,6 +701,12 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
         `[cutscene] step 'start-battle' (trainerId: "${(step as { trainerId: string }).trainerId}") is not implemented yet. ` +
           `Remove this step from the cutscene, or implement battle-from-cutscene handoff.`,
       );
+    }
+
+    case 'run': {
+      _stepIndex++;
+      step.run();
+      break;
     }
 
     case 'start-scene': {

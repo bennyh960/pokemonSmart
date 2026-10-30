@@ -27,6 +27,11 @@ export interface StartMiniGameOptions {
    * `intro` replaces the level picker on the intro card; once cleared there is no "Play again".
    */
   gate?: { intro: Bilingual };
+  /**
+   * Unown ambush round (english/ambush.ts): plays `level` with no level picker, pays one common prize of ladder
+   * step `stepIndex` on a clear, no ladder points. `intro` replaces the level picker on the intro card.
+   */
+  ambush?: { stepIndex: number; intro: Bilingual };
 }
 
 export interface MiniGameLaunch extends StartMiniGameOptions {

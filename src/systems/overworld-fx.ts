@@ -1,12 +1,12 @@
 /**
- * Overworld particle effects — fire, smoke and hit bursts drawn on the map.
- * Used by the `fx` cutscene step (e.g. a scripted fight between two NPCs).
+ * Overworld particle effects — fire, smoke, hit bursts and an Unown storm drawn on the map.
+ * Used by the `fx` cutscene step (e.g. a scripted fight between two NPCs, the Unown ambush).
  * Particles are plain pixel squares in world coordinates, so they scroll with the camera.
  */
 
 import { TILE_SIZE } from '../engine/config.js';
 
-export type OverworldFxKind = 'fire' | 'smoke' | 'burst' | 'rain';
+export type OverworldFxKind = 'fire' | 'smoke' | 'burst' | 'rain' | 'unown';
 
 interface Particle {
   x: number;
@@ -16,6 +16,11 @@ interface Particle {
   life: number;
   maxLife: number;
   size: number;
+  /** Unown only: the letter, its orbit around the center (angle in radians, distance in pixels) and turn speed. */
+  glyph?: string;
+  angle?: number;
+  dist?: number;
+  spin?: number;
 }
 
 export interface OverworldFx {
@@ -32,13 +37,17 @@ export interface OverworldFx {
 }
 
 /** Particles spawned per second, per tile of radius. */
-const SPAWN_RATE: Record<OverworldFxKind, number> = { fire: 70, smoke: 18, burst: 0, rain: 40 };
+const SPAWN_RATE: Record<OverworldFxKind, number> = { fire: 70, smoke: 18, burst: 0, rain: 40, unown: 5 };
 const BURST_COUNT = 28;
 
 const FIRE_COLORS = ['#fff3a0', '#ffd23f', '#ff9f1c', '#f25c05', '#c22a00'];
 const SMOKE_COLORS = ['#8a8a8a', '#6e6e6e', '#555555'];
 const BURST_COLORS = ['#ffffff', '#fff3a0', '#ffb347', '#ff7b00'];
 const RAIN_COLOR = '#9ec9ff';
+const UNOWN_GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?!';
+/** Glitch stripes across the storm: how many, and how far they reach each side of the center (world pixels). */
+const UNOWN_STRIPES = 5;
+const UNOWN_STRIPE_REACH = 140;
 
 function rand(min: number, max: number): number {
   return min + Math.random() * (max - min);
@@ -52,6 +61,13 @@ function spawnParticle(fx: OverworldFx): Particle {
   if (fx.kind === 'fire') {
     const maxLife = rand(0.35, 0.75);
     return { x, y, vx: rand(-6, 6), vy: rand(-38, -20), life: maxLife, maxLife, size: rand(2, 4) };
+  }
+  if (fx.kind === 'unown') {
+    // A letter enters at the rim and spirals into the center
+    const maxLife = rand(1.1, 1.7);
+    const spin = (Math.random() < 0.5 ? -1 : 1) * rand(2.5, 4.5);
+    const glyph = UNOWN_GLYPHS[Math.floor(Math.random() * UNOWN_GLYPHS.length)];
+    return { x, y, vx: 0, vy: 0, life: maxLife, maxLife, size: rand(6, 9), glyph, angle, dist: fx.radius * 1.6, spin };
   }
   if (fx.kind === 'rain') {
     // Drops start anywhere in a square above the area and fall diagonally through it
@@ -128,6 +144,12 @@ export function updateOverworldFx(fx: OverworldFx, dt: number): boolean {
       p.vx *= 0.9;
       p.vy *= 0.9;
     }
+    if (fx.kind === 'unown') {
+      p.angle! += p.spin! * dt;
+      p.dist = fx.radius * 1.6 * (p.life / p.maxLife);
+      p.x = fx.cx + Math.cos(p.angle!) * p.dist;
+      p.y = fx.cy + Math.sin(p.angle!) * p.dist * 0.7;
+    }
   }
   fx.particles = fx.particles.filter((p) => p.life > 0);
   return fx.timer >= fx.durationS && fx.particles.length === 0;
@@ -137,9 +159,56 @@ function pickColor(colors: string[], t: number): string {
   return colors[Math.min(colors.length - 1, Math.floor(t * colors.length))];
 }
 
+/** Same hue for the same letter (as the English games' Unown tiles). */
+function glyphHue(glyph: string): number {
+  return ((glyph.charCodeAt(0) - 65) * 47 + 250) % 360;
+}
+
+/** The Unown storm: flickering glitch stripes, then each letter with its eye. */
+function drawUnownStorm(ctx: CanvasRenderingContext2D, fx: OverworldFx, camX: number, camY: number): void {
+  const live = fx.timer < fx.durationS;
+  if (live) {
+    for (let i = 0; i < UNOWN_STRIPES; i++) {
+      if (Math.random() < 0.5) continue;
+      ctx.globalAlpha = rand(0.12, 0.3);
+      ctx.fillStyle = Math.random() < 0.5 ? '#ff2fd1' : '#2fe6ff';
+      const y = fx.cy - camY + rand(-fx.radius * 1.4, fx.radius * 1.4);
+      ctx.fillRect(Math.round(fx.cx - camX - UNOWN_STRIPE_REACH), Math.round(y), UNOWN_STRIPE_REACH * 2, rand(1, 3));
+    }
+  }
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.lineWidth = 1.5;
+  for (const p of fx.particles) {
+    const t = 1 - p.life / p.maxLife;
+    const sx = p.x - camX + (Math.random() < 0.08 ? rand(-2, 2) : 0); // a glitchy twitch now and then
+    const sy = p.y - camY;
+    ctx.globalAlpha = Math.min(1, t * 4, (1 - t) * 3);
+    ctx.font = `bold ${Math.round(p.size)}px monospace`;
+    ctx.strokeStyle = '#140a24';
+    ctx.strokeText(p.glyph!, sx, sy);
+    ctx.fillStyle = `hsl(${glyphHue(p.glyph!)}, 85%, 65%)`;
+    ctx.fillText(p.glyph!, sx, sy);
+    // The eye
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(sx, sy, p.size * 0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#140a24';
+    ctx.beginPath();
+    ctx.arc(sx, sy, p.size * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 /** Draw the effect. camX/camY are the camera offset in world pixels. */
 export function drawOverworldFx(ctx: CanvasRenderingContext2D, fx: OverworldFx, camX: number, camY: number): void {
   ctx.save();
+  if (fx.kind === 'unown') {
+    drawUnownStorm(ctx, fx, camX, camY);
+    ctx.restore();
+    return;
+  }
   for (const p of fx.particles) {
     const t = 1 - p.life / p.maxLife; // 0 = just born, 1 = about to die
     let size = p.size;

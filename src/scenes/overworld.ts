@@ -22,6 +22,8 @@ import {
   rollCareTrigger,
   type CareMatch,
 } from '../minigames/care.js';
+import { forceAmbush } from '../minigames/english/ambush.js';
+import { springDueAmbush, UNOWN_AMBUSH_CUTSCENE_ID } from '../systems/unown-ambush.js';
 import { openEnglishBoard, openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
 import { pathToFace } from '../systems/grid-path.js';
 import { FLAGS } from '../data/story/flags.js';
@@ -2452,6 +2454,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           activateCutscene(pendingCutsceneId);
           return;
         }
+        // Unown burst out of a beaten glitched Pokémon (systems/unown-ambush.ts) — once the map is calm
+        if (!activeTextBox && !player.moving && hasActiveGame() && springDueAmbush(getPlayerData())) {
+          activateCutscene(UNOWN_AMBUSH_CUTSCENE_ID);
+          return;
+        }
       }
 
       // Check for pending message queued by story engine (show-message action)
@@ -3921,6 +3928,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           const care = forceCareGame(getPlayerData().party);
           if (care) offerCareGame(care);
           else activeTextBox = createTextBox([t('admin.care.none')], isRTL());
+          return;
+        }
+      }
+
+      // U key → Force an Unown ambush (a review English round) now (admin-only debug shortcut)
+      if (input.isKeyPressed('u') || input.isKeyPressed('U')) {
+        if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
+          const pd = getPlayerData();
+          if (!forceAmbush(pd.miniGames ?? {}, pd.totalSteps))
+            activeTextBox = createTextBox([t('admin.ambush.none')], isRTL());
           return;
         }
       }

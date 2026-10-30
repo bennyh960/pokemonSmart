@@ -1,7 +1,8 @@
 /**
  * The English ladder — what a child plays next, driven only by English progress (never the trainer rank).
  * Every ladder round (library gate, Word Board) earns points by stars (STAR_POINTS: 1★ none, 2★ a little, 3★ more).
- * Climbing to the next step needs both: `pointsToNext` points AND every game of the step finished PLAYS_TO_CLIMB times. The librarian opens a game once the child reaches the first step
+ * Climbing to the next step needs both: `pointsToNext` points AND every game of the step played PLAYS_TO_CLIMB times
+ * with PLAY_MIN_STARS or more. The librarian opens a game once the child reaches the first step
  * that has it. Each step has its own Word Board prizes (board.ts). Saved in `pd.miniGames['unown-words'].data.ladder`.
  */
 
@@ -218,15 +219,17 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   },
 ];
 
-/** Finished rounds (1★ or more) of each game of a step before the child can climb from it. */
+/** Rounds of each game of a step, with PLAY_MIN_STARS or more, before the child can climb from it. */
 export const PLAYS_TO_CLIMB = 3;
+/** Stars a round needs to count as one of the PLAYS_TO_CLIMB plays. */
+export const PLAY_MIN_STARS: Stars = 2;
 
 export interface LadderState {
   /** Index into ENGLISH_LADDER. */
   step: number;
   /** Points earned on this step (at most its pointsToNext). */
   points: number;
-  /** Finished rounds of each game of this step, by its index in `play`. */
+  /** Counted rounds (PLAY_MIN_STARS or more) of each game of this step, by its index in `play`. */
   plays: number[];
 }
 
@@ -273,7 +276,7 @@ export interface LadderRoundRef {
 
 /**
  * Adds a finished ladder round to `save` (mutates it; use inside a mutate() recipe): its points and, for a round of
- * the current step with 1★ or more, one play of its game. A full bar with every game of the step played
+ * the current step with PLAY_MIN_STARS or more, one play of its game. A full bar with every game of the step played
  * PLAYS_TO_CLIMB times climbs one step and starts the next from zero.
  */
 export function addLadderPoints(
@@ -287,7 +290,7 @@ export function addLadderPoints(
   const need = ladder[state.step].pointsToNext;
   if (!need) return { gained, leveledUp: false };
   const plays = [...state.plays];
-  if (stars >= 1 && round?.stepIndex === state.step && round.playIndex in plays) plays[round.playIndex]++;
+  if (stars >= PLAY_MIN_STARS && round?.stepIndex === state.step && round.playIndex in plays) plays[round.playIndex]++;
   const points = Math.min(need, state.points + gained);
   const leveledUp = points >= need && plays.every((n) => n >= PLAYS_TO_CLIMB);
   writeLadder(save, leveledUp ? { step: state.step + 1, points: 0, plays: [] } : { step: state.step, points, plays });

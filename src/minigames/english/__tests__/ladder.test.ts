@@ -17,6 +17,7 @@ import {
   ladderProgress,
   ladderRound,
   ladderStep,
+  PLAY_MIN_STARS,
   PLAYS_TO_CLIMB,
   PRACTICE_ODDS,
   roundStep,
@@ -77,14 +78,15 @@ describe('English ladder', () => {
     const step = ENGLISH_LADDER.findIndex((s) => s.play.length > 1 && s.pointsToNext);
     const save = onStep(step, ENGLISH_LADDER[step].pointsToNext);
     const games = ENGLISH_LADDER[step].play.length;
-    // practice rounds (a lower step) and 0★ rounds don't count as plays
+    // practice rounds (a lower step) and rounds below PLAY_MIN_STARS don't count as plays
     addLadderPoints(save, 3, { stepIndex: step - 1, playIndex: 0 });
     addLadderPoints(save, 0, { stepIndex: step, playIndex: 0 });
+    addLadderPoints(save, 1, { stepIndex: step, playIndex: 0 });
     expect(ladderProgress(save)!.plays[0].done).toBe(0);
     for (let g = 0; g < games; g++)
       for (let n = 0; n < PLAYS_TO_CLIMB; n++) {
         const last = g === games - 1 && n === PLAYS_TO_CLIMB - 1;
-        expect(addLadderPoints(save, 1, { stepIndex: step, playIndex: g }).leveledUp).toBe(last);
+        expect(addLadderPoints(save, PLAY_MIN_STARS, { stepIndex: step, playIndex: g }).leveledUp).toBe(last);
       }
     expect(ladderStep(save)).toBe(step + 1);
   });
@@ -92,7 +94,7 @@ describe('English ladder', () => {
   it('a step round picks a game that still needs plays', () => {
     const step = ENGLISH_LADDER.findIndex((s) => s.play.length > 1 && s.pointsToNext);
     const save = onStep(step);
-    for (let n = 0; n < PLAYS_TO_CLIMB; n++) addLadderPoints(save, 1, { stepIndex: step, playIndex: 0 });
+    for (let n = 0; n < PLAYS_TO_CLIMB; n++) addLadderPoints(save, PLAY_MIN_STARS, { stepIndex: step, playIndex: 0 });
     for (let seed = 1; seed < 30; seed++) {
       const round = ladderRound(save, createRng(seed));
       if (round.stepIndex === step) expect(round.playIndex).not.toBe(0);

@@ -340,6 +340,7 @@ export const FLAGS = {
 
   // ── Libraries ───────────────────────────────────────────────────────────────
   ENGLISH_BOARD_INTRO_DONE: 'english-board-intro-done', // Librarian showed the Word Board (first library with one)
+  UNOWN_AMBUSH_MET: 'unown-ambush-met', // First Unown ambush — Prof. Algorithma explained the Unown and the Glitch
 } as const;
 
 /** Union type of all valid flag string values. Useful for typed flag parameters. */
@@ -505,4 +506,5 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.STORY_BADGE_7]: 'Badge 7 earned (Integrala)',
   [FLAGS.STORY_BADGE_8]: 'Badge 8 earned (Absoluta)',
   [FLAGS.ENGLISH_BOARD_INTRO_DONE]: 'Librarian walked the player to the Word Board',
+  [FLAGS.UNOWN_AMBUSH_MET]: 'First Unown ambush seen — Prof. Algorithma explained the Unown lore',
 };

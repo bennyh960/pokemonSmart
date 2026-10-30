@@ -84,6 +84,11 @@ export type CutsceneStep =
   | { type: 'start-battle'; trainerId: string }
   | { type: 'start-gate'; gateId: string }
   | { type: 'start-scene'; sceneId: string }
+  /**
+   * run — calls a function, then goes on. For cutscenes built in code (e.g. the Unown ambush starts its game);
+   * map/story data uses the other steps. Also runs when the cutscene is skipped.
+   */
+  | { type: 'run'; run: () => void }
   | {
       type: 'thief-npc';
       npcId: string;

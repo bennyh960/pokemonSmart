@@ -105,6 +105,7 @@ import {
 import { sendCaughtToBox } from '../../systems/pc-storage.js';
 import { recordTrainerDefeat } from '../../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../../systems/game-state.js';
+import { noteGlitchBattleEnd } from '../../systems/unown-ambush.js';
 import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
 import { getBattleBackground } from '.././../engine/asset-generator.js';
 import { t, isRTL, getLocale } from '../../i18n/i18n.js';
@@ -5110,6 +5111,9 @@ export function createBattleScene(
   }
 
   function goBack(): void {
+    // A glitched wild Pokémon, beaten or fled from, may break into Unown (systems/unown-ambush.ts)
+    if (enemy.isGlitched && (isWildNpcBattle || !isTrainerBattle))
+      noteGlitchBattleEnd(isWildNpcBattle ? 'wild-npc' : 'wild', getCurrentMapId());
     autoSave();
     stateMachine.change('OVERWORLD');
   }
