@@ -31,6 +31,7 @@ interface BoardRound {
   gameId: MiniGameId;
   level: number;
   stepIndex: number;
+  playIndex: number;
   n: number;
 }
 
@@ -86,6 +87,7 @@ export function MiniGameApp({ launch, onClose, onOutcome }: Props) {
               onOutcome={onOutcome}
               board={{
                 stepIndex: boardRound.stepIndex,
+                playIndex: boardRound.playIndex,
                 city: launch.boardCity,
                 intro: BOARD_INTRO[locale]
                   .replace('{n}', String(boardRound.stepIndex + 1))

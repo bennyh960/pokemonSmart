@@ -295,7 +295,9 @@ export function renderEnglishTab(container: HTMLElement): (() => void) | void {
     const status = el('p', 'text-muted');
     status.textContent =
       `Now: Level ${step + 1} — ${ENGLISH_LADDER[step].name.en}` +
-      (progress ? ` (${progress.have}/${progress.need} points)` : ' (top level)') +
+      (progress
+        ? ` (${progress.have}/${progress.need} points; plays ${progress.plays.map((p) => `${p.play.gameId} ${p.done}`).join(', ')})`
+        : ' (top level)') +
       (lockLeft > 0 ? ` · locked for ${Math.ceil(lockLeft / 60000)} min` : '') +
       (isBoardRoundOpen(save) ? ' · a round is open' : '') +
       ` · words met ${Object.keys(stats).length}, strong ${strongCount(stats)}, known ${knownCount(stats)}`;

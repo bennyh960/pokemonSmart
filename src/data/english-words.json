@@ -19,7 +19,6 @@
   {"id":"bite","theme":"moves","tier":1,"move":"Bite","emoji":"😬","say":"בַּייט"},
   {"id":"cut","theme":"moves","tier":1,"move":"Cut","emoji":"✂️","say":"קַאט"},
   {"id":"fly","theme":"moves","tier":1,"move":"Fly","emoji":"🛫","say":"פְלַיי"},
-  {"id":"dig","theme":"moves","tier":1,"move":"Dig","emoji":"⛏️","say":"דִיג"},
   {"id":"sing","theme":"moves","tier":1,"move":"Sing","emoji":"🎤","say":"סִינְג"},
   {"id":"scratch","theme":"moves","tier":2,"move":"Scratch","emoji":"🐾","say":"סְקְרֶץ׳"},
   {"id":"growl","theme":"moves","tier":2,"move":"Growl","emoji":"😾","say":"גְרַאוּל"},

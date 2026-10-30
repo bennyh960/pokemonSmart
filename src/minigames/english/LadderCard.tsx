@@ -1,8 +1,12 @@
-/** The child's place on the English ladder: level name + the points bar to the next level. Word Dex and Word Board. */
+/**
+ * The child's place on the English ladder: level name, the points bar to the next level and how many times each game
+ * of the level was played (PLAYS_TO_CLIMB each to climb). Word Dex and Word Board.
+ */
 
 import { useI18n } from '../../ui-react/context/i18n-context.js';
+import { getMiniGame } from '../registry.js';
 import type { Bilingual, MiniGamesSave, Stars } from '../types.js';
-import { ENGLISH_LADDER, ladderProgress, ladderStep, STAR_POINTS } from './ladder.js';
+import { ENGLISH_LADDER, ladderProgress, ladderStep, PLAYS_TO_CLIMB, STAR_POINTS } from './ladder.js';
 
 const TEXT = {
   step: { en: 'Level', he: 'רמה' },
@@ -10,6 +14,8 @@ const TEXT = {
   nextStep: { en: 'To the next level:', he: 'לרמה הבאה:' },
   points: { en: 'points', he: 'נקודות' },
   topStep: { en: 'You reached the top level!', he: 'הגעתם לרמה הכי גבוהה!' },
+  playEach: { en: 'Play every game {n} times:', he: 'שחקו בכל משחק {n} פעמים:' },
+  level: { en: 'level', he: 'שלב' },
 } satisfies Record<string, Bilingual>;
 
 /** Star counts that earn points, for the "★★ = +1" hint. */
@@ -43,6 +49,28 @@ export function LadderCard({ save }: { save: MiniGamesSave }) {
               style={{ width: `${(bar.have / bar.need) * 100}%` }}
             />
           </div>
+          <p className="mt-2 text-sm font-bold text-white/85">
+            {TEXT.playEach[locale].replace('{n}', String(PLAYS_TO_CLIMB))}
+          </p>
+          <ul className="mt-1 flex flex-wrap gap-2">
+            {bar.plays.map(({ play, done }, i) => {
+              const twice = step.play.filter((p) => p.gameId === play.gameId).length > 1;
+              return (
+                <li
+                  key={i}
+                  className={`rounded-full px-3 py-0.5 text-sm font-black ${
+                    done >= PLAYS_TO_CLIMB ? 'bg-green-300 text-green-950' : 'bg-black/25 text-white'
+                  }`}
+                >
+                  {getMiniGame(play.gameId).name[locale]}
+                  {twice && typeof play.level === 'number' && ` (${TEXT.level[locale]} ${play.level})`}{' '}
+                  <span dir="ltr">
+                    {done >= PLAYS_TO_CLIMB ? '✓' : `${done}/${PLAYS_TO_CLIMB}`}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </>
       ) : (
         <p className="mt-1 font-bold text-green-200">{TEXT.topStep[locale]}</p>

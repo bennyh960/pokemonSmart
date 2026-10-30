@@ -17,6 +17,7 @@ import {
   ladderProgress,
   ladderRound,
   ladderStep,
+  PLAYS_TO_CLIMB,
   PRACTICE_ODDS,
   roundStep,
   setLadderStep,
@@ -58,16 +59,44 @@ describe('English ladder', () => {
 
   it('points fill the bar; a full bar climbs one step and starts again', () => {
     const save: MiniGamesSave = {};
+    const round = { stepIndex: 0, playIndex: 0 };
     expect(ladderStep(save)).toBe(0);
-    expect(addLadderPoints(save, 1)).toEqual({ gained: 0, leveledUp: false });
-    expect(ladderProgress(save)).toEqual({ have: 0, need: ENGLISH_LADDER[0].pointsToNext });
-    addLadderPoints(save, 2);
+    expect(addLadderPoints(save, 1, round)).toEqual({ gained: 0, leveledUp: false });
+    expect(ladderProgress(save)).toMatchObject({ have: 0, need: ENGLISH_LADDER[0].pointsToNext });
+    addLadderPoints(save, 2, round);
     expect(ladderProgress(save)!.have).toBe(STAR_POINTS[2]);
     let ups = 0;
-    while (ladderStep(save) === 0) if (addLadderPoints(save, 3).leveledUp) ups++;
+    while (ladderStep(save) === 0) if (addLadderPoints(save, 3, round).leveledUp) ups++;
     expect(ups).toBe(1);
     expect(ladderStep(save)).toBe(1);
     expect(ladderProgress(save)!.have).toBe(0);
+    expect(ladderProgress(save)!.plays.every((p) => p.done === 0)).toBe(true);
+  });
+
+  it('a full bar waits until every game of the step was played PLAYS_TO_CLIMB times', () => {
+    const step = ENGLISH_LADDER.findIndex((s) => s.play.length > 1 && s.pointsToNext);
+    const save = onStep(step, ENGLISH_LADDER[step].pointsToNext);
+    const games = ENGLISH_LADDER[step].play.length;
+    // practice rounds (a lower step) and 0★ rounds don't count as plays
+    addLadderPoints(save, 3, { stepIndex: step - 1, playIndex: 0 });
+    addLadderPoints(save, 0, { stepIndex: step, playIndex: 0 });
+    expect(ladderProgress(save)!.plays[0].done).toBe(0);
+    for (let g = 0; g < games; g++)
+      for (let n = 0; n < PLAYS_TO_CLIMB; n++) {
+        const last = g === games - 1 && n === PLAYS_TO_CLIMB - 1;
+        expect(addLadderPoints(save, 1, { stepIndex: step, playIndex: g }).leveledUp).toBe(last);
+      }
+    expect(ladderStep(save)).toBe(step + 1);
+  });
+
+  it('a step round picks a game that still needs plays', () => {
+    const step = ENGLISH_LADDER.findIndex((s) => s.play.length > 1 && s.pointsToNext);
+    const save = onStep(step);
+    for (let n = 0; n < PLAYS_TO_CLIMB; n++) addLadderPoints(save, 1, { stepIndex: step, playIndex: 0 });
+    for (let seed = 1; seed < 30; seed++) {
+      const round = ladderRound(save, createRng(seed));
+      if (round.stepIndex === step) expect(round.playIndex).not.toBe(0);
+    }
   });
 
   it('the top step has no bar and never climbs further', () => {
@@ -84,7 +113,7 @@ describe('English ladder', () => {
     expect(ladderStep(save)).toBe(2);
     expect(ladderProgress(save)!.have).toBe(1);
     setLadderStep(save, 0, 999);
-    expect(ladderProgress(save)!.have).toBe(ENGLISH_LADDER[0].pointsToNext! - 1);
+    expect(ladderProgress(save)!.have).toBe(ENGLISH_LADDER[0].pointsToNext);
     setLadderStep(save, 999, 5);
     expect(ladderStep(save)).toBe(ENGLISH_LADDER.length - 1);
     setLadderStep(save, -3);

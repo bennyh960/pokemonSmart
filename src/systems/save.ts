@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 22;
+export const CURRENT_SAVE_VERSION = 23;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -374,6 +374,12 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     // Mini-games: progress per game (stars / best / clears)
     if (!data.miniGames || typeof data.miniGames !== 'object') data.miniGames = {};
     data.saveVersion = 22;
+  },
+  23: (data) => {
+    // English ladder got harder (double points + every game 3 times): everyone restarts at level 1.
+    // No saved ladder = level 1 (readLadder in minigames/english/ladder.ts); word records are kept
+    delete data.miniGames?.['unown-words']?.data?.ladder;
+    data.saveVersion = 23;
   },
 };
 

@@ -1,7 +1,7 @@
 /**
  * The English ladder — what a child plays next, driven only by English progress (never the trainer rank).
- * Every ladder round (library gate, Word Board) earns points by stars (STAR_POINTS: 1★ none, 2★ a little, 3★ more);
- * `pointsToNext` points climb to the next step. The librarian opens a game once the child reaches the first step
+ * Every ladder round (library gate, Word Board) earns points by stars (STAR_POINTS: 1★ none, 2★ a little, 3★ more).
+ * Climbing to the next step needs both: `pointsToNext` points AND every game of the step finished PLAYS_TO_CLIMB times. The librarian opens a game once the child reaches the first step
  * that has it. Each step has its own Word Board prizes (board.ts). Saved in `pd.miniGames['unown-words'].data.ladder`.
  */
 
@@ -62,7 +62,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   {
     name: { en: 'Letters', he: 'אותיות' },
     play: [{ gameId: 'unown-words', level: 1 }],
-    pointsToNext: 6,
+    pointsToNext: 12,
     prizes: [
       prize('common', item('poke-ball', 2)),
       prize('common', item('potion', 2)),
@@ -75,7 +75,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   {
     name: { en: 'Big & small letters', he: 'אותיות גדולות וקטנות' },
     play: [{ gameId: 'unown-words', level: 2 }],
-    pointsToNext: 6,
+    pointsToNext: 12,
     prizes: [
       prize('common', item('poke-ball', 3)),
       prize('common', item('potion', 3)),
@@ -90,7 +90,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   {
     name: { en: 'Colors', he: 'צבעים' },
     play: [{ gameId: 'memory-match', level: 1 }],
-    pointsToNext: 9,
+    pointsToNext: 18,
     prizes: [
       prize('common', item('great-ball')),
       prize('common', item('super-potion')),
@@ -108,7 +108,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       { gameId: 'pokemon-colors', level: 1 },
       { gameId: 'pokemon-colors', level: 2 },
     ],
-    pointsToNext: 9,
+    pointsToNext: 18,
     prizes: [
       prize('common', item('great-ball', 2)),
       prize('common', item('super-potion', 2)),
@@ -126,7 +126,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   {
     name: { en: 'Pokémon types', he: 'סוגי פוקימון' },
     play: [{ gameId: 'memory-match', level: 2 }],
-    pointsToNext: 12,
+    pointsToNext: 24,
     prizes: [
       prize('common', item('great-ball', 3)),
       prize('common', item('super-potion', 2)),
@@ -148,7 +148,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       { gameId: 'memory-match', level: 3 },
       { gameId: 'pokemon-says', level: 1 },
     ],
-    pointsToNext: 12,
+    pointsToNext: 24,
     prizes: [
       prize('common', item('ultra-ball')),
       prize('common', item('hyper-potion')),
@@ -172,7 +172,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       { gameId: 'memory-match', level: 5 },
       { gameId: 'pokemon-colors', level: 3 },
     ],
-    pointsToNext: 15,
+    pointsToNext: 30,
     prizes: [
       prize('common', item('ultra-ball', 2)),
       prize('common', item('hyper-potion', 2)),
@@ -218,11 +218,16 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   },
 ];
 
+/** Finished rounds (1★ or more) of each game of a step before the child can climb from it. */
+export const PLAYS_TO_CLIMB = 3;
+
 export interface LadderState {
   /** Index into ENGLISH_LADDER. */
   step: number;
-  /** Points earned on this step. */
+  /** Points earned on this step (at most its pointsToNext). */
   points: number;
+  /** Finished rounds of each game of this step, by its index in `play`. */
+  plays: number[];
 }
 
 /** The saved ladder state (missing or broken → the first step). */
@@ -230,7 +235,15 @@ export function readLadder(save: MiniGamesSave, ladder: readonly LadderStep[] = 
   const raw = save[WORDS_HOME]?.data?.ladder as Partial<LadderState> | undefined;
   const step = Number.isInteger(raw?.step) ? Math.max(0, Math.min(ladder.length - 1, raw!.step!)) : 0;
   const points = typeof raw?.points === 'number' && raw.points > 0 ? raw.points : 0;
-  return { step, points };
+  const plays = ladder[step].play.map((_, i) => {
+    const n = Array.isArray(raw?.plays) ? raw.plays[i] : 0;
+    return typeof n === 'number' && n > 0 ? Math.floor(n) : 0;
+  });
+  return { step, points, plays };
+}
+
+function writeLadder(save: MiniGamesSave, state: LadderState): void {
+  (ensureGameProgress(save, WORDS_HOME).data ??= {}).ladder = state;
 }
 
 /** Index of the step the child stands on. */
@@ -238,33 +251,50 @@ export function ladderStep(save: MiniGamesSave, ladder: readonly LadderStep[] = 
   return readLadder(save, ladder).step;
 }
 
-/** Points towards the next step (null on the last step). */
-export function ladderProgress(save: MiniGamesSave): { have: number; need: number } | null {
-  const { step, points } = readLadder(save);
+/** Progress towards the next step: points and finished rounds of each game (null on the last step). */
+export function ladderProgress(
+  save: MiniGamesSave,
+): { have: number; need: number; plays: { play: LadderPlay; done: number }[] } | null {
+  const { step, points, plays } = readLadder(save);
   const need = ENGLISH_LADDER[step].pointsToNext;
-  return need ? { have: Math.min(points, need), need } : null;
+  if (!need) return null;
+  return {
+    have: Math.min(points, need),
+    need,
+    plays: ENGLISH_LADDER[step].play.map((play, i) => ({ play, done: Math.min(plays[i], PLAYS_TO_CLIMB) })),
+  };
+}
+
+/** Which ladder round finished: its step and the index of its game in that step's `play`. */
+export interface LadderRoundRef {
+  stepIndex: number;
+  playIndex: number;
 }
 
 /**
- * Adds a finished ladder round's points to `save` (mutates it; use inside a mutate() recipe).
- * A full bar climbs one step and starts the next bar from zero.
+ * Adds a finished ladder round to `save` (mutates it; use inside a mutate() recipe): its points and, for a round of
+ * the current step with 1★ or more, one play of its game. A full bar with every game of the step played
+ * PLAYS_TO_CLIMB times climbs one step and starts the next from zero.
  */
 export function addLadderPoints(
   save: MiniGamesSave,
   stars: Stars,
+  round?: LadderRoundRef,
   ladder: readonly LadderStep[] = ENGLISH_LADDER,
 ): { gained: number; leveledUp: boolean } {
   const gained = STAR_POINTS[stars];
   const state = readLadder(save, ladder);
   const need = ladder[state.step].pointsToNext;
-  let next: LadderState = { step: state.step, points: need ? state.points + gained : 0 };
-  const leveledUp = !!need && next.points >= need;
-  if (leveledUp) next = { step: state.step + 1, points: 0 };
-  setLadderStep(save, next.step, next.points, ladder);
+  if (!need) return { gained, leveledUp: false };
+  const plays = [...state.plays];
+  if (stars >= 1 && round?.stepIndex === state.step && round.playIndex in plays) plays[round.playIndex]++;
+  const points = Math.min(need, state.points + gained);
+  const leveledUp = points >= need && plays.every((n) => n >= PLAYS_TO_CLIMB);
+  writeLadder(save, leveledUp ? { step: state.step + 1, points: 0, plays: [] } : { step: state.step, points, plays });
   return { gained, leveledUp };
 }
 
-/** Puts the child on `step` with `points` towards the next one, both clamped to the ladder (mutates `save`). */
+/** Puts the child on `step` with `points` towards the next one and no plays yet, clamped to the ladder (mutates `save`). */
 export function setLadderStep(
   save: MiniGamesSave,
   step: number,
@@ -273,8 +303,8 @@ export function setLadderStep(
 ): void {
   const s = Math.max(0, Math.min(ladder.length - 1, Math.floor(step)));
   const need = ladder[s].pointsToNext;
-  const p = need ? Math.max(0, Math.min(need - 1, Math.floor(points))) : 0;
-  (ensureGameProgress(save, WORDS_HOME).data ??= {}).ladder = { step: s, points: p } satisfies LadderState;
+  const p = need ? Math.max(0, Math.min(need, Math.floor(points))) : 0;
+  writeLadder(save, { step: s, points: p, plays: [] });
 }
 
 /** First step that plays this game (-1 = not on the ladder). */
@@ -303,10 +333,17 @@ export function roundStep(current: number, rng: Rng): number {
   return current;
 }
 
-/** A Word Board round: one game of the step `roundStep()` picks (its prizes are that step's). */
-export function ladderRound(save: MiniGamesSave, rng: Rng): { gameId: MiniGameId; level: number; stepIndex: number } {
-  const stepIndex = roundStep(ladderStep(save), rng);
-  const play = pick(rng, ENGLISH_LADDER[stepIndex].play);
+/**
+ * A Word Board round: one game of the step `roundStep()` picks (its prizes are that step's). On the current step a
+ * game not yet played PLAYS_TO_CLIMB times comes first, so every game gets its turns.
+ */
+export function ladderRound(save: MiniGamesSave, rng: Rng): { gameId: MiniGameId; level: number } & LadderRoundRef {
+  const state = readLadder(save);
+  const stepIndex = roundStep(state.step, rng);
+  const all = ENGLISH_LADDER[stepIndex].play.map((_, i) => i);
+  const missing = stepIndex === state.step ? all.filter((i) => state.plays[i] < PLAYS_TO_CLIMB) : [];
+  const playIndex = pick(rng, missing.length > 0 ? missing : all);
+  const play = ENGLISH_LADDER[stepIndex].play[playIndex];
   const level = play.level === 'best' ? highestUnlockedLevel(save, getMiniGame(play.gameId)) : play.level;
-  return { gameId: play.gameId, level, stepIndex };
+  return { gameId: play.gameId, level, stepIndex, playIndex };
 }
