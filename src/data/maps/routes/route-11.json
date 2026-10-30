@@ -294,6 +294,24 @@
           "he": "9 × 7 = 63, ו-6 + 3 = 9. נסה עם מספרים אחרים!"
         }
       ]
+    },
+    {
+      "id": "npc-17933xz614408",
+      "x": 34,
+      "y": 6,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male",
+      "pokemonId": 149,
+      "level": 50,
+      "isGlitched": true,
+      "despawnOnDefeat": true
     }
   ],
   "music": "route",

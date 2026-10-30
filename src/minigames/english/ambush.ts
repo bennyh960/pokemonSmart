@@ -5,7 +5,7 @@
  *             for a random wild one (by the map's infection). Never in a city (map-manifest cities), at most once
  *             every AMBUSH_COOLDOWN_STEPS steps.
  *   round:    one game level of a step the child reached (`reviewRounds()`): steps below the current one, and
- *             levels of the current step played at least once. A level is skipped while it is mastered — its last
+ *             levels of the current step played at least once (a recent result, or a clear saved before). A level is skipped while it is mastered — its last
  *             RECENT_RESULTS rounds all 3★ (`recordEnglishResult()`, any English round). Weaker levels come more.
  *   forced:   no lock — a round left before it is cleared comes back after AMBUSH_RETRY_STEPS steps (same game).
  *   prizes:   one common prize of the step on a clear; no ladder points.
@@ -14,7 +14,7 @@
  */
 
 import type { InfectionLevel } from '../../types/index.js';
-import { ensureGameProgress, highestUnlockedLevel, resolvePrize, type AwardedPrize } from '../progress.js';
+import { ensureGameProgress, getLevelProgress, highestUnlockedLevel, resolvePrize, type AwardedPrize } from '../progress.js';
 import { getMiniGame } from '../registry.js';
 import type { MiniGameId, MiniGamesSave, Stars } from '../types.js';
 import { boardStep, unlockedStep } from './board.js';
@@ -77,10 +77,16 @@ export function reviewRounds(save: MiniGamesSave): { round: AmbushRound; weight:
       if (seen.has(key)) continue;
       seen.add(key);
       const results = recent[key] ?? [];
-      if (stepIndex === current && results.length === 0) continue; // not played yet: nothing to review
+      // Played = a recent result, or a clear saved before results were kept
+      const saved = getLevelProgress(save, play.gameId, level);
+      if (stepIndex === current && results.length === 0 && saved.clears === 0) continue; // nothing to review yet
       if (isMastered(save, play.gameId, level)) continue;
-      // Average stars of the last rounds (none saved yet → middle): 3★ → weight 1, 0★ → weight 4
-      const avg = results.length ? results.reduce<number>((s, n) => s + n, 0) / results.length : 1.5;
+      // Average stars of the last rounds (else the level's best, else middle): 3★ → weight 1, 0★ → weight 4
+      const avg = results.length
+        ? results.reduce<number>((s, n) => s + n, 0) / results.length
+        : saved.clears > 0
+          ? saved.stars
+          : 1.5;
       out.push({ round: { gameId: play.gameId, level, stepIndex }, weight: 4 - avg });
     }
   }

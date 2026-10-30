@@ -51,6 +51,12 @@ describe('Unown ambush — what to review', () => {
     expect(pickAmbushRound({}, createRng(1))).toBeNull();
   });
 
+  it('a level of the current step cleared before results were kept counts as played', () => {
+    const letters = firstPlay(0);
+    const save: MiniGamesSave = { [letters.gameId]: { levels: { [letters.level]: { stars: 2, best: 5, clears: 1 } } } };
+    expect(reviewRounds(save).map((r) => keyOf(r.round))).toEqual([keyOf(letters)]);
+  });
+
   it('reviews lower steps and played levels of the current step, never mastered ones', () => {
     const save = onStep(2);
     const keys = () => reviewRounds(save).map((r) => keyOf(r.round));

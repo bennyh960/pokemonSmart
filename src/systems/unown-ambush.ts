@@ -108,7 +108,8 @@ export function noteGlitchBattleEnd(source: AmbushSource, mapId: string | null):
   if (!hasActiveGame() || !mapId) return;
   const pd = getPlayerData();
   const chance = ambushChance(source, pd.story?.mapInfection[mapId as MapId], isCityMap(mapId));
-  rollAmbush(pd.miniGames ?? {}, pd.totalSteps, chance);
+  const sprung = rollAmbush(pd.miniGames ?? {}, pd.totalSteps, chance);
+  if (import.meta.env.DEV) console.info(`[unown-ambush] ${source} on ${mapId}: chance ${chance}, ambush ${sprung}`);
 }
 
 /** When an ambush is due: sets up its cutscene (play it with UNOWN_AMBUSH_CUTSCENE_ID) and returns true. */
