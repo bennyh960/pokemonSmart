@@ -38,7 +38,12 @@
  *                wild-base-suicune, npc-base-b4-hatch
  *   route-12     npc-pct-guard-1..3 (Heat Collectors), npc-pct-grunt-4..5, npc-pct-admin-shield,
  *                npc-pct-admin, npc-pct-reminder-r12, npc-pct-max, wild-pct-entei,
- *                npc-pct-moltres-fight, wild-pct-moltres, npc-pct-suicune-ally
+ *                npc-pct-moltres-fight, wild-pct-moltres, npc-pct-suicune-ally,
+ *                npc-r12-hidden-grunt-1..7 (in tall grass, run off when beaten),
+ *                npc-r12-jenny + npc-r12-officer-1..4 (Suicune freed → legends done),
+ *                wild-r12-glitch-* (glitched fire Pokémon), npc-r12-hiker-1/2, ace-1, birdkeeper,
+ *                psychic, firefighter, and after the legends: npc-r12-lance, jenny-after, misty,
+ *                brock, alice, officer-after (leave once Oak scans the cores)
  */
 
 import { registerCutscene, type CutsceneStep } from '../../cutscenes.js';
@@ -46,9 +51,12 @@ import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { registerQuest } from '../../quests.js';
 import { MapId } from '../../../maps/map-ids.js';
+import type { InfectionLevel } from '../../../../types/index.js';
 
 const CITY = MapId.PERCENTILE_PERCENTILE;
 const R12 = MapId.ROUTES_ROUTE_12;
+/** Route 12 already has many glitched Rocket/wild NPCs, so random encounters stay at the lowest glitch level. */
+const R12_INFECTION: InfectionLevel = 'low';
 
 /** Everything the arc's glitch touched — drops 2 infection levels when Moltres is beaten. */
 const ARC_AREA: MapId[] = [
@@ -205,7 +213,7 @@ registerCutscene({
       ],
     },
     { type: 'action', action: { type: 'set-infection', mapId: CITY, value: 'critical' } },
-    { type: 'action', action: { type: 'set-infection', mapId: R12, value: 'critical' } },
+    { type: 'action', action: { type: 'set-infection', mapId: R12, value: R12_INFECTION } },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-percentile' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-clues' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_ARC_STARTED } },
@@ -617,8 +625,25 @@ registerCutscene({
       speakerName: PLAYER,
       lines: [{ en: 'The hills are on fire... Every wild Pokémon here could be glitched.', he: 'הגבעות בוערות... כל פוקימון בר כאן עלול להיות נגוע.' }],
     },
+    {
+      type: 'dialogue',
+      speakerId: 'officer-Jenny',
+      speakerName: "Officer Jenny (radio) / השוטרת ג'ני (קשר)",
+      lines: [
+        { en: '*krrk* Officer Jenny to all units! Team Rocket is all over Route 12!', he: "*קרררק* השוטרת ג'ני לכל הניידות! צוות רוקט נמצא בכל דרך 12!" },
+        { en: '*krrk* Grunts are hiding in the tall grass. Find them, and stop those Heat Collectors! *krrk*', he: '*קרררק* סוכנים מתחבאים בדשא הגבוה. מצאו אותם, ועצרו את אוספי החום! *קרררק*' },
+      ],
+    },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_R12_ENTERED } },
   ],
+});
+
+// Saves that started the arc when Route 12 was set to 'critical' drop to the new level.
+registerStoryEvent({
+  id: 'evt-pct-r12-infection-fix',
+  trigger: { type: 'map-enter', mapId: R12 },
+  conditions: [{ type: 'infection-level', mapId: R12, value: 'critical' }],
+  actions: [{ type: 'set-infection', mapId: R12, value: R12_INFECTION }],
 });
 
 // ── Beat 5 → 6: all 3 Heat Collectors down (after the lab beat) → shield drops ──

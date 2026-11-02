@@ -4304,6 +4304,18 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 }
               },
             });
+          } else if (npc.type === 'wild-pokemon') {
+            // Wild Pokémon with no overworld sheet: draw its battle sprite, bobbing on the tile
+            const sprite = loadPokemonSprite((npc as unknown as WildPokemonData).pokemonId, () => {});
+            const cx = Math.floor(npcPixelX - camera.x) + TILE_SIZE / 2;
+            const cy = Math.floor(npcPixelY - camera.y) + TILE_SIZE / 2 - 2 + Math.round(Math.sin(performance.now() / 250));
+            renderables.push({
+              y: renderY,
+              render: () => {
+                if (sprite) drawOverworldPokemon(ctx, sprite, cx, cy, 0.75, 1);
+                else fillRect(ctx, cx - 4, cy - 4, 8, 8, '#FF8800');
+              },
+            });
           } else {
             // Fallback: old procedural 16x16 sprite
             const nx = Math.floor(npcPixelX - camera.x);

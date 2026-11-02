@@ -353,10 +353,18 @@
             "delay": 1.5
           }
         ],
-        "loop": true
+        "loop": true,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 7,
+            "delay": 0.2
+          }
+        ]
       },
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-pct-grunt-5",
@@ -421,10 +429,18 @@
             "delay": 1.5
           }
         ],
-        "loop": true
+        "loop": true,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 10,
+            "delay": 0.2
+          }
+        ]
       },
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-pct-admin-shield",
@@ -724,6 +740,1429 @@
         "floating": true
       },
       "spawnAfter": "act4-pct-entei-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-1",
+      "x": 33,
+      "y": 63,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Surprise! You walked right past my hiding spot!",
+          "he": "הפתעה! עברת ממש ליד המחבוא שלי!"
+        },
+        {
+          "en": "Nobody gets near the Heat Collectors!",
+          "he": "אף אחד לא מתקרב לאוספי החום!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Retreat! I am out of here!",
+          "he": "נסיגה! אני בורח מפה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 109,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 228,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 5,
+            "delay": 0.2
+          },
+          {
+            "dir": "right",
+            "steps": 8,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-2",
+      "x": 18,
+      "y": 12,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Shhh! I was hiding in the grass... and you found me!",
+          "he": "ששש! הסתתרתי בדשא... ומצאת אותי!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "My hiding spot is ruined. Bye!",
+          "he": "המחבוא שלי נהרס. ביי!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 42,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 218,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 7,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-3",
+      "x": 31,
+      "y": 12,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "The grass is hot, but the plan is hotter! Battle!",
+          "he": "הדשא חם, אבל התוכנית חמה יותר! קרב!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Too hot for me... I am running to the hills!",
+          "he": "חם לי מדי... אני רץ לגבעות!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 20,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 77,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 3,
+            "delay": 0.2
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-4",
+      "x": 39,
+      "y": 12,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Gotcha! A grunt in the grass is worth two on the path!",
+          "he": "תפסתי אותך! סוכן בדשא שווה שניים בשביל!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "The police are coming! Run!",
+          "he": "המשטרה מגיעה! לברוח!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 88,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 37,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 89,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 0.2
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-5",
+      "x": 47,
+      "y": 14,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "This is the way to the hills. And I am the wall!",
+          "he": "זאת הדרך לגבעות. ואני הקיר!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Some wall I am... I am out!",
+          "he": "איזה קיר אני... אני הולך!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 228,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 110,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "right",
+            "steps": 1,
+            "delay": 0.2
+          },
+          {
+            "dir": "up",
+            "steps": 5,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-6",
+      "x": 42,
+      "y": 19,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "I counted every step you took. Now count my Pokémon!",
+          "he": "ספרתי כל צעד שעשית. עכשיו תספור את הפוקימונים שלי!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "I lost count... Retreat!",
+          "he": "איבדתי את הספירה... נסיגה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 24,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 219,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 8,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-hidden-grunt-7",
+      "x": 22,
+      "y": 39,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Nobody finds the back path. How did you find it?!",
+          "he": "אף אחד לא מוצא את השביל האחורי. איך מצאת אותו?!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Admin Kelvin will hear about this!",
+          "he": "האדמין קלווין ישמע על זה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 198,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 1600
+      },
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 0.2
+          },
+          {
+            "dir": "left",
+            "steps": 3,
+            "delay": 0.2
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-jenny",
+      "x": 13,
+      "y": 63,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "officer-Jenny",
+      "name": {
+        "en": "Officer Jenny",
+        "he": "השוטרת ג'ני"
+      },
+      "dialogue": [
+        {
+          "en": "I'm Officer Jenny. Thanks to you the fire got weaker, so we came up here.",
+          "he": "אני השוטרת ג'ני. בזכותך האש נחלשה, אז עלינו לכאן."
+        },
+        {
+          "en": "Team Rocket is everywhere on these hills! Grunts hide in the tall grass and jump out at you.",
+          "he": "צוות רוקט נמצא בכל הגבעות! סוכנים מתחבאים בדשא הגבוה וקופצים עליך."
+        },
+        {
+          "en": "Three of them guard Heat Collectors. Beat those three, and their admin loses his shield.",
+          "he": "שלושה מהם שומרים על אוספי חום. תנצח את השלושה, והאדמין שלהם יאבד את המגן."
+        },
+        {
+          "en": "Take these. Fire Pokémon here burn hard!",
+          "he": "קח את אלה. פוקימוני האש כאן שורפים חזק!"
+        }
+      ],
+      "spawnAfter": "act4-pct-suicune-done",
+      "despawnAfter": "act4-pct-legends-done",
+      "reward": {
+        "items": [
+          {
+            "itemId": "burn-heal",
+            "quantity": 3
+          },
+          {
+            "itemId": "hyper-potion",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-r12-officer-1",
+      "x": 32,
+      "y": 64,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "Careful! A grunt was hiding in that grass a minute ago.",
+          "he": "זהירות! סוכן הסתתר בדשא הזה לפני דקה."
+        },
+        {
+          "en": "This path goes up to the east hills. One of the Heat Collectors is up there.",
+          "he": "השביל הזה עולה לגבעות המזרחיות. אחד מאוספי החום נמצא שם למעלה."
+        }
+      ],
+      "spawnAfter": "act4-pct-suicune-done",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-officer-2",
+      "x": 14,
+      "y": 47,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_4c0f36",
+      "name": {
+        "en": "Officer Jake",
+        "he": "השוטר ג'ייק"
+      },
+      "dialogue": [
+        {
+          "en": "We counted more than ten grunts on Route 12. Ten!",
+          "he": "ספרנו יותר מעשרה סוכנים בדרך 12. עשרה!"
+        },
+        {
+          "en": "And the wild Pokémon are glitched. Fire ones, mostly. Watch out!",
+          "he": "והפוקימונים הפראיים נגועים בגליץ'. בעיקר של אש. תיזהר!"
+        }
+      ],
+      "spawnAfter": "act4-pct-suicune-done",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-officer-3",
+      "x": 14,
+      "y": 9,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "The meadow to the east is full of tall grass — and full of grunts.",
+          "he": "באחו ממזרח יש הרבה דשא גבוה — והרבה סוכנים."
+        },
+        {
+          "en": "If the grass moves, get your Pokémon ready!",
+          "he": "אם הדשא זז, תכין את הפוקימונים שלך!"
+        }
+      ],
+      "spawnAfter": "act4-pct-suicune-done",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-officer-4",
+      "x": 40,
+      "y": 52,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_330791",
+      "name": {
+        "en": "Deputy Segen",
+        "he": "סגן ניצב"
+      },
+      "dialogue": [
+        {
+          "en": "Up this path, across the bridge, sits Admin Kelvin.",
+          "he": "במעלה השביל הזה, מעבר לגשר, יושב האדמין קלווין."
+        },
+        {
+          "en": "His heat shield stops my whole team. Only you can turn it off!",
+          "he": "מגן החום שלו עוצר את כל הצוות שלי. רק אתה יכול לכבות אותו!"
+        }
+      ],
+      "spawnAfter": "act4-pct-suicune-done",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "wild-r12-glitch-magmar",
+      "x": 36,
+      "y": 13,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Magmar",
+        "he": "מגמאר"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 126,
+      "level": 48,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-r12-glitch-rapidash",
+      "x": 26,
+      "y": 11,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Rapidash",
+        "he": "ראפידאש"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 78,
+      "level": 48,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1.5
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 1.5
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-r12-glitch-houndoom",
+      "x": 28,
+      "y": 5,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Houndoom",
+        "he": "האונדום"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 229,
+      "level": 48,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-r12-glitch-ninetales",
+      "x": 38,
+      "y": 55,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Ninetales",
+        "he": "ניינטיילס"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 38,
+      "level": 49,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-r12-glitch-magcargo",
+      "x": 26,
+      "y": 53,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Magcargo",
+        "he": "מגקרגו"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 219,
+      "level": 47,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "wild-r12-glitch-charmeleon",
+      "x": 12,
+      "y": 38,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Charmeleon",
+        "he": "שרמליאון"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 5,
+      "level": 46,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-r12-glitch-flareon",
+      "x": 21,
+      "y": 30,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Flareon",
+        "he": "פלריאון"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 136,
+      "level": 48,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "wild-r12-glitch-quilava",
+      "x": 38,
+      "y": 20,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Quilava",
+        "he": "קווילאבה"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 156,
+      "level": 45,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "wild-r12-glitch-graveler",
+      "x": 44,
+      "y": 57,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "",
+      "name": {
+        "en": "Graveler",
+        "he": "גראבלר"
+      },
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "pokemonId": 75,
+      "level": 47,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      }
+    },
+    {
+      "id": "npc-r12-hiker-1",
+      "x": 11,
+      "y": 20,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Hiker Ron",
+        "he": "המטפס רון"
+      },
+      "dialogue": [
+        {
+          "en": "These hills got so hot, my boots melted! Battle me to cool off!",
+          "he": "הגבעות האלה התחממו כל כך, שהנעליים שלי נמסו! תילחם בי כדי להתקרר!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Rock beats fire, but you beat rock!",
+          "he": "סלע מנצח אש, אבל אתה מנצח סלע!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 75,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 95,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 111,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 2000
+      },
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      }
+    },
+    {
+      "id": "npc-r12-firefighter",
+      "x": 28,
+      "y": 62,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_4d53b7",
+      "name": {
+        "en": "Firefighter Dana",
+        "he": "הכבאית דנה"
+      },
+      "dialogue": [
+        {
+          "en": "My water Pokémon fight fires all day. Can they fight you too?",
+          "he": "פוקימוני המים שלי נלחמים בשריפות כל היום. גם בך הם יכולים להילחם?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "You are strong! Go put out the real fire on the hills!",
+          "he": "אתה חזק! לך לכבות את האש האמיתית על הגבעות!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 61,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 117,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 131,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      },
+      "spawnAfter": "act4-pct-suicune-done",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-ace-1",
+      "x": 41,
+      "y": 9,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_c32979",
+      "name": {
+        "en": "Ace Trainer Ethan",
+        "he": "המאמן המצטיין איתן"
+      },
+      "dialogue": [
+        {
+          "en": "I came to see the fire. I found a battle instead!",
+          "he": "באתי לראות את האש. מצאתי קרב במקום!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Wow. You are ready for those hills.",
+          "he": "וואו. אתה מוכן לגבעות האלה."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 18,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 99,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 128,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 2000
+      },
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      }
+    },
+    {
+      "id": "npc-r12-birdkeeper",
+      "x": 35,
+      "y": 9,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_0ade0c",
+      "name": {
+        "en": "Bird Keeper Tom",
+        "he": "שומר הציפורים טום"
+      },
+      "dialogue": [
+        {
+          "en": "My birds fly over the hills and see everything. Even the grunts in the grass!",
+          "he": "הציפורים שלי עפות מעל הגבעות ורואות הכול. אפילו את הסוכנים בדשא!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "My birds saw you coming... they still lost!",
+          "he": "הציפורים שלי ראו אותך מגיע... ובכל זאת הפסידו!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 22,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 85,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 227,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      }
+    },
+    {
+      "id": "npc-r12-hiker-2",
+      "x": 24,
+      "y": 53,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Hiker Gil",
+        "he": "המטפס גיל"
+      },
+      "dialogue": [
+        {
+          "en": "Rock and stone! Let us battle on the hot hill!",
+          "he": "סלע ואבן! בוא נילחם על הגבעה החמה!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "My Golem needs a rest in the shade.",
+          "he": "הגולם שלי צריך מנוחה בצל."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 76,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 185,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 2000
+      },
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      }
+    },
+    {
+      "id": "npc-r12-psychic",
+      "x": 36,
+      "y": 53,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "char_75200a",
+      "name": {
+        "en": "Psychic Crystal",
+        "he": "קריסטל המדיומית"
+      },
+      "dialogue": [
+        {
+          "en": "I saw you in my dreams... and then I saw you lose!",
+          "he": "ראיתי אותך בחלום... ואז ראיתי אותך מפסיד!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "My dream was wrong. That never happens!",
+          "he": "החלום שלי טעה. זה אף פעם לא קורה!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 64,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 203,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 80,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 3,
+      "reward": {
+        "money": 2000
+      },
+      "location": {
+        "en": "Route 12",
+        "he": "דרך 12"
+      }
+    },
+    {
+      "id": "npc-r12-lance",
+      "x": 37,
+      "y": 35,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_919bca",
+      "name": {
+        "en": "Lance",
+        "he": "לאנס"
+      },
+      "dialogue": [
+        {
+          "en": "We saw the flames from the sky and came as fast as we could...",
+          "he": "ראינו את הלהבות מהשמיים ובאנו הכי מהר שיכולנו..."
+        },
+        {
+          "en": "...and you had already cooled down two legends! Amazing.",
+          "he": "...וכבר קיררת שני אגדיים! מדהים."
+        },
+        {
+          "en": "Six cores now. NULL-X will feel that. Take them to the lab in Percentile — Professor Oak is on his way.",
+          "he": "שש ליבות עכשיו. נאל-איקס ירגיש את זה. קח אותן למעבדה בפרסנטייל — פרופסור אוק בדרך לשם."
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-lab-final",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "afterSpawnPattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-r12-jenny-after",
+      "x": 36,
+      "y": 35,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "officer-Jenny",
+      "name": {
+        "en": "Officer Jenny",
+        "he": "השוטרת ג'ני"
+      },
+      "dialogue": [
+        {
+          "en": "My officers caught the grunts running down the hills. Route 12 is safe again!",
+          "he": "השוטרים שלי תפסו את הסוכנים שברחו במורד הגבעות. דרך 12 בטוחה שוב!"
+        },
+        {
+          "en": "One of them kept saying \"the next core is under a city\"... I will find out which one.",
+          "he": "אחד מהם המשיך להגיד \"הליבה הבאה מתחת לעיר\"... אני אגלה איזו."
+        },
+        {
+          "en": "Here — a thank-you from the police.",
+          "he": "הנה — תודה מהמשטרה."
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-lab-final",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "afterSpawnPattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.3
+          }
+        ]
+      },
+      "reward": {
+        "items": [
+          {
+            "itemId": "ultra-ball",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-r12-misty",
+      "x": 39,
+      "y": 36,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "Misty",
+      "name": {
+        "en": "Misty",
+        "he": "מיסטי"
+      },
+      "dialogue": [
+        {
+          "en": "My water Pokémon are putting out the last little fires. Water beats fire!",
+          "he": "פוקימוני המים שלי מכבים את השריפות הקטנות האחרונות. מים מנצחים אש!"
+        },
+        {
+          "en": "And Suicune's rain did most of the work. What a sight!",
+          "he": "והגשם של סוויקון עשה את רוב העבודה. איזה מראה!"
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-lab-final",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "afterSpawnPattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-r12-brock",
+      "x": 33,
+      "y": 36,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_d25760",
+      "name": {
+        "en": "Brock",
+        "he": "ברוק"
+      },
+      "dialogue": [
+        {
+          "en": "The rocks are still warm — those Heat Collectors cooked the whole hill.",
+          "he": "הסלעים עדיין חמים — אוספי החום האלה בישלו את כל הגבעה."
+        },
+        {
+          "en": "I saw Rocket trucks drive off toward Minusburg. Something is going on there...",
+          "he": "ראיתי משאיות של רוקט נוסעות לכיוון מינוסבורג. משהו קורה שם..."
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-lab-final",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "afterSpawnPattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc-r12-alice",
+      "x": 30,
+      "y": 31,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "alice",
+      "name": {
+        "en": "Alice",
+        "he": "אליס"
+      },
+      "dialogue": [
+        {
+          "en": "Hello again! Lance told me you would be here.",
+          "he": "שלום שוב! לאנס אמר לי שתהיה כאן."
+        },
+        {
+          "en": "Articuno in the forest, and now Entei and Moltres... NULL-X hides its cores inside legends.",
+          "he": "ארטיקונו ביער, ועכשיו אנטאיי ומולטרס... נאל-איקס מחביא את הליבות שלו בתוך אגדיים."
+        },
+        {
+          "en": "Go to the lab. Oak can read what the cores are saying.",
+          "he": "לך למעבדה. אוק יודע לקרוא מה הליבות אומרות."
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-lab-final"
+    },
+    {
+      "id": "npc-r12-officer-after",
+      "x": 13,
+      "y": 63,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gate-officer",
+      "name": {
+        "en": "Police Officer",
+        "he": "שוטר"
+      },
+      "dialogue": [
+        {
+          "en": "All the grunts are under arrest. You can walk the hills safely now!",
+          "he": "כל הסוכנים עצורים. אפשר ללכת בגבעות בבטחה עכשיו!"
+        }
+      ],
+      "spawnAfter": "act4-pct-legends-done",
+      "despawnAfter": "act4-pct-lab-final"
     }
   ],
   "music": "town",
@@ -10056,6 +11495,123 @@
       "key": "td1",
       "x": 21,
       "y": 35
+    },
+    {
+      "key": "item-generic",
+      "x": 45,
+      "y": 3,
+      "interactArgs": {
+        "itemId": "fire-stone",
+        "itemQty": 1,
+        "label": {
+          "en": "Fire Stone",
+          "he": "אבן אש"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 17,
+      "y": 4,
+      "interactArgs": {
+        "itemId": "leftovers",
+        "itemQty": 1,
+        "label": {
+          "en": "Leftovers",
+          "he": "שאריות"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 29,
+      "y": 9,
+      "interactArgs": {
+        "itemId": "hp-up",
+        "itemQty": 1,
+        "label": {
+          "en": "HP Up",
+          "he": "חיזוק חיים"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 46,
+      "y": 10,
+      "interactArgs": {
+        "itemId": "max-elixir",
+        "itemQty": 1,
+        "label": {
+          "en": "Max Elixir",
+          "he": "שיקוי כוח מלא"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 46,
+      "y": 29,
+      "interactArgs": {
+        "itemId": "max-revive",
+        "itemQty": 1,
+        "label": {
+          "en": "Max Revive",
+          "he": "החייאה מלאה"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 24,
+      "y": 36,
+      "interactArgs": {
+        "itemId": "full-restore",
+        "itemQty": 1,
+        "label": {
+          "en": "Full Restore",
+          "he": "ריפוי מלא"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 20,
+      "y": 40,
+      "interactArgs": {
+        "itemId": "rare-candy",
+        "itemQty": 2,
+        "label": {
+          "en": "Rare Candy",
+          "he": "סוכריה נדירה"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 11,
+      "y": 56,
+      "interactArgs": {
+        "itemId": "burn-heal",
+        "itemQty": 3,
+        "label": {
+          "en": "Burn Heal",
+          "he": "תרופה לכוויה"
+        }
+      }
+    },
+    {
+      "key": "item-generic",
+      "x": 27,
+      "y": 57,
+      "interactArgs": {
+        "itemId": "ultra-ball",
+        "itemQty": 5,
+        "label": {
+          "en": "Ultra Ball",
+          "he": "אולטרה בול"
+        }
+      }
     }
   ],
   "objectLayer": [

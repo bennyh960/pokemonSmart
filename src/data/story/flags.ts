@@ -457,7 +457,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.GATE_FRACTALIS_GYM_PASS]: 'Passed Electric Gym entry gate',
   [FLAGS.VISITED_PERCENTILE]: 'First arrival at Percentile',
   [FLAGS.PERCENTILE_OCEAN_OPEN]: 'Open ocean west of Percentile unlocked (swimmer blockers leave)',
-  [FLAGS.ACT4_PCT_ARC_STARTED]: 'Burning Chance arc started — Percentile + Route 12 infection critical',
+  [FLAGS.ACT4_PCT_ARC_STARTED]: 'Burning Chance arc started — Percentile infection critical, Route 12 low',
   [FLAGS.ACT4_PCT_CLUE_COIN]: 'Clue: library coin lands heads every time (chance is broken)',
   [FLAGS.ACT4_PCT_CLUE_MAP]: 'Clue: ball-storage Rocket thief dropped a map of the Route 12 hills',
   [FLAGS.ACT4_PCT_CLUE_GROWLITHE]: "Clue: Jimmy's Growlithe ran toward the heat on Route 12",
