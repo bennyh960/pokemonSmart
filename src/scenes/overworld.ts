@@ -23,7 +23,12 @@ import {
   type CareMatch,
 } from '../minigames/care.js';
 import { forceAmbush } from '../minigames/english/ambush.js';
-import { springDueAmbush, UNOWN_AMBUSH_CUTSCENE_ID } from '../systems/unown-ambush.js';
+import {
+  GLITCH_BATTLE_INTRO_CUTSCENE_ID,
+  setGlitchBattleStart,
+  springDueAmbush,
+  UNOWN_AMBUSH_CUTSCENE_ID,
+} from '../systems/unown-ambush.js';
 import { openEnglishBoard, openMiniGamePicker, resolveMiniGames, startMiniGame } from '../minigames/index.js';
 import { pathToFace } from '../systems/grid-path.js';
 import { FLAGS } from '../data/story/flags.js';
@@ -82,6 +87,7 @@ import {
   type WildPokemonData,
   type DayCareData,
   checkTrainerLineOfSight,
+  checkWildPokemonLineOfSight,
   normalizeReward,
   resolveDialogue,
   type DialogueReward,
@@ -126,6 +132,7 @@ import { collectGateLights, gateLightAt, getGatePass, drawGateLight, type GateLi
 import {
   isCutsceneActive,
   activateCutscene,
+  deactivateCutscene,
   updateCutscene,
   renderCutscene,
   type CutsceneContext,
@@ -1673,12 +1680,52 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
-  /** Start a wild Pokémon NPC battle (no trainer intro, catch allowed, flee possible). */
+  /** A visible, not-yet-beaten wild Pokémon NPC standing on (x, y), if any. */
+  function getActiveWildNpcAt(x: number, y: number): WildPokemonData | undefined {
+    if (!npcManager || !hasActiveGame()) return undefined;
+    const npc = npcManager.getNPCAt(x, y);
+    if (!npc || npc.type !== 'wild-pokemon') return undefined;
+    const pd = getPlayerData();
+    if (!isNPCVisible(npc, pd.flags, pd.party) || pd.flags[`trainer-${npc.id}-defeated`]) return undefined;
+    return npc as unknown as WildPokemonData;
+  }
+
+  /** Move the player one tile back (opposite of facing) if that tile is free — used before battles / HM scenes. */
+  function stepPlayerBack(): void {
+    const faceVec = DIR_VECTORS[player.facing];
+    if (!faceVec || !tileMap) return;
+    const backX = player.gridX - faceVec.dx;
+    const backY = player.gridY - faceVec.dy;
+    const pd = hasActiveGame() ? getPlayerData() : null;
+    if (!tileMap.isWalkable(backX, backY) || npcManager?.isVisibleNPCAt(backX, backY, pd?.flags ?? {}, pd?.party))
+      return;
+    player.gridX = backX;
+    player.gridY = backY;
+    player.pixelX = backX * TILE_SIZE;
+    player.pixelY = backY * TILE_SIZE;
+    player.targetGridX = backX;
+    player.targetGridY = backY;
+    player.moving = false;
+  }
+
+  /** Start a wild Pokémon NPC battle (no trainer intro, catch allowed, flee possible).
+   *  A glitched one first bursts into an Unown storm (systems/unown-ambush.ts). */
   function startWildNpcBattle(npc: WildPokemonData): void {
     if (!hasActiveGame()) return;
     const flags = getPlayerData().flags;
     if (flags[`trainer-${npc.id}-defeated`]) return; // already despawned
+    if (npc.isGlitched) {
+      setGlitchBattleStart(() => {
+        deactivateCutscene();
+        launchWildNpcBattle(npc);
+      });
+      activateCutscene(GLITCH_BATTLE_INTRO_CUTSCENE_ID);
+      return;
+    }
+    launchWildNpcBattle(npc);
+  }
 
+  function launchWildNpcBattle(npc: WildPokemonData): void {
     const data = getPokemon(npc.pokemonId);
     if (!data) return;
     const wildPokemon = createPokemonFromData(data, npc.level, npc.moves, npc.heldItemId);
@@ -1752,26 +1799,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     const careSpot = hmName === 'care-spot';
     const frontVec = DIR_VECTORS[player.facing];
 
-    // Try to step back one tile (opposite of facing)
-    const faceVec = DIR_VECTORS[player.facing];
-    if (faceVec) {
-      const backX = player.gridX - faceVec.dx;
-      const backY = player.gridY - faceVec.dy;
-      const _hmPd = hasActiveGame() ? getPlayerData() : null;
-      if (
-        tileMap &&
-        tileMap.isWalkable(backX, backY) &&
-        !npcManager?.isVisibleNPCAt(backX, backY, _hmPd?.flags ?? {}, _hmPd?.party)
-      ) {
-        player.gridX = backX;
-        player.gridY = backY;
-        player.pixelX = backX * TILE_SIZE;
-        player.pixelY = backY * TILE_SIZE;
-        player.targetGridX = backX;
-        player.targetGridY = backY;
-        player.moving = false;
-      }
-    }
+    stepPlayerBack();
 
     const spritePath = `/sprites/pokemon/front/${pokemon.id}.png`;
 
@@ -2913,25 +2941,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
         } else if (ta.phase === 'battle-start') {
           // Push player back 1 step (opposite of facing direction) before dialogue/battle
-          const _tbFaceVec = DIR_VECTORS[player.facing];
-          if (_tbFaceVec) {
-            const _tbBackX = player.gridX - _tbFaceVec.dx;
-            const _tbBackY = player.gridY - _tbFaceVec.dy;
-            const _tbPd = hasActiveGame() ? getPlayerData() : null;
-            if (
-              tileMap &&
-              tileMap.isWalkable(_tbBackX, _tbBackY) &&
-              !npcManager?.isVisibleNPCAt(_tbBackX, _tbBackY, _tbPd?.flags ?? {}, _tbPd?.party)
-            ) {
-              player.gridX = _tbBackX;
-              player.gridY = _tbBackY;
-              player.pixelX = _tbBackX * TILE_SIZE;
-              player.pixelY = _tbBackY * TILE_SIZE;
-              player.targetGridX = _tbBackX;
-              player.targetGridY = _tbBackY;
-              player.moving = false;
-            }
-          }
+          stepPlayerBack();
           // Reset trainer to original tile
           ta.trainer.x = ta.originalX;
           ta.trainer.y = ta.originalY;
@@ -3151,21 +3161,17 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               startTrainerApproach(spotter);
               return;
             }
-          }
-
-          // Check wild Pokémon NPC collision — battle starts on same tile
-          if (npcManager && hasActiveGame() && !encounterTriggered) {
-            const flags = getPlayerData().flags;
-            const _wParty = getPlayerData().party;
-            for (const npc of npcManager.getNPCs()) {
-              if (npc.type !== 'wild-pokemon') continue;
-              if (!isNPCVisible(npc, flags, _wParty)) continue;
-              if (flags[`trainer-${npc.id}-defeated`]) continue;
-              if (npc.x === player.gridX && npc.y === player.gridY) {
-                interactingNPC = npc;
-                startWildNpcBattle(npc as unknown as WildPokemonData);
-                return;
-              }
+            // Wild Pokémon NPCs see like trainers (facing + interactRange) but stay put — the battle just starts
+            const wild = checkWildPokemonLineOfSight(
+              npcManager.getWildPokemon(),
+              player.gridX,
+              player.gridY,
+              _losPd.flags,
+              _losPd.party,
+            );
+            if (wild) {
+              startWildNpcBattle(wild);
+              return;
             }
           }
 
@@ -3519,13 +3525,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             npcManager.getNearbyFloatingNPC(player.gridX, player.gridY);
           const _iPd = hasActiveGame() ? getPlayerData() : null;
           const iFlags = _iPd?.flags ?? {};
-          // Floating wild-pokemon: start battle immediately on Space — no dialogue needed
-          if (npc && npc.type === 'wild-pokemon' && isNPCVisible(npc, iFlags, _iPd?.party) && hasActiveGame()) {
-            const _wpFlags = getPlayerData().flags;
-            if (!_wpFlags[`trainer-${npc.id}-defeated`]) {
-              startWildNpcBattle(npc as unknown as WildPokemonData);
-              return;
-            }
+          // Wild Pokémon: start battle immediately on Space — no dialogue needed
+          const _wild = npc ? getActiveWildNpcAt(npc.x, npc.y) : undefined;
+          if (_wild) {
+            startWildNpcBattle(_wild);
+            return;
           }
           if (npc && npc.dialogue.length > 0 && isNPCVisible(npc, iFlags, _iPd?.party)) {
             // Defeated trainers: show re-encounter dialogue or "already beaten" message
@@ -4042,6 +4046,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               player.moveProgress = 0;
               player.walkTimer = 0;
               player.walkFrame = 1;
+            } else if (walkable && getActiveWildNpcAt(nx, ny)) {
+              // Walking into a wild Pokémon starts the battle; step back so a flee doesn't re-trigger it
+              const wild = getActiveWildNpcAt(nx, ny)!;
+              stepPlayerBack();
+              startWildNpcBattle(wild);
+              return;
             } else if (
               walkable &&
               npcManager?.isVisibleNPCAt(nx, ny, _movPd?.flags ?? {}, _movPd?.party) &&

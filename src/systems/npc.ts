@@ -470,6 +470,10 @@ export function createNPCManager(npcs: NPCData[]) {
     getTrainers(): TrainerData[] {
       return npcs.filter((npc): npc is TrainerData => npc.type === 'trainer');
     },
+
+    getWildPokemon(): WildPokemonData[] {
+      return npcs.filter((npc): npc is WildPokemonData => npc.type === 'wild-pokemon');
+    },
   };
 }
 
@@ -484,21 +488,45 @@ export function checkTrainerLineOfSight(
   defeatedFlags: Record<string, boolean>,
   party?: import('../types/index.js').Pokemon[],
 ): TrainerData | null {
-  for (const trainer of trainers) {
-    // Skip already-defeated or hidden trainers
-    if (defeatedFlags[`trainer-${trainer.id}-defeated`]) continue;
-    if (!isNPCVisible(trainer, defeatedFlags, party)) continue;
+  return findSpotter(trainers, playerX, playerY, defeatedFlags, party, (t) => t.lineOfSight || 3);
+}
 
-    const vec = FACING_VECTORS[trainer.facing];
+/** Sight of a wild Pokémon NPC when its `interactRange` isn't set (the editor shows the same default). */
+const WILD_NPC_SIGHT = 1;
+
+/**
+ * Check if any wild Pokémon NPC sees the player: in front of it (its facing), up to its `interactRange`.
+ * Unlike a trainer it doesn't walk over — the battle just starts.
+ */
+export function checkWildPokemonLineOfSight(
+  wilds: WildPokemonData[],
+  playerX: number,
+  playerY: number,
+  flags: Record<string, boolean>,
+  party?: import('../types/index.js').Pokemon[],
+): WildPokemonData | null {
+  return findSpotter(wilds, playerX, playerY, flags, party, (w) => w.interactRange || WILD_NPC_SIGHT);
+}
+
+/** The first visible, not-yet-beaten NPC whose facing line (up to `range` tiles) holds the player. */
+function findSpotter<T extends NPCData>(
+  npcs: T[],
+  playerX: number,
+  playerY: number,
+  flags: Record<string, boolean>,
+  party: import('../types/index.js').Pokemon[] | undefined,
+  range: (npc: T) => number,
+): T | null {
+  for (const npc of npcs) {
+    if (flags[`trainer-${npc.id}-defeated`]) continue;
+    if (!isNPCVisible(npc, flags, party)) continue;
+
+    const vec = FACING_VECTORS[npc.facing];
     if (!vec) continue;
 
-    const range = trainer.lineOfSight || 3;
-    for (let d = 1; d <= range; d++) {
-      const checkX = trainer.x + vec.dx * d;
-      const checkY = trainer.y + vec.dy * d;
-      if (checkX === playerX && checkY === playerY) {
-        return trainer;
-      }
+    const sight = range(npc);
+    for (let d = 1; d <= sight; d++) {
+      if (npc.x + vec.dx * d === playerX && npc.y + vec.dy * d === playerY) return npc;
     }
   }
   return null;

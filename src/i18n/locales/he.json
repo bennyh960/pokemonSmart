@@ -643,6 +643,8 @@
   "battle.defogClear": "הזירה נוקתה ממכשולים!",
   "battle.glitchedCantCatch": "הפוקימון נגוע ע\"י NULL-X! לא ניתן ללכוד אותו!",
   "battle.wildNpcFled": "{name} הפרא ברח!",
+  "battle.wildNpcBeaten": "{name} הפרא התעייף ורץ משם!",
+  "battle.wildNpcGlitchCleared": "הגליץ' נעלם... {name} חופשי ורץ משם!",
   "battle.lockInOutrageStopped": "{name} התבלבל אחרי ההתפרצות!",
   "battle.lockInUproarStopped": "{name} נרגע אחרי המהומה!",
   "battle.lockInRageBoost": "הזעם של {name} גובר!",

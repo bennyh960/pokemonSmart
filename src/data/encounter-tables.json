@@ -1697,31 +1697,32 @@
       }
     ]
   },
+
   "r11-rocket-base": {
     "encounterRate": 0.05,
     "entries": [
       {
         "pokemonId": 23,
-        "minLevel": 25,
-        "maxLevel": 30,
-        "weight": 40
+        "minLevel": 34,
+        "maxLevel": 40,
+        "weight": 25
       },
       {
         "pokemonId": 109,
-        "minLevel": 25,
-        "maxLevel": 30,
-        "weight": 40
+        "minLevel": 30,
+        "maxLevel": 40,
+        "weight": 25
       },
       {
         "pokemonId": 92,
-        "minLevel": 15,
-        "maxLevel": 20,
-        "weight": 10
+        "minLevel": 20,
+        "maxLevel": 30,
+        "weight": 25
       },
       {
         "pokemonId": 228,
         "minLevel": 20,
-        "maxLevel": 30,
+        "maxLevel": 35,
         "weight": 10
       },
       {
@@ -1729,6 +1730,18 @@
         "minLevel": 30,
         "maxLevel": 40,
         "weight": 10
+      },
+      {
+        "pokemonId": 24,
+        "minLevel": 40,
+        "maxLevel": 45,
+        "weight": 5
+      },
+      {
+        "pokemonId": 110,
+        "minLevel": 40,
+        "maxLevel": 45,
+        "weight": 5
       }
     ]
   },

@@ -96,6 +96,26 @@ registerCutscene({
   ],
 });
 
+/** A short Unown storm before a battle with a glitched wild Pokémon NPC — the Glitch is made of Unown. */
+export const GLITCH_BATTLE_INTRO_CUTSCENE_ID = 'glitch-battle-intro';
+
+let startGlitchBattle: () => void = () => {};
+
+registerCutscene({
+  id: GLITCH_BATTLE_INTRO_CUTSCENE_ID,
+  steps: [
+    { type: 'play-sfx', sfxId: 'cry:201' },
+    { type: 'screen-shake', durationMs: 600, intensity: 1.5 },
+    { type: 'fx', kind: 'unown', durationMs: 1600, radius: 2, waitForComplete: true },
+    { type: 'run', run: () => startGlitchBattle() },
+  ],
+});
+
+/** Set what the storm leads into (play it with GLITCH_BATTLE_INTRO_CUTSCENE_ID). */
+export function setGlitchBattleStart(start: () => void): void {
+  startGlitchBattle = start;
+}
+
 /** City maps (and their houses): every map in the folder of a world-map city. */
 const CITY_FOLDERS = new Set(mapManifest.cities.map((c) => c.id.split('/')[0]));
 

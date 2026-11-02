@@ -1305,7 +1305,11 @@ export function createBattleScene(
     }
 
     // Build reward message lines
-    const lines: string[] = [t('battle.trainerReward', { money: td.reward.money })];
+    // A wild Pokémon NPC is built from trainer data but pays no money — say what happened to it instead
+    const lines: string[] = td.isWildNpc
+      ? [t(enemy.isGlitched ? 'battle.wildNpcGlitchCleared' : 'battle.wildNpcBeaten', { name: getPokemonDisplayName(enemy.id) })]
+      : [];
+    if (td.reward.money > 0) lines.push(t('battle.trainerReward', { money: td.reward.money }));
     if (!isRematch && td.reward.items) {
       for (const ri of td.reward.items) {
         const itemDef = getItem(ri.itemId);
