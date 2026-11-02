@@ -33,7 +33,8 @@ export const MINI_GAME_IDS = [
 export type MiniGameId = (typeof MINI_GAME_IDS)[number];
 
 /** What a game trains — buildings and hosts offer games by category (library → english, lab → logic). */
-export type MiniGameCategory = 'english' | 'logic' | 'arcade';
+export const MINI_GAME_CATEGORIES = ['english', 'logic', 'arcade'] as const;
+export type MiniGameCategory = (typeof MINI_GAME_CATEGORIES)[number];
 
 /** A set of games, by id and/or category (`resolveMiniGames()` in registry.ts). */
 export interface MiniGameChoice {

@@ -33,6 +33,31 @@
   ],
   "npcs": [
     {
+      "id": "npc-mart-word-fan",
+      "x": 2,
+      "y": 5,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "char_c32979",
+      "name": {
+        "en": "Ethan",
+        "he": "איתן"
+      },
+      "dialogue": [
+        {
+          "en": "I learn English by reading the signs on the shelves!",
+          "he": "אני לומד אנגלית מהשלטים על המדפים!"
+        },
+        {
+          "en": "Words are like Poké Balls — the more you have, the better!",
+          "he": "מילים הן כמו כדורי פוקימון — כמה שיותר, יותר טוב!"
+        }
+      ],
+      "miniGame": {
+        "category": "english"
+      }
+    },
+    {
       "id": "npc-shopkeepr",
       "x": 9,
       "y": 3,

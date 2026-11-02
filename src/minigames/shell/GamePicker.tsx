@@ -21,9 +21,13 @@ interface Props {
   dexPrize?: boolean;
   /** Why a game can't be played yet (shown on its card), or null when it's open. */
   lockOf?: (game: AnyMiniGameDef) => string | null;
+  /** Replaces the subtitle under the title. */
+  subtitle?: string;
+  /** A note on a game's card in place of its stars (e.g. "🕸️ level 3"). */
+  noteOf?: (game: AnyMiniGameDef) => string | null;
 }
 
-export function GamePicker({ games, initialId, onPick, onClose, onWordDex, dexPrize, lockOf }: Props) {
+export function GamePicker({ games, initialId, onPick, onClose, onWordDex, dexPrize, lockOf, subtitle, noteOf }: Props) {
   const { t, locale } = useI18n();
   const [pd] = usePlayerData();
   const save = pd.miniGames ?? {};
@@ -58,7 +62,7 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex, dexPr
             <h1 className="text-3xl font-black text-white drop-shadow-[0_3px_0_rgba(0,0,0,0.25)] sm:text-4xl">
               🎮 {t('minigames.title')}
             </h1>
-            <p className="mt-1 font-bold text-white/85">{t('minigames.pickerSubtitle')}</p>
+            <p className="mt-1 font-bold text-white/85">{subtitle ?? t('minigames.pickerSubtitle')}</p>
           </div>
           <div className="flex items-center gap-2">
             {onWordDex && (
@@ -87,6 +91,7 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex, dexPr
             const { stars, max } = totalStars(save, game);
             const selected = sel === i;
             const lock = lockOf?.(game) ?? null;
+            const note = noteOf?.(game) ?? null;
             return (
               <button
                 key={game.id}
@@ -110,7 +115,7 @@ export function GamePicker({ games, initialId, onPick, onClose, onWordDex, dexPr
                     style={{ background: game.theme.accent, color: game.theme.accentText }}
                     dir="ltr"
                   >
-                    {lock ? '🔒' : `★ ${stars}/${max}`}
+                    {lock ? '🔒' : (note ?? `★ ${stars}/${max}`)}
                   </span>
                   {lock && <span className="flex-1 text-sm font-black text-white drop-shadow">{lock}</span>}
                   <PokemonSprite

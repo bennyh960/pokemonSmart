@@ -30,6 +30,7 @@ import { getKnownMapIds, loadMapFromProject } from './map-io.js';
 import { mapRelationIndex } from './map-relation-index.js';
 import { categorizeTiles } from './tile-palette.js';
 import type { InteractArgs } from '../data/interact-types.js';
+import { MINI_GAME_CATEGORIES, type MiniGameCategory, type MiniGameChoice } from '../minigames/types.js';
 
 // Ensure character sprites are loaded for preview
 loadCharacterSprites().catch(() => {});
@@ -476,6 +477,7 @@ export class PropertiesPanel {
     // ── NPC Interaction ──
     if (npc.type === 'dialogue') {
       this.renderNpcInteractionUI(body, npc);
+      this.renderMiniGameHostUI(body, npc);
     }
 
     // ── Trainer-specific fields ──
@@ -744,6 +746,41 @@ export class PropertiesPanel {
   }
 
   // ── Day-Care: route, stepsPerLevel, costPerLevel ──
+  /** Mini-game host: after its talk (and gift, if any) the NPC asks "Want to play?" and opens these games. */
+  private renderMiniGameHostUI(section: HTMLElement, npc: NPCData): void {
+    const npcAny = npc as unknown as Record<string, unknown>;
+    const choice = npcAny['miniGame'] as MiniGameChoice | undefined;
+    const row = document.createElement('div');
+    row.className = 'prop-row';
+    row.innerHTML = '<label>🎮 Mini-game host:</label>';
+    const sel = document.createElement('select');
+    for (const value of ['', ...MINI_GAME_CATEGORIES]) {
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = value || 'none';
+      opt.selected = (choice?.category ?? '') === value;
+      sel.appendChild(opt);
+    }
+    sel.title = 'After talking, the NPC asks "Want to play?" and opens the games of this category';
+    sel.addEventListener('change', () => {
+      const category = sel.value as MiniGameCategory | '';
+      const rest = { ...(npcAny['miniGame'] as MiniGameChoice | undefined) };
+      delete rest.category;
+      const next: MiniGameChoice = category ? { ...rest, category } : rest;
+      if (next.category || next.gameIds?.length) npcAny['miniGame'] = next;
+      else delete npcAny['miniGame'];
+      this.state.emit('map-modified');
+    });
+    row.appendChild(sel);
+    section.appendChild(row);
+    if (choice?.gameIds?.length) {
+      const note = document.createElement('div');
+      note.style.cssText = 'font-size:11px;color:#8899bb;margin:-2px 0 6px;';
+      note.textContent = `+ games: ${choice.gameIds.join(', ')} (edit in JSON)`;
+      section.appendChild(note);
+    }
+  }
+
   private renderDayCareUI(section: HTMLElement, npc: NPCData): void {
     const emit = () => this.state.emit('map-modified');
     const npcAny = npc as unknown as Record<string, unknown>;

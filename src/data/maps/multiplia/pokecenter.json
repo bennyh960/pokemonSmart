@@ -16,6 +16,31 @@
   },
   "npcs": [
     {
+      "id": "npc-multiplia-pc-word-fan",
+      "x": 7,
+      "y": 6,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Noa",
+        "he": "נועה"
+      },
+      "dialogue": [
+        {
+          "en": "My Pokémon are resting, so I play word games!",
+          "he": "הפוקימונים שלי נחים, אז אני משחקת במשחקי מילים!"
+        },
+        {
+          "en": "Every game teaches me new English words.",
+          "he": "כל משחק מלמד אותי מילים חדשות באנגלית."
+        }
+      ],
+      "miniGame": {
+        "category": "english"
+      }
+    },
+    {
       "id": "npc-trader-2",
       "x": 11,
       "y": 5,

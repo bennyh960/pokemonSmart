@@ -27,6 +27,31 @@
   ],
   "npcs": [
     {
+      "id": "npc-league-word-fan",
+      "x": 19,
+      "y": 8,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Noa",
+        "he": "נועה"
+      },
+      "dialogue": [
+        {
+          "en": "My Pokémon are resting, so I play word games!",
+          "he": "הפוקימונים שלי נחים, אז אני משחקת במשחקי מילים!"
+        },
+        {
+          "en": "Every game teaches me new English words.",
+          "he": "כל משחק מלמד אותי מילים חדשות באנגלית."
+        }
+      ],
+      "miniGame": {
+        "category": "english"
+      }
+    },
+    {
       "id": "nurse-pc",
       "name": {
         "en": "Nurse Joy",
