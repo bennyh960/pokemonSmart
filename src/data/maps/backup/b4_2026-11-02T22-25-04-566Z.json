@@ -1,0 +1,343 @@
+{
+  "id": "b4",
+  "name": "Rocket Base B4 — Steam Core",
+  "label": {
+    "en": "Rocket Base B4 — Steam Core",
+    "he": "בסיס רוקט קומה 4 — ליבת הקיטור"
+  },
+  "tileset": "interior",
+  "width": 26,
+  "height": 20,
+  "tileSize": 16,
+  "spawn": {
+    "x": 2,
+    "y": 4
+  },
+  "transitions": [
+    {
+      "fromX": 1,
+      "fromY": 3,
+      "toMapId": "rocket-base/b3",
+      "toX": 27,
+      "toY": 19
+    },
+    {
+      "fromX": 12,
+      "fromY": 18,
+      "toMapId": "routes/route-11",
+      "toX": 18,
+      "toY": 4
+    }
+  ],
+  "npcs": [
+    {
+      "id": "wild-base-suicune",
+      "x": 12,
+      "y": 7,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "spriteType": "suicune",
+      "name": {
+        "en": "Suicune",
+        "he": "סוויקון"
+      },
+      "dialogue": [
+        {
+          "en": "Shuuuu...!! (Steam bursts from the chains around it)",
+          "he": "שווווו...!! (קיטור פורץ מהשרשראות סביבו)"
+        }
+      ],
+      "pokemonId": 245,
+      "level": 52,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "fleeAtHpPct": 0.9,
+      "spawnAfter": "act4-pct-arc-started"
+    },
+    {
+      "id": "npc-base-b4-grunt-1",
+      "x": 6,
+      "y": 14,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Do not touch the core! The pressure is at 99%!",
+          "he": "אל תיגע בליבה! הלחץ על 99%!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "99%... 80%... it is dropping!",
+          "he": "99%... 80%... הוא יורד!"
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 110,
+          "level": 48,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 48,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 48,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b4-grunt-2",
+      "x": 18,
+      "y": 13,
+      "facing": "up",
+      "type": "trainer",
+      "spriteType": "char_7db1c5",
+      "name": {
+        "en": "Rocket Grunt",
+        "he": "סוכן צוות רוקט"
+      },
+      "dialogue": [
+        {
+          "en": "Suicune purifies water. We use it to make steam. Smart, right?",
+          "he": "סוויקון מטהר מים. אנחנו משתמשים בו כדי לייצר קיטור. חכם, נכון?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Not that smart, I guess...",
+          "he": "כנראה לא כל כך חכם..."
+        }
+      ],
+      "party": [
+        {
+          "pokemonId": 219,
+          "level": 48,
+          "moves": []
+        },
+        {
+          "pokemonId": 78,
+          "level": 48,
+          "moves": []
+        },
+        {
+          "pokemonId": 42,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 4,
+      "reward": {
+        "money": 1800
+      },
+      "isGlitched": true,
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 2
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 2
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-base-b4-hatch",
+      "x": 12,
+      "y": 18,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "transparent",
+      "name": {
+        "en": "Emergency hatch",
+        "he": "פתח חירום"
+      },
+      "dialogue": [
+        {
+          "en": "An emergency hatch. The steam pressure keeps it sealed.",
+          "he": "פתח חירום. לחץ הקיטור שומר עליו נעול."
+        }
+      ],
+      "despawnAfter": "act4-pct-suicune-done"
+    }
+  ],
+  "music": "team-rocket-grunt",
+  "encounterTableId": null,
+  "movablePuzzle": {},
+  "flagListeners": [],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "max-revive",
+        "x": 23,
+        "y": 4
+      }
+    ]
+  },
+  "ambientFx": [
+    {
+      "kind": "smoke",
+      "x": 12,
+      "y": 4,
+      "radius": 2,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 7,
+      "y": 6,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 17,
+      "y": 6,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "fire",
+      "x": 4,
+      "y": 12,
+      "despawnAfter": "act4-pct-suicune-done"
+    },
+    {
+      "kind": "fire",
+      "x": 22,
+      "y": 12,
+      "despawnAfter": "act4-pct-suicune-done"
+    }
+  ],
+  "objects": [
+    {
+      "key": "labScreen",
+      "x": 11,
+      "y": 3
+    },
+    {
+      "key": "lab2",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "key": "lab2",
+      "x": 16,
+      "y": 5
+    },
+    {
+      "key": "lab5",
+      "x": 9,
+      "y": 4
+    },
+    {
+      "key": "lab5",
+      "x": 15,
+      "y": 4
+    },
+    {
+      "key": "tool-1",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "key": "tool-1",
+      "x": 21,
+      "y": 11
+    },
+    {
+      "key": "lab-5",
+      "x": 4,
+      "y": 15
+    },
+    {
+      "key": "lab-5",
+      "x": 19,
+      "y": 15
+    },
+    {
+      "key": "item-generic",
+      "x": 23,
+      "y": 4
+    }
+  ],
+  "tiles": [
+    ["w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2"],
+    ["w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","stairs","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","stairs","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-b3","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-b4"]
+  ]
+}

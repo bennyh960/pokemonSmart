@@ -265,6 +265,29 @@
       "y": 12,
       "despawnAfter": "act4-pct-suicune-done"
     }
+  ]
+,
+  "tiles": [
+    ["w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2"],
+    ["w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
+    ["w5-r","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
+    ["w5-r","stairs","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
+    ["w5-b3","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-c2","stairs","w5-c1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-b4"]
   ],
   "objects": [
     {
@@ -317,27 +340,5 @@
       "x": 23,
       "y": 4
     }
-  ],
-  "tiles": [
-    ["w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2"],
-    ["w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l"],
-    ["w5-r","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l"],
-    ["w5-r","stairs","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-r","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","stairs","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","fe1","w5-l"],
-    ["w5-b3","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-b4"]
   ]
 }

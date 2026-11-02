@@ -373,7 +373,7 @@
     }
   ],
   "music": "team-rocket-grunt",
-  "encounterTableId": null,
+  "encounterTableId": "r11-rocket-base",
   "movablePuzzle": {},
   "flagListeners": [],
   "interactiveItems": {
@@ -381,71 +381,32 @@
       {
         "itemId": "ultra-ball",
         "x": 32,
-        "y": 9
+        "y": 9,
+        "itemQty": 6
       },
       {
         "itemId": "super-repel",
         "x": 8,
-        "y": 20
+        "y": 20,
+        "itemQty": 3
       },
       {
         "itemId": "max-potion",
         "x": 30,
-        "y": 3
+        "y": 3,
+        "itemQty": 2
+      },
+      {
+        "itemId": "elixir",
+        "itemQty": 3
       }
     ]
   },
   "label": {
     "en": "Rocket Base B1",
     "he": "בסיס רוקט קומה 1"
-  },
-  "objects": [
-    {
-      "key": "tv-screen1",
-      "x": 12,
-      "y": 9
-    },
-    {
-      "key": "screen2",
-      "x": 20,
-      "y": 9
-    },
-    {
-      "key": "box",
-      "x": 30,
-      "y": 11
-    },
-    {
-      "key": "lab-5",
-      "x": 14,
-      "y": 18
-    },
-    {
-      "key": "box-2",
-      "x": 20,
-      "y": 25
-    },
-    {
-      "key": "box-2",
-      "x": 24,
-      "y": 32
-    },
-    {
-      "key": "item-generic",
-      "x": 32,
-      "y": 9
-    },
-    {
-      "key": "item-generic",
-      "x": 8,
-      "y": 20
-    },
-    {
-      "key": "item-generic",
-      "x": 30,
-      "y": 3
-    }
-  ],
+  }
+,
   "tiles": [
     ["black-non-walk","w5-b1","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-b2","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w5-r","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
@@ -470,8 +431,8 @@
     ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","w5-c1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","w5-c3","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-2","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
-    ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
-    ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
+    ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w5","w3-up","w5","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
+    ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w5b","w3-down","w5b","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","stairs","f6-shadow-top","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","w5-r","f6-shadow-top","f6-shadow-top","f6-shadow-top","f6-shadow-top","w5-l","w5-b3","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-1","w5-c2","f6-shadow-top","f6-shadow-top","w5-c1","w5-1","w5-1","w5-1","w5-1","w5-l","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
@@ -547,6 +508,78 @@
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"],
     ["black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk","black-non-walk"]
+  ],
+  "objects": [
+    {
+      "key": "tv-screen1",
+      "x": 12,
+      "y": 9
+    },
+    {
+      "key": "screen2",
+      "x": 20,
+      "y": 9
+    },
+    {
+      "key": "box",
+      "x": 30,
+      "y": 11
+    },
+    {
+      "key": "lab-5",
+      "x": 14,
+      "y": 18
+    },
+    {
+      "key": "box-2",
+      "x": 20,
+      "y": 25
+    },
+    {
+      "key": "box-2",
+      "x": 24,
+      "y": 32
+    },
+    {
+      "key": "item-generic",
+      "x": 32,
+      "y": 9
+    },
+    {
+      "key": "item-generic",
+      "x": 8,
+      "y": 20
+    },
+    {
+      "key": "item-generic",
+      "x": 30,
+      "y": 3
+    },
+    {
+      "key": "box-2",
+      "x": 25,
+      "y": 31
+    },
+    {
+      "key": "box-2",
+      "x": 4,
+      "y": 19
+    },
+    {
+      "key": "box-2",
+      "x": 8,
+      "y": 13
+    },
+    {
+      "key": "item-generic",
+      "x": 33,
+      "y": 31
+    },
+    {
+      "key": "lab5",
+      "x": 34,
+      "y": 24
+    }
   ],
   "objectLayer": [
     [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],

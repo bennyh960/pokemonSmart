@@ -1,15 +1,19 @@
 {
-  "id": "percentile/library",
+  "id": "library",
   "name": "library1",
   "template": "library1",
   "tileset": "interior",
-  "area": "percentile",
   "label": {
     "en": "Percentile Library",
     "he": "ספריית פרסנטייל"
   },
+  "area": "percentile",
   "music": "pokecenter",
   "encounterTableId": null,
+  "spawn": {
+    "x": 9,
+    "y": 18
+  },
   "npcs": [
     {
       "id": "npc-pct-coin-kid",
@@ -171,5 +175,13 @@
         "category": "english"
       }
     }
-  ]
+  ],
+  "interactiveItems": {
+    "item-generic": [
+      {
+        "itemId": "poke-ball",
+        "itemQty": 3
+      }
+    ]
+  }
 }
