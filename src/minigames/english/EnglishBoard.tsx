@@ -1,6 +1,6 @@
 /**
  * Word Board screen — opened from the library's board tile: the child's level + bar, a big Play button,
- * how stars turn into prizes, and every level's prizes by rarity (board.ts).
+ * dusty levels to clean (dust.ts), how stars turn into prizes, and every level's prizes by rarity (board.ts).
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -31,6 +31,7 @@ import {
 import { dexPrizeWaiting } from './dex.js';
 import { ENGLISH_LADDER, ladderStep } from './ladder.js';
 import { todayKey } from './learning.js';
+import { DustyCard } from './DustyCard.js';
 import { LadderCard } from './LadderCard.js';
 
 export const BOARD_THEME: MiniGameTheme = { from: '#0e7490', to: '#7c3aed', accent: '#fde047', accentText: '#1e1b4b' };
@@ -145,6 +146,7 @@ export function EnglishBoard({ city, onPlay, onWordDex, onClose }: Props) {
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 pt-2">
           <LadderCard save={save} />
+          <DustyCard save={save} now={now} />
 
           <div className="flex flex-col items-center gap-2">
             <MgButton

@@ -14,9 +14,10 @@ import { usePlayerData } from '../../ui-react/hooks/usePlayerData.js';
 import { getTrainerRank } from '../../systems/trainer-rank.js';
 import { carePrizes } from '../care.js';
 import { ambushPrizes, recordEnglishResult } from '../english/ambush.js';
-import { boardPrizes, finishBoardRound, ownedSpecies } from '../english/board.js';
+import { boardPrizes, dustBonusPrize, finishBoardRound, ownedSpecies } from '../english/board.js';
+import { recordDust } from '../english/dust.js';
 import { dexPrizeWaiting } from '../english/dex.js';
-import { addLadderPoints, ladderStep } from '../english/ladder.js';
+import { addLadderPoints, ladderStep, stepOfLevel } from '../english/ladder.js';
 import { knownCount, todayKey } from '../english/learning.js';
 import { wordStatsOf } from '../english/useWords.js';
 import { highestUnlockedLevel, isLevelUnlocked, levelForRank, recordResult, type RecordOutcome } from '../progress.js';
@@ -194,6 +195,17 @@ export function MiniGameShell({
         finishBoardRound(draft.miniGames);
         const { gained, leveledUp } = addLadderPoints(draft.miniGames, rec.stars, board);
         rec.ladder = { gained, newLevel: leveledUp ? ladderStep(draft.miniGames) + 1 : undefined };
+      }
+      // English levels gather dust when not played for a while: a 3★ round cleans one and pays a bonus prize
+      if (def.category === 'english') {
+        const dust = recordDust(draft.miniGames, def.id, level.number, rec.stars, Date.now());
+        const stepIndex = board?.stepIndex ?? stepOfLevel(def.id, level.number);
+        const bonus =
+          dust === 'cleaned' && stepIndex >= 0
+            ? dustBonusPrize(stepIndex, countBadges(draft.badges), Math.random, board?.city)
+            : null;
+        if (bonus) rec.prizes = [...rec.prizes, bonus];
+        if (dust !== 'clean') rec.dust = dust;
       }
       for (const prize of rec.prizes) grantReward(prize.reward, { silent: true });
     });

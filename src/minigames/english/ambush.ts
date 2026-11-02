@@ -6,7 +6,8 @@
  *             every AMBUSH_COOLDOWN_STEPS steps.
  *   round:    one game level of a step the child reached (`reviewRounds()`): steps below the current one, and
  *             levels of the current step played at least once (a recent result, or a clear saved before). A level is skipped while it is mastered — its last
- *             RECENT_RESULTS rounds all 3★ (`recordEnglishResult()`, any English round). Weaker levels come more.
+ *             RECENT_RESULTS rounds all 3★ (`recordEnglishResult()`, any English round) and not dusty (dust.ts).
+ *             Weaker levels come more, dusty ones DUST_REVIEW_WEIGHT× more.
  *   forced:   no lock — a round left before it is cleared comes back after AMBUSH_RETRY_STEPS steps (same game).
  *   prizes:   one common prize of the step on a clear; no ladder points.
  *
@@ -14,10 +15,10 @@
  */
 
 import type { InfectionLevel } from '../../types/index.js';
-import { ensureGameProgress, getLevelProgress, highestUnlockedLevel, resolvePrize, type AwardedPrize } from '../progress.js';
-import { getMiniGame } from '../registry.js';
+import { ensureGameProgress, getLevelProgress, resolvePrize, type AwardedPrize } from '../progress.js';
 import type { MiniGameId, MiniGamesSave, Stars } from '../types.js';
 import { boardStep, unlockedStep } from './board.js';
+import { DUST_REVIEW_WEIGHT, isDusty, levelKey } from './dust.js';
 import { ENGLISH_LADDER, readLadder } from './ladder.js';
 import { pick, type Rng } from './random.js';
 import { WORDS_HOME } from './useWords.js';
@@ -43,7 +44,7 @@ export interface AmbushRound {
 
 type RecentResults = Record<string, Stars[]>;
 
-const roundKey = (gameId: MiniGameId, level: number) => `${gameId}:${level}`;
+const roundKey = levelKey;
 
 function recentOf(save: MiniGamesSave): RecentResults {
   const raw = save[WORDS_HOME]?.data?.recent;
@@ -58,21 +59,24 @@ export function recordEnglishResult(save: MiniGamesSave, gameId: MiniGameId, lev
   data.recent = recent;
 }
 
-/** A level is mastered while its last RECENT_RESULTS rounds were all 3★. */
-export function isMastered(save: MiniGamesSave, gameId: MiniGameId, level: number): boolean {
+/** A level is mastered while its last RECENT_RESULTS rounds were all 3★ and it isn't dusty (dust.ts). */
+export function isMastered(save: MiniGamesSave, gameId: MiniGameId, level: number, now = Date.now()): boolean {
   const results = recentOf(save)[roundKey(gameId, level)] ?? [];
-  return results.length >= RECENT_RESULTS && results.every((s) => s === 3);
+  return results.length >= RECENT_RESULTS && results.every((s) => s === 3) && !isDusty(save, gameId, level, now);
 }
 
-/** Every game level the child can review, each with its weight (weaker → more): mastered ones are left out. */
-export function reviewRounds(save: MiniGamesSave): { round: AmbushRound; weight: number }[] {
+/**
+ * Every game level the child can review, each with its weight (weaker → more, dusty ×DUST_REVIEW_WEIGHT): mastered
+ * ones are left out.
+ */
+export function reviewRounds(save: MiniGamesSave, now = Date.now()): { round: AmbushRound; weight: number }[] {
   const current = readLadder(save).step;
   const recent = recentOf(save);
   const seen = new Set<string>();
   const out: { round: AmbushRound; weight: number }[] = [];
   for (let stepIndex = 0; stepIndex <= current; stepIndex++) {
     for (const play of ENGLISH_LADDER[stepIndex].play) {
-      const level = play.level === 'best' ? highestUnlockedLevel(save, getMiniGame(play.gameId)) : play.level;
+      const { level } = play;
       const key = roundKey(play.gameId, level);
       if (seen.has(key)) continue;
       seen.add(key);
@@ -80,22 +84,23 @@ export function reviewRounds(save: MiniGamesSave): { round: AmbushRound; weight:
       // Played = a recent result, or a clear saved before results were kept
       const saved = getLevelProgress(save, play.gameId, level);
       if (stepIndex === current && results.length === 0 && saved.clears === 0) continue; // nothing to review yet
-      if (isMastered(save, play.gameId, level)) continue;
+      if (isMastered(save, play.gameId, level, now)) continue;
       // Average stars of the last rounds (else the level's best, else middle): 3★ → weight 1, 0★ → weight 4
       const avg = results.length
         ? results.reduce<number>((s, n) => s + n, 0) / results.length
         : saved.clears > 0
           ? saved.stars
           : 1.5;
-      out.push({ round: { gameId: play.gameId, level, stepIndex }, weight: 4 - avg });
+      const dust = isDusty(save, play.gameId, level, now) ? DUST_REVIEW_WEIGHT : 1;
+      out.push({ round: { gameId: play.gameId, level, stepIndex }, weight: (4 - avg) * dust });
     }
   }
   return out;
 }
 
 /** A review round to play, weighted by `reviewRounds()` (null = nothing to review). */
-export function pickAmbushRound(save: MiniGamesSave, rng: Rng): AmbushRound | null {
-  const rounds = reviewRounds(save);
+export function pickAmbushRound(save: MiniGamesSave, rng: Rng, now = Date.now()): AmbushRound | null {
+  const rounds = reviewRounds(save, now);
   let r = rng() * rounds.reduce((s, x) => s + x.weight, 0);
   for (const x of rounds) {
     r -= x.weight;

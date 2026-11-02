@@ -160,6 +160,8 @@ export interface RecordOutcome {
   ladder?: { gained: number; newLevel?: number };
   /** English round only (set by the shell): Word Dex cards collected in this round, and a prize waiting in the book. */
   dex?: { newCards: number; prizeWaiting: boolean };
+  /** English round only (set by the shell): the level was dusty and this round cleaned it, or left the dust on. */
+  dust?: 'cleaned' | 'dusty';
 }
 
 export interface RecordOptions {

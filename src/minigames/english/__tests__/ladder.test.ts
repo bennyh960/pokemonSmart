@@ -36,11 +36,10 @@ describe('English ladder', () => {
       for (const p of step.play) {
         const def = getMiniGame(p.gameId);
         expect(def.category, p.gameId).toBe('english');
-        if (p.level !== 'best')
-          expect(
-            def.levels.some((l) => l.number === p.level),
-            `${p.gameId} L${p.level}`,
-          ).toBe(true);
+        expect(
+          def.levels.some((l) => l.number === p.level),
+          `${p.gameId} L${p.level}`,
+        ).toBe(true);
       }
       const ids = step.rarePokemon?.ids;
       if (Array.isArray(ids)) for (const id of ids) expect(BOARD_POKEMON, step.name.en).toContain(id);
@@ -49,6 +48,23 @@ describe('English ladder', () => {
       expect(firstStepOf(g.id), g.id).toBeGreaterThanOrEqual(0);
     ENGLISH_LADDER.slice(0, -1).forEach((s) => expect(s.pointsToNext, s.name.en).toBeGreaterThan(0));
     expect(ENGLISH_LADDER[ENGLISH_LADDER.length - 1].pointsToNext).toBeUndefined();
+  });
+
+  it('every level of every English game is on exactly one step, each game easy → hard', () => {
+    const plays = ENGLISH_LADDER.flatMap((s) => s.play).map((p) => `${p.gameId} L${p.level}`);
+    const all = MINI_GAME_LIST.filter((g) => g.category === 'english').flatMap((g) =>
+      g.levels.map((l) => `${g.id} L${l.number}`),
+    );
+    expect([...plays].sort()).toEqual([...all].sort());
+    for (const g of MINI_GAME_LIST.filter((x) => x.category === 'english')) {
+      const levels = ENGLISH_LADDER.flatMap((s) => s.play.filter((p) => p.gameId === g.id).map((p) => p.level));
+      expect(levels, g.id).toEqual([...levels].sort((a, b) => a - b));
+    }
+  });
+
+  it('points still matter: a step needs more than its counted plays alone give', () => {
+    for (const s of ENGLISH_LADDER.slice(0, -1))
+      expect(s.pointsToNext!, s.name.en).toBeGreaterThan(s.play.length * PLAYS_TO_CLIMB * STAR_POINTS[PLAY_MIN_STARS]);
   });
 
   it('1 star earns nothing, 2 stars a little, 3 stars more', () => {

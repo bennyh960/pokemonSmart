@@ -59,7 +59,6 @@ export function LadderCard({ save }: { save: MiniGamesSave }) {
           </p>
           <ul className="mt-1 flex flex-wrap gap-2">
             {bar.plays.map(({ play, done }, i) => {
-              const twice = step.play.filter((p) => p.gameId === play.gameId).length > 1;
               return (
                 <li
                   key={i}
@@ -68,7 +67,7 @@ export function LadderCard({ save }: { save: MiniGamesSave }) {
                   }`}
                 >
                   {getMiniGame(play.gameId).name[locale]}
-                  {twice && typeof play.level === 'number' && ` (${TEXT.level[locale]} ${play.level})`}{' '}
+                  {` (${TEXT.level[locale]} ${play.level})`}{' '}
                   <span dir="ltr">
                     {done >= PLAYS_TO_CLIMB ? '✓' : `${done}/${PLAYS_TO_CLIMB}`}
                   </span>

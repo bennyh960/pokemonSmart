@@ -82,7 +82,7 @@ export interface MiniGameLevelRewards {
 }
 
 /** Level prizes, the care prizes of a care round (see `MiniGameCare`), and Word Board prizes (english/board.ts). */
-export type PrizeKind = keyof MiniGameLevelRewards | 'care' | 'bonus' | 'board';
+export type PrizeKind = keyof MiniGameLevelRewards | 'care' | 'bonus' | 'board' | 'dust';
 
 // ── Care rounds (overworld trigger) ─────────────────────────────────────────
 

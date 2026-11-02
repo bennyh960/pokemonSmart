@@ -133,6 +133,15 @@ export function Results({
             </p>
           )}
 
+          {outcome.dust && (
+            <p
+              className="mg-slide-up mt-3 rounded-2xl bg-black/20 px-4 py-2 font-black"
+              style={{ animationDelay: '1.75s' }}
+            >
+              {t(outcome.dust === 'cleaned' ? 'minigames.results.dustCleaned' : 'minigames.results.dustLeft')}
+            </p>
+          )}
+
           {outcome.dex && (outcome.dex.newCards > 0 || outcome.dex.prizeWaiting) && (
             <p
               className="mg-slide-up mt-3 rounded-2xl bg-black/20 px-4 py-2 font-black"

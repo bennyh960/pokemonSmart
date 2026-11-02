@@ -2,24 +2,25 @@
  * The English ladder — what a child plays next, driven only by English progress (never the trainer rank).
  * Every ladder round (library gate, Word Board) earns points by stars (STAR_POINTS: 1★ none, 2★ a little, 3★ more).
  * Climbing to the next step needs both: `pointsToNext` points AND every game of the step played PLAYS_TO_CLIMB times
- * with PLAY_MIN_STARS or more. The librarian opens a game once the child reaches the first step
+ * with PLAY_MIN_STARS or more (3★ = almost no mistakes, so a level is only passed once its words are known).
+ * Every level of every English game sits on one step. The librarian opens a game once the child reaches the first step
  * that has it. Each step has its own Word Board prizes (board.ts). Saved in `pd.miniGames['unown-words'].data.ladder`.
  */
 
 import { evolutionStonePrize, item, money, prize, tmPrize, vitaminPrize } from '../define.js';
-import { ensureGameProgress, highestUnlockedLevel } from '../progress.js';
-import { getMiniGame } from '../registry.js';
+import { ensureGameProgress } from '../progress.js';
 import type { Bilingual, MiniGameId, MiniGamePrizeDef, MiniGamesSave, Stars } from '../types.js';
+import { DUST_PRACTICE_SHARE, isDusty } from './dust.js';
 import { pick, type Rng } from './random.js';
 import { WORDS_HOME } from './useWords.js';
 
 /** Ladder points a round earns by its stars. */
 export const STAR_POINTS: Readonly<Record<Stars, number>> = { 0: 0, 1: 0, 2: 1, 3: 3 };
 
-/** A game to play on a step: a fixed level, or 'best' = the highest level the child has opened. */
+/** A game level to play on a step. */
 export interface LadderPlay {
   gameId: MiniGameId;
-  level: number | 'best';
+  level: number;
 }
 
 export interface LadderStep {
@@ -59,10 +60,17 @@ const FEEBAS = 349;
 const ABSOL = 359;
 const DEINO = 633;
 
+/** One ladder game: `gameId` at a fixed level. */
+const at = (gameId: MiniGameId, level: number): LadderPlay => ({ gameId, level });
+
+/**
+ * Every level of every English game is played on exactly one step, easy → hard: each step adds the next level of a
+ * few games, so the child keeps meeting the same words in new games before the next words come.
+ */
 export const ENGLISH_LADDER: readonly LadderStep[] = [
   {
     name: { en: 'Letters', he: 'אותיות' },
-    play: [{ gameId: 'unown-words', level: 1 }],
+    play: [at('unown-words', 1)],
     pointsToNext: 12,
     prizes: [
       prize('common', item('poke-ball', 2)),
@@ -75,7 +83,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   },
   {
     name: { en: 'Big & small letters', he: 'אותיות גדולות וקטנות' },
-    play: [{ gameId: 'unown-words', level: 2 }],
+    play: [at('unown-words', 2)],
     pointsToNext: 12,
     prizes: [
       prize('common', item('poke-ball', 3)),
@@ -90,8 +98,8 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
   },
   {
     name: { en: 'Colors', he: 'צבעים' },
-    play: [{ gameId: 'memory-match', level: 1 }],
-    pointsToNext: 18,
+    play: [at('memory-match', 1), at('pokemon-colors', 1)],
+    pointsToNext: 24,
     prizes: [
       prize('common', item('great-ball')),
       prize('common', item('super-potion')),
@@ -104,12 +112,9 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     ],
   },
   {
-    name: { en: 'Pokémon colors', he: 'הצבעים של הפוקימונים' },
-    play: [
-      { gameId: 'pokemon-colors', level: 1 },
-      { gameId: 'pokemon-colors', level: 2 },
-    ],
-    pointsToNext: 18,
+    name: { en: 'Rainbow & types', he: 'קשת וסוגי פוקימון' },
+    play: [at('pokemon-colors', 2), at('memory-match', 2)],
+    pointsToNext: 24,
     prizes: [
       prize('common', item('great-ball', 2)),
       prize('common', item('super-potion', 2)),
@@ -125,9 +130,9 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     epic: [epic(prize('epic', item('max-elixir')))],
   },
   {
-    name: { en: 'Pokémon types', he: 'סוגי פוקימון' },
-    play: [{ gameId: 'memory-match', level: 2 }],
-    pointsToNext: 24,
+    name: { en: 'Animals & actions', he: 'חיות ופעולות' },
+    play: [at('memory-match', 3), at('pokemon-says', 1), at('pokemon-says', 2)],
+    pointsToNext: 36,
     prizes: [
       prize('common', item('great-ball', 3)),
       prize('common', item('super-potion', 2)),
@@ -144,13 +149,9 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     epic: [epic(prize('epic', item('max-elixir', 2)))],
   },
   {
-    name: { en: 'Animals & actions', he: 'חיות ופעולות' },
-    play: [
-      { gameId: 'memory-match', level: 3 },
-      { gameId: 'pokemon-says', level: 1 },
-      { gameId: 'pokemon-says', level: 2 },
-    ],
-    pointsToNext: 24,
+    name: { en: 'Sounds & colors', he: 'צלילים וצבעים' },
+    play: [at('unown-words', 3), at('memory-match', 4), at('pokemon-colors', 3)],
+    pointsToNext: 36,
     prizes: [
       prize('common', item('ultra-ball')),
       prize('common', item('hyper-potion')),
@@ -167,16 +168,28 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
     epic: [epic(prize('epic', item('rare-candy', 3)))],
   },
   {
-    name: { en: 'Sounds & the Pokémon world', he: 'צלילים ועולם הפוקימון' },
-    play: [
-      { gameId: 'unown-words', level: 3 },
-      { gameId: 'unown-words', level: 4 },
-      { gameId: 'memory-match', level: 4 },
-      { gameId: 'memory-match', level: 5 },
-      { gameId: 'pokemon-colors', level: 3 },
-      { gameId: 'pokemon-says', level: 3 },
+    name: { en: 'First words to read', he: 'מילים ראשונות לקריאה' },
+    play: [at('find-pokemon', 1), at('word-catcher', 1), at('unown-battle', 1)],
+    pointsToNext: 36,
+    prizes: [
+      prize('common', item('ultra-ball')),
+      prize('common', item('hyper-potion', 2)),
+      prize('common', money(4500)),
+      prize('good', item('ultra-ball', 2)),
+      prize('good', item('max-revive')),
+      prize('good', item('full-heal', 2)),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      evolutionStonePrize('rare'),
+      tmPrize('rare'),
+      vitaminPrize('rare', 2),
     ],
-    pointsToNext: 30,
+    epic: [epic(prize('epic', item('rare-candy', 3)))],
+  },
+  {
+    name: { en: 'The Pokémon world', he: 'עולם הפוקימון' },
+    play: [at('memory-match', 5), at('unown-words', 4), at('pokemon-says', 3)],
+    pointsToNext: 40,
     prizes: [
       prize('common', item('ultra-ball', 2)),
       prize('common', item('hyper-potion', 2)),
@@ -192,17 +205,91 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
       vitaminPrize('rare', 2),
     ],
     epic: [epic(prize('epic', item('rare-candy', 3)))],
+  },
+  {
+    name: { en: 'Describing words', he: 'מילים מתארות' },
+    play: [at('find-pokemon', 2), at('word-catcher', 2), at('unown-battle', 2)],
+    pointsToNext: 40,
+    prizes: [
+      prize('common', item('ultra-ball', 2)),
+      prize('common', item('max-potion')),
+      prize('common', money(5500)),
+      prize('good', item('ultra-ball', 3)),
+      prize('good', item('max-revive')),
+      prize('good', item('full-restore')),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      prize('rare', item('max-elixir')),
+      evolutionStonePrize('rare'),
+      tmPrize('rare'),
+      vitaminPrize('rare', 2),
+    ],
+    epic: [epic(prize('epic', item('rare-candy', 3)))],
+  },
+  {
+    name: { en: 'Quick ears', he: 'אוזניים זריזות' },
+    play: [at('pokemon-says', 4), at('memory-match', 6), at('find-pokemon', 3)],
+    pointsToNext: 40,
+    prizes: [
+      prize('common', item('ultra-ball', 2)),
+      prize('common', item('max-potion')),
+      prize('common', money(6000)),
+      prize('good', item('max-revive')),
+      prize('good', item('full-restore')),
+      prize('good', money(10000)),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      prize('rare', item('max-elixir')),
+      evolutionStonePrize('rare'),
+      tmPrize('rare'),
+      vitaminPrize('rare', 2),
+    ],
+    epic: [epic(prize('epic', item('rare-candy', 4)))],
+  },
+  {
+    name: { en: 'Word storm', he: 'סערת מילים' },
+    play: [at('word-catcher', 3), at('unown-battle', 3), at('find-pokemon', 4)],
+    pointsToNext: 45,
+    prizes: [
+      prize('common', item('ultra-ball', 3)),
+      prize('common', item('max-potion')),
+      prize('common', money(7000)),
+      prize('good', item('max-revive')),
+      prize('good', item('full-restore')),
+      prize('good', money(12000)),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      prize('rare', item('max-elixir')),
+      evolutionStonePrize('rare'),
+      tmPrize('rare'),
+      vitaminPrize('rare', 2),
+    ],
+    epic: [epic(prize('epic', item('rare-candy', 4)))],
+  },
+  {
+    name: { en: 'Word masters', he: 'אלופי מילים' },
+    play: [at('word-catcher', 4), at('unown-battle', 4), at('pokemon-says', 5)],
+    pointsToNext: 45,
+    prizes: [
+      prize('common', item('ultra-ball', 3)),
+      prize('common', item('max-potion')),
+      prize('common', money(7500)),
+      prize('good', item('max-revive')),
+      prize('good', item('full-restore')),
+      prize('good', money(14000)),
+      prize('good', item('max-ether')),
+      prize('rare', item('rare-candy')),
+      prize('rare', item('max-elixir')),
+      evolutionStonePrize('rare'),
+      tmPrize('rare'),
+      vitaminPrize('rare', 2),
+    ],
+    epic: [epic(prize('epic', item('rare-candy', 5)))],
     rarePokemon: { ids: [TRAPINCH, FEEBAS, ABSOL, DEINO], chance: RARE_POKEMON_CHANCE },
   },
   {
     name: { en: 'Word explorer', he: 'חוקרי מילים' },
-    play: [
-      { gameId: 'find-pokemon', level: 'best' },
-      { gameId: 'word-catcher', level: 'best' },
-      { gameId: 'unown-battle', level: 'best' },
-      { gameId: 'pokemon-says', level: 'best' },
-      { gameId: 'memory-match', level: 'best' },
-    ],
+    play: [at('find-pokemon', 5), at('word-catcher', 5), at('unown-battle', 5)],
     prizes: [
       prize('common', item('ultra-ball', 3)),
       prize('common', item('max-potion')),
@@ -225,7 +312,7 @@ export const ENGLISH_LADDER: readonly LadderStep[] = [
 /** Rounds of each game of a step, with PLAY_MIN_STARS or more, before the child can climb from it. */
 export const PLAYS_TO_CLIMB = 3;
 /** Stars a round needs to count as one of the PLAYS_TO_CLIMB plays. */
-export const PLAY_MIN_STARS: Stars = 2;
+export const PLAY_MIN_STARS: Stars = 3;
 
 export interface LadderState {
   /** Index into ENGLISH_LADDER. */
@@ -339,17 +426,38 @@ export function roundStep(current: number, rng: Rng): number {
   return current;
 }
 
+/** A ladder round: a game level and where it sits on the ladder. */
+export type LadderRound = { gameId: MiniGameId; level: number } & LadderRoundRef;
+
+/** Dusty levels (dust.ts) on the steps up to `maxStep`, lowest step first. */
+export function dustyRounds(save: MiniGamesSave, now: number, maxStep: number): LadderRound[] {
+  return ENGLISH_LADDER.slice(0, Math.max(0, maxStep + 1)).flatMap((step, stepIndex) =>
+    step.play.flatMap(({ gameId, level }, playIndex) =>
+      isDusty(save, gameId, level, now) ? [{ gameId, level, stepIndex, playIndex }] : [],
+    ),
+  );
+}
+
 /**
  * A Word Board round: one game of the step `roundStep()` picks (its prizes are that step's). On the current step a
- * game not yet played PLAYS_TO_CLIMB times comes first, so every game gets its turns.
+ * game not yet played PLAYS_TO_CLIMB times comes first, so every game gets its turns. A practice round goes to a
+ * dusty level below the current step DUST_PRACTICE_SHARE of the time, while there is one.
  */
-export function ladderRound(save: MiniGamesSave, rng: Rng): { gameId: MiniGameId; level: number } & LadderRoundRef {
+export function ladderRound(save: MiniGamesSave, rng: Rng, now = Date.now()): LadderRound {
   const state = readLadder(save);
   const stepIndex = roundStep(state.step, rng);
+  if (stepIndex < state.step) {
+    const dusty = dustyRounds(save, now, state.step - 1);
+    if (dusty.length > 0 && rng() < DUST_PRACTICE_SHARE) return pick(rng, dusty);
+  }
   const all = ENGLISH_LADDER[stepIndex].play.map((_, i) => i);
   const missing = stepIndex === state.step ? all.filter((i) => state.plays[i] < PLAYS_TO_CLIMB) : [];
   const playIndex = pick(rng, missing.length > 0 ? missing : all);
-  const play = ENGLISH_LADDER[stepIndex].play[playIndex];
-  const level = play.level === 'best' ? highestUnlockedLevel(save, getMiniGame(play.gameId)) : play.level;
-  return { gameId: play.gameId, level, stepIndex, playIndex };
+  const { gameId, level } = ENGLISH_LADDER[stepIndex].play[playIndex];
+  return { gameId, level, stepIndex, playIndex };
+}
+
+/** The step that plays this game level (-1 = not on the ladder). */
+export function stepOfLevel(gameId: MiniGameId, level: number): number {
+  return ENGLISH_LADDER.findIndex((s) => s.play.some((p) => p.gameId === gameId && p.level === level));
 }

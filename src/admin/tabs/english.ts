@@ -5,7 +5,8 @@ import { loadGame, saveGame } from '../../systems/save';
 import type { PlayerData } from '../../types/index';
 import { getPokemonSpriteUrl } from '../../utils/util';
 import { boardLockLeft, clearBoardLock, isBoardRoundOpen } from '../../minigames/english/board';
-import { ENGLISH_LADDER, ladderProgress, readLadder, setLadderStep } from '../../minigames/english/ladder';
+import { ageShine, DUST_DAYS, DUST_MS } from '../../minigames/english/dust';
+import { dustyRounds, ENGLISH_LADDER, ladderProgress, readLadder, setLadderStep } from '../../minigames/english/ladder';
 import { knownCount, strongCount, todayKey, type WordStats } from '../../minigames/english/learning';
 import { createRng, type Rng } from '../../minigames/english/random';
 import { wordStatsOf } from '../../minigames/english/useWords';
@@ -172,8 +173,8 @@ const ENGLISH_GAMES = MINI_GAME_LIST.filter((d) => d.category === 'english');
 function ladderStepsOf(gameId: MiniGameId, level: number): string[] {
   return ENGLISH_LADDER.flatMap((st, i) =>
     st.play
-      .filter((p) => p.gameId === gameId && (p.level === level || p.level === 'best'))
-      .map((p) => `Step ${i + 1} — ${st.name.en}${p.level === 'best' ? ' (best level)' : ''}`),
+      .filter((p) => p.gameId === gameId && p.level === level)
+      .map(() => `Step ${i + 1} — ${st.name.en}`),
   );
 }
 
@@ -300,7 +301,8 @@ export function renderEnglishTab(container: HTMLElement): (() => void) | void {
         : ' (top level)') +
       (lockLeft > 0 ? ` · locked for ${Math.ceil(lockLeft / 60000)} min` : '') +
       (isBoardRoundOpen(save) ? ' · a round is open' : '') +
-      ` · words met ${Object.keys(stats).length}, strong ${strongCount(stats)}, known ${knownCount(stats)}`;
+      ` · words met ${Object.keys(stats).length}, strong ${strongCount(stats)}, known ${knownCount(stats)}` +
+      ` · dusty levels ${dustyRounds(save, Date.now(), step).length}`;
     s.body.appendChild(status);
 
     const row = el('div', '');
@@ -326,7 +328,14 @@ export function renderEnglishTab(container: HTMLElement): (() => void) | void {
       saveGame(slot, pd, true);
       render();
     });
-    row.append(levelSelect, pointsInput, setBtn);
+    const dustBtn = el('button', 'btn btn-sm', `🕸️ Age levels ${DUST_DAYS} days`);
+    dustBtn.title = 'Move every played level’s last play back, so it gets dusty (test the dust + cleaning bonus)';
+    dustBtn.addEventListener('click', () => {
+      ageShine((pd.miniGames ??= {}), DUST_MS);
+      saveGame(slot, pd, true);
+      render();
+    });
+    row.append(levelSelect, pointsInput, setBtn, dustBtn);
 
     if (lockLeft > 0 || isBoardRoundOpen(save)) {
       const unlockBtn = el('button', 'btn btn-sm', 'Open board');

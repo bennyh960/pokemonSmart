@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 23;
+export const CURRENT_SAVE_VERSION = 25;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -380,6 +380,29 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     // No saved ladder = level 1 (readLadder in minigames/english/ladder.ts); word records are kept
     delete data.miniGames?.['unown-words']?.data?.ladder;
     data.saveVersion = 23;
+  },
+  24: (data) => {
+    // English ladder: 8 steps → 13 (every level of every game, plays count only at 3★). Each old step moves to the
+    // new step with the same games (old top "Word explorer" → "First words to read"); points and plays restart
+    const ladder = data.miniGames?.['unown-words']?.data?.ladder;
+    if (ladder && Number.isInteger(ladder.step)) {
+      const OLD_TO_NEW = [0, 1, 2, 3, 3, 4, 5, 6];
+      ladder.step = OLD_TO_NEW[Math.max(0, Math.min(OLD_TO_NEW.length - 1, ladder.step))];
+      ladder.points = 0;
+      ladder.plays = [];
+    }
+    data.saveVersion = 24;
+  },
+  25: (data) => {
+    // Dusty English levels (minigames/english/dust.ts): levels played before start their 7-day shine clock now,
+    // so they don't all turn dusty at once. Played levels = the recent results kept per "game:level"
+    const words = data.miniGames?.['unown-words']?.data;
+    if (words?.recent && typeof words.recent === 'object') {
+      const shinedAt = { ...(words.shinedAt ?? {}) };
+      for (const key of Object.keys(words.recent)) shinedAt[key] ??= Date.now();
+      words.shinedAt = shinedAt;
+    }
+    data.saveVersion = 25;
   },
 };
 

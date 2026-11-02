@@ -180,15 +180,36 @@ export function boardPrizes(
   const won = stars >= EPIC_STARS ? rollEpic(epicOdds(step, owned), rng) : null;
   if (won) prizes.push({ kind: 'board', ...resolvePrize(won, rng) });
   while (prizes.length < stars) {
-    let r = DRAWN_RARITIES.indexOf(rollRarity(stars as Exclude<Stars, 0>, rng));
-    let options = step.prizes.filter((p) => p.rarity === DRAWN_RARITIES[r]);
-    while (options.length === 0 && r > 0) options = step.prizes.filter((p) => p.rarity === DRAWN_RARITIES[--r]);
-    if (options.length === 0) break;
-    if (options.length === 0) continue;
-    const def = options[Math.min(options.length - 1, Math.floor(rng() * options.length))];
+    const def = drawOfRarity(step, rollRarity(stars as Exclude<Stars, 0>, rng), rng);
+    if (!def) break;
     prizes.push({ kind: 'board', ...resolvePrize(def, rng) });
   }
   return prizes;
+}
+
+/** One prize of `rarity` from the step's pool, or of the next lower rarity the pool has (null = empty pool). */
+function drawOfRarity(step: LadderStep, rarity: DrawnRarity, rng: () => number): MiniGamePrizeDef | null {
+  let r = DRAWN_RARITIES.indexOf(rarity);
+  let options = step.prizes.filter((p) => p.rarity === DRAWN_RARITIES[r]);
+  while (options.length === 0 && r > 0) options = step.prizes.filter((p) => p.rarity === DRAWN_RARITIES[--r]);
+  if (options.length === 0) return null;
+  return options[Math.min(options.length - 1, Math.floor(rng() * options.length))];
+}
+
+/**
+ * The bonus for cleaning a dusty level (dust.ts) of `stepIndex`: one prize of that step drawn like a 3★ prize, but
+ * never common. Premium prizes still need their badges.
+ */
+export function dustBonusPrize(
+  stepIndex: number,
+  badges: number,
+  rng: () => number = Math.random,
+  city?: string,
+): AwardedPrize | null {
+  const step = unlockedStep(boardStep(stepIndex, city), badges);
+  const rolled = rollRarity(3, rng);
+  const def = drawOfRarity(step, rolled === 'common' ? 'good' : rolled, rng);
+  return def ? { kind: 'dust', ...resolvePrize(def, rng) } : null;
 }
 
 /** How long the board stays closed after leaving a round before it finished. */
