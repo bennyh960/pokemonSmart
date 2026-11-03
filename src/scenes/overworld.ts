@@ -1469,28 +1469,20 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       },
       walkPlayerToInteract(interactTypeId) {
         if (!tileMap) return false;
-        const pd = hasActiveGame() ? getPlayerData() : null;
-        const warps = new Set((currentMapData?.transitions ?? []).map((tr) => `${tr.fromX},${tr.fromY}`));
-        const map = tileMap;
-        const walk = pathToFace(
-          { x: player.gridX, y: player.gridY },
-          map.getInteractCells(interactTypeId),
-          (x, y) =>
-            map.isWalkable(x, y) &&
-            map.getTileCategory(x, y) !== 'water' &&
-            !warps.has(`${x},${y}`) &&
-            !npcManager?.isVisibleNPCAt(x, y, pd?.flags ?? {}, pd?.party),
-        );
+        return walkPlayerToFace(tileMap.getInteractCells(interactTypeId));
+      },
+      walkToFace(npcId, x, y) {
+        if (!npcId) return walkPlayerToFace([{ x, y }]);
+        const npc = npcManager?.getNPCs().find((n) => n.id === npcId);
+        if (!npc) return false;
+        const walk = cutscenePathToFace({ x: npc.x, y: npc.y }, [{ x, y }]);
         if (!walk) return false;
-        if (walk.path.length === 0) {
-          player.facing = CUTSCENE_DIR_TO_FACING[walk.face];
-          return false;
-        }
-        playerCutscenePathQueue = [...walk.path];
-        playerCutsceneWalking = true;
-        playerCutsceneFinalFacing = walk.face;
-        cutsceneCameraFollowsPlayer = true;
-        return true;
+        const st = getNpcState(npc);
+        npc.facing = walk.path[0] ?? walk.face;
+        st.facing = npc.facing;
+        st.cutscenePathQueue = [...walk.path];
+        st.cutsceneWalking = walk.path.length > 0;
+        return st.cutsceneWalking;
       },
       playPokemonAnim(step) {
         const npc =
@@ -1569,6 +1561,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           return;
         }
         startTrainerApproach(trainer);
+      },
+      flyTo(pokemonId, mapId, at) {
+        startFlyAnimation(pokemonId, mapId, at);
       },
     };
   }
@@ -1867,11 +1862,46 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   /** Start the Fly animation sequence. */
-  function startFlyAnimation(pokemon: import('../types/index.js').Pokemon, destMapId: string): void {
-    const destSpawn = resolveFlySpawn(destMapId) ?? getCachedMap(destMapId)?.spawn ?? { x: 5, y: 5 };
+  /** Cutscene walk: shortest path to stand next to one of `targets` and face it — over walkable land,
+   *  never through warps, NPCs or the player. */
+  function cutscenePathToFace(start: { x: number; y: number }, targets: { x: number; y: number }[]) {
+    if (!tileMap) return null;
+    const map = tileMap;
+    const pd = hasActiveGame() ? getPlayerData() : null;
+    const warps = new Set((currentMapData?.transitions ?? []).map((tr) => `${tr.fromX},${tr.fromY}`));
+    return pathToFace(
+      start,
+      targets,
+      (x, y) =>
+        map.isWalkable(x, y) &&
+        map.getTileCategory(x, y) !== 'water' &&
+        !warps.has(`${x},${y}`) &&
+        !(x === player.gridX && y === player.gridY && (start.x !== x || start.y !== y)) &&
+        !npcManager?.isVisibleNPCAt(x, y, pd?.flags ?? {}, pd?.party),
+    );
+  }
+
+  /** Walk the player next to one of `targets`, facing it. False = nothing to walk (already there / no path). */
+  function walkPlayerToFace(targets: { x: number; y: number }[]): boolean {
+    const walk = cutscenePathToFace({ x: player.gridX, y: player.gridY }, targets);
+    if (!walk) return false;
+    if (walk.path.length === 0) {
+      player.facing = CUTSCENE_DIR_TO_FACING[walk.face];
+      return false;
+    }
+    playerCutscenePathQueue = [...walk.path];
+    playerCutsceneWalking = true;
+    playerCutsceneFinalFacing = walk.face;
+    cutsceneCameraFollowsPlayer = true;
+    return true;
+  }
+
+  /** Fly animation to a city on this Pokémon species — from the Fly menu or a story cutscene (fly-to). */
+  function startFlyAnimation(pokemonId: number, destMapId: string, at?: { x: number; y: number }): void {
+    const destSpawn = at ?? resolveFlySpawn(destMapId) ?? getCachedMap(destMapId)?.spawn ?? { x: 5, y: 5 };
     flyAnim = {
       phase: 'mount',
-      pokemonId: pokemon.id,
+      pokemonId,
       pokemonSprite: null,
       timer: 0,
       spriteScale: 1,
@@ -1883,8 +1913,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       spriteOffsetY: 0,
       teleported: false,
     };
-    flyAnim.pokemonSprite = loadPokemonSprite(pokemon.id, (img) => {
-      if (flyAnim && flyAnim.pokemonId === pokemon.id) flyAnim.pokemonSprite = img;
+    flyAnim.pokemonSprite = loadPokemonSprite(pokemonId, (img) => {
+      if (flyAnim && flyAnim.pokemonId === pokemonId) flyAnim.pokemonSprite = img;
     });
   }
 
@@ -1911,7 +1941,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     if (flyUser) {
       const capturedFlyUser = flyUser;
       setFlyCallback((destMapId: string) => {
-        startFlyAnimation(capturedFlyUser, destMapId);
+        startFlyAnimation(capturedFlyUser.id, destMapId);
       }, capturedFlyUser);
     } else {
       setFlyCallback(null);

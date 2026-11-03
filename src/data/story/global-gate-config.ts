@@ -291,14 +291,20 @@ const GYM_AUTO_GATE_OVERRIDES: Record<string, AutoGateMapOverride> = {
       timeLimitPerQuestion: 150,
     },
   },
+  // Doors: the city door (light beside it) and the Route 12 back door
+  [MapId.PERCENTILE_GYM]: {
+    questionSetIds: ['+', '-', '×', '÷'],
+    sessionConfig: {
+      inputQuestions: { count: 5, types: ['+', '-', '×', '÷'] },
+      questionsRequired: 10,
+      timeLimitPerQuestion: 150,
+    },
+  },
 };
 
-registerAutoGateMap(MapId.SUMVILLE_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.SUMVILLE_GYM]);
-registerAutoGateMap(MapId.MINUSBURG_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.MINUSBURG_GYM]);
-registerAutoGateMap(MapId.MULTIPLIA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.MULTIPLIA_GYM]);
-registerAutoGateMap(MapId.DIVIDIA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.DIVIDIA_GYM]);
-registerAutoGateMap(MapId.FRACTALIS_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.FRACTALIS_GYM]);
-registerAutoGateMap(MapId.SYMMETRIKA_GYM, 'gym', GYM_AUTO_GATE_OVERRIDES[MapId.SYMMETRIKA_GYM]);
+for (const [mapId, overrides] of Object.entries(GYM_AUTO_GATE_OVERRIDES)) {
+  registerAutoGateMap(mapId, 'gym', overrides);
+}
 
 // Labs — a mini-game instead of questions (the level follows the trainer rank).
 // Libraries have no entry gate: kids play English at the Word Board because they want to.

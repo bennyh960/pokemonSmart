@@ -18,7 +18,11 @@
       "fromY": 1,
       "toMapId": "percentile/gym",
       "toX": 7,
-      "toY": 24
+      "toY": 24,
+      "light": {
+        "x": 44,
+        "y": 1
+      }
     },
     {
       "fromX": 13,

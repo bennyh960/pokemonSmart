@@ -45,6 +45,8 @@ export interface CutsceneContext {
   isPlayerWalking(): boolean;
   /** Walk the player to face the nearest object of an interact type. False = nothing to walk (already there / none). */
   walkPlayerToInteract(interactTypeId: string): boolean;
+  /** Walk the player (no npcId) or an NPC next to tile (x, y), facing it. False = nothing to walk. */
+  walkToFace(npcId: string | undefined, x: number, y: number): boolean;
   /** Start a Pokémon sprite animation on the map (fly / surf / walk). */
   playPokemonAnim(step: Extract<CutsceneStep, { type: 'pokemon-anim' }>): void;
   /** Returns true while a pokemon-anim is still playing. */
@@ -66,6 +68,8 @@ export interface CutsceneContext {
   startScene(sceneId: string): void;
   /** A visible, unbeaten trainer NPC spots the player: "!" → walks over → pre-battle dialogue → battle. */
   startTrainerBattle(trainerId: string): void;
+  /** Fly the player to a city on this Pokémon species (the Fly-menu animation); `at` = landing tile. */
+  flyTo(pokemonId: number, mapId: string, at?: { x: number; y: number }): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -178,6 +182,11 @@ export function activateCutscene(id: string): boolean {
   return true;
 }
 
+/** A fly-to step's landing tile, when it names one (else the city's fly spot). */
+function flyLanding(step: { x?: number; y?: number }): { x: number; y: number } | undefined {
+  return step.x !== undefined && step.y !== undefined ? { x: step.x, y: step.y } : undefined;
+}
+
 export function deactivateCutscene(): void {
   _active = false;
   _def = null;
@@ -261,6 +270,10 @@ export function updateCutscene(dt: number, input: InputManager, ctx: CutsceneCon
         // Transition scene must still happen (e.g. STARTER_SELECT)
         deactivateCutscene();
         ctx.startScene((step as { sceneId: string }).sceneId);
+        return;
+      } else if (step.type === 'fly-to') {
+        deactivateCutscene();
+        ctx.flyTo(step.pokemonId, step.mapId, flyLanding(step));
         return;
       }
       // Dialogue, fades, waits, NPC movement — safely skipped
@@ -675,8 +688,10 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
         // Don't advance _stepIndex — dialogue handler does it on dismiss
         break;
       }
+      const def = _def;
       ctx.executeStoryAction(step.action);
-      _stepIndex++;
+      // A start-cutscene action replaces this cutscene — don't skip the new one's first step
+      if (_def === def) _stepIndex++;
       break;
     }
 
@@ -701,6 +716,12 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
       // Ends the cutscene — the trainer then engages the player like a line-of-sight spot
       deactivateCutscene();
       ctx.startTrainerBattle(step.trainerId);
+      break;
+    }
+
+    case 'fly-to': {
+      deactivateCutscene();
+      ctx.flyTo(step.pokemonId, step.mapId, flyLanding(step));
       break;
     }
 
@@ -730,6 +751,17 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     case 'walk-to-interact': {
       if (ctx.walkPlayerToInteract(step.interact)) _playerMoveWaiting = true;
       else _stepIndex++;
+      break;
+    }
+
+    case 'walk-to': {
+      const walking = ctx.walkToFace(step.npcId, step.x, step.y);
+      if (walking && step.waitForComplete !== false) {
+        if (step.npcId) _npcMoveWaiting = step.npcId;
+        else _playerMoveWaiting = true;
+      } else {
+        _stepIndex++;
+      }
       break;
     }
 

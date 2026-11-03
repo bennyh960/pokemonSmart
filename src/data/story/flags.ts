@@ -304,6 +304,8 @@ export const FLAGS = {
   ACT4_PCT_LAB_FINAL: 'act4-pct-lab-final', // Oak scanned 6 cores → Minusburg
   ACT4_PCT_GYM_OPEN: 'act4-pct-gym-open', // Lance + Jenny scene done → gym door opens
   ACT4_PCT_ARC_COMPLETE: 'act4-pct-arc-complete', // Badge 7 won → arc NPCs leave
+  ACT4_PCT_FLY_HILL: 'act4-pct-fly-hill', // Badge 7 → Max waits on the hill behind the gym (Gary's call + Charizard ride)
+  ACT5_MB_ARC_STARTED: 'act5-mb-arc-started', // Landed in Minusburg → Gary + Jenny start the Minusburg arc
   ACT4_MINUSBURG_OPEN: 'act4-minusburg-open', // Officer Jenny's Minusburg blockade lifts
 
   // ── Act 4: Integrala ────────────────────────────────────────────────────────
@@ -482,6 +484,8 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT4_PCT_LAB_FINAL]: 'Oak scanned the 6 cores — next signal under Minusburg',
   [FLAGS.ACT4_PCT_GYM_OPEN]: 'Lance + Jenny scene done — Percentile gym open',
   [FLAGS.ACT4_PCT_ARC_COMPLETE]: 'Badge 7 won — Burning Chance arc complete',
+  [FLAGS.ACT4_PCT_FLY_HILL]: 'Badge 7 won — Max waits on the hill behind the gym (Gary calls, Charizard ride)',
+  [FLAGS.ACT5_MB_ARC_STARTED]: 'Landed in Minusburg on Max’s Charizard — Gary + Jenny start the Minusburg arc',
   [FLAGS.ACT4_MINUSBURG_OPEN]: "Officer Jenny's Minusburg blockade lifted (after badge 7)",
   [FLAGS.GATE_ROUTE7_PASS]: 'Route 7 → Integrala checkpoint passed',
   [FLAGS.VISITED_INTEGRALA]: 'First arrival at Integrala',

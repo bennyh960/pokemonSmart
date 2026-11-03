@@ -44,6 +44,20 @@
       "toMapId": "percentile/percentile",
       "toX": 31,
       "toY": 2
+    },
+    {
+      "fromX": 40,
+      "fromY": 65,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 24
+    },
+    {
+      "fromX": 41,
+      "fromY": 65,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 24
     }
   ],
   "npcs": [
@@ -2141,6 +2155,64 @@
       },
       "spawnAfter": "trainer-wild-r12-glitch-charizard-defeated",
       "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-r12-gym-closed-1",
+      "x": 40,
+      "y": 65,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_0ade0c",
+      "name": {
+        "en": "Gym Helper",
+        "he": "עוזר המכון"
+      },
+      "dialogue": [
+        {
+          "en": "Sorry, the gym is closed. Max Formax went out and hasn't come back.",
+          "he": "סליחה, המכון סגור. מקס פורמקס יצא ועוד לא חזר."
+        }
+      ],
+      "despawnAfter": "act4-pct-gym-open"
+    },
+    {
+      "id": "npc-r12-gym-closed-2",
+      "x": 41,
+      "y": 65,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "char_0ade0c",
+      "name": {
+        "en": "Gym Helper",
+        "he": "עוזר המכון"
+      },
+      "dialogue": [
+        {
+          "en": "Sorry, the gym is closed. Max Formax went out and hasn't come back.",
+          "he": "סליחה, המכון סגור. מקס פורמקס יצא ועוד לא חזר."
+        }
+      ],
+      "despawnAfter": "act4-pct-gym-open"
+    },
+    {
+      "id": "npc-r12-max-hill",
+      "x": 40,
+      "y": 62,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "gym-7-integrala",
+      "name": {
+        "en": "Max Formax",
+        "he": "מקס פרבולה"
+      },
+      "dialogue": [
+        {
+          "en": "Fresh air! The best place to learn how to fly.",
+          "he": "אוויר צח! המקום הכי טוב ללמוד לעוף."
+        }
+      ],
+      "spawnAfter": "act4-pct-fly-hill",
+      "despawnAfter": "act4-pct-gary-called"
     }
   ],
   "music": "town",
@@ -2378,8 +2450,7 @@
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done"
     }
-  ]
-,
+  ],
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","gre-c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","gre-c","xtest","xtest","xtest","xtest","xtest","gre-c","gre-c","xtest","gre-c","xtest","gre-c"],

@@ -26,8 +26,10 @@
  *   9. Moltres beaten → Core X6 (Energy), Rocket gone, area infection −2 levels, ocean opens.
  *  10. Lab: Oak scans the 6 cores → "87% chance the next signal is under Minusburg".
  *  11. Leaving the lab → Lance lands, Jenny on the phone, gym opens.
- *  12. Badge 7 (+ HM02 Fly) → Minusburg blockade lifts.
- *  13. Walking out of the gym → Gary calls: he, Jenny and Lance need help under Minusburg.
+ *  12. Badge 7 (+ HM02 Fly) → Minusburg blockade lifts. Max walks to the leader room's back arrow
+ *      (it leads to the hill behind the gym — Route 12, also the gym's back door); the player steps on it.
+ *  13. Hill: Gary calls (he, Jenny and Lance need help under Minusburg) → Max joins: "fly with my
+ *      Charizard", explains Fly → both fly to Minusburg (fly-to) → act5/quest-minusburg-depths.ts.
  *
  * NPC IDs:
  *   percentile   npc-pct-reminder, npc-pct-gym-closed, npc-pct-lance
@@ -37,7 +39,8 @@
  *   route-11     npc-r11-rocket-lookout (on the cave door until the lab beat)
  *   rocket-base  b1–b4 grunts, npc-base-b2-gen-1..4 (generators), npc-base-jessie, npc-base-james,
  *                wild-base-suicune, npc-base-b4-hatch
- *   route-12     npc-pct-collector-1-grunt + npc-pct-guard-2..3 (Heat Collectors, any order), npc-pct-grunt-4..5, npc-pct-admin-shield,
+ *   route-12     npc-r12-max-hill (Fly lesson), npc-r12-gym-closed-1/2 (on the gym back door 40,65 / 41,65 until the gym opens),
+ *                npc-pct-collector-1-grunt + npc-pct-guard-2..3 (Heat Collectors, any order), npc-pct-grunt-4..5, npc-pct-admin-shield,
  *                Heat Collector #1 (lab-equip 32,53 + smoke): guarded by 4 glitched wild Pokémon that
  *                appear one after another (157 → 467 → charizard → arcanine, each spawnAfter the last's
  *                defeat flag), then npc-pct-collector-1-grunt spawns and charges in; beating it blows the machine up
@@ -56,6 +59,7 @@ import { FLAGS } from '../../flags.js';
 import { registerQuest } from '../../quests.js';
 import { MapId } from '../../../maps/map-ids.js';
 import type { InfectionLevel } from '../../../../types/index.js';
+import { HM_CONFIG } from '../../../../systems/hm.js';
 
 const CITY = MapId.PERCENTILE_PERCENTILE;
 const R12 = MapId.ROUTES_ROUTE_12;
@@ -183,11 +187,20 @@ registerQuest({
 });
 
 registerQuest({
+  id: 'main-act4-pct-fly-hill',
+  title: { en: 'Learn to Fly!', he: 'ללמוד לעוף!' },
+  objective: {
+    en: 'Step on the arrow and go out to the hill with Max!',
+    he: 'עלה על החץ וצא לגבעה עם מקס!',
+  },
+});
+
+registerQuest({
   id: 'main-act5-minusburg',
   title: { en: 'Back to Minusburg', he: 'חזרה למינוסבורג' },
   objective: {
-    en: 'Gary needs help! Fly to Minusburg — he is there with Officer Jenny and Lance',
-    he: "גארי צריך עזרה! עוף למינוסבורג — הוא שם עם השוטרת ג'ני ולאנס",
+    en: 'Gary needs help! Find him in Minusburg — he is there with Officer Jenny and Lance',
+    he: "גארי צריך עזרה! מצא אותו במינוסבורג — הוא שם עם השוטרת ג'ני ולאנס",
   },
 });
 
@@ -1445,34 +1458,137 @@ registerCutscene({
   ],
 });
 
-// ── Beat 11: Badge 7 → Fly → Minusburg ──────────────────────────────────────
+// ── Beat 11: Badge 7 → Max walks you out to the hill behind the gym ──────────
+
+/** The leader room's back arrow — it leads to the hill (gym.json transition). */
+const GYM_HILL_EXIT = { x: 29, y: 11 };
 
 registerStoryEvent({
   id: 'evt-pct-badge7',
   trigger: { type: 'badge-earned', badge: 7 },
-  actions: [
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-badge7' }],
+});
+
+registerCutscene({
+  id: 'cutscene-pct-badge7',
+  steps: [
     {
-      type: 'show-message',
+      type: 'dialogue',
+      speakerId: 'npc-pgym-leader',
+      speakerName: MAX,
       lines: [
         {
-          en: 'You got HM02 Fly! Teach it to a flying Pokémon to travel between cities.',
-          he: 'קיבלת את מכונת הלימוד תעופה! למד אותה לפוקימון מעופף כדי לטוס בין ערים.',
+          en: 'Take HM02 Fly too! But you cannot learn to fly under a roof.',
+          he: 'קח גם את מכונת הלימוד תעופה! אבל אי אפשר ללמוד לעוף מתחת לגג.',
+        },
+        {
+          en: 'Come — let us go out to the hill behind the gym!',
+          he: 'בוא — נצא לגבעה שמאחורי המכון!',
         },
       ],
     },
-    { type: 'complete-quest', questId: 'main-act4-pct-badge' },
-    { type: 'set-flag', flag: FLAGS.ACT4_MINUSBURG_OPEN },
-    { type: 'set-flag', flag: FLAGS.ACT4_PCT_ARC_COMPLETE },
+    { type: 'walk-to', npcId: 'npc-pgym-leader', ...GYM_HILL_EXIT },
+    { type: 'hide-npc', npcId: 'npc-pgym-leader' },
+    { type: 'walk-to', ...GYM_HILL_EXIT },
+    { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-badge' } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_MINUSBURG_OPEN } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_ARC_COMPLETE } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_FLY_HILL } },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-fly-hill' } },
   ],
 });
 
-// ── Beat 12: Out of the gym → Gary calls for help in Minusburg (closes the arc) ──
+// ── Beat 12: The hill → Gary calls → Max: "fly with my Charizard" → both fly to Minusburg ──
 
+const FLY = HM_CONFIG.fly;
+const CHARIZARD = 6;
+/** Landing spot in Minusburg — Gary + Jenny wait there (minusburg.json npc-mb-*-landing). */
+const MINUSBURG_LANDING = { x: 44, y: 3 };
+
+const GARY_CALL: CutsceneStep = {
+  type: 'dialogue',
+  speakerId: 'rival-story-gary',
+  speakerName: 'Gary Oak / גארי אוק',
+  lines: [
+    {
+      en: "Hey, it's Gary! Seven badges, huh? Not bad... for you.",
+      he: 'היי, זה גארי! שבעה תגים, מה? לא רע... בשבילך.',
+    },
+    {
+      en: "Listen. I'm in Minusburg with Officer Jenny and Lance. We found something under the city.",
+      he: "תקשיב. אני במינוסבורג עם השוטרת ג'ני ולאנס. מצאנו משהו מתחת לעיר.",
+    },
+    {
+      en: "The glitch is everywhere down here... and it's getting stronger.",
+      he: 'השיבוש נמצא פה למטה בכל מקום... והוא נהיה חזק יותר.',
+    },
+    {
+      en: 'I hate to say it, but I need your help. Fly to Minusburg — fast!',
+      he: 'אני שונא להגיד את זה, אבל אני צריך את העזרה שלך. עוף למינוסבורג — מהר!',
+    },
+  ],
+};
+const GARY_CALL_DONE: CutsceneStep[] = [
+  { type: 'action', action: { type: 'set-quest', questId: 'main-act5-minusburg' } },
+  { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_GARY_CALLED } },
+];
+
+registerStoryEvent({
+  id: 'evt-pct-fly-hill',
+  trigger: { type: 'map-enter', mapId: R12 },
+  conditions: [
+    { type: 'flag', flag: FLAGS.ACT4_PCT_FLY_HILL },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_GARY_CALLED },
+  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-fly-hill' }],
+});
+
+/** The Fly rules come from HM_CONFIG and the Fly menu (cities only). */
+registerCutscene({
+  id: 'cutscene-pct-fly-hill',
+  phoneCaller: { en: 'Gary Oak', he: 'גארי אוק' },
+  steps: [
+    GARY_CALL,
+    {
+      type: 'dialogue',
+      speakerId: 'npc-r12-max-hill',
+      speakerName: MAX,
+      lines: [
+        {
+          en: 'Minusburg? Then let us fly there with my Charizard!',
+          he: 'מינוסבורג? אז בוא נטוס לשם עם הצ׳אריזרד שלי!',
+        },
+        {
+          en: 'Watch how I control him. When your own Pokémon is ready, you will fly the same way.',
+          he: 'תסתכל איך אני שולט בו. כשהפוקימון שלך יהיה מוכן, תטוס בדיוק ככה.',
+        },
+        {
+          en: 'Teach it Fly from the Bag. Then stand outside in a city — not in a building, a cave or on a route.',
+          he: 'למד אותו תעופה מהתיק. אחר כך עמוד בחוץ בתוך עיר — לא בבניין, לא במערה ולא בדרך.',
+        },
+        {
+          en: 'Open the menu, choose Map and pick a city you have visited.',
+          he: 'פתח את התפריט, בחר מפה ובחר עיר שכבר ביקרת בה.',
+        },
+        {
+          en: `A small bird cannot carry you! It must be level ${FLY.minLevel} or more, weigh at least ${FLY.minWeight} kg and be at least ${FLY.minHeight} m tall.`,
+          he: `ציפור קטנה לא יכולה לשאת אותך! הפוקימון צריך להיות ברמה ${FLY.minLevel} ומעלה, לשקול לפחות ${FLY.minWeight} ק"ג ולהיות בגובה ${FLY.minHeight} מטר לפחות.`,
+        },
+        { en: 'Hold on tight!', he: 'תחזיק חזק!' },
+      ],
+    },
+    ...GARY_CALL_DONE,
+    { type: 'fly-to', pokemonId: CHARIZARD, mapId: MapId.MINUSBURG_MINUSBURG, ...MINUSBURG_LANDING },
+  ],
+});
+
+// Saves that won badge 7 before the hill scene existed: Gary calls on the next city visit instead
 registerStoryEvent({
   id: 'evt-pct-gary-call',
   trigger: { type: 'map-enter', mapId: CITY },
   conditions: [
     { type: 'flag', flag: FLAGS.ACT4_PCT_ARC_COMPLETE },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_FLY_HILL },
     { type: 'flag-not', flag: FLAGS.ACT4_PCT_GARY_CALLED },
   ],
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-gary-call' }],
@@ -1481,30 +1597,5 @@ registerStoryEvent({
 registerCutscene({
   id: 'cutscene-pct-gary-call',
   phoneCaller: { en: 'Gary Oak', he: 'גארי אוק' },
-  steps: [
-    {
-      type: 'dialogue',
-      speakerName: 'Gary Oak / גארי אוק',
-      lines: [
-        {
-          en: "Hey, it's Gary! Seven badges, huh? Not bad... for you.",
-          he: 'היי, זה גארי! שבעה תגים, מה? לא רע... בשבילך.',
-        },
-        {
-          en: "Listen. I'm in Minusburg with Officer Jenny and Lance. We found something under the city.",
-          he: "תקשיב. אני במינוסבורג עם השוטרת ג'ני ולאנס. מצאנו משהו מתחת לעיר.",
-        },
-        {
-          en: "The glitch is everywhere down here... and it's getting stronger.",
-          he: 'השיבוש נמצא פה למטה בכל מקום... והוא נהיה חזק יותר.',
-        },
-        {
-          en: 'I hate to say it, but I need your help. Fly to Minusburg — fast!',
-          he: 'אני שונא להגיד את זה, אבל אני צריך את העזרה שלך. עוף למינוסבורג — מהר!',
-        },
-      ],
-    },
-    { type: 'action', action: { type: 'set-quest', questId: 'main-act5-minusburg' } },
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_GARY_CALLED } },
-  ],
+  steps: [GARY_CALL, ...GARY_CALL_DONE],
 });

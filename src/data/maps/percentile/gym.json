@@ -23,17 +23,16 @@
     {
       "fromX": 29,
       "fromY": 11,
-      "returnToPrevious": false,
-      "toMapId": "percentile/percentile",
-      "toX": 41,
-      "toY": 2
+      "toMapId": "routes/route-12",
+      "toX": 40,
+      "toY": 64
     },
     {
       "fromX": 1,
       "fromY": 13,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 40,
+      "toY": 64
     },
     {
       "fromX": 4,
@@ -59,9 +58,9 @@
     {
       "fromX": 13,
       "fromY": 13,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 41,
+      "toY": 64
     },
     {
       "fromX": 16,
@@ -80,9 +79,9 @@
     {
       "fromX": 22,
       "fromY": 13,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 40,
+      "toY": 64
     },
     {
       "fromX": 25,
@@ -94,16 +93,16 @@
     {
       "fromX": 28,
       "fromY": 13,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 41,
+      "toY": 64
     },
     {
       "fromX": 31,
       "fromY": 13,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 40,
+      "toY": 64
     },
     {
       "fromX": 34,
@@ -129,9 +128,9 @@
     {
       "fromX": 43,
       "fromY": 13,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 41,
+      "toY": 64
     },
     {
       "fromX": 1,
@@ -143,16 +142,16 @@
     {
       "fromX": 4,
       "fromY": 1,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 40,
+      "toY": 64
     },
     {
       "fromX": 7,
       "fromY": 1,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 41,
+      "toY": 64
     },
     {
       "fromX": 10,
@@ -171,9 +170,9 @@
     {
       "fromX": 31,
       "fromY": 1,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 40,
+      "toY": 64
     },
     {
       "fromX": 34,
@@ -192,9 +191,9 @@
     {
       "fromX": 40,
       "fromY": 1,
-      "toMapId": "percentile/gym",
-      "toX": 7,
-      "toY": 23
+      "toMapId": "routes/route-12",
+      "toX": 41,
+      "toY": 64
     },
     {
       "fromX": 43,
@@ -230,8 +229,8 @@
           "he": "רק עוזר אחד צודק. עלה על החץ שליד העוזר שצודק!"
         },
         {
-          "en": "A wrong arrow brings you back here. No worries — mistakes help us learn!",
-          "he": "חץ לא נכון מחזיר אותך לכאן. אל דאגה — טעויות עוזרות ללמוד!"
+          "en": "A wrong arrow sends you back here — or all the way out to Route 12! So think before you step.",
+          "he": "חץ לא נכון מחזיר אותך לכאן — או זורק אותך החוצה עד דרך 12! אז תחשוב לפני שאתה עולה."
         }
       ]
     },
@@ -1224,8 +1223,7 @@
     "he": "מכון העיר אינטגרלה"
   },
   "movablePuzzle": {},
-  "flagListeners": []
-,
+  "flagListeners": [],
   "tiles": [
     ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
     ["w1-r","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w4-x1","w6","f4","w6","w6","w6","w6","w6","w6","w6","w6","w6","w6","f4","w6","w4-x1","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w1-l"],

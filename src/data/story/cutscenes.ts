@@ -65,6 +65,12 @@ export type CutsceneStep =
    * Example: { type: 'walk-to-interact', interact: 'english-board' }
    */
   | { type: 'walk-to-interact'; interact: InteractTypeId }
+  /**
+   * walk-to — the player (or the NPC `npcId`) walks the shortest path to stand next to tile (x, y) and face it.
+   * Skipped when already there or there's no path. Example: walk up to a door and let the player step in.
+   * Example: { type: 'walk-to', npcId: 'npc-pgym-leader', x: 29, y: 11 }
+   */
+  | { type: 'walk-to'; x: number; y: number; npcId?: string; waitForComplete?: boolean }
   | {
       type: 'dialogue';
       speakerId?: string;
@@ -85,6 +91,12 @@ export type CutsceneStep =
   | { type: 'start-battle'; trainerId: string }
   | { type: 'start-gate'; gateId: string }
   | { type: 'start-scene'; sceneId: string }
+  /**
+   * fly-to — ends the cutscene: the player flies to a city on this Pokémon (the same animation as the Fly menu,
+   * landing on the city's fly spot). For story rides on someone else's Pokémon. Also runs when skipped.
+   * Example: { type: 'fly-to', pokemonId: 6, mapId: MapId.MINUSBURG_MINUSBURG }
+   */
+  | { type: 'fly-to'; pokemonId: number; mapId: string; x?: number; y?: number }
   /**
    * run — calls a function, then goes on. For cutscenes built in code (e.g. the Unown ambush starts its game);
    * map/story data uses the other steps. Also runs when the cutscene is skipped.

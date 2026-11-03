@@ -41,6 +41,7 @@ import './act4/quest-percentile-burning-chance.js';
 import './act4/quest-algebria.js';
 
 // Act 5 — The Core: NULL-X Tower
+import './act5/quest-minusburg-depths.js';
 import './act5/quest-nullx-tower.js';
 
 // Any act — buildings

@@ -1276,6 +1276,64 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-mb-gary-landing",
+      "x": 45,
+      "y": 3,
+      "facing": "left",
+      "type": "dialogue",
+      "spriteType": "rival-story-gary",
+      "name": {
+        "en": "Gary",
+        "he": "גארי"
+      },
+      "dialogue": [
+        {
+          "en": "Lance will send his signal soon. Get your team ready!",
+          "he": "לאנס ישלח את האות שלו בקרוב. תכין את הקבוצה שלך!"
+        }
+      ],
+      "spawnAfter": "act4-pct-gary-called"
+    },
+    {
+      "id": "npc-mb-jenny-landing",
+      "x": 43,
+      "y": 3,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "officer-Jenny",
+      "name": {
+        "en": "Officer Jenny",
+        "he": "השוטרת ג'ני"
+      },
+      "dialogue": [
+        {
+          "en": "The tunnels under the city are not safe yet. Stay close!",
+          "he": "המנהרות מתחת לעיר עוד לא בטוחות. הישאר קרוב!"
+        }
+      ],
+      "spawnAfter": "act4-pct-gary-called"
+    },
+    {
+      "id": "npc-mb-max-landing",
+      "x": 44,
+      "y": 4,
+      "facing": "up",
+      "type": "dialogue",
+      "spriteType": "gym-7-integrala",
+      "name": {
+        "en": "Max Formax",
+        "he": "מקס פרבולה"
+      },
+      "dialogue": [
+        {
+          "en": "What a flight!",
+          "he": "איזו טיסה!"
+        }
+      ],
+      "spawnAfter": "act4-pct-fly-hill",
+      "despawnAfter": "act5-mb-arc-started"
     }
   ],
   "music": "town",
@@ -1287,8 +1345,7 @@
     "rain": 0.1
   },
   "movablePuzzle": {},
-  "flagListeners": []
-,
+  "flagListeners": [],
   "tiles": [
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
