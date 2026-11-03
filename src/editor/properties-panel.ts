@@ -89,6 +89,18 @@ const TYPE_COLORS: Record<string, string> = {
   steel: '#b8b8d0',
 };
 
+/**
+ * One NPC-list search term: "12,5" = exact tile, "x:12" / "y:5" = one coordinate,
+ * anything else = text inside any field of the NPC (id, name, type, sprite, dialogue, flags…).
+ */
+function npcMatchesSearchTerm(npc: { x: number; y: number }, text: string, term: string): boolean {
+  const tile = /^\(?(\d+)\s*,\s*(\d+)\)?$/.exec(term);
+  if (tile) return npc.x === Number(tile[1]) && npc.y === Number(tile[2]);
+  const axis = /^([xy])[:=](\d+)$/.exec(term);
+  if (axis) return (axis[1] === 'x' ? npc.x : npc.y) === Number(axis[2]);
+  return text.includes(term);
+}
+
 export class PropertiesPanel {
   private container: HTMLElement;
   private state: EditorState;
@@ -96,6 +108,8 @@ export class PropertiesPanel {
   private _history: HistoryManager;
   private tiles: Record<string, TileDef>;
   private onNavigate?: (mapId: string) => void;
+  /** NPC list search text — kept across panel re-renders */
+  private npcSearch = '';
 
   constructor(
     container: HTMLElement,
@@ -528,6 +542,7 @@ export class PropertiesPanel {
 
   // ── Wild Pokémon NPC ──
   private renderWildPokemonUI(section: HTMLElement, npc: import('../systems/npc.js').WildPokemonData): void {
+    type WildLook = import('../systems/npc.js').WildLook;
     const emit = () => this.state.emit('map-modified');
     const npcAny = npc as unknown as Record<string, unknown>;
 
@@ -630,6 +645,31 @@ export class PropertiesPanel {
       emit();
     });
     addRow('Flee at HP%:', fleeHpInput, 'e.g. 50 = flee when HP ≤ 50%');
+
+    // Look — only used when the sprite type has no overworld Pokémon sheet (a sheet always wins)
+    const lookSelect = document.createElement('select');
+    const looks: [WildLook | '', string][] = [
+      ['', 'Story — person until glitch sight, then Pokémon'],
+      ['person', 'Always a person (legacy NPC sprite)'],
+      ['pokemon', 'Always its Pokémon battle sprite'],
+    ];
+    for (const [value, text] of looks) {
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = text;
+      lookSelect.appendChild(opt);
+    }
+    lookSelect.value = npc.look ?? '';
+    lookSelect.addEventListener('change', () => {
+      if (lookSelect.value) npcAny['look'] = lookSelect.value;
+      else delete npcAny['look'];
+      emit();
+    });
+    addRow(
+      'Look (no sheet):',
+      lookSelect,
+      `Only when the sprite type has no Pokémon overworld sheet. Glitch sight = flag "${FLAGS.GLITCH_SIGHT}" (Suicune freed)`,
+    );
   }
 
   // ── Gate-Guard: Gate ID and Passed Dialogue ──
@@ -3912,27 +3952,56 @@ export class PropertiesPanel {
   private renderNpcList(scrollToSelected = false): void {
     const section = this.makeSection('NPCs');
     const body = PropertiesPanel.sectionBody(section);
-    const npcs = this.state.mapData.npcs || [];
+    const npcs = [...(this.state.mapData.npcs || [])].sort((a, b) => a.x - b.x || a.y - b.y);
     if (npcs.length === 0) {
       body.innerHTML = '<div class="prop-empty">No NPCs</div>';
-    } else {
-      for (const npc of npcs) {
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        item.textContent = `${npc.id} (${npc.x},${npc.y}) [${npc.type}]`;
-        item.addEventListener('click', () => {
-          this.state.selectNpc(npc.id);
-          this.state.focusTile(npc.x, npc.y);
-        });
-        if (this.state.selectedNpcId === npc.id) {
-          item.classList.add('selected');
-          if (scrollToSelected) {
-            requestAnimationFrame(() => item.scrollIntoView({ block: 'nearest' }));
-          }
-        }
-        body.appendChild(item);
-      }
+      this.container.appendChild(section);
+      return;
     }
+
+    const search = document.createElement('input');
+    search.type = 'search';
+    search.placeholder = 'Search: 12,5 · x:12 · y:5 · id / name / type / any field';
+    search.value = this.npcSearch;
+    search.style.width = '100%';
+    search.style.marginBottom = '4px';
+    body.appendChild(search);
+    const count = document.createElement('div');
+    count.className = 'prop-empty';
+    body.appendChild(count);
+
+    const rows = npcs.map((npc) => {
+      const item = document.createElement('div');
+      item.className = 'list-item';
+      item.textContent = `(${npc.x},${npc.y}) ${npc.id} [${npc.type}]`;
+      item.addEventListener('click', () => {
+        this.state.selectNpc(npc.id);
+        this.state.focusTile(npc.x, npc.y);
+      });
+      if (this.state.selectedNpcId === npc.id) {
+        item.classList.add('selected');
+        if (scrollToSelected) requestAnimationFrame(() => item.scrollIntoView({ block: 'nearest' }));
+      }
+      body.appendChild(item);
+      return { npc, item, text: JSON.stringify(npc).toLowerCase() };
+    });
+
+    // Filter in place (no panel re-render, so the input keeps focus). Every space-separated term must match.
+    const applyFilter = () => {
+      const terms = this.npcSearch.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const { npc, item, text } of rows) {
+        const ok = terms.every((term) => npcMatchesSearchTerm(npc, text, term));
+        item.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      }
+      count.textContent = terms.length ? `${shown} / ${rows.length}` : `${rows.length} NPCs (sorted by x, then y)`;
+    };
+    search.addEventListener('input', () => {
+      this.npcSearch = search.value;
+      applyFilter();
+    });
+    applyFilter();
     this.container.appendChild(section);
   }
 

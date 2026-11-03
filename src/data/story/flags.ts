@@ -291,6 +291,7 @@ export const FLAGS = {
   ACT4_PCT_BASE_JJ_DONE: 'act4-pct-base-jj-done', // Jessie + James beaten on B3
   ACT4_PCT_B4_SEEN: 'act4-pct-b4-seen', // Steam Core reveal (Suicune in chains)
   ACT4_PCT_SUICUNE_DONE: 'act4-pct-suicune-done', // Suicune freed → Core X4, generators stop, hatch opens
+  GLITCH_SIGHT: 'glitch-sight', // Core X4 scan upgrade: disguised glitched wild Pokémon show their true form
   ACT4_PCT_SUICUNE_ARRIVED: 'act4-pct-suicune-arrived', // Suicune surfs in to help on the Route 12 hilltop
   ACT4_PCT_R12_ENTERED: 'act4-pct-r12-entered', // First Route 12 visit during the arc
   ACT4_PCT_MACHINES_OFF: 'act4-pct-machines-off', // All 3 Heat Collector guards beaten
@@ -467,6 +468,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT4_PCT_BASE_JJ_DONE]: 'Jessie and James beaten on Rocket Base B3',
   [FLAGS.ACT4_PCT_B4_SEEN]: 'Steam Core reveal — Suicune chained to the steam engine',
   [FLAGS.ACT4_PCT_SUICUNE_DONE]: 'Suicune freed on B4 — Core X4, generators stop, emergency hatch opens',
+  [FLAGS.GLITCH_SIGHT]: 'Glitch sight — wild-Pokémon NPCs disguised as people now show their true Pokémon form',
   [FLAGS.ACT4_PCT_SUICUNE_ARRIVED]: 'Suicune arrived on the Route 12 hilltop to help against Entei and Moltres',
   [FLAGS.ACT4_PCT_R12_ENTERED]: 'First Route 12 visit during the Burning Chance arc',
   [FLAGS.ACT4_PCT_MACHINES_OFF]: 'All 3 Heat Collectors shut down — admin shield down',

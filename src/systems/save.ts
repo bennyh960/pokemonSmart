@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 25;
+export const CURRENT_SAVE_VERSION = 26;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -403,6 +403,11 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       words.shinedAt = shinedAt;
     }
     data.saveVersion = 25;
+  },
+  26: (data) => {
+    // Glitch sight (set in the Suicune-freed cutscene): saves already past that scene get it now
+    if (data.flags?.['act4-pct-suicune-done']) data.flags['glitch-sight'] = true;
+    data.saveVersion = 26;
   },
 };
 

@@ -85,6 +85,7 @@ import {
   type TrainerData,
   type GateGuardData,
   type WildPokemonData,
+  showsTrueForm,
   type DayCareData,
   checkTrainerLineOfSight,
   checkWildPokemonLineOfSight,
@@ -4304,8 +4305,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 }
               },
             });
-          } else if (npc.type === 'wild-pokemon') {
-            // Wild Pokémon with no overworld sheet: draw its battle sprite, bobbing on the tile
+          } else if (npc.type === 'wild-pokemon' && showsTrueForm(npc as unknown as WildPokemonData, visFlags)) {
+            // Wild Pokémon with no overworld sheet, seen in its true form: its battle sprite, bobbing on the tile.
+            // Otherwise it falls through to the person sprite it disguises itself as
             const sprite = loadPokemonSprite((npc as unknown as WildPokemonData).pokemonId, () => {});
             const cx = Math.floor(npcPixelX - camera.x) + TILE_SIZE / 2;
             const cy = Math.floor(npcPixelY - camera.y) + TILE_SIZE / 2 - 2 + Math.round(Math.sin(performance.now() / 250));

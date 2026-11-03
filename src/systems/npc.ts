@@ -13,6 +13,7 @@ import type { ItemCategory } from '../data/item-defs.js';
 import type { MajorStatusId } from '../types/battle-metadata.js';
 import { getCharacterList } from '../engine/character-sprites.js';
 import { getPlayerData } from './game-state.js';
+import { FLAGS } from '../data/story/flags.js';
 
 /** A single bilingual text line. */
 export interface BilingualText {
@@ -315,6 +316,23 @@ export interface WildPokemonData extends NPCData {
   fleeAfterTurns?: number;
   /** Flee when HP drops at or below this percentage (0–1, e.g. 0.5 = 50%). */
   fleeAtHpPct?: number;
+  /**
+   * How it looks when it has no overworld Pokémon sheet (a sheet always wins).
+   * undefined = story: a person until the player has glitch sight (FLAGS.GLITCH_SIGHT), then its battle sprite.
+   */
+  look?: WildLook;
+}
+
+/** 'person' = always the legacy NPC sprite, 'pokemon' = always its battle sprite. */
+export type WildLook = 'person' | 'pokemon';
+
+/**
+ * A wild-Pokémon NPC with no overworld sheet: draw it as its battle sprite (true form) instead of the
+ * person it pretends to be? Its own `look` wins; otherwise the player needs glitch sight.
+ */
+export function showsTrueForm(npc: Pick<WildPokemonData, 'look'>, flags: Record<string, boolean | undefined>): boolean {
+  if (npc.look) return npc.look === 'pokemon';
+  return !!flags[FLAGS.GLITCH_SIGHT];
 }
 
 /** Normalize a reward field that may be a legacy plain number. */

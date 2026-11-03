@@ -563,6 +563,20 @@ registerCutscene({
         { en: 'There is an emergency hatch on this floor — it leads straight outside.', he: 'יש פתח חירום בקומה הזאת — הוא מוביל ישר החוצה.' },
       ],
     },
+    // Glitch sight: from here on, glitched wild Pokémon disguised as people show their true form (showsTrueForm in systems/npc.ts)
+    { type: 'fx', kind: 'burst', at: 'player', durationMs: 500, radius: 1 },
+    { type: 'play-sfx', sfxId: 'item-found' },
+    {
+      type: 'dialogue',
+      speakerId: 'Prof.Algorithma',
+      speakerName: ALGORITHMA,
+      lines: [
+        { en: 'Wait — Core X4 sent a signal to your Pokédex. I am adding it to your scanner... done!', he: 'רגע — ליבה X4 שלחה אות לפוקידקס שלך. אני מוסיפה אותו לסורק שלך... מוכן!' },
+        { en: 'Some glitched Pokémon hide as people. From now on you will see what they really are!', he: 'יש פוקימונים משובשים שמתחפשים לאנשים. מעכשיו תראה מה הם באמת!' },
+        { en: 'But stay careful outside the cities — the glitch can still pop out with a question.', he: 'אבל תיזהר מחוץ לערים — השיבוש עדיין יכול לקפוץ עם שאלה.' },
+      ],
+    },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.GLITCH_SIGHT } },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-base-core' } },
     { type: 'action', action: { type: 'set-quest', questId: 'main-act4-pct-hills' } },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_SUICUNE_DONE } },
