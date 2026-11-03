@@ -36,10 +36,10 @@
  *   route-11     npc-r11-rocket-lookout (on the cave door until the lab beat)
  *   rocket-base  b1–b4 grunts, npc-base-b2-gen-1..4 (generators), npc-base-jessie, npc-base-james,
  *                wild-base-suicune, npc-base-b4-hatch
- *   route-12     npc-pct-guard-1..3 (Heat Collectors), npc-pct-grunt-4..5, npc-pct-admin-shield,
+ *   route-12     npc-pct-collector-1-grunt + npc-pct-guard-2..3 (Heat Collectors, any order), npc-pct-grunt-4..5, npc-pct-admin-shield,
  *                Heat Collector #1 (lab-equip 32,53 + smoke): guarded by 4 glitched wild Pokémon that
  *                appear one after another (157 → 467 → charizard → arcanine, each spawnAfter the last's
- *                defeat flag), then npc-pct-guard-1 spawns and charges in; beating it blows the machine up
+ *                defeat flag), then npc-pct-collector-1-grunt spawns and charges in; beating it blows the machine up
  *                npc-pct-admin, npc-pct-reminder-r12, npc-pct-max, wild-pct-entei,
  *                npc-pct-moltres-fight, wild-pct-moltres, npc-pct-suicune-ally,
  *                npc-r12-hidden-grunt-1..7 (in tall grass, run off when beaten),
@@ -79,7 +79,7 @@ const ALGORITHMA = 'Prof. Algorithma / פרופ׳ אלגוריתמה';
 const MAX = 'Max Formax / מקס פורמקס';
 
 const CLUE_FLAGS = [FLAGS.ACT4_PCT_CLUE_COIN, FLAGS.ACT4_PCT_CLUE_MAP, FLAGS.ACT4_PCT_CLUE_GROWLITHE];
-const GUARD_IDS = ['npc-pct-guard-1', 'npc-pct-guard-2', 'npc-pct-guard-3'];
+const GUARD_IDS = ['npc-pct-collector-1-grunt', 'npc-pct-guard-2', 'npc-pct-guard-3'];
 const GUARD_FLAGS = GUARD_IDS.map((id) => `trainer-${id}-defeated`);
 
 const ENTEI = 244;
@@ -814,15 +814,16 @@ registerStoryEvent({
 
 // ── Beat 5: Heat Collector #1 — four glitched guardians, then its grunt ─────
 // The 4 wild Pokémon around the machine come one by one (route-12 spawnAfter chain). When the
-// last one falls, guard-1 appears (spawnAfter its defeat flag) and charges the player.
+// last one falls, its grunt appears (spawnAfter its defeat flag) and charges the player.
 
 const COLLECTOR_1 = { x: 33, y: 54 }; // center of the 3×3 lab-equip at 32,53
 const COLLECTOR_1_LAST_WILD = 'wild-r12-glitch-arcanine';
+const COLLECTOR_1_GRUNT = GUARD_IDS[0];
 
 registerStoryEvent({
   id: 'evt-pct-collector-1-guard-arrives',
   trigger: { type: 'trainer-defeated', trainerId: COLLECTOR_1_LAST_WILD },
-  conditions: [{ type: 'flag-not', flag: 'trainer-npc-pct-guard-1-defeated' }],
+  conditions: [{ type: 'flag-not', flag: `trainer-${COLLECTOR_1_GRUNT}-defeated` }],
   actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-collector-1-guard' }],
 });
 
@@ -832,7 +833,7 @@ registerCutscene({
     { type: 'wait', durationMs: 300 },
     {
       type: 'dialogue',
-      speakerId: 'npc-pct-guard-1',
+      speakerId: COLLECTOR_1_GRUNT,
       speakerName: 'Rocket Grunt / סוכן צוות רוקט',
       lines: [
         {
@@ -841,32 +842,32 @@ registerCutscene({
         },
       ],
     },
-    { type: 'start-battle', trainerId: 'npc-pct-guard-1' },
+    { type: 'start-battle', trainerId: COLLECTOR_1_GRUNT },
   ],
 });
 
-// Guard-1 beaten → the overheated machine blows up (registered before the machines-off events,
+// Its grunt beaten → the overheated machine blows up (registered before the machines-off events,
 // which run after this cutscene ends)
 registerStoryEvent({
-  id: 'evt-pct-collector-1-destroyed',
-  trigger: { type: 'trainer-defeated', trainerId: 'npc-pct-guard-1' },
-  conditions: [{ type: 'flag-not', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED }],
-  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-collector-1-destroyed' }],
+  id: 'evt-pct-collector-1-exploded',
+  trigger: { type: 'trainer-defeated', trainerId: COLLECTOR_1_GRUNT },
+  conditions: [{ type: 'flag-not', flag: FLAGS.ACT4_PCT_COLLECTOR_1_EXPLODED }],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-collector-1-exploded' }],
 });
 
-// Saves that beat guard-1 before the machine could blow up → remove it quietly
+// Saves that beat the grunt before the machine could blow up → remove it quietly
 registerStoryEvent({
-  id: 'evt-pct-collector-1-destroyed-on-enter',
+  id: 'evt-pct-collector-1-exploded-on-enter',
   trigger: { type: 'map-enter', mapId: R12 },
   conditions: [
-    { type: 'flag', flag: 'trainer-npc-pct-guard-1-defeated' },
-    { type: 'flag-not', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED },
+    { type: 'flag', flag: `trainer-${COLLECTOR_1_GRUNT}-defeated` },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_COLLECTOR_1_EXPLODED },
   ],
-  actions: [{ type: 'set-flag', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED }],
+  actions: [{ type: 'set-flag', flag: FLAGS.ACT4_PCT_COLLECTOR_1_EXPLODED }],
 });
 
 registerCutscene({
-  id: 'cutscene-pct-collector-1-destroyed',
+  id: 'cutscene-pct-collector-1-exploded',
   steps: [
     { type: 'camera-pan', x: COLLECTOR_1.x, y: COLLECTOR_1.y, durationMs: 400 },
     {
@@ -892,7 +893,7 @@ registerCutscene({
     { type: 'play-sfx', sfxId: 'move:Explosion' },
     { type: 'fx', kind: 'burst', at: COLLECTOR_1, durationMs: 500, radius: 3 },
     // Machine (route-12 flagListener) and its smoke (ambientFx) disappear
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_COLLECTOR_1_EXPLODED } },
     { type: 'fx', kind: 'smoke', at: COLLECTOR_1, durationMs: 2200, radius: 3 },
     { type: 'wait', durationMs: 1200 },
     {

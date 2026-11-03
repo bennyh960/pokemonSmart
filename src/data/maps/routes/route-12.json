@@ -68,7 +68,7 @@
       "despawnAfter": "act4-pct-legends-done"
     },
     {
-      "id": "npc-pct-guard-1",
+      "id": "npc-pct-collector-1-grunt",
       "x": 33,
       "y": 56,
       "facing": "down",
@@ -1408,7 +1408,6 @@
       "level": 47,
       "isGlitched": true,
       "despawnOnDefeat": true,
-      "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done"
     },
     {
@@ -2215,8 +2214,7 @@
       "key": "lab-equip",
       "x": 32,
       "y": 53,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     }
   ],
   "interactiveItems": {},
@@ -2248,64 +2246,56 @@
       "x": 33,
       "y": 54,
       "radius": 1.8,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "fire",
       "x": 34,
       "y": 53,
       "radius": 0.6,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "smoke",
       "x": 30,
       "y": 52,
       "radius": 1,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "smoke",
       "x": 36,
       "y": 52,
       "radius": 1,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "smoke",
       "x": 29,
       "y": 55,
       "radius": 1,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "smoke",
       "x": 37,
       "y": 55,
       "radius": 1,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "smoke",
       "x": 31,
       "y": 58,
       "radius": 1,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "smoke",
       "x": 35,
       "y": 58,
       "radius": 1,
-      "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-collector-1-destroyed"
+      "despawnAfter": "act4-pct-collector-1-exploded"
     },
     {
       "kind": "fire",
@@ -12162,6 +12152,11 @@
       "key": "g4",
       "x": 33,
       "y": 63
+    },
+    {
+      "key": "lab-equip",
+      "x": 32,
+      "y": 53
     }
   ],
   "objectLayer": [
