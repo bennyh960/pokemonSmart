@@ -728,7 +728,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** Check if the player's current tile triggers a map transition. */
   function checkTransition(): boolean {
     if (!currentMapData?.transitions) return false;
-    for (const tr of currentMapData.transitions) {
+    // Last match wins: a template map's transitions come first, so an instance transition on the same
+    // tile overrides it (e.g. a house exit that must lead to a fixed door instead of returnToPrevious)
+    for (const tr of [...currentMapData.transitions].reverse()) {
       if (tr.fromX === player.gridX && tr.fromY === player.gridY) {
         if (currentMapData.id && hasActiveGame()) {
           fireStoryTrigger({ type: 'map-exit', mapId: currentMapData.id as MapId });

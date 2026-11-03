@@ -140,7 +140,7 @@
         ]
       },
       "spawnAfter": "trainer-wild-r12-glitch-arcanine-defeated",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-pct-guard-2",
@@ -1986,41 +1986,6 @@
       }
     },
     {
-      "id": "npc-r12-misty",
-      "x": 39,
-      "y": 36,
-      "facing": "up",
-      "type": "dialogue",
-      "spriteType": "Misty",
-      "name": {
-        "en": "Misty",
-        "he": "מיסטי"
-      },
-      "dialogue": [
-        {
-          "en": "My water Pokémon are putting out the last little fires. Water beats fire!",
-          "he": "פוקימוני המים שלי מכבים את השריפות הקטנות האחרונות. מים מנצחים אש!"
-        },
-        {
-          "en": "And Suicune's rain did most of the work. What a sight!",
-          "he": "והגשם של סוויקון עשה את רוב העבודה. איזה מראה!"
-        }
-      ],
-      "spawnAfter": "act4-pct-legends-done",
-      "despawnAfter": "act4-pct-lab-final",
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "afterSpawnPattern": [
-          {
-            "dir": "up",
-            "steps": 2,
-            "delay": 0.3
-          }
-        ]
-      }
-    },
-    {
       "id": "npc-r12-brock",
       "x": 33,
       "y": 36,
@@ -2054,34 +2019,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "npc-r12-alice",
-      "x": 30,
-      "y": 31,
-      "facing": "right",
-      "type": "dialogue",
-      "spriteType": "alice",
-      "name": {
-        "en": "Alice",
-        "he": "אליס"
-      },
-      "dialogue": [
-        {
-          "en": "Hello again! Lance told me you would be here.",
-          "he": "שלום שוב! לאנס אמר לי שתהיה כאן."
-        },
-        {
-          "en": "Articuno in the forest, and now Entei and Moltres... NULL-X hides its cores inside legends.",
-          "he": "ארטיקונו ביער, ועכשיו אנטאיי ומולטרס... נאל-איקס מחביא את הליבות שלו בתוך אגדיים."
-        },
-        {
-          "en": "Go to the lab. Oak can read what the cores are saying.",
-          "he": "לך למעבדה. אוק יודע לקרוא מה הליבות אומרות."
-        }
-      ],
-      "spawnAfter": "act4-pct-legends-done",
-      "despawnAfter": "act4-pct-lab-final"
     },
     {
       "id": "npc-r12-officer-after",

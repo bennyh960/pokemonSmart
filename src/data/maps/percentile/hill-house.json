@@ -1,0 +1,147 @@
+{
+  "id": "percentile/hill-house",
+  "name": "house-small",
+  "template": "house-small",
+  "tileset": "interior",
+  "area": "percentile",
+  "label": {
+    "en": "Hillside House",
+    "he": "הבית שליד הגבעה"
+  },
+  "music": "town3",
+  "encounterTableId": null,
+  "transitions": [
+    {
+      "fromX": 6,
+      "fromY": 14,
+      "toMapId": "percentile/percentile",
+      "toX": 28,
+      "toY": 7
+    },
+    {
+      "fromX": 7,
+      "fromY": 14,
+      "toMapId": "percentile/percentile",
+      "toX": 28,
+      "toY": 7
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-pct-hill-house-hiker",
+      "x": 10,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Hiker Ron",
+        "he": "המטייל רון"
+      },
+      "dialogue": [
+        {
+          "en": "Welcome! My back door opens right onto the hills of Route 12.",
+          "he": "ברוך הבא! הדלת האחורית שלי נפתחת ישר אל הגבעות של דרך 12."
+        },
+        {
+          "en": "Lately the hills are hot, even at night... and the air smells like smoke.",
+          "he": "בזמן האחרון הגבעות חמות, אפילו בלילה... והאוויר מריח כמו עשן."
+        },
+        {
+          "en": "Last night I saw strange lights up there. Somebody is building something.",
+          "he": "אתמול בלילה ראיתי שם למעלה אורות מוזרים. מישהו בונה שם משהו."
+        }
+      ],
+      "despawnAfter": "act4-pct-r12-entered"
+    },
+    {
+      "id": "npc-pct-hill-house-kid",
+      "x": 4,
+      "y": 8,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "char_cfd98f",
+      "name": {
+        "en": "Tommy",
+        "he": "טומי"
+      },
+      "dialogue": [
+        {
+          "en": "Grandpa says it's too hot to go out today. Want to play a game with me?",
+          "he": "סבא אומר שחם מדי לצאת היום. רוצה לשחק איתי משחק?"
+        }
+      ],
+      "miniGame": {
+        "category": "logic"
+      },
+      "despawnAfter": "act4-pct-r12-entered"
+    },
+    {
+      "id": "npc-pct-hill-house-hiker-thanks",
+      "x": 10,
+      "y": 5,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Hiker Ron",
+        "he": "המטייל רון"
+      },
+      "dialogue": [
+        {
+          "en": "It was you! I saw Moltres fly away from my window, and the hills are cool again.",
+          "he": "זה היית אתה! ראיתי מהחלון את מולטרס עף משם, והגבעות שוב קרירות."
+        },
+        {
+          "en": "Use my back door any time you come down from the hills. And take this!",
+          "he": "תשתמש בדלת האחורית שלי בכל פעם שאתה יורד מהגבעות. וקח את זה!"
+        }
+      ],
+      "reward": {
+        "money": 0,
+        "items": [
+          {
+            "itemId": "full-restore",
+            "quantity": 2
+          },
+          {
+            "itemId": "rare-candy",
+            "quantity": 1
+          }
+        ]
+      },
+      "postFlagDialogue": {
+        "flag": "npc-npc-pct-hill-house-hiker-thanks-rewarded",
+        "dialogue": [
+          {
+            "en": "Tomorrow I'm hiking up again — the first time in weeks!",
+            "he": "מחר אני עולה שוב לטיול — בפעם הראשונה מזה שבועות!"
+          }
+        ]
+      },
+      "spawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-pct-hill-house-kid-thanks",
+      "x": 4,
+      "y": 8,
+      "facing": "right",
+      "type": "dialogue",
+      "spriteType": "char_cfd98f",
+      "name": {
+        "en": "Tommy",
+        "he": "טומי"
+      },
+      "dialogue": [
+        {
+          "en": "Thank you for saving the hills! Now we can play outside. One more game?",
+          "he": "תודה שהצלת את הגבעות! עכשיו אפשר לשחק בחוץ. עוד משחק אחד?"
+        }
+      ],
+      "miniGame": {
+        "category": "logic"
+      },
+      "spawnAfter": "act4-pct-legends-done"
+    }
+  ]
+}

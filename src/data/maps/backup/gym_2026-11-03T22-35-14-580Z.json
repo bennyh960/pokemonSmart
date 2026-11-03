@@ -1,0 +1,1305 @@
+{
+  "id": "gym",
+  "tileset": "interior",
+  "area": "percentile",
+  "width": 46,
+  "height": 26,
+  "tileSize": 16,
+  "spawn": {
+    "x": 7,
+    "y": 24
+  },
+  "transitions": [
+    {
+      "fromX": 7,
+      "fromY": 25,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 8,
+      "fromY": 25,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 29,
+      "fromY": 11,
+      "returnToPrevious": true
+    },
+    {
+      "fromX": 1,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 4,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 7,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 10,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 22,
+      "toY": 23
+    },
+    {
+      "fromX": 13,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 16,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 37,
+      "toY": 23
+    },
+    {
+      "fromX": 19,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 22,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 25,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 28,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 31,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 34,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 37,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 10
+    },
+    {
+      "fromX": 40,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 43,
+      "fromY": 13,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 1,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 4,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 7,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 10,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 13,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 37,
+      "toY": 10
+    },
+    {
+      "fromX": 31,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 34,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 22,
+      "toY": 10
+    },
+    {
+      "fromX": 37,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 40,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    },
+    {
+      "fromX": 43,
+      "fromY": 1,
+      "toMapId": "percentile/gym",
+      "toX": 7,
+      "toY": 23
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc-pgym-guide",
+      "x": 5,
+      "y": 23,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Gym Guide Noa",
+        "he": "המדריכה נועה"
+      },
+      "dialogue": [
+        {
+          "en": "Welcome to the Fire Gym of Percentile! I am so happy you came!",
+          "he": "ברוך הבא למכון האש של פרסנטייל! אני כל כך שמחה שבאת!"
+        },
+        {
+          "en": "There are 5 rooms. Each room has 5 helpers. Each one teaches you a trick and gives an answer.",
+          "he": "יש 5 חדרים. בכל חדר יש 5 עוזרים. כל אחד מלמד אותך טריק ונותן תשובה."
+        },
+        {
+          "en": "Only ONE helper is right. Step on the arrow next to the helper who is right!",
+          "he": "רק עוזר אחד צודק. עלה על החץ שליד העוזר שצודק!"
+        },
+        {
+          "en": "A wrong arrow brings you back here. No worries — mistakes help us learn!",
+          "he": "חץ לא נכון מחזיר אותך לכאן. אל דאגה — טעויות עוזרות ללמוד!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r1-1",
+      "x": 2,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_c32979",
+      "name": {
+        "en": "Helper Noam",
+        "he": "העוזר נועם"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 100% means ALL of it. 100% of 8 is 8!",
+          "he": "טריק: 100% זה הכל. 100% מ-8 זה 8!"
+        },
+        {
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
+        },
+        {
+          "en": "My answer: all 20 found the leader!",
+          "he": "התשובה שלי: כל ה-20 מצאו את המנהיג!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r1-2",
+      "x": 5,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_dc1a34",
+      "name": {
+        "en": "Helper Maya",
+        "he": "העוזרת מאיה"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 50% means HALF. 50% of 10 is 5!",
+          "he": "טריק: 50% זה חצי. 50% מ-10 זה 5!"
+        },
+        {
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
+        },
+        {
+          "en": "My answer: 10 of them found the leader!",
+          "he": "התשובה שלי: 10 מהם מצאו את המנהיג!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r1-3",
+      "x": 8,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_0502ea",
+      "name": {
+        "en": "Helper Dana",
+        "he": "העוזרת דנה"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 20% means 1 out of every 5. 20% of 25 is 5!",
+          "he": "טריק: 20% זה 1 מכל 5. 20% מ-25 זה 5!"
+        },
+        {
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
+        },
+        {
+          "en": "My answer: 5 of them found the leader!",
+          "he": "התשובה שלי: 5 מהם מצאו את המנהיג!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r1-4",
+      "x": 11,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_1b9be7",
+      "name": {
+        "en": "Helper Tal",
+        "he": "העוזר טל"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 10% means 1 out of every 10. 10% of 30 is 3!",
+          "he": "טריק: 10% זה 1 מכל 10. 10% מ-30 זה 3!"
+        },
+        {
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
+        },
+        {
+          "en": "My answer: 2 of them found the leader!",
+          "he": "התשובה שלי: 2 מהם מצאו את המנהיג!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r1-5",
+      "x": 14,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_083dc8",
+      "name": {
+        "en": "Helper Omer",
+        "he": "העוזר עומר"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 1% is tiny — just 1 out of every 100!",
+          "he": "טריק: 1% זה ממש קטן — רק 1 מכל 100!"
+        },
+        {
+          "en": "Question: only 10% of challengers find our leader. Today 20 trainers came.",
+          "he": "שאלה: רק 10% מהמתמודדים מוצאים את המנהיג שלנו. היום הגיעו 20 מאמנים."
+        },
+        {
+          "en": "My answer: only 1 of them found the leader!",
+          "he": "התשובה שלי: רק 1 מהם מצא את המנהיג!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-1",
+      "x": 17,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_6f0793",
+      "name": {
+        "en": "Helper Lia",
+        "he": "העוזרת ליה"
+      },
+      "dialogue": [
+        {
+          "en": "Great job getting here! Trick: Water puts out fire, and fire cannot melt Rock or Ground.",
+          "he": "כל הכבוד שהגעת! טריק: מים מכבים אש, ואש לא יכולה להמיס סלע או אדמה."
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: 3 types — Water, Ground and Rock!",
+          "he": "התשובה שלי: 3 סוגים — מים, אדמה וסלע!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-2",
+      "x": 20,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_cfd98f",
+      "name": {
+        "en": "Helper Tommy",
+        "he": "העוזר טומי"
+      },
+      "dialogue": [
+        {
+          "en": "Great job getting here! Trick: Fire burns Grass, melts Ice and Steel, and beats Bug!",
+          "he": "כל הכבוד שהגעת! טריק: אש שורפת דשא, ממיסה קרח ופלדה, ומנצחת חרקים!"
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: 4 types — Grass, Ice, Steel and Bug!",
+          "he": "התשובה שלי: 4 סוגים — דשא, קרח, פלדה וחרק!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-3",
+      "x": 23,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_338625",
+      "name": {
+        "en": "Helper Erika",
+        "he": "העוזרת אריקה"
+      },
+      "dialogue": [
+        {
+          "en": "Great job getting here! Trick: you can check any type in your Pokédex!",
+          "he": "כל הכבוד שהגעת! טריק: אפשר לבדוק כל סוג בפוקידקס שלך!"
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: only 1 type — Water!",
+          "he": "התשובה שלי: רק סוג אחד — מים!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-4",
+      "x": 26,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_0ade0c",
+      "name": {
+        "en": "Helper Yoni",
+        "he": "העוזר יוני"
+      },
+      "dialogue": [
+        {
+          "en": "Great job getting here! Trick: Fire and Dragon Pokémon are not hurt much by fire!",
+          "he": "כל הכבוד שהגעת! טריק: פוקימוני אש ודרקון כמעט לא נפגעים מאש!"
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: 5 types — Water, Ground, Rock, Fire and Dragon!",
+          "he": "התשובה שלי: 5 סוגים — מים, אדמה, סלע, אש ודרקון!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r2-5",
+      "x": 29,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_10af6a",
+      "name": {
+        "en": "Helper Shira",
+        "he": "העוזרת שירה"
+      },
+      "dialogue": [
+        {
+          "en": "Great job getting here! Trick: water and sand put out a campfire!",
+          "he": "כל הכבוד שהגעת! טריק: מים וחול מכבים מדורה!"
+        },
+        {
+          "en": "Question: our leader trains Fire Pokémon. How many types are super effective against Fire?",
+          "he": "שאלה: המנהיג שלנו מאמן פוקימוני אש. כמה סוגים יעילים במיוחד נגד אש?"
+        },
+        {
+          "en": "My answer: 2 types — Water and Ground!",
+          "he": "התשובה שלי: 2 סוגים — מים ואדמה!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-1",
+      "x": 32,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_46f643",
+      "name": {
+        "en": "Helper Jimmy",
+        "he": "העוזר ג'ימי"
+      },
+      "dialogue": [
+        {
+          "en": "Halfway there! Trick: 100 split into groups of 20 makes 5 groups.",
+          "he": "כבר באמצע! טריק: אם מחלקים 100 לקבוצות של 20 מקבלים 5 קבוצות."
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 5%!",
+          "he": "התשובה שלי: 5%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-2",
+      "x": 35,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_994b11",
+      "name": {
+        "en": "Helper Max",
+        "he": "העוזר מקס"
+      },
+      "dialogue": [
+        {
+          "en": "Halfway there! Trick: 100 minus 20 is 80.",
+          "he": "כבר באמצע! טריק: 100 פחות 20 זה 80."
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 80%!",
+          "he": "התשובה שלי: 80%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-3",
+      "x": 38,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_6bacac",
+      "name": {
+        "en": "Helper Noa",
+        "he": "העוזרת נועה"
+      },
+      "dialogue": [
+        {
+          "en": "Halfway there! Trick: percent means \"out of 100\". If there are 100 HP, every 1 HP is 1%!",
+          "he": "כבר באמצע! טריק: אחוז זה \"מתוך 100\". אם יש 100 חיים, כל חיים אחד הוא 1%!"
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 20%!",
+          "he": "התשובה שלי: 20%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-4",
+      "x": 41,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_1f9b7d",
+      "name": {
+        "en": "Helper Gal",
+        "he": "העוזרת גל"
+      },
+      "dialogue": [
+        {
+          "en": "Halfway there! Trick: 10% of 100 is 10.",
+          "he": "כבר באמצע! טריק: 10% מ-100 זה 10."
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 10%!",
+          "he": "התשובה שלי: 10%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r3-5",
+      "x": 44,
+      "y": 14,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_22fdd1",
+      "name": {
+        "en": "Helper Ido",
+        "he": "העוזר עידו"
+      },
+      "dialogue": [
+        {
+          "en": "Halfway there! Trick: two Potions heal 40 HP.",
+          "he": "כבר באמצע! טריק: שני שיקויים מרפאים 40 חיים."
+        },
+        {
+          "en": "Question: a Potion heals 20 HP. Your Pokémon has 100 HP. What percent does one Potion heal?",
+          "he": "שאלה: שיקוי מרפא 20 חיים. לפוקימון שלך יש 100 חיים. כמה אחוז מרפא שיקוי אחד?"
+        },
+        {
+          "en": "My answer: 40%!",
+          "he": "התשובה שלי: 40%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r4-1",
+      "x": 2,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_24117d",
+      "name": {
+        "en": "Helper Roni",
+        "he": "העוזרת רוני"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 25% of 100 is 25.",
+          "he": "טריק: 25% מ-100 זה 25."
+        },
+        {
+          "en": "Question: a Fire Stone costs 100 coins. Today the shop has 25% off! How many coins does it cost now?",
+          "he": "שאלה: אבן אש עולה 100 מטבעות. היום יש בחנות הנחה של 25%! כמה מטבעות היא עולה עכשיו?"
+        },
+        {
+          "en": "My answer: 25 coins!",
+          "he": "התשובה שלי: 25 מטבעות!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r4-2",
+      "x": 5,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_29f912",
+      "name": {
+        "en": "Helper Ben",
+        "he": "העוזר בן"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 100 plus 25 is 125.",
+          "he": "טריק: 100 ועוד 25 זה 125."
+        },
+        {
+          "en": "Question: a Fire Stone costs 100 coins. Today the shop has 25% off! How many coins does it cost now?",
+          "he": "שאלה: אבן אש עולה 100 מטבעות. היום יש בחנות הנחה של 25%! כמה מטבעות היא עולה עכשיו?"
+        },
+        {
+          "en": "My answer: 125 coins!",
+          "he": "התשובה שלי: 125 מטבעות!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r4-3",
+      "x": 8,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_2c5fb3",
+      "name": {
+        "en": "Helper Yael",
+        "he": "העוזרת יעל"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: 50% off means you pay half.",
+          "he": "טריק: הנחה של 50% אומרת שמשלמים חצי."
+        },
+        {
+          "en": "Question: a Fire Stone costs 100 coins. Today the shop has 25% off! How many coins does it cost now?",
+          "he": "שאלה: אבן אש עולה 100 מטבעות. היום יש בחנות הנחה של 25%! כמה מטבעות היא עולה עכשיו?"
+        },
+        {
+          "en": "My answer: 50 coins!",
+          "he": "התשובה שלי: 50 מטבעות!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r4-4",
+      "x": 11,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_2db5a7",
+      "name": {
+        "en": "Helper Eitan",
+        "he": "העוזר איתן"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: on a normal day a Fire Stone costs 100 coins.",
+          "he": "טריק: ביום רגיל אבן אש עולה 100 מטבעות."
+        },
+        {
+          "en": "Question: a Fire Stone costs 100 coins. Today the shop has 25% off! How many coins does it cost now?",
+          "he": "שאלה: אבן אש עולה 100 מטבעות. היום יש בחנות הנחה של 25%! כמה מטבעות היא עולה עכשיו?"
+        },
+        {
+          "en": "My answer: 100 coins!",
+          "he": "התשובה שלי: 100 מטבעות!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r4-5",
+      "x": 14,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_304fc6",
+      "name": {
+        "en": "Helper Hila",
+        "he": "העוזרת הילה"
+      },
+      "dialogue": [
+        {
+          "en": "Trick: \"off\" means we take it away from the price.",
+          "he": "טריק: \"הנחה\" אומרת שמורידים מהמחיר."
+        },
+        {
+          "en": "Question: a Fire Stone costs 100 coins. Today the shop has 25% off! How many coins does it cost now?",
+          "he": "שאלה: אבן אש עולה 100 מטבעות. היום יש בחנות הנחה של 25%! כמה מטבעות היא עולה עכשיו?"
+        },
+        {
+          "en": "My answer: 75 coins!",
+          "he": "התשובה שלי: 75 מטבעות!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r5-1",
+      "x": 32,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_330791",
+      "name": {
+        "en": "Helper Uri",
+        "he": "העוזר אורי"
+      },
+      "dialogue": [
+        {
+          "en": "Last room! Trick: it won 3 battles.",
+          "he": "החדר האחרון! טריק: הוא ניצח ב-3 קרבות."
+        },
+        {
+          "en": "Question: our leader's Arcanine won 3 of its 4 battles. What percent of its battles did it win?",
+          "he": "שאלה: הארקנין של המנהיג שלנו ניצח ב-3 מתוך 4 הקרבות שלו. בכמה אחוז מהקרבות הוא ניצח?"
+        },
+        {
+          "en": "My answer: 3%!",
+          "he": "התשובה שלי: 3%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r5-2",
+      "x": 35,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_3470af",
+      "name": {
+        "en": "Helper Adi",
+        "he": "העוזרת עדי"
+      },
+      "dialogue": [
+        {
+          "en": "Last room! Trick: 4 quarters make a whole, and a whole is 100%.",
+          "he": "החדר האחרון! טריק: 4 רבעים הם שלם, ושלם זה 100%."
+        },
+        {
+          "en": "Question: our leader's Arcanine won 3 of its 4 battles. What percent of its battles did it win?",
+          "he": "שאלה: הארקנין של המנהיג שלנו ניצח ב-3 מתוך 4 הקרבות שלו. בכמה אחוז מהקרבות הוא ניצח?"
+        },
+        {
+          "en": "My answer: 75%!",
+          "he": "התשובה שלי: 75%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r5-3",
+      "x": 38,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_392694",
+      "name": {
+        "en": "Helper Tamar",
+        "he": "העוזרת תמר"
+      },
+      "dialogue": [
+        {
+          "en": "Last room! Trick: it lost 1 battle out of 4. That is one quarter!",
+          "he": "החדר האחרון! טריק: הוא הפסיד בקרב 1 מתוך 4. זה רבע!"
+        },
+        {
+          "en": "Question: our leader's Arcanine won 3 of its 4 battles. What percent of its battles did it win?",
+          "he": "שאלה: הארקנין של המנהיג שלנו ניצח ב-3 מתוך 4 הקרבות שלו. בכמה אחוז מהקרבות הוא ניצח?"
+        },
+        {
+          "en": "My answer: 25%!",
+          "he": "התשובה שלי: 25%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודקת — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r5-4",
+      "x": 41,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_3979e8",
+      "name": {
+        "en": "Helper Nadav",
+        "he": "העוזר נדב"
+      },
+      "dialogue": [
+        {
+          "en": "Last room! Trick: 3 tens make 30.",
+          "he": "החדר האחרון! טריק: 3 עשרות זה 30."
+        },
+        {
+          "en": "Question: our leader's Arcanine won 3 of its 4 battles. What percent of its battles did it win?",
+          "he": "שאלה: הארקנין של המנהיג שלנו ניצח ב-3 מתוך 4 הקרבות שלו. בכמה אחוז מהקרבות הוא ניצח?"
+        },
+        {
+          "en": "My answer: 30%!",
+          "he": "התשובה שלי: 30%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-r5-5",
+      "x": 44,
+      "y": 2,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_424d3d",
+      "name": {
+        "en": "Helper Lior",
+        "he": "העוזר ליאור"
+      },
+      "dialogue": [
+        {
+          "en": "Last room! Trick: it fought 4 battles in all.",
+          "he": "החדר האחרון! טריק: בסך הכל הוא נלחם ב-4 קרבות."
+        },
+        {
+          "en": "Question: our leader's Arcanine won 3 of its 4 battles. What percent of its battles did it win?",
+          "he": "שאלה: הארקנין של המנהיג שלנו ניצח ב-3 מתוך 4 הקרבות שלו. בכמה אחוז מהקרבות הוא ניצח?"
+        },
+        {
+          "en": "My answer: 40%!",
+          "he": "התשובה שלי: 40%!"
+        },
+        {
+          "en": "If you think I am right — step on the arrow next to me!",
+          "he": "אם אתה חושב שאני צודק — עלה על החץ שלידי!"
+        }
+      ]
+    },
+    {
+      "id": "npc-pgym-trainer-1",
+      "x": 1,
+      "y": 18,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_a8bd41",
+      "name": {
+        "en": "Kindler Dan",
+        "he": "דן המצית"
+      },
+      "party": [
+        {
+          "pokemonId": 5,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 156,
+          "level": 44,
+          "moves": []
+        },
+        {
+          "pokemonId": 77,
+          "level": 45,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 2000
+      },
+      "dialogue": [
+        {
+          "en": "Hi! Fun fact: a candle flame is about 1,000°C hot!",
+          "he": "היי! עובדה מגניבה: להבה של נר חמה בערך 1,000 מעלות!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Wow, you are good! Fire needs oxygen to burn — that is why water and sand put it out.",
+          "he": "וואו, אתה טוב! אש צריכה חמצן כדי לבעור — בגלל זה מים וחול מכבים אותה."
+        }
+      ],
+      "interactRange": 12
+    },
+    {
+      "id": "npc-pgym-trainer-2",
+      "x": 29,
+      "y": 18,
+      "facing": "left",
+      "type": "trainer",
+      "spriteType": "char_c3dacc",
+      "name": {
+        "en": "Firebreather Lea",
+        "he": "לאה נושפת האש"
+      },
+      "party": [
+        {
+          "pokemonId": 58,
+          "level": 45,
+          "moves": []
+        },
+        {
+          "pokemonId": 126,
+          "level": 46,
+          "moves": []
+        },
+        {
+          "pokemonId": 219,
+          "level": 46,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 2000
+      },
+      "dialogue": [
+        {
+          "en": "Hello! The Sun is a giant ball of fire — about 5,500°C on the outside!",
+          "he": "שלום! השמש היא כדור אש ענק — בערך 5,500 מעלות מבחוץ!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Great battle! Magcargo is so hot it is about 10,000°C — hotter than the Sun's surface!",
+          "he": "קרב מעולה! מגקרגו כל כך חם — בערך 10,000 מעלות, יותר מפני השמש!"
+        }
+      ],
+      "interactRange": 12
+    },
+    {
+      "id": "npc-pgym-trainer-3",
+      "x": 1,
+      "y": 6,
+      "facing": "right",
+      "type": "trainer",
+      "spriteType": "char_8c60a6",
+      "name": {
+        "en": "Ace Trainer Ron",
+        "he": "המאמן רון"
+      },
+      "party": [
+        {
+          "pokemonId": 136,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 229,
+          "level": 47,
+          "moves": []
+        },
+        {
+          "pokemonId": 78,
+          "level": 47,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 5,
+      "reward": {
+        "money": 2000
+      },
+      "dialogue": [
+        {
+          "en": "You made it far! Did you know Flareon's body can heat up to 900°C?",
+          "he": "הגעת רחוק! ידעת שהגוף של פלריאון יכול להתחמם עד 900 מעלות?"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "You are ready for our leader. Remember: Water, Ground and Rock beat Fire!",
+          "he": "אתה מוכן למנהיג שלנו. תזכור: מים, אדמה וסלע מנצחים אש!"
+        }
+      ],
+      "interactRange": 14
+    },
+    {
+      "id": "npc-pgym-leader",
+      "x": 22,
+      "y": 3,
+      "facing": "down",
+      "type": "trainer",
+      "spriteType": "gym-7-integrala",
+      "name": {
+        "en": "Max Formax",
+        "he": "מקס פרבולה"
+      },
+      "party": [
+        {
+          "pokemonId": 38,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 78,
+          "level": 50,
+          "moves": []
+        },
+        {
+          "pokemonId": 59,
+          "level": 51,
+          "moves": []
+        },
+        {
+          "pokemonId": 157,
+          "level": 53,
+          "moves": []
+        },
+        {
+          "pokemonId": 6,
+          "level": 54,
+          "moves": []
+        },
+        {
+          "pokemonId": 467,
+          "level": 55,
+          "moves": []
+        }
+      ],
+      "lineOfSight": 1,
+      "excludeFromMapClear": true,
+      "questions": {
+        "count": 3,
+        "types": []
+      },
+      "reward": {
+        "money": 6000,
+        "badge": 7,
+        "items": [
+          {
+            "itemId": "hm02",
+            "quantity": 1
+          },
+          {
+            "itemId": "fire-stone",
+            "quantity": 1
+          },
+          {
+            "itemId": "max-revive",
+            "quantity": 2
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "en": "Ho ho! You solved all five riddles. Welcome, young mathematician!",
+          "he": "הו הו! פתרת את כל חמש החידות. ברוך הבא, מתמטיקאי צעיר!"
+        },
+        {
+          "en": "I am Max Formax. For 50 years I have studied fire and numbers.",
+          "he": "אני מקס פורמקס. כבר 50 שנה אני חוקר אש ומספרים."
+        },
+        {
+          "en": "A good trainer, like a good fire, needs 3 things: fuel, air and heat. Show me yours!",
+          "he": "מאמן טוב, כמו אש טובה, צריך 3 דברים: דלק, אוויר וחום. הראה לי את שלך!"
+        }
+      ],
+      "postBattleDialogue": [
+        {
+          "en": "Wonderful! You burned brighter than 100% of my expectations!",
+          "he": "נפלא! בערת יותר חזק מ-100% מהציפיות שלי!"
+        },
+        {
+          "en": "Take this badge. You have earned it with your head and your heart.",
+          "he": "קח את התג הזה. הרווחת אותו עם הראש ועם הלב."
+        }
+      ]
+    }
+  ],
+  "music": "gym-battle",
+  "encounterTableId": null,
+  "interactiveItems": {},
+  "label": {
+    "en": "percentile Gym",
+    "he": "מכון העיר אינטגרלה"
+  },
+  "movablePuzzle": {},
+  "flagListeners": [],
+  "tiles": [
+    ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
+    ["w1-r","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w4-x1","w6","f4","w6","w6","w6","w6","w6","w6","w6","w6","w6","w6","f4","w6","w4-x1","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","down","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","w4-y1","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-box","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-box","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y2","w4-y3","w1-l"],
+    ["w1-r","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w4-x","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w4-x","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-r","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x2","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w4-x2","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","f4","w1-l"],
+    ["w1-b3","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","f4","f4","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-1","w1-b4"]
+  ],
+  "objects": [
+    {
+      "key": "battle-arena",
+      "x": 20,
+      "y": 3
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "key": "firePlaceTop",
+      "x": 27,
+      "y": 1
+    },
+    {
+      "key": "stvoe2",
+      "x": 13,
+      "y": 10
+    },
+    {
+      "key": "firPlaceBody1",
+      "x": 16,
+      "y": 4
+    },
+    {
+      "key": "firPlaceBody1",
+      "x": 27,
+      "y": 4
+    },
+    {
+      "key": "lab2",
+      "x": 16,
+      "y": 17
+    },
+    {
+      "key": "lab2",
+      "x": 12,
+      "y": 17
+    },
+    {
+      "key": "chair-x3",
+      "x": 17,
+      "y": 6
+    },
+    {
+      "key": "chair-x4",
+      "x": 28,
+      "y": 6
+    }
+  ]
+}

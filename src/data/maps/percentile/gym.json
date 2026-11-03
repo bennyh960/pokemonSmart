@@ -23,7 +23,10 @@
     {
       "fromX": 29,
       "fromY": 11,
-      "returnToPrevious": true
+      "returnToPrevious": false,
+      "toMapId": "percentile/percentile",
+      "toX": 41,
+      "toY": 2
     },
     {
       "fromX": 1,
@@ -568,7 +571,7 @@
       "y": 14,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_994b11",
+      "spriteType": "char_304fc6",
       "name": {
         "en": "Helper Max",
         "he": "העוזר מקס"
@@ -688,7 +691,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_24117d",
+      "spriteType": "char_0b132f",
       "name": {
         "en": "Helper Roni",
         "he": "העוזרת רוני"
@@ -718,7 +721,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_29f912",
+      "spriteType": "char_615686",
       "name": {
         "en": "Helper Ben",
         "he": "העוזר בן"
@@ -748,7 +751,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_2c5fb3",
+      "spriteType": "char_9ceeb2",
       "name": {
         "en": "Helper Yael",
         "he": "העוזרת יעל"
@@ -778,7 +781,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_2db5a7",
+      "spriteType": "char_962c1b",
       "name": {
         "en": "Helper Eitan",
         "he": "העוזר איתן"
@@ -838,7 +841,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_330791",
+      "spriteType": "char_22fdd1",
       "name": {
         "en": "Helper Uri",
         "he": "העוזר אורי"
@@ -898,7 +901,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_392694",
+      "spriteType": "char_c32979",
       "name": {
         "en": "Helper Tamar",
         "he": "העוזרת תמר"
@@ -928,7 +931,7 @@
       "y": 2,
       "facing": "down",
       "type": "dialogue",
-      "spriteType": "char_3979e8",
+      "spriteType": "char_e38ab2",
       "name": {
         "en": "Helper Nadav",
         "he": "העוזר נדב"
@@ -1221,7 +1224,8 @@
     "he": "מכון העיר אינטגרלה"
   },
   "movablePuzzle": {},
-  "flagListeners": [],
+  "flagListeners": []
+,
   "tiles": [
     ["w1-b1","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-2","w1-b2"],
     ["w1-r","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w4-x1","w6","f4","w6","w6","w6","w6","w6","w6","w6","w6","w6","w6","f4","w6","w4-x1","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w6","up","w6","w1-l"],

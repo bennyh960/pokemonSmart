@@ -27,6 +27,7 @@
  *  10. Lab: Oak scans the 6 cores → "87% chance the next signal is under Minusburg".
  *  11. Leaving the lab → Lance lands, Jenny on the phone, gym opens.
  *  12. Badge 7 (+ HM02 Fly) → Minusburg blockade lifts.
+ *  13. Walking out of the gym → Gary calls: he, Jenny and Lance need help under Minusburg.
  *
  * NPC IDs:
  *   percentile   npc-pct-reminder, npc-pct-gym-closed, npc-pct-lance
@@ -185,8 +186,8 @@ registerQuest({
   id: 'main-act5-minusburg',
   title: { en: 'Back to Minusburg', he: 'חזרה למינוסבורג' },
   objective: {
-    en: 'Fly to Minusburg — Officer Jenny and Lance are waiting',
-    he: "עוף למינוסבורג — השוטרת ג'ני ולאנס מחכים",
+    en: 'Gary needs help! Fly to Minusburg — he is there with Officer Jenny and Lance',
+    he: "גארי צריך עזרה! עוף למינוסבורג — הוא שם עם השוטרת ג'ני ולאנס",
   },
 });
 
@@ -1305,6 +1306,9 @@ registerStoryEvent({
 registerCutscene({
   id: 'cutscene-pct-lab-final',
   steps: [
+    // Player walks from the lab door (spawn 7,13) to stand right of Oak (5,8), face to face
+    { type: 'face-npc', npcId: 'npc-pct-oak', dir: 'down' },
+    { type: 'move-player', path: ['up', 'up', 'up', 'up', 'up', 'left'] },
     { type: 'face-npc', npcId: 'npc-pct-oak', dir: 'right' },
     {
       type: 'dialogue',
@@ -1343,15 +1347,27 @@ registerCutscene({
           he: 'סיכוי של 87%: האות הבא מגיע מתחת למינוסבורג!',
         },
         {
-          en: 'Hmm, Officer Jenny closed the north side of that city... now I see why.',
-          he: "הממ, השוטרת ג'ני סגרה את הצד הצפוני של העיר הזאת... עכשיו אני מבין למה.",
+          en: 'Officer Jenny and her team are already searching there. Their investigation is almost done.',
+          he: "השוטרת ג'ני והצוות שלה כבר מחפשים שם. החקירה שלהם כמעט נגמרה.",
         },
         {
           en: "And the last core... it hides inside NULL-X's own tower.",
           he: 'והליבה האחרונה... היא מסתתרת בתוך המגדל של נאל-איקס עצמו.',
         },
+        {
+          en: 'For now, go win your next badge. We will keep you in touch!',
+          he: 'בינתיים, לך לנצח את התג הבא שלך. אנחנו נעדכן אותך!',
+        },
       ],
     },
+    // Oak heads out of the lab (5,8 → by the door); lab.json despawns him at act4-pct-lab-final
+    {
+      type: 'move-npc',
+      npcId: 'npc-pct-oak',
+      path: ['down', 'down', 'down', 'down', 'down', 'right'],
+      waitForComplete: true,
+    },
+    { type: 'hide-npc', npcId: 'npc-pct-oak' },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_LAB_FINAL } },
   ],
 });
@@ -1381,12 +1397,12 @@ registerCutscene({
       speakerName: 'Lance / לאנס',
       lines: [
         {
-          en: 'Good to see you again! Alice told me what you did in the forest.',
-          he: 'טוב לראות אותך שוב! אליס סיפרה לי מה עשית ביער.',
+          en: 'Good to see you again! I was up on the hills too, after the fire.',
+          he: 'טוב לראות אותך שוב! גם אני הייתי בגבעות, אחרי השריפה.',
         },
         {
-          en: 'I saw the fire on the hills from the sky — two legends, and you stopped both.',
-          he: 'ראיתי את האש על הגבעות מהשמיים — שני אגדיים, ועצרת את שניהם.',
+          en: 'Two legends, and you stopped both. Not many trainers could do that.',
+          he: 'שני אגדיים, ועצרת את שניהם. לא הרבה מאמנים היו מצליחים.',
         },
         {
           en: 'Oak told me about Minusburg. I have been tracking the glitch there with Officer Jenny.',
@@ -1405,8 +1421,8 @@ registerCutscene({
           he: 'בזכותך, אנחנו יודעים מה אנחנו מחפשים מתחת למינוסבורג.',
         },
         {
-          en: 'Win your seventh badge and learn to Fly — then come back. I will open the road for you.',
-          he: 'תנצח את התג השביעי שלך ותלמד לעוף — ואז תחזור. אני אפתח לך את הדרך.',
+          en: 'We are almost done down there. Win your seventh badge — we will call you when we need you.',
+          he: 'אנחנו כמעט מסיימים שם למטה. תנצח את התג השביעי שלך — אנחנו נתקשר כשנצטרך אותך.',
         },
       ],
     },
@@ -1419,7 +1435,7 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'npc-pct-lance',
       speakerName: 'Lance / לאנס',
-      lines: [{ en: 'Go win that badge. See you in Minusburg!', he: 'לך תנצח את התג הזה. נתראה במינוסבורג!' }],
+      lines: [{ en: 'Go win that badge. See you soon!', he: 'לך תנצח את התג הזה. נתראה בקרוב!' }],
     },
     { type: 'pokemon-anim', pokemonId: DRAGONITE, motion: 'fly', from: { npcId: 'npc-pct-lance' } },
     { type: 'hide-npc', npcId: 'npc-pct-lance' },
@@ -1442,12 +1458,53 @@ registerStoryEvent({
           en: 'You got HM02 Fly! Teach it to a flying Pokémon to travel between cities.',
           he: 'קיבלת את מכונת הלימוד תעופה! למד אותה לפוקימון מעופף כדי לטוס בין ערים.',
         },
-        { en: 'Officer Jenny is waiting in Minusburg.', he: "השוטרת ג'ני מחכה במינוסבורג." },
       ],
     },
     { type: 'complete-quest', questId: 'main-act4-pct-badge' },
-    { type: 'set-quest', questId: 'main-act5-minusburg' },
     { type: 'set-flag', flag: FLAGS.ACT4_MINUSBURG_OPEN },
     { type: 'set-flag', flag: FLAGS.ACT4_PCT_ARC_COMPLETE },
+  ],
+});
+
+// ── Beat 12: Out of the gym → Gary calls for help in Minusburg (closes the arc) ──
+
+registerStoryEvent({
+  id: 'evt-pct-gary-call',
+  trigger: { type: 'map-enter', mapId: CITY },
+  conditions: [
+    { type: 'flag', flag: FLAGS.ACT4_PCT_ARC_COMPLETE },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_GARY_CALLED },
+  ],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-gary-call' }],
+});
+
+registerCutscene({
+  id: 'cutscene-pct-gary-call',
+  phoneCaller: { en: 'Gary Oak', he: 'גארי אוק' },
+  steps: [
+    {
+      type: 'dialogue',
+      speakerName: 'Gary Oak / גארי אוק',
+      lines: [
+        {
+          en: "Hey, it's Gary! Seven badges, huh? Not bad... for you.",
+          he: 'היי, זה גארי! שבעה תגים, מה? לא רע... בשבילך.',
+        },
+        {
+          en: "Listen. I'm in Minusburg with Officer Jenny and Lance. We found something under the city.",
+          he: "תקשיב. אני במינוסבורג עם השוטרת ג'ני ולאנס. מצאנו משהו מתחת לעיר.",
+        },
+        {
+          en: "The glitch is everywhere down here... and it's getting stronger.",
+          he: 'השיבוש נמצא פה למטה בכל מקום... והוא נהיה חזק יותר.',
+        },
+        {
+          en: 'I hate to say it, but I need your help. Fly to Minusburg — fast!',
+          he: 'אני שונא להגיד את זה, אבל אני צריך את העזרה שלך. עוף למינוסבורג — מהר!',
+        },
+      ],
+    },
+    { type: 'action', action: { type: 'set-quest', questId: 'main-act5-minusburg' } },
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_GARY_CALLED } },
   ],
 });

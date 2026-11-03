@@ -71,6 +71,7 @@ export const MapId = {
   PERCENTILE_BALL_STORAGE: 'percentile/ball-storage',
   PERCENTILE_FAMILY_HOUSE: 'percentile/family-house',
   PERCENTILE_GYM: 'percentile/gym',
+  PERCENTILE_HILL_HOUSE: 'percentile/hill-house',
   PERCENTILE_LAB: 'percentile/lab',
   PERCENTILE_LIBRARY: 'percentile/library',
   PERCENTILE_PERCENTILE: 'percentile/percentile',

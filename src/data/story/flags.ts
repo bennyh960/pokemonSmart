@@ -295,6 +295,7 @@ export const FLAGS = {
   ACT4_PCT_SUICUNE_ARRIVED: 'act4-pct-suicune-arrived', // Suicune surfs in to help on the Route 12 hilltop
   ACT4_PCT_R12_ENTERED: 'act4-pct-r12-entered', // First Route 12 visit during the arc
   ACT4_PCT_MACHINES_OFF: 'act4-pct-machines-off', // All 3 Heat Collector guards beaten
+  ACT4_PCT_GARY_CALLED: 'act4-pct-gary-called', // Out of the gym with badge 7 → Gary calls for help in Minusburg
   ACT4_PCT_COLLECTOR_1_EXPLODED: 'act4-pct-collector-1-exploded', // Its grunt beaten → Heat Collector #1 blown up (route-12 machine + smoke gone)
   ACT4_PCT_ENTEI_DONE: 'act4-pct-entei-done', // Entei beaten → Core X5, Moltres battle opens
   ACT4_PCT_LEGENDS_DONE: 'act4-pct-legends-done', // Moltres beaten → Core X6, Rocket gone, infection drops 2 levels
@@ -472,6 +473,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT4_PCT_SUICUNE_ARRIVED]: 'Suicune arrived on the Route 12 hilltop to help against Entei and Moltres',
   [FLAGS.ACT4_PCT_R12_ENTERED]: 'First Route 12 visit during the Burning Chance arc',
   [FLAGS.ACT4_PCT_MACHINES_OFF]: 'All 3 Heat Collectors shut down — admin shield down',
+  [FLAGS.ACT4_PCT_GARY_CALLED]: 'Gary called after badge 7 — asks for help in Minusburg',
   [FLAGS.ACT4_PCT_COLLECTOR_1_EXPLODED]: 'Heat Collector #1 on Route 12 blown up (its grunt npc-pct-collector-1-grunt beaten)',
   [FLAGS.ACT4_PCT_ENTEI_DONE]: 'Entei beaten — Core X5 collected',
   [FLAGS.ACT4_PCT_LEGENDS_DONE]: 'Moltres beaten — Core X6 collected, Rocket gone, area infection down 2 levels',

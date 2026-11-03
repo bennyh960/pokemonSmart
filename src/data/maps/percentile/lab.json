@@ -32,7 +32,7 @@
         }
       ],
       "spawnAfter": "act4-pct-legends-done",
-      "despawnAfter": "act4-pct-arc-complete"
+      "despawnAfter": "act4-pct-lab-final"
     },
     {
       "id": "npc-1783419724700-ability-swapper",
