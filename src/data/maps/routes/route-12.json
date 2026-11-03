@@ -146,8 +146,8 @@
     },
     {
       "id": "npc-pct-guard-2",
-      "x": 30,
-      "y": 40,
+      "x": 25,
+      "y": 27,
       "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -192,36 +192,39 @@
       "autoWalk": {
         "pattern": [
           {
-            "dir": "right",
-            "steps": 3,
-            "delay": 1.5
+            "dir": "down",
+            "steps": 5,
+            "delay": 0.5
           },
           {
-            "dir": "left",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "left",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "right",
-            "steps": 3,
-            "delay": 1.5
+            "dir": "up",
+            "steps": 5,
+            "delay": 0.5
           }
         ],
-        "loop": true
+        "loop": true,
+        "beforeDespawnPattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 0.5
+          }
+        ]
       },
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "despawnOnDefeat": true
     },
     {
       "id": "npc-pct-guard-3",
-      "x": 12,
+      "x": 10,
       "y": 30,
-      "facing": "down",
+      "facing": "right",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -263,38 +266,25 @@
       },
       "isGlitched": true,
       "autoWalk": {
-        "pattern": [
+        "pattern": [],
+        "loop": true,
+        "beforeDespawnPattern": [
           {
             "dir": "up",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "up",
-            "steps": 3,
-            "delay": 1.5
+            "steps": 10,
+            "delay": 0
           }
-        ],
-        "loop": true
+        ]
       },
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "interactRange": 5
     },
     {
       "id": "npc-pct-grunt-4",
-      "x": 13,
+      "x": 15,
       "y": 52,
-      "facing": "down",
+      "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -331,46 +321,36 @@
       },
       "isGlitched": true,
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "up",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "up",
-            "steps": 3,
-            "delay": 1.5
-          }
-        ],
-        "loop": true,
+        "pattern": [],
+        "loop": false,
         "beforeDespawnPattern": [
           {
             "dir": "up",
-            "steps": 7,
+            "steps": 3,
             "delay": 0.2
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 0.5
+          },
+          {
+            "dir": "up",
+            "steps": 5,
+            "delay": 0.5
           }
         ]
       },
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done",
-      "despawnOnDefeat": true
+      "despawnOnDefeat": true,
+      "interactRange": 5
     },
     {
       "id": "npc-pct-grunt-5",
-      "x": 30,
+      "x": 25,
       "y": 19,
-      "facing": "left",
+      "facing": "up",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -440,7 +420,8 @@
       },
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done",
-      "despawnOnDefeat": true
+      "despawnOnDefeat": true,
+      "interactRange": 4
     },
     {
       "id": "npc-pct-admin-shield",
@@ -823,7 +804,7 @@
       "dialogue": [
         {
           "en": "Shhh! I was hiding in the grass... and you found me!",
-          "he": "ששש! הסתתרתי בדשא... ומצאת אותי!"
+          "he": "אין לך מה לחפש כאן! עכשיו אתה בצרות!"
         }
       ],
       "postBattleDialogue": [
@@ -855,8 +836,19 @@
         "he": "דרך 12"
       },
       "autoWalk": {
-        "pattern": [],
-        "loop": false,
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 0.5
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 0.5
+          }
+        ],
+        "loop": true,
         "beforeDespawnPattern": [
           {
             "dir": "up",
@@ -870,9 +862,9 @@
     },
     {
       "id": "npc-r12-hidden-grunt-3",
-      "x": 31,
-      "y": 12,
-      "facing": "left",
+      "x": 33,
+      "y": 15,
+      "facing": "up",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -919,24 +911,25 @@
         "beforeDespawnPattern": [
           {
             "dir": "right",
-            "steps": 3,
+            "steps": 9,
             "delay": 0.2
           },
           {
-            "dir": "up",
-            "steps": 3,
+            "dir": "down",
+            "steps": 5,
             "delay": 0.2
           }
         ]
       },
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "interactRange": 6
     },
     {
       "id": "npc-r12-hidden-grunt-4",
       "x": 39,
-      "y": 12,
-      "facing": "right",
+      "y": 11,
+      "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -946,7 +939,7 @@
       "dialogue": [
         {
           "en": "Gotcha! A grunt in the grass is worth two on the path!",
-          "he": "תפסתי אותך! סוכן בדשא שווה שניים בשביל!"
+          "he": "לעולם לא תתגבר על צוות רוקט! היכנע עכשיו!"
         }
       ],
       "postBattleDialogue": [
@@ -982,29 +975,15 @@
         "en": "Route 12",
         "he": "דרך 12"
       },
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "down",
-            "steps": 3,
-            "delay": 0.2
-          },
-          {
-            "dir": "left",
-            "steps": 3,
-            "delay": 0.2
-          }
-        ]
-      },
+      "autoWalk": null,
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "interactRange": 4
     },
     {
       "id": "npc-r12-hidden-grunt-5",
       "x": 47,
-      "y": 14,
+      "y": 15,
       "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -1021,7 +1000,7 @@
       "postBattleDialogue": [
         {
           "en": "Some wall I am... I am out!",
-          "he": "איזה קיר אני... אני הולך!"
+          "he": "זה לא נגמר פה!"
         }
       ],
       "party": [
@@ -1038,7 +1017,7 @@
       ],
       "lineOfSight": 4,
       "reward": {
-        "money": 1600
+        "money": 3600
       },
       "isGlitched": true,
       "despawnOnDefeat": true,
@@ -1046,29 +1025,14 @@
         "en": "Route 12",
         "he": "דרך 12"
       },
-      "autoWalk": {
-        "pattern": [],
-        "loop": false,
-        "beforeDespawnPattern": [
-          {
-            "dir": "right",
-            "steps": 1,
-            "delay": 0.2
-          },
-          {
-            "dir": "up",
-            "steps": 5,
-            "delay": 0.2
-          }
-        ]
-      },
+      "autoWalk": null,
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done"
     },
     {
       "id": "npc-r12-hidden-grunt-6",
       "x": 42,
-      "y": 19,
+      "y": 20,
       "facing": "right",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -1102,7 +1066,7 @@
       ],
       "lineOfSight": 4,
       "reward": {
-        "money": 1600
+        "money": 2600
       },
       "isGlitched": true,
       "despawnOnDefeat": true,
@@ -1128,7 +1092,7 @@
       "id": "npc-r12-hidden-grunt-7",
       "x": 22,
       "y": 39,
-      "facing": "left",
+      "facing": "up",
       "type": "trainer",
       "spriteType": "char_7db1c5",
       "name": {
@@ -1174,19 +1138,20 @@
         "loop": false,
         "beforeDespawnPattern": [
           {
-            "dir": "down",
+            "dir": "up",
             "steps": 2,
             "delay": 0.2
           },
           {
-            "dir": "left",
-            "steps": 3,
+            "dir": "right",
+            "steps": 6,
             "delay": 0.2
           }
         ]
       },
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "interactRange": 4
     },
     {
       "id": "npc-r12-jenny",
@@ -1258,7 +1223,7 @@
     },
     {
       "id": "npc-r12-officer-2",
-      "x": 14,
+      "x": 12,
       "y": 47,
       "facing": "up",
       "type": "dialogue",
@@ -1278,13 +1243,28 @@
         }
       ],
       "spawnAfter": "act4-pct-suicune-done",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "down",
+            "steps": 10,
+            "delay": 0.3
+          },
+          {
+            "dir": "up",
+            "steps": 10,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      }
     },
     {
       "id": "npc-r12-officer-3",
-      "x": 14,
-      "y": 9,
-      "facing": "right",
+      "x": 13,
+      "y": 8,
+      "facing": "left",
       "type": "dialogue",
       "spriteType": "gate-officer",
       "name": {
@@ -1294,15 +1274,17 @@
       "dialogue": [
         {
           "en": "The meadow to the east is full of tall grass — and full of grunts.",
-          "he": "באחו ממזרח יש הרבה דשא גבוה — והרבה סוכנים."
+          "he": "באחו ממזרח יש הרבה דשא גבוה — והרבה סוכנים צוות רוקט! היזהר !"
         },
         {
           "en": "If the grass moves, get your Pokémon ready!",
-          "he": "אם הדשא זז, תכין את הפוקימונים שלך!"
+          "he": ""
         }
       ],
       "spawnAfter": "act4-pct-suicune-done",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "blocker": true,
+      "interactRange": 3
     },
     {
       "id": "npc-r12-officer-4",
@@ -1330,8 +1312,8 @@
     },
     {
       "id": "wild-r12-glitch-magmar",
-      "x": 36,
-      "y": 13,
+      "x": 37,
+      "y": 9,
       "facing": "down",
       "type": "wild-pokemon",
       "spriteType": "",
@@ -1352,25 +1334,15 @@
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done",
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "up",
-            "steps": 2,
-            "delay": 2
-          },
-          {
-            "dir": "down",
-            "steps": 2,
-            "delay": 2
-          }
-        ],
-        "loop": true
-      }
+        "pattern": [],
+        "loop": false
+      },
+      "interactRange": 5
     },
     {
       "id": "wild-r12-glitch-rapidash",
-      "x": 26,
-      "y": 11,
+      "x": 23,
+      "y": 9,
       "facing": "down",
       "type": "wild-pokemon",
       "spriteType": "",
@@ -1391,35 +1363,15 @@
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done",
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 1.5
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 1.5
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 1.5
-          },
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 1.5
-          }
-        ],
-        "loop": true
-      }
+        "pattern": [],
+        "loop": false
+      },
+      "interactRange": 6
     },
     {
       "id": "wild-r12-glitch-houndoom",
-      "x": 28,
-      "y": 5,
+      "x": 30,
+      "y": 9,
       "facing": "down",
       "type": "wild-pokemon",
       "spriteType": "",
@@ -1440,20 +1392,10 @@
       "spawnAfter": "act4-pct-arc-started",
       "despawnAfter": "act4-pct-legends-done",
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 2
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 2
-          }
-        ],
-        "loop": true
-      }
+        "pattern": [],
+        "loop": false
+      },
+      "interactRange": 6
     },
     {
       "id": "wild-r12-glitch-ninetales",
@@ -1537,7 +1479,7 @@
       "spriteType": "",
       "name": {
         "en": "Charmeleon",
-        "he": "שרמליאון"
+        "he": "צרמיליון"
       },
       "dialogue": [
         {
@@ -1565,7 +1507,8 @@
           }
         ],
         "loop": true
-      }
+      },
+      "interactRange": 3
     },
     {
       "id": "wild-r12-glitch-flareon",
@@ -1608,9 +1551,9 @@
     },
     {
       "id": "wild-r12-glitch-quilava",
-      "x": 38,
+      "x": 33,
       "y": 20,
-      "facing": "down",
+      "facing": "up",
       "type": "wild-pokemon",
       "spriteType": "",
       "name": {
@@ -1628,7 +1571,8 @@
       "isGlitched": true,
       "despawnOnDefeat": true,
       "spawnAfter": "act4-pct-arc-started",
-      "despawnAfter": "act4-pct-legends-done"
+      "despawnAfter": "act4-pct-legends-done",
+      "interactRange": 3
     },
     {
       "id": "wild-r12-glitch-graveler",
@@ -1683,7 +1627,7 @@
       "dialogue": [
         {
           "en": "These hills got so hot, my boots melted! Battle me to cool off!",
-          "he": "הגבעות האלה התחממו כל כך, שהנעליים שלי נמסו! תילחם בי כדי להתקרר!"
+          "he": "הגבעות האלה התחממו כל כך, שהנעליים שלי נמסו! הפוקימונים שלי דיי חסינים לפוקימוני אש."
         }
       ],
       "postBattleDialogue": [
@@ -1716,7 +1660,8 @@
       "location": {
         "en": "Route 12",
         "he": "דרך 12"
-      }
+      },
+      "spawnAfter": "act4-pct-legends-done"
     },
     {
       "id": "npc-r12-firefighter",
@@ -1816,7 +1761,8 @@
       "location": {
         "en": "Route 12",
         "he": "דרך 12"
-      }
+      },
+      "spawnAfter": "act4-pct-legends-done"
     },
     {
       "id": "npc-r12-birdkeeper",
@@ -1832,7 +1778,7 @@
       "dialogue": [
         {
           "en": "My birds fly over the hills and see everything. Even the grunts in the grass!",
-          "he": "הציפורים שלי עפות מעל הגבעות ורואות הכול. אפילו את הסוכנים בדשא!"
+          "he": "הפוקימונים המעופפים שלי עפים מעל הגבעות ורואות הכול. ראיתי מלמעלה איך הבסת את צוות רוקט! לא הספקתי להגיע בזמן אבל שמח שהבסת אותם! עכשיו אני חייב לאתגר אותך עכשיו"
         }
       ],
       "postBattleDialogue": [
@@ -1856,6 +1802,11 @@
           "pokemonId": 227,
           "level": 48,
           "moves": []
+        },
+        {
+          "pokemonId": 18,
+          "level": 50,
+          "moves": []
         }
       ],
       "lineOfSight": 3,
@@ -1865,6 +1816,12 @@
       "location": {
         "en": "Route 12",
         "he": "דרך 12"
+      },
+      "spawnAfter": "act4-pct-legends-done",
+      "reencounter": {
+        "count": 3,
+        "lvlStep": 2,
+        "timeInterval": 1
       }
     },
     {
@@ -2163,6 +2120,39 @@
       ],
       "spawnAfter": "act4-pct-legends-done",
       "despawnAfter": "act4-pct-lab-final"
+    },
+    {
+      "id": "npc-1793717652627",
+      "x": 10,
+      "y": 23,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Hello!",
+          "he": ""
+        }
+      ],
+      "spriteType": "npc-male"
+    },
+    {
+      "id": "npc-1793717654422",
+      "x": 15,
+      "y": 17,
+      "facing": "left",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "112211 1122211 2211",
+          "he": "1122 2212 112211"
+        }
+      ],
+      "spriteType": "npc-male",
+      "pokemonId": 38,
+      "level": 45,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "interactRange": 5
     }
   ],
   "music": "town",
@@ -2175,7 +2165,7 @@
     "he": "דרך 12"
   },
   "outside": {
-    "rain": 0.25
+    "sun": 1
   }
 ,
   "tiles": [
@@ -2187,7 +2177,7 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","xtest","gre-c","xtest","gre-c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","gre-c","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","gre-c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mt2tl2"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","mt2c","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mt2tl2"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest"],
@@ -2200,7 +2190,7 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","mt2c","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","g1","mt2c","mt2c","mt2c","mt2c","g1","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","g1","mt2c","mt2c","mt2c","mt2c","g1","g1","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mt2c","g1","g1","g1"],
@@ -7233,11 +7223,6 @@
     },
     {
       "key": "mt2l",
-      "x": 16,
-      "y": 21
-    },
-    {
-      "key": "mt2l",
       "x": 18,
       "y": 23
     },
@@ -7468,17 +7453,7 @@
     },
     {
       "key": "g5",
-      "x": 32,
-      "y": 30
-    },
-    {
-      "key": "g5",
       "x": 29,
-      "y": 31
-    },
-    {
-      "key": "g5",
-      "x": 36,
       "y": 31
     },
     {
@@ -7583,11 +7558,6 @@
     },
     {
       "key": "g3",
-      "x": 38,
-      "y": 20
-    },
-    {
-      "key": "g3",
       "x": 37,
       "y": 20
     },
@@ -7684,11 +7654,6 @@
     {
       "key": "g3",
       "x": 29,
-      "y": 19
-    },
-    {
-      "key": "g3",
-      "x": 30,
       "y": 19
     },
     {
@@ -7744,11 +7709,6 @@
     {
       "key": "g3",
       "x": 41,
-      "y": 19
-    },
-    {
-      "key": "g3",
-      "x": 42,
       "y": 19
     },
     {
@@ -7834,11 +7794,6 @@
     {
       "key": "g3",
       "x": 21,
-      "y": 39
-    },
-    {
-      "key": "g3",
-      "x": 22,
       "y": 39
     },
     {
@@ -9058,11 +9013,6 @@
     },
     {
       "key": "g3",
-      "x": 18,
-      "y": 7
-    },
-    {
-      "key": "g3",
       "x": 16,
       "y": 4
     },
@@ -9445,11 +9395,6 @@
       "key": "s1-4",
       "x": 11,
       "y": 19
-    },
-    {
-      "key": "s1-4",
-      "x": 11,
-      "y": 20
     },
     {
       "key": "s1-4",
@@ -10244,11 +10189,6 @@
     {
       "key": "g3",
       "x": 47,
-      "y": 14
-    },
-    {
-      "key": "g3",
-      "x": 47,
       "y": 15
     },
     {
@@ -10960,11 +10900,6 @@
       "key": "g3",
       "x": 17,
       "y": 3
-    },
-    {
-      "key": "st1s",
-      "x": 18,
-      "y": 8
     },
     {
       "key": "st1ls",
@@ -10975,11 +10910,6 @@
       "key": "t2b",
       "x": 49,
       "y": 4
-    },
-    {
-      "key": "t1",
-      "x": 17,
-      "y": 10
     },
     {
       "key": "t1",
@@ -11612,6 +11542,246 @@
           "he": "אולטרה בול"
         }
       }
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 29
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 24
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 23
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 22
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 35
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 36
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 37
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 41
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 42
+    },
+    {
+      "key": "g3",
+      "x": 10,
+      "y": 43
+    },
+    {
+      "key": "g4",
+      "x": 17,
+      "y": 9
+    },
+    {
+      "key": "g4",
+      "x": 17,
+      "y": 10
+    },
+    {
+      "key": "st1s",
+      "x": 18,
+      "y": 8
+    },
+    {
+      "key": "st1ls",
+      "x": 16,
+      "y": 21
+    },
+    {
+      "key": "gre7",
+      "x": 18,
+      "y": 7
+    },
+    {
+      "key": "gre7",
+      "x": 18,
+      "y": 8
+    },
+    {
+      "key": "g4",
+      "x": 18,
+      "y": 7
+    },
+    {
+      "key": "g3",
+      "x": 47,
+      "y": 14
+    },
+    {
+      "key": "g4",
+      "x": 30,
+      "y": 19
+    },
+    {
+      "key": "g4",
+      "x": 38,
+      "y": 20
+    },
+    {
+      "key": "g4",
+      "x": 42,
+      "y": 19
+    },
+    {
+      "key": "g3",
+      "x": 22,
+      "y": 39
+    },
+    {
+      "key": "g3",
+      "x": 31,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 32,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 29,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 28,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 26,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 27,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 33,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 35,
+      "y": 40
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 40
+    },
+    {
+      "key": "g5",
+      "x": 30,
+      "y": 40
+    },
+    {
+      "key": "s1-4",
+      "x": 11,
+      "y": 20
+    },
+    {
+      "key": "item-ultra ball",
+      "x": 17,
+      "y": 42
+    },
+    {
+      "key": "item-revive",
+      "x": 17,
+      "y": 41
+    },
+    {
+      "key": "item-revive",
+      "x": 19,
+      "y": 18
+    },
+    {
+      "key": "item-revive",
+      "x": 37,
+      "y": 5
+    },
+    {
+      "key": "item-revive",
+      "x": 40,
+      "y": 2
+    },
+    {
+      "key": "g3",
+      "x": 22,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 21,
+      "y": 30
+    },
+    {
+      "key": "g3",
+      "x": 21,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 22,
+      "y": 31
+    },
+    {
+      "key": "g3",
+      "x": 22,
+      "y": 32
+    },
+    {
+      "key": "g3",
+      "x": 21,
+      "y": 33
+    },
+    {
+      "key": "g3",
+      "x": 22,
+      "y": 33
     }
   ],
   "objectLayer": [
