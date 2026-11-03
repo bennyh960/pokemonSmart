@@ -64,6 +64,8 @@ export interface CutsceneContext {
   getFlag(flag: string): boolean;
   /** Immediately end the cutscene and switch to a different scene (e.g. STARTER_SELECT). */
   startScene(sceneId: string): void;
+  /** A visible, unbeaten trainer NPC spots the player: "!" → walks over → pre-battle dialogue → battle. */
+  startTrainerBattle(trainerId: string): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -696,11 +698,10 @@ function executeStep(step: CutsceneStep, ctx: CutsceneContext): void {
     }
 
     case 'start-battle': {
-      // Not yet implemented — wire up battle scene launch from cutscene
-      throw new Error(
-        `[cutscene] step 'start-battle' (trainerId: "${(step as { trainerId: string }).trainerId}") is not implemented yet. ` +
-          `Remove this step from the cutscene, or implement battle-from-cutscene handoff.`,
-      );
+      // Ends the cutscene — the trainer then engages the player like a line-of-sight spot
+      deactivateCutscene();
+      ctx.startTrainerBattle(step.trainerId);
+      break;
     }
 
     case 'run': {

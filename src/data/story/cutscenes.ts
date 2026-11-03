@@ -81,6 +81,7 @@ export type CutsceneStep =
   | { type: 'stop-music' }
   | { type: 'action'; action: StoryAction }
   | { type: 'if-flag'; flag: string; thenSteps: CutsceneStep[]; elseSteps?: CutsceneStep[] }
+  /** Ends the cutscene: the trainer NPC (must be visible + unbeaten) shows "!", walks to the player and battles. */
   | { type: 'start-battle'; trainerId: string }
   | { type: 'start-gate'; gateId: string }
   | { type: 'start-scene'; sceneId: string }

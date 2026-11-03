@@ -251,9 +251,9 @@
     },
     {
       "id": "npc-pct-reminder",
-      "x": 39,
-      "y": 2,
-      "facing": "left",
+      "x": 38,
+      "y": 1,
+      "facing": "down",
       "type": "trainer",
       "spriteType": "rival-reminder",
       "name": {
@@ -263,17 +263,17 @@
       "dialogue": [
         {
           "en": "Hey! The gym is closed and the leader went up to the hills!",
-          "he": "היי! המכון סגור והמנהיג עלה לגבעות!"
+          "he": "תודה שעזרת לי! עכשיו אני מוכן לקרב שלנו! נראה מי ישיג את תג הלהבה ראשון!"
         },
         {
           "en": "Before we go — let's see who's ready for the heat!",
-          "he": "לפני שנלך — בוא נראה מי מוכן לחום!"
+          "he": ""
         }
       ],
       "postBattleDialogue": [
         {
           "en": "You're hot today! See you on Route 12!",
-          "he": "אתה לוהט היום! נתראה בדרך 12!"
+          "he": "אתה לוהט היום! בהצלחה בקרב המכון"
         }
       ],
       "party": [
@@ -319,8 +319,23 @@
       },
       "despawnOnDefeat": true,
       "excludeFromMapClear": true,
-      "spawnAfter": "act4-pct-lab-done",
-      "despawnAfter": "act4-pct-arc-complete"
+      "spawnAfter": "act4-pct-gym-open",
+      "autoWalk": {
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
+          {
+            "dir": "left",
+            "steps": 6,
+            "delay": 0
+          },
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 0.5
+          }
+        ]
+      }
     },
     {
       "id": "npc-pct-gym-closed",
@@ -387,8 +402,8 @@
         }
       ],
       "light": {
-        "x": 48,
-        "y": 18
+        "x": 47,
+        "y": 19
       }
     },
     {
@@ -861,7 +876,7 @@
 ,
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2tl2"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1b","wt1br","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1b","wt1br","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","door-gym","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1b","wt1br","s1-5","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1","wt1br","s1-5","s1-5","cs1r2c2","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","fl81","mt2c","fl81","fl81","fl81","mt2c","fl81","fl81","fl81","fl81","fl81","mt2tl2","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1tr","s1-5","s1-5","cs1r2c2","cs1r2c2","xtest","xtest","s1-5","s1-5","s1-5","s1-5","s1-5","s1-5","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","mt2c","fl81","fl81","fl81","fl81","fl81","mt2c","mt2c","mt2c","mt2c","mt2c","xtest","mt2c","mt2c"],

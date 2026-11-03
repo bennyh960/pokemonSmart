@@ -69,8 +69,8 @@
     },
     {
       "id": "npc-pct-guard-1",
-      "x": 34,
-      "y": 57,
+      "x": 33,
+      "y": 56,
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -80,8 +80,8 @@
       },
       "dialogue": [
         {
-          "en": "Heat Collector #1 — charge at 64% and rising!",
-          "he": "אוסף חום מספר 1 — טעינה 64% ועולה!"
+          "en": "You will not touch my machine!",
+          "he": "לא תפגע במכונה!"
         },
         {
           "en": "Nobody touches the machine. Not even 1% of a chance, kid!",
@@ -117,31 +117,29 @@
       },
       "isGlitched": true,
       "autoWalk": {
-        "pattern": [
+        "pattern": [],
+        "loop": false,
+        "beforeDespawnPattern": [
           {
             "dir": "right",
-            "steps": 3,
-            "delay": 1.5
+            "steps": 9,
+            "delay": 0
           },
           {
-            "dir": "left",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "left",
-            "steps": 3,
-            "delay": 1.5
-          },
-          {
-            "dir": "right",
-            "steps": 3,
-            "delay": 1.5
+            "dir": "up",
+            "steps": 6,
+            "delay": 0.5
           }
         ],
-        "loop": true
+        "afterSpawnPattern": [
+          {
+            "dir": "down",
+            "steps": 1,
+            "delay": 0
+          }
+        ]
       },
-      "spawnAfter": "act4-pct-arc-started",
+      "spawnAfter": "trainer-wild-r12-glitch-arcanine-defeated",
       "despawnAfter": "act4-pct-legends-done"
     },
     {
@@ -164,7 +162,11 @@
       "postBattleDialogue": [
         {
           "en": "No! The collector is cooling down... the chance is coming back!",
-          "he": "לא! האוסף מתקרר... הסיכוי חוזר!"
+          "he": "לא! האוסף חום מתקרר... הסיכוי חוזר!"
+        },
+        {
+          "en": "",
+          "he": "אבל הסיכוי שלך עדיין נמוך מאוד - לעולם לא תמצא את המעבר הסודי לגבעה השנייה"
         }
       ],
       "party": [
@@ -441,7 +443,11 @@
         },
         {
           "en": "Three Heat Collectors power it. While they run, nobody passes.",
-          "he": "שלושה אוספי חום מפעילים אותו. כל עוד הם פועלים, אף אחד לא עובר."
+          "he": "שלושה קולטני חום מפעילים אותו. כל עוד הם פועלים, אף אחד לא עובר."
+        },
+        {
+          "en": "Our plan is perfect! Soon this whole area will be on fire!",
+          "he": "התוכנית שלנו מושלמת! תכף נוכל להבעיר פה את כל האזור!"
         }
       ],
       "blocker": true,
@@ -517,7 +523,7 @@
       "id": "npc-pct-reminder-r12",
       "x": 43,
       "y": 38,
-      "facing": "down",
+      "facing": "left",
       "type": "dialogue",
       "spriteType": "rival-reminder",
       "name": {
@@ -527,11 +533,11 @@
       "dialogue": [
         {
           "en": "That admin has a heat shield — I can't get past him!",
-          "he": "לאדמין הזה יש מגן חום — אני לא מצליח לעבור אותו!"
+          "he": "האאא עזור לי! ניסיתי להילחם במפקד של הצוות רוקט אבל הוא חסם אותי במעגל תרמי"
         },
         {
           "en": "Three Rocket grunts are guarding Heat Collectors on this route. Beat them and the shield goes down!",
-          "he": "שלושה סוכני רוקט שומרים על אוספי חום בדרך הזאת. תנצח אותם והמגן ייפול!"
+          "he": "3 סוכני צוות רוקט מחזיקים בקולטני החום! הם ברחו לעבר הגבעה השנייה אבל הדרך לשם חסומה"
         }
       ],
       "postFlagDialogue": {
@@ -546,7 +552,7 @@
       "blocker": true,
       "lineOfSight": 2,
       "spawnAfter": "act4-pct-lab-done",
-      "despawnAfter": "act4-pct-admin-defeated"
+      "despawnAfter": "trainer-npc-pct-admin-defeated"
     },
     {
       "id": "npc-pct-max",
@@ -574,7 +580,7 @@
           }
         ]
       },
-      "spawnAfter": "act4-pct-admin-defeated",
+      "spawnAfter": "trainer-npc-pct-admin-defeated",
       "despawnAfter": "act4-pct-legends-done"
     },
     {
@@ -624,7 +630,7 @@
         ],
         "loop": true
       },
-      "spawnAfter": "act4-pct-admin-defeated"
+      "spawnAfter": "trainer-npc-pct-admin-defeated"
     },
     {
       "id": "npc-pct-moltres-fight",
@@ -669,7 +675,7 @@
         "loop": true,
         "floating": true
       },
-      "spawnAfter": "act4-pct-admin-defeated",
+      "spawnAfter": "trainer-npc-pct-admin-defeated",
       "despawnAfter": "act4-pct-entei-done"
     },
     {
@@ -724,8 +730,8 @@
     },
     {
       "id": "npc-r12-hidden-grunt-1",
-      "x": 33,
-      "y": 63,
+      "x": 26,
+      "y": 53,
       "facing": "left",
       "type": "trainer",
       "spriteType": "char_7db1c5",
@@ -776,13 +782,13 @@
         "loop": false,
         "beforeDespawnPattern": [
           {
-            "dir": "up",
-            "steps": 5,
+            "dir": "right",
+            "steps": 8,
             "delay": 0.2
           },
           {
-            "dir": "right",
-            "steps": 8,
+            "dir": "down",
+            "steps": 1,
             "delay": 0.2
           }
         ]
@@ -1167,15 +1173,15 @@
       "dialogue": [
         {
           "en": "I'm Officer Jenny. Thanks to you the fire got weaker, so we came up here.",
-          "he": "אני השוטרת ג'ני. בזכותך האש נחלשה, אז עלינו לכאן."
+          "he": "צוות רוקט נמצא כן באזור."
         },
         {
           "en": "Team Rocket is everywhere on these hills! Grunts hide in the tall grass and jump out at you.",
-          "he": "צוות רוקט נמצא בכל הגבעות! סוכנים מתחבאים בדשא הגבוה וקופצים עליך."
+          "he": "עלינו לחפש אותם בכל מקום ולנטרלם!"
         },
         {
           "en": "Three of them guard Heat Collectors. Beat those three, and their admin loses his shield.",
-          "he": "שלושה מהם שומרים על אוספי חום. תנצח את השלושה, והאדמין שלהם יאבד את המגן."
+          "he": "שלושה מהם שומרים על אוספי חום. מכשירים שאוספים חום מפוקימוני אש - עדיין לא ברור לנו מה התוכניות שלהם. היזהר!"
         },
         {
           "en": "Take these. Fire Pokémon here burn hard!",
@@ -1198,30 +1204,6 @@
       }
     },
     {
-      "id": "npc-r12-officer-1",
-      "x": 32,
-      "y": 64,
-      "facing": "down",
-      "type": "dialogue",
-      "spriteType": "gate-officer",
-      "name": {
-        "en": "Police Officer",
-        "he": "שוטר"
-      },
-      "dialogue": [
-        {
-          "en": "Careful! A grunt was hiding in that grass a minute ago.",
-          "he": "זהירות! סוכן הסתתר בדשא הזה לפני דקה."
-        },
-        {
-          "en": "This path goes up to the east hills. One of the Heat Collectors is up there.",
-          "he": "השביל הזה עולה לגבעות המזרחיות. אחד מאוספי החום נמצא שם למעלה."
-        }
-      ],
-      "spawnAfter": "act4-pct-suicune-done",
-      "despawnAfter": "act4-pct-legends-done"
-    },
-    {
       "id": "npc-r12-officer-2",
       "x": 12,
       "y": 47,
@@ -1235,11 +1217,15 @@
       "dialogue": [
         {
           "en": "We counted more than ten grunts on Route 12. Ten!",
-          "he": "ספרנו יותר מעשרה סוכנים בדרך 12. עשרה!"
+          "he": "הדרך מלאה בסוכני צוות רוקט - 3 מהם נראו שאוחזים במכשירים ששולטים בפויקמוני החום בסביבה! צריך לנטרל אותם"
         },
         {
           "en": "And the wild Pokémon are glitched. Fire ones, mostly. Watch out!",
-          "he": "והפוקימונים הפראיים נגועים בגליץ'. בעיקר של אש. תיזהר!"
+          "he": "רק שאינני מוצא דרך איך להגיע לגבעה הדרומית."
+        },
+        {
+          "en": "",
+          "he": "סגן ניצב בריבוע אמר שיש מעבר סודי פה באזור"
         }
       ],
       "spawnAfter": "act4-pct-suicune-done",
@@ -1278,37 +1264,13 @@
         },
         {
           "en": "If the grass moves, get your Pokémon ready!",
-          "he": ""
+          "he": "יש פה הרבה קצינים שעוזרים בחקירה! כדאי שתדבר עם סגן ניצב בריבוע! הוא נמצא בגבעה שלידי כבר דיי הרבה זמן"
         }
       ],
       "spawnAfter": "act4-pct-suicune-done",
       "despawnAfter": "act4-pct-legends-done",
       "blocker": true,
       "interactRange": 3
-    },
-    {
-      "id": "npc-r12-officer-4",
-      "x": 40,
-      "y": 52,
-      "facing": "up",
-      "type": "dialogue",
-      "spriteType": "char_330791",
-      "name": {
-        "en": "Deputy Segen",
-        "he": "סגן ניצב"
-      },
-      "dialogue": [
-        {
-          "en": "Up this path, across the bridge, sits Admin Kelvin.",
-          "he": "במעלה השביל הזה, מעבר לגשר, יושב האדמין קלווין."
-        },
-        {
-          "en": "His heat shield stops my whole team. Only you can turn it off!",
-          "he": "מגן החום שלו עוצר את כל הצוות שלי. רק אתה יכול לכבות אותו!"
-        }
-      ],
-      "spawnAfter": "act4-pct-suicune-done",
-      "despawnAfter": "act4-pct-legends-done"
     },
     {
       "id": "wild-r12-glitch-magmar",
@@ -1398,15 +1360,15 @@
       "interactRange": 6
     },
     {
-      "id": "wild-r12-glitch-ninetales",
-      "x": 38,
-      "y": 55,
+      "id": "wild-r12-glitch-467",
+      "x": 35,
+      "y": 54,
       "facing": "down",
       "type": "wild-pokemon",
       "spriteType": "",
       "name": {
-        "en": "Ninetales",
-        "he": "ניינטיילס"
+        "en": "11100 0 1101",
+        "he": "00100011"
       },
       "dialogue": [
         {
@@ -1414,48 +1376,27 @@
           "he": "*בזזט* ...גררר!"
         }
       ],
-      "pokemonId": 38,
+      "pokemonId": 467,
       "level": 49,
       "isGlitched": true,
       "despawnOnDefeat": true,
-      "spawnAfter": "act4-pct-arc-started",
+      "spawnAfter": "trainer-wild-r12-glitch-157-defeated",
       "despawnAfter": "act4-pct-legends-done",
       "autoWalk": {
-        "pattern": [
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 2
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 2
-          },
-          {
-            "dir": "left",
-            "steps": 2,
-            "delay": 2
-          },
-          {
-            "dir": "right",
-            "steps": 2,
-            "delay": 2
-          }
-        ],
-        "loop": true
+        "pattern": [],
+        "loop": false
       }
     },
     {
-      "id": "wild-r12-glitch-magcargo",
-      "x": 26,
-      "y": 53,
+      "id": "wild-r12-glitch-157",
+      "x": 31,
+      "y": 54,
       "facing": "down",
       "type": "wild-pokemon",
       "spriteType": "",
       "name": {
-        "en": "Magcargo",
-        "he": "מגקרגו"
+        "en": "000100011",
+        "he": "11100 0011 0001"
       },
       "dialogue": [
         {
@@ -1463,7 +1404,7 @@
           "he": "*בזזט* ...גררר!"
         }
       ],
-      "pokemonId": 219,
+      "pokemonId": 157,
       "level": 47,
       "isGlitched": true,
       "despawnOnDefeat": true,
@@ -1575,15 +1516,15 @@
       "interactRange": 3
     },
     {
-      "id": "wild-r12-glitch-graveler",
-      "x": 44,
-      "y": 57,
+      "id": "wild-r12-glitch-charizard",
+      "x": 35,
+      "y": 56,
       "facing": "down",
       "type": "wild-pokemon",
       "spriteType": "",
       "name": {
-        "en": "Graveler",
-        "he": "גראבלר"
+        "en": "0110 1110 01",
+        "he": "1001 0110 11"
       },
       "dialogue": [
         {
@@ -1591,11 +1532,11 @@
           "he": "*בזזט* ...גררר!"
         }
       ],
-      "pokemonId": 75,
-      "level": 47,
+      "pokemonId": 6,
+      "level": 50,
       "isGlitched": true,
       "despawnOnDefeat": true,
-      "spawnAfter": "act4-pct-arc-started",
+      "spawnAfter": "trainer-wild-r12-glitch-467-defeated",
       "despawnAfter": "act4-pct-legends-done",
       "autoWalk": {
         "pattern": [
@@ -1611,7 +1552,8 @@
           }
         ],
         "loop": true
-      }
+      },
+      "look": "pokemon"
     },
     {
       "id": "npc-r12-hiker-1",
@@ -1711,8 +1653,12 @@
         "en": "Route 12",
         "he": "דרך 12"
       },
-      "spawnAfter": "act4-pct-suicune-done",
-      "despawnAfter": "act4-pct-legends-done"
+      "spawnAfter": "act4-pct-legends-done",
+      "reencounter": {
+        "count": 3,
+        "lvlStep": 2,
+        "timeInterval": 1
+      }
     },
     {
       "id": "npc-r12-ace-1",
@@ -1857,6 +1803,11 @@
           "pokemonId": 185,
           "level": 48,
           "moves": []
+        },
+        {
+          "pokemonId": 467,
+          "level": 50,
+          "moves": []
         }
       ],
       "lineOfSight": 4,
@@ -1866,12 +1817,18 @@
       "location": {
         "en": "Route 12",
         "he": "דרך 12"
+      },
+      "spawnAfter": "act4-pct-legends-done",
+      "reencounter": {
+        "count": 3,
+        "lvlStep": 2,
+        "timeInterval": 1
       }
     },
     {
       "id": "npc-r12-psychic",
-      "x": 36,
-      "y": 53,
+      "x": 34,
+      "y": 60,
       "facing": "down",
       "type": "trainer",
       "spriteType": "char_75200a",
@@ -1915,6 +1872,32 @@
       "location": {
         "en": "Route 12",
         "he": "דרך 12"
+      },
+      "spawnAfter": "act4-pct-legends-done",
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "up",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "left",
+            "steps": 2,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 2,
+            "delay": 3
+          },
+          {
+            "dir": "down",
+            "steps": 2,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
       }
     },
     {
@@ -2122,20 +2105,6 @@
       "despawnAfter": "act4-pct-lab-final"
     },
     {
-      "id": "npc-1793717652627",
-      "x": 10,
-      "y": 23,
-      "facing": "down",
-      "type": "dialogue",
-      "dialogue": [
-        {
-          "en": "Hello!",
-          "he": ""
-        }
-      ],
-      "spriteType": "npc-male"
-    },
-    {
       "id": "npc-1793717654422",
       "x": 15,
       "y": 17,
@@ -2152,13 +2121,104 @@
       "level": 45,
       "isGlitched": true,
       "despawnOnDefeat": true,
-      "interactRange": 5
+      "interactRange": 5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "id": "npc-act4-hint-officer-segen-baribua",
+      "x": 33,
+      "y": 7,
+      "facing": "down",
+      "type": "dialogue",
+      "dialogue": [
+        {
+          "en": "Are you helping with our investigation?",
+          "he": "אתה עוזר לנו בחקירה?"
+        },
+        {
+          "en": "Team Rocket is not here by chance! Their heat machines suck heat energy out of the fire Pokémon around here.",
+          "he": "צוות רוקט פרוס פה לא סתם! יש להם מכשירים תרמודינמים. בעזרתם הם שואבים אנרגיית חום מפוקימוני האש שבאזור."
+        },
+        {
+          "en": "Help us beat them!",
+          "he": "עזור לנו להביס אותם!"
+        },
+        {
+          "en": "Look: the river between the hills hides a secret way to the south hill — check there too. This hill is clear already, I beat them all.",
+          "he": "שים לב שבנהר שבין הגבעות יש מעבר סודי לגבעה הדרומית - נסה לבדוק גם שם. הגבעה הזו כבר ריקה - חיסלתי את כולם"
+        }
+      ],
+      "spriteType": "char_330791",
+      "despawnAfter": "act4-pct-legends-done",
+      "name": {
+        "en": "Lt. Squared",
+        "he": "סגן בריבוע"
+      },
+      "autoWalk": {
+        "pattern": [
+          {
+            "dir": "left",
+            "steps": 6,
+            "delay": 2
+          },
+          {
+            "dir": "up",
+            "steps": 3,
+            "delay": 1
+          },
+          {
+            "dir": "right",
+            "steps": 6,
+            "delay": 2
+          },
+          {
+            "dir": "down",
+            "steps": 3,
+            "delay": 0.5
+          }
+        ],
+        "loop": true
+      },
+      "spawnAfter": "act4-pct-arc-started"
+    },
+    {
+      "id": "wild-r12-glitch-arcanine",
+      "x": 31,
+      "y": 56,
+      "facing": "down",
+      "type": "wild-pokemon",
+      "dialogue": [
+        {
+          "en": "*bzzt* ...Grrr!",
+          "he": "*בזזט* ...גררר!"
+        }
+      ],
+      "spriteType": "npc-male",
+      "pokemonId": 59,
+      "level": 48,
+      "isGlitched": true,
+      "despawnOnDefeat": true,
+      "name": {
+        "en": "1011 0010 111",
+        "he": "0100 1101 000"
+      },
+      "spawnAfter": "trainer-wild-r12-glitch-charizard-defeated",
+      "despawnAfter": "act4-pct-legends-done"
     }
   ],
   "music": "town",
   "encounterTableId": "route-12",
   "movablePuzzle": {},
-  "flagListeners": [],
+  "flagListeners": [
+    {
+      "key": "lab-equip",
+      "x": 32,
+      "y": 53,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    }
+  ],
   "interactiveItems": {},
   "label": {
     "en": "Route 12",
@@ -2166,7 +2226,232 @@
   },
   "outside": {
     "sun": 1
-  }
+  },
+  "ambientFx": [
+    {
+      "kind": "shield",
+      "x": 42,
+      "y": 38,
+      "radius": 1.4,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-machines-off"
+    },
+    {
+      "kind": "help",
+      "x": 43,
+      "y": 38,
+      "spawnAfter": "act4-pct-lab-done",
+      "despawnAfter": "act4-pct-machines-off"
+    },
+    {
+      "kind": "smoke",
+      "x": 33,
+      "y": 54,
+      "radius": 1.8,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "fire",
+      "x": 34,
+      "y": 53,
+      "radius": 0.6,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "smoke",
+      "x": 30,
+      "y": 52,
+      "radius": 1,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "smoke",
+      "x": 36,
+      "y": 52,
+      "radius": 1,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "smoke",
+      "x": 29,
+      "y": 55,
+      "radius": 1,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "smoke",
+      "x": 37,
+      "y": 55,
+      "radius": 1,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "smoke",
+      "x": 31,
+      "y": 58,
+      "radius": 1,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "smoke",
+      "x": 35,
+      "y": 58,
+      "radius": 1,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-collector-1-destroyed"
+    },
+    {
+      "kind": "fire",
+      "x": 20,
+      "y": 12,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 21,
+      "y": 10,
+      "radius": 2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 44,
+      "y": 13,
+      "radius": 1.2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 28,
+      "y": 14,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 23,
+      "y": 19,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 38,
+      "y": 19,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 30,
+      "y": 18,
+      "radius": 2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 46,
+      "y": 19,
+      "radius": 2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 31,
+      "y": 26,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 46,
+      "y": 32,
+      "radius": 1.2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 41,
+      "y": 26,
+      "radius": 2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 29,
+      "y": 34,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 33,
+      "y": 37,
+      "radius": 1.2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 27,
+      "y": 40,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 26,
+      "y": 60,
+      "radius": 1.2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 40,
+      "y": 61,
+      "radius": 2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "fire",
+      "x": 41,
+      "y": 53,
+      "radius": 1.2,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    },
+    {
+      "kind": "smoke",
+      "x": 30,
+      "y": 63,
+      "radius": 1.5,
+      "spawnAfter": "act4-pct-arc-started",
+      "despawnAfter": "act4-pct-legends-done"
+    }
+  ]
 ,
   "tiles": [
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","xtest","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","gre-c","xtest","gre-c"],
@@ -2215,8 +2500,8 @@
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","xtest","xtest","xtest","s1-5","s1-5","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","xtest","mt2c","mt2c","mt2c","xtest","xtest","xtest","xtest","xtest","xtest","mt2c","mt2c","g1","g1","g1","g1","g1","g1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t","wt1t"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","mt2c","mt2c","wt1","wt1","wt1","wt1","wt1","wt1"],
-    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","xtest","xtest","s1-5","mt2c","mt2c","mt2c","mt2c","mg1c","mg1c","mg1c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mg1c","mg1c","g1","g1","mt2c","mt2c","g1","g1","g1","mt2c","mt2c","g1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1b","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","mt2c","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","mt2c","mt2c","wt1","wt1","wt1","wt1","wt1","wt1"],
+    ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","xtest","xtest","s1-5","mt2c","mt2c","mt2c","mt2c","mg1c","mg1c","mg1c","g1","mt2c","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","g1","mg1c","mg1c","g1","g1","mt2c","mt2c","g1","g1","g1","mt2c","mt2c","g1"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","xtest","xtest","s1-5","mt2c","g1","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g1","g1","mt2c","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","s1-5","cs1","s1-5","s1-5","s1-5","xtest","xtest","s1-5","mt2c","g1","mt2c","mt2c","mg1c","g1","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","g1","mg1c","mt2c","mt2c","mt2c"],
     ["wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1","wt1tr","s1-5","cs1","cs1","s1-5","s1-5","xtest","xtest","s1-5","mt2c","g1","mt2c","mt2c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mg1c","mt2c","mt2c","mt2c"],
@@ -4883,11 +5168,6 @@
     },
     {
       "key": "mt2t",
-      "x": 25,
-      "y": 46
-    },
-    {
-      "key": "mt2t",
       "x": 26,
       "y": 46
     },
@@ -5019,11 +5299,6 @@
     {
       "key": "mt2t",
       "x": 24,
-      "y": 47
-    },
-    {
-      "key": "mt2t",
-      "x": 25,
       "y": 47
     },
     {
@@ -5163,11 +5438,6 @@
     },
     {
       "key": "mg1t",
-      "x": 25,
-      "y": 50
-    },
-    {
-      "key": "mg1t",
       "x": 26,
       "y": 50
     },
@@ -5203,11 +5473,6 @@
     },
     {
       "key": "mg1t",
-      "x": 25,
-      "y": 49
-    },
-    {
-      "key": "mg1t",
       "x": 26,
       "y": 49
     },
@@ -5229,11 +5494,6 @@
     {
       "key": "mg1t",
       "x": 24,
-      "y": 48
-    },
-    {
-      "key": "mg1t",
-      "x": 25,
       "y": 48
     },
     {
@@ -6804,11 +7064,6 @@
     {
       "key": "g3",
       "x": 34,
-      "y": 60
-    },
-    {
-      "key": "g3",
-      "x": 34,
       "y": 61
     },
     {
@@ -6830,11 +7085,6 @@
       "key": "g3",
       "x": 33,
       "y": 64
-    },
-    {
-      "key": "g3",
-      "x": 33,
-      "y": 63
     },
     {
       "key": "g3",
@@ -6893,11 +7143,6 @@
     },
     {
       "key": "g5",
-      "x": 38,
-      "y": 55
-    },
-    {
-      "key": "g5",
       "x": 43,
       "y": 56
     },
@@ -6923,8 +7168,8 @@
     },
     {
       "key": "t8",
-      "x": 30,
-      "y": 54
+      "x": 29,
+      "y": 56
     },
     {
       "key": "t8",
@@ -9048,11 +9293,6 @@
     },
     {
       "key": "g3",
-      "x": 27,
-      "y": 7
-    },
-    {
-      "key": "g3",
       "x": 28,
       "y": 7
     },
@@ -9074,11 +9314,6 @@
     {
       "key": "g3",
       "x": 32,
-      "y": 7
-    },
-    {
-      "key": "g3",
-      "x": 33,
       "y": 7
     },
     {
@@ -11782,6 +12017,151 @@
       "key": "g3",
       "x": 22,
       "y": 33
+    },
+    {
+      "key": "str1sb",
+      "x": 25,
+      "y": 46
+    },
+    {
+      "key": "str1sb",
+      "x": 25,
+      "y": 47
+    },
+    {
+      "key": "str1sb",
+      "x": 25,
+      "y": 48
+    },
+    {
+      "key": "str1sb",
+      "x": 25,
+      "y": 49
+    },
+    {
+      "key": "str1sb",
+      "x": 25,
+      "y": 50
+    },
+    {
+      "key": "g4",
+      "x": 24,
+      "y": 46
+    },
+    {
+      "key": "g4",
+      "x": 26,
+      "y": 46
+    },
+    {
+      "key": "g4",
+      "x": 19,
+      "y": 50
+    },
+    {
+      "key": "g4",
+      "x": 35,
+      "y": 46
+    },
+    {
+      "key": "g4",
+      "x": 17,
+      "y": 46
+    },
+    {
+      "key": "g3",
+      "x": 25,
+      "y": 46
+    },
+    {
+      "key": "g3",
+      "x": 34,
+      "y": 46
+    },
+    {
+      "key": "g3",
+      "x": 36,
+      "y": 46
+    },
+    {
+      "key": "g3",
+      "x": 24,
+      "y": 47
+    },
+    {
+      "key": "g3",
+      "x": 26,
+      "y": 47
+    },
+    {
+      "key": "g4",
+      "x": 25,
+      "y": 47
+    },
+    {
+      "key": "g5",
+      "x": 24,
+      "y": 48
+    },
+    {
+      "key": "g5",
+      "x": 25,
+      "y": 48
+    },
+    {
+      "key": "g5",
+      "x": 26,
+      "y": 48
+    },
+    {
+      "key": "g5",
+      "x": 27,
+      "y": 46
+    },
+    {
+      "key": "g5",
+      "x": 23,
+      "y": 46
+    },
+    {
+      "key": "g4",
+      "x": 23,
+      "y": 48
+    },
+    {
+      "key": "g4",
+      "x": 27,
+      "y": 48
+    },
+    {
+      "key": "g4",
+      "x": 27,
+      "y": 47
+    },
+    {
+      "key": "g4",
+      "x": 23,
+      "y": 47
+    },
+    {
+      "key": "flowerX",
+      "x": 33,
+      "y": 7
+    },
+    {
+      "key": "flowerX",
+      "x": 27,
+      "y": 7
+    },
+    {
+      "key": "g4",
+      "x": 34,
+      "y": 60
+    },
+    {
+      "key": "g4",
+      "x": 33,
+      "y": 63
     }
   ],
   "objectLayer": [

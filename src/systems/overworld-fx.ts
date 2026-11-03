@@ -2,11 +2,13 @@
  * Overworld particle effects — fire, smoke, hit bursts and an Unown storm drawn on the map.
  * Used by the `fx` cutscene step (e.g. a scripted fight between two NPCs, the Unown ambush).
  * Particles are plain pixel squares in world coordinates, so they scroll with the camera.
+ * Map `ambientFx` also uses them for always-on effects: `shield` (a heat dome around an NPC) and
+ * `help` (a bobbing "!" bubble over someone who needs the player).
  */
 
 import { TILE_SIZE } from '../engine/config.js';
 
-export type OverworldFxKind = 'fire' | 'smoke' | 'burst' | 'rain' | 'unown';
+export type OverworldFxKind = 'fire' | 'smoke' | 'burst' | 'rain' | 'unown' | 'shield' | 'help';
 
 interface Particle {
   x: number;
@@ -37,13 +39,25 @@ export interface OverworldFx {
 }
 
 /** Particles spawned per second, per tile of radius. */
-const SPAWN_RATE: Record<OverworldFxKind, number> = { fire: 70, smoke: 18, burst: 0, rain: 40, unown: 5 };
+const SPAWN_RATE: Record<OverworldFxKind, number> = {
+  fire: 70,
+  smoke: 18,
+  burst: 0,
+  rain: 40,
+  unown: 5,
+  shield: 22,
+  help: 0,
+};
 const BURST_COUNT = 28;
 
 const FIRE_COLORS = ['#fff3a0', '#ffd23f', '#ff9f1c', '#f25c05', '#c22a00'];
 const SMOKE_COLORS = ['#8a8a8a', '#6e6e6e', '#555555'];
 const BURST_COLORS = ['#ffffff', '#fff3a0', '#ffb347', '#ff7b00'];
 const RAIN_COLOR = '#9ec9ff';
+/** Shield dome: ring color, how fast it pulses (radians/s) and how high embers climb while orbiting (px/s). */
+const SHIELD_RING = '#ff9f1c';
+const SHIELD_PULSE = 3;
+const SHIELD_RISE = 10;
 const UNOWN_GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?!';
 /** Glitch stripes across the storm: how many, and how far they reach each side of the center (world pixels). */
 const UNOWN_STRIPES = 5;
@@ -68,6 +82,11 @@ function spawnParticle(fx: OverworldFx): Particle {
     const spin = (Math.random() < 0.5 ? -1 : 1) * rand(2.5, 4.5);
     const glyph = UNOWN_GLYPHS[Math.floor(Math.random() * UNOWN_GLYPHS.length)];
     return { x, y, vx: 0, vy: 0, life: maxLife, maxLife, size: rand(6, 9), glyph, angle, dist: fx.radius * 1.6, spin };
+  }
+  if (fx.kind === 'shield') {
+    // An ember on the dome's rim that circles the center while it climbs
+    const maxLife = rand(0.8, 1.4);
+    return { x, y, vx: 0, vy: 0, life: maxLife, maxLife, size: rand(2, 3), angle, dist: fx.radius, spin: rand(1.2, 2) };
   }
   if (fx.kind === 'rain') {
     // Drops start anywhere in a square above the area and fall diagonally through it
@@ -150,6 +169,11 @@ export function updateOverworldFx(fx: OverworldFx, dt: number): boolean {
       p.x = fx.cx + Math.cos(p.angle!) * p.dist;
       p.y = fx.cy + Math.sin(p.angle!) * p.dist * 0.7;
     }
+    if (fx.kind === 'shield') {
+      p.angle! += p.spin! * dt;
+      p.x = fx.cx + Math.cos(p.angle!) * p.dist!;
+      p.y = fx.cy + Math.sin(p.angle!) * p.dist! * 0.5 - (p.maxLife - p.life) * SHIELD_RISE;
+    }
   }
   fx.particles = fx.particles.filter((p) => p.life > 0);
   return fx.timer >= fx.durationS && fx.particles.length === 0;
@@ -201,6 +225,36 @@ function drawUnownStorm(ctx: CanvasRenderingContext2D, fx: OverworldFx, camX: nu
   }
 }
 
+/** Heat shield: a pulsing see-through dome over the tile (embers are drawn as fire particles). */
+function drawShieldDome(ctx: CanvasRenderingContext2D, fx: OverworldFx, camX: number, camY: number): void {
+  const pulse = 0.5 + 0.5 * Math.sin(fx.timer * SHIELD_PULSE);
+  const cx = fx.cx - camX;
+  const cy = fx.cy - camY - TILE_SIZE * 0.4; // the sprite stands above its tile
+  ctx.fillStyle = SHIELD_RING;
+  ctx.globalAlpha = 0.1 + 0.08 * pulse;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, fx.radius, fx.radius * 1.15, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = SHIELD_RING;
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.45 + 0.35 * pulse;
+  ctx.stroke();
+}
+
+/** Someone needs help: a white "!" bubble bobbing above the NPC on this tile. */
+function drawHelpBubble(ctx: CanvasRenderingContext2D, fx: OverworldFx, camX: number, camY: number): void {
+  const bob = Math.round(Math.sin(fx.timer * 4) * 1.5);
+  const x = Math.round(fx.cx - camX);
+  const y = Math.round(fx.cy - camY) - TILE_SIZE - 6 + bob;
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x - 4, y - 5, 8, 10);
+  ctx.fillRect(x - 1, y + 5, 2, 2); // the bubble's tail
+  ctx.fillStyle = '#e02020';
+  ctx.fillRect(x - 1, y - 3, 2, 4);
+  ctx.fillRect(x - 1, y + 2, 2, 2);
+}
+
 /** Draw the effect. camX/camY are the camera offset in world pixels. */
 export function drawOverworldFx(ctx: CanvasRenderingContext2D, fx: OverworldFx, camX: number, camY: number): void {
   ctx.save();
@@ -209,10 +263,16 @@ export function drawOverworldFx(ctx: CanvasRenderingContext2D, fx: OverworldFx, 
     ctx.restore();
     return;
   }
+  if (fx.kind === 'help') {
+    drawHelpBubble(ctx, fx, camX, camY);
+    ctx.restore();
+    return;
+  }
+  if (fx.kind === 'shield') drawShieldDome(ctx, fx, camX, camY);
   for (const p of fx.particles) {
     const t = 1 - p.life / p.maxLife; // 0 = just born, 1 = about to die
     let size = p.size;
-    if (fx.kind === 'fire') {
+    if (fx.kind === 'fire' || fx.kind === 'shield') {
       ctx.fillStyle = pickColor(FIRE_COLORS, t);
       ctx.globalAlpha = 1 - t * 0.6;
       size = p.size * (1 - t * 0.6);

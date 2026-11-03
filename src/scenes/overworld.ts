@@ -1558,6 +1558,16 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       startScene(sceneId) {
         stateMachine.change(sceneId as import('../types/index.js').SceneId);
       },
+      startTrainerBattle(trainerId) {
+        if (!npcManager || !hasActiveGame()) return;
+        const pd = getPlayerData();
+        const trainer = npcManager.getTrainers().find((t) => t.id === trainerId);
+        if (!trainer || !isNPCVisible(trainer, pd.flags, pd.party) || pd.flags[`trainer-${trainerId}-defeated`]) {
+          console.warn(`[cutscene] start-battle: trainer "${trainerId}" is not on this map, hidden or already beaten`);
+          return;
+        }
+        startTrainerApproach(trainer);
+      },
     };
   }
 
@@ -1689,9 +1699,9 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   /** A visible, not-yet-beaten wild Pokémon NPC standing on (x, y), if any. */
   function getActiveWildNpcAt(x: number, y: number): WildPokemonData | undefined {
     if (!npcManager || !hasActiveGame()) return undefined;
-    const npc = npcManager.getNPCAt(x, y);
-    if (!npc || npc.type !== 'wild-pokemon') return undefined;
     const pd = getPlayerData();
+    const npc = npcManager.getNPCAt(x, y, pd.flags, pd.party);
+    if (!npc || npc.type !== 'wild-pokemon') return undefined;
     if (!isNPCVisible(npc, pd.flags, pd.party) || pd.flags[`trainer-${npc.id}-defeated`]) return undefined;
     return npc as unknown as WildPokemonData;
   }
@@ -3530,11 +3540,11 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       if (!player.moving && (input.isKeyPressed('Enter') || input.isKeyPressed(' '))) {
         if (npcManager) {
           // Prefer NPC in facing direction; fall back to any adjacent floating NPC
-          const npc =
-            npcManager.getFacingNPC(player.gridX, player.gridY, player.facing) ??
-            npcManager.getNearbyFloatingNPC(player.gridX, player.gridY);
           const _iPd = hasActiveGame() ? getPlayerData() : null;
           const iFlags = _iPd?.flags ?? {};
+          const npc =
+            npcManager.getFacingNPC(player.gridX, player.gridY, player.facing, iFlags, _iPd?.party) ??
+            npcManager.getNearbyFloatingNPC(player.gridX, player.gridY, iFlags, _iPd?.party);
           // Wild Pokémon: start battle immediately on Space — no dialogue needed
           const _wild = npc ? getActiveWildNpcAt(npc.x, npc.y) : undefined;
           if (_wild) {

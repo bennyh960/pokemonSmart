@@ -37,10 +37,13 @@
  *   rocket-base  b1–b4 grunts, npc-base-b2-gen-1..4 (generators), npc-base-jessie, npc-base-james,
  *                wild-base-suicune, npc-base-b4-hatch
  *   route-12     npc-pct-guard-1..3 (Heat Collectors), npc-pct-grunt-4..5, npc-pct-admin-shield,
+ *                Heat Collector #1 (lab-equip 32,53 + smoke): guarded by 4 glitched wild Pokémon that
+ *                appear one after another (157 → 467 → charizard → arcanine, each spawnAfter the last's
+ *                defeat flag), then npc-pct-guard-1 spawns and charges in; beating it blows the machine up
  *                npc-pct-admin, npc-pct-reminder-r12, npc-pct-max, wild-pct-entei,
  *                npc-pct-moltres-fight, wild-pct-moltres, npc-pct-suicune-ally,
  *                npc-r12-hidden-grunt-1..7 (in tall grass, run off when beaten),
- *                npc-r12-jenny + npc-r12-officer-1..4 (Suicune freed → legends done),
+ *                npc-r12-jenny + npc-r12-officer-2..3 (Suicune freed → legends done),
  *                wild-r12-glitch-* (glitched fire Pokémon), npc-r12-hiker-1/2, ace-1, birdkeeper,
  *                psychic, firefighter, and after the legends: npc-r12-lance, jenny-after, misty,
  *                brock, alice, officer-after (leave once Oak scans the cores)
@@ -55,8 +58,8 @@ import type { InfectionLevel } from '../../../../types/index.js';
 
 const CITY = MapId.PERCENTILE_PERCENTILE;
 const R12 = MapId.ROUTES_ROUTE_12;
-/** Route 12 already has many glitched Rocket/wild NPCs, so random encounters stay at the lowest glitch level. */
-const R12_INFECTION: InfectionLevel = 'low';
+/** Glitch level of Route 12's random encounters during the arc (critical saves drop to this on entry). */
+const R12_INFECTION: InfectionLevel = 'high';
 
 /** Everything the arc's glitch touched — drops 2 infection levels when Moltres is beaten. */
 const ARC_AREA: MapId[] = [
@@ -120,7 +123,7 @@ registerQuest({
   title: { en: 'Deeper into the Base', he: 'עמוק יותר בבסיס' },
   objective: {
     en: 'Jessie and James blasted off! Take the stairs down to the steam core',
-    he: 'ג\'סי וג\'יימס עפו! רד במדרגות אל ליבת הקיטור',
+    he: "ג'סי וג'יימס עפו! רד במדרגות אל ליבת הקיטור",
   },
 });
 
@@ -205,11 +208,26 @@ registerCutscene({
       speakerId: 'Prof.Algorithma',
       speakerName: ALGORITHMA,
       lines: [
-        { en: 'You made it to Percentile! Listen — my sensors are going crazy.', he: 'הגעת לפרסנטייל! תקשיב — החיישנים שלי משתגעים.' },
-        { en: 'The heat around the city keeps rising, and something even stranger...', he: 'החום סביב העיר ממשיך לעלות, ויש משהו עוד יותר מוזר...' },
-        { en: "Chance itself is acting wrong. Random things aren't random anymore!", he: 'הסיכוי עצמו מתנהג לא נכון. דברים אקראיים כבר לא אקראיים!' },
-        { en: 'That smells like NULL-X. Ask around — the library, the ball storage, the family house.', he: 'זה מריח כמו נאל-איקס. תשאל בעיר — בספרייה, במחסן הכדורים, בבית המשפחה.' },
-        { en: 'And be careful: every wild Pokémon around here may be glitched.', he: 'ותיזהר: כל פוקימון בר כאן עלול להיות נגוע.' },
+        {
+          en: 'You made it to Percentile! Listen — my sensors are going crazy.',
+          he: 'הגעת לפרסנטייל! תקשיב — החיישנים שלי משתגעים.',
+        },
+        {
+          en: 'The heat around the city keeps rising, and something even stranger...',
+          he: 'החום סביב העיר ממשיך לעלות, ויש משהו עוד יותר מוזר...',
+        },
+        {
+          en: "Chance itself is acting wrong. Random things aren't random anymore!",
+          he: 'הסיכוי עצמו מתנהג לא נכון. דברים אקראיים כבר לא אקראיים!',
+        },
+        {
+          en: 'That smells like NULL-X. Ask around — the library, the ball storage, the family house.',
+          he: 'זה מריח כמו נאל-איקס. תשאל בעיר — בספרייה, במחסן הכדורים, בבית המשפחה.',
+        },
+        {
+          en: 'And be careful: every wild Pokémon around here may be glitched.',
+          he: 'ותיזהר: כל פוקימון בר כאן עלול להיות נגוע.',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-infection', mapId: CITY, value: 'critical' } },
@@ -239,7 +257,10 @@ registerCutscene({
       speakerName: 'Omer / עומר',
       lines: [
         { en: 'Heads. Heads. Heads... HEADS! Ten times in a row!', he: 'עץ. עץ. עץ... עץ! עשר פעמים ברצף!' },
-        { en: "A coin is 50/50. Getting heads 10 times should almost never happen!", he: 'מטבע הוא 50/50. לקבל עץ 10 פעמים כמעט אף פעם לא אמור לקרות!' },
+        {
+          en: 'A coin is 50/50. Getting heads 10 times should almost never happen!',
+          he: 'מטבע הוא 50/50. לקבל עץ 10 פעמים כמעט אף פעם לא אמור לקרות!',
+        },
       ],
     },
     {
@@ -247,8 +268,14 @@ registerCutscene({
       speakerId: 'npc-percentile-librarian',
       speakerName: 'Grand Lea / סבתא לאה',
       lines: [
-        { en: 'He is right. Half × half × half... ten times. That is 1 in 1024 — about 0.1%.', he: 'הוא צודק. חצי × חצי × חצי... עשר פעמים. זה 1 מתוך 1024 — בערך 0.1%.' },
-        { en: 'And my statistics books... every table shows the same number now.', he: 'וספרי הסטטיסטיקה שלי... כל טבלה מראה עכשיו את אותו מספר.' },
+        {
+          en: 'He is right. Half × half × half... ten times. That is 1 in 1024 — about 0.1%.',
+          he: 'הוא צודק. חצי × חצי × חצי... עשר פעמים. זה 1 מתוך 1024 — בערך 0.1%.',
+        },
+        {
+          en: 'And my statistics books... every table shows the same number now.',
+          he: 'וספרי הסטטיסטיקה שלי... כל טבלה מראה עכשיו את אותו מספר.',
+        },
         { en: 'Something is erasing chance from our city.', he: 'משהו מוחק את הסיכוי מהעיר שלנו.' },
       ],
     },
@@ -284,11 +311,26 @@ registerCutscene({
       speakerId: 'npc-percentile-ball-keeper',
       speakerName: 'Storekeeper Mos / מחסנאי מוס',
       lines: [
-        { en: 'Thank you! The storeroom is so hot the balls almost melted.', he: 'תודה! המחסן כל כך חם שהכדורים כמעט נמסו.' },
-        { en: 'Look — that grunt dropped a map. The Route 12 hills, with three marks on it.', he: 'תראה — הסוכן הזה הפיל מפה. הגבעות של דרך 12, עם שלושה סימונים.' },
-        { en: '"Heat Collector 1, 2, 3"... Whatever that is, it\'s up there.', he: '"אוסף חום 1, 2, 3"... מה שזה לא יהיה, זה שם למעלה.' },
-        { en: 'And a fourth mark, far away: "Steam Plant — Route 11 cave". Strange...', he: 'וסימון רביעי, רחוק: "מפעל קיטור — מערת דרך 11". מוזר...' },
-        { en: 'Take some Ultra Balls. You will need them more than the thieves!', he: 'קח כמה כדורי אולטרה. אתה תצטרך אותם יותר מהגנבים!' },
+        {
+          en: 'Thank you! The storeroom is so hot the balls almost melted.',
+          he: 'תודה! המחסן כל כך חם שהכדורים כמעט נמסו.',
+        },
+        {
+          en: 'Look — that grunt dropped a map. The Route 12 hills, with three marks on it.',
+          he: 'תראה — הסוכן הזה הפיל מפה. הגבעות של דרך 12, עם שלושה סימונים.',
+        },
+        {
+          en: '"Heat Collector 1, 2, 3"... Whatever that is, it\'s up there.',
+          he: '"אוסף חום 1, 2, 3"... מה שזה לא יהיה, זה שם למעלה.',
+        },
+        {
+          en: 'And a fourth mark, far away: "Steam Plant — Route 11 cave". Strange...',
+          he: 'וסימון רביעי, רחוק: "מפעל קיטור — מערת דרך 11". מוזר...',
+        },
+        {
+          en: 'Take some Ultra Balls. You will need them more than the thieves!',
+          he: 'קח כמה כדורי אולטרה. אתה תצטרך אותם יותר מהגנבים!',
+        },
       ],
     },
     { type: 'action', action: { type: 'give-item', itemId: 'ultra-ball', quantity: 3 } },
@@ -328,8 +370,14 @@ registerCutscene({
       speakerId: 'npc-percentile-mom',
       speakerName: 'Erika / אריקה',
       lines: [
-        { en: "Oh — and one more thing. Jimmy's Growlithe ran away this morning.", he: "אה — ועוד דבר. הגרוליית' של ג'ימי ברח הבוקר." },
-        { en: 'It smelled the heat and ran north, toward the hills on Route 12.', he: 'הוא הריח את החום ורץ צפונה, לכיוון הגבעות של דרך 12.' },
+        {
+          en: "Oh — and one more thing. Jimmy's Growlithe ran away this morning.",
+          he: "אה — ועוד דבר. הגרוליית' של ג'ימי ברח הבוקר.",
+        },
+        {
+          en: 'It smelled the heat and ran north, toward the hills on Route 12.',
+          he: 'הוא הריח את החום ורץ צפונה, לכיוון הגבעות של דרך 12.',
+        },
       ],
     },
     {
@@ -366,7 +414,10 @@ for (const clue of CLUE_FLAGS) {
       {
         type: 'show-message',
         lines: [
-          { en: 'Broken chance... rising heat... the hills of Route 12. Time to visit the lab!', he: 'סיכוי שבור... חום עולה... הגבעות של דרך 12. הגיע הזמן לבקר במעבדה!' },
+          {
+            en: 'Broken chance... rising heat... the hills of Route 12. Time to visit the lab!',
+            he: 'סיכוי שבור... חום עולה... הגבעות של דרך 12. הגיע הזמן לבקר במעבדה!',
+          },
         ],
       },
       { type: 'complete-quest', questId: 'main-act4-pct-clues' },
@@ -396,10 +447,22 @@ registerCutscene({
       speakerId: 'npc-percentile-lab-researcher',
       speakerName: 'Researcher Noa / החוקרת נועה',
       lines: [
-        { en: 'A coin, a map and a runaway Growlithe? It all fits my readings!', he: 'מטבע, מפה וגרוליית\' שברח? הכל מתאים למדידות שלי!' },
-        { en: 'The heat grows by 10% every hour — 10% of what it already is.', he: 'החום גדל ב-10% כל שעה — 10% ממה שכבר יש.' },
-        { en: '100 → 110 → 121 → 133 → 146 → 161 → 177 → 195...', he: '100 → 110 → 121 → 133 → 146 → 161 → 177 → 195...' },
-        { en: 'In about 7 hours it doubles! Growth on top of growth gets fast.', he: 'בעוד בערך 7 שעות הוא יוכפל! גדילה על גבי גדילה נהיית מהירה.' },
+        {
+          en: 'A coin, a map and a runaway Growlithe? It all fits my readings!',
+          he: "מטבע, מפה וגרוליית' שברח? הכל מתאים למדידות שלי!",
+        },
+        {
+          en: 'The heat grows by 10% every hour — 10% of what it already is.',
+          he: 'החום גדל ב-10% כל שעה — 10% ממה שכבר יש.',
+        },
+        {
+          en: '100 → 110 → 121 → 133 → 146 → 161 → 177 → 195...',
+          he: '100 → 110 → 121 → 133 → 146 → 161 → 177 → 195...',
+        },
+        {
+          en: 'In about 7 hours it doubles! Growth on top of growth gets fast.',
+          he: 'בעוד בערך 7 שעות הוא יוכפל! גדילה על גבי גדילה נהיית מהירה.',
+        },
       ],
     },
     {
@@ -407,9 +470,18 @@ registerCutscene({
       speakerId: 'npc-percentile-beldum-trader',
       speakerName: 'Dr. Gal / ד"ר גל',
       lines: [
-        { en: 'I traced the source. Two huge heat signals, up on the Route 12 hills.', he: 'איתרתי את המקור. שני אותות חום ענקיים, למעלה בגבעות של דרך 12.' },
-        { en: 'But the machines get their power from somewhere else — steam pipes, running under the Route 11 cave!', he: 'אבל המכונות מקבלות כוח ממקום אחר — צינורות קיטור, שעוברים מתחת למערה של דרך 11!' },
-        { en: 'Hold on — Professor Algorithma is calling the lab screen.', he: 'רגע — פרופסור אלגוריתמה מתקשר למסך של המעבדה.' },
+        {
+          en: 'I traced the source. Two huge heat signals, up on the Route 12 hills.',
+          he: 'איתרתי את המקור. שני אותות חום ענקיים, למעלה בגבעות של דרך 12.',
+        },
+        {
+          en: 'But the machines get their power from somewhere else — steam pipes, running under the Route 11 cave!',
+          he: 'אבל המכונות מקבלות כוח ממקום אחר — צינורות קיטור, שעוברים מתחת למערה של דרך 11!',
+        },
+        {
+          en: 'Hold on — Professor Algorithma is calling the lab screen.',
+          he: 'רגע — פרופסור אלגוריתמה מתקשר למסך של המעבדה.',
+        },
       ],
     },
     {
@@ -417,13 +489,34 @@ registerCutscene({
       speakerId: 'Prof.Algorithma',
       speakerName: ALGORITHMA,
       lines: [
-        { en: 'Two hot signals and a steam plant... that could be three cores! Let me explain what you are collecting.', he: 'שני אותות חמים ומפעל קיטור... אלה יכולות להיות שלוש ליבות! תן לי להסביר מה אתה אוסף.' },
-        { en: 'NULL-X was built from 8 modules. Each core is one of them — one piece of its equation.', he: 'נאל-איקס נבנה משמונה מודולים. כל ליבה היא אחד מהם — חלק אחד מהמשוואה שלו.' },
-        { en: 'NULL-X hides its cores inside legendary Pokémon. Only they are strong enough to hold one.', he: 'נאל-איקס מסתיר את הליבות שלו בתוך פוקימונים אגדיים. רק הם חזקים מספיק כדי להחזיק אחת.' },
-        { en: 'The glitch you see on them is the core\'s code leaking out. Beat them, and the core falls free.', he: 'הגליץ\' שאתה רואה עליהם הוא הקוד של הליבה שדולף החוצה. תנצח אותם, והליבה משתחררת.' },
-        { en: 'One core up there must be the CHANCE module — it is erasing randomness.', he: 'ליבה אחת שם למעלה היא כנראה מודול הסיכוי — הוא מוחק את האקראיות.' },
-        { en: 'The other is the ENERGY module — it is feeding on heat.', he: 'השנייה היא מודול האנרגיה — היא ניזונה מחום.' },
-        { en: 'But first, cut the power. Find that steam plant under the Route 11 cave!', he: 'אבל קודם, תנתק את הכוח. מצא את מפעל הקיטור מתחת למערה של דרך 11!' },
+        {
+          en: 'Two hot signals and a steam plant... that could be three cores! Let me explain what you are collecting.',
+          he: 'שני אותות חמים ומפעל קיטור... אלה יכולות להיות שלוש ליבות! תן לי להסביר מה אתה אוסף.',
+        },
+        {
+          en: 'NULL-X was built from 8 modules. Each core is one of them — one piece of its equation.',
+          he: 'נאל-איקס נבנה משמונה מודולים. כל ליבה היא אחד מהם — חלק אחד מהמשוואה שלו.',
+        },
+        {
+          en: 'NULL-X hides its cores inside legendary Pokémon. Only they are strong enough to hold one.',
+          he: 'נאל-איקס מסתיר את הליבות שלו בתוך פוקימונים אגדיים. רק הם חזקים מספיק כדי להחזיק אחת.',
+        },
+        {
+          en: "The glitch you see on them is the core's code leaking out. Beat them, and the core falls free.",
+          he: "הגליץ' שאתה רואה עליהם הוא הקוד של הליבה שדולף החוצה. תנצח אותם, והליבה משתחררת.",
+        },
+        {
+          en: 'One core up there must be the CHANCE module — it is erasing randomness.',
+          he: 'ליבה אחת שם למעלה היא כנראה מודול הסיכוי — הוא מוחק את האקראיות.',
+        },
+        {
+          en: 'The other is the ENERGY module — it is feeding on heat.',
+          he: 'השנייה היא מודול האנרגיה — היא ניזונה מחום.',
+        },
+        {
+          en: 'But first, cut the power. Find that steam plant under the Route 11 cave!',
+          he: 'אבל קודם, תנתק את הכוח. מצא את מפעל הקיטור מתחת למערה של דרך 11!',
+        },
       ],
     },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-lab' } },
@@ -451,7 +544,10 @@ registerCutscene({
       speakerName: PLAYER,
       lines: [
         { en: 'A secret Team Rocket base, hidden under the cave!', he: 'בסיס סודי של צוות רוקט, מוסתר מתחת למערה!' },
-        { en: 'The floor is warm... the steam plant must be deep below.', he: 'הרצפה חמה... מפעל הקיטור בטח עמוק למטה.' },
+        {
+          en: 'The floor is warm... the steam plant must be deep below.',
+          he: 'הרצפה חמה... מפעל הקיטור בטח עמוק למטה.',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_BASE_ENTERED } },
@@ -486,7 +582,10 @@ registerCutscene({
       speakerId: 'rocket-james',
       speakerName: "James / ג'יימס",
       lines: [
-        { en: 'Suicune is still down in the core... the boss will be furious!', he: 'סוויקון עדיין למטה בליבה... הבוס יתעצבן נורא!' },
+        {
+          en: 'Suicune is still down in the core... the boss will be furious!',
+          he: 'סוויקון עדיין למטה בליבה... הבוס יתעצבן נורא!',
+        },
         { en: "Team Rocket's blasting off agaaaain!", he: 'צוות רוקט עף שוב פעםםם!' },
       ],
     },
@@ -517,8 +616,14 @@ registerCutscene({
       type: 'dialogue',
       speakerName: PLAYER,
       lines: [
-        { en: 'Suicune — the Pokémon that purifies water — chained to a steam engine!', he: 'סוויקון — הפוקימון שמטהר מים — כבול למנוע קיטור!' },
-        { en: 'The glitch is all over it. It is boiling water for the whole base...', he: 'הגליץ\' על כולו. הוא מרתיח מים בשביל כל הבסיס...' },
+        {
+          en: 'Suicune — the Pokémon that purifies water — chained to a steam engine!',
+          he: 'סוויקון — הפוקימון שמטהר מים — כבול למנוע קיטור!',
+        },
+        {
+          en: 'The glitch is all over it. It is boiling water for the whole base...',
+          he: "הגליץ' על כולו. הוא מרתיח מים בשביל כל הבסיס...",
+        },
         { en: 'If I weaken it, the chains should break!', he: 'אם אחליש אותו, השרשראות אמורות להישבר!' },
       ],
     },
@@ -548,8 +653,14 @@ registerCutscene({
       type: 'dialogue',
       speakerName: PLAYER,
       lines: [
-        { en: 'The chains broke and Suicune ran free... and it dropped NULL-X Core X4!', he: 'השרשראות נשברו וסוויקון ברח לחופשי... והוא הפיל את ליבת נאל-איקס X4!' },
-        { en: 'The generators are going quiet. The fire Pokémon are free too!', he: 'הגנרטורים משתתקים. גם פוקימוני האש חופשיים!' },
+        {
+          en: 'The chains broke and Suicune ran free... and it dropped NULL-X Core X4!',
+          he: 'השרשראות נשברו וסוויקון ברח לחופשי... והוא הפיל את ליבת נאל-איקס X4!',
+        },
+        {
+          en: 'The generators are going quiet. The fire Pokémon are free too!',
+          he: 'הגנרטורים משתתקים. גם פוקימוני האש חופשיים!',
+        },
       ],
     },
     {
@@ -557,10 +668,22 @@ registerCutscene({
       speakerId: 'Prof.Algorithma',
       speakerName: ALGORITHMA,
       lines: [
-        { en: 'I see it on my screen — Core X4, the FLOW module! It controls water and steam.', he: 'אני רואה את זה על המסך — ליבה X4, מודול הזרימה! הוא שולט במים ובקיטור.' },
-        { en: 'Without the steam, the Heat Collectors on Route 12 are much weaker. Now is our chance!', he: 'בלי הקיטור, אוספי החום בדרך 12 הרבה יותר חלשים. זה הסיכוי שלנו!' },
-        { en: 'The fire is weaker now — the police opened the road from Percentile to Route 12.', he: 'האש נחלשה — המשטרה פתחה את הדרך מפרסנטייל לדרך 12.' },
-        { en: 'There is an emergency hatch on this floor — it leads straight outside.', he: 'יש פתח חירום בקומה הזאת — הוא מוביל ישר החוצה.' },
+        {
+          en: 'I see it on my screen — Core X4, the FLOW module! It controls water and steam.',
+          he: 'אני רואה את זה על המסך — ליבה X4, מודול הזרימה! הוא שולט במים ובקיטור.',
+        },
+        {
+          en: 'Without the steam, the Heat Collectors on Route 12 are much weaker. Now is our chance!',
+          he: 'בלי הקיטור, אוספי החום בדרך 12 הרבה יותר חלשים. זה הסיכוי שלנו!',
+        },
+        {
+          en: 'The fire is weaker now — the police opened the road from Percentile to Route 12.',
+          he: 'האש נחלשה — המשטרה פתחה את הדרך מפרסנטייל לדרך 12.',
+        },
+        {
+          en: 'There is an emergency hatch on this floor — it leads straight outside.',
+          he: 'יש פתח חירום בקומה הזאת — הוא מוביל ישר החוצה.',
+        },
       ],
     },
     // Glitch sight: from here on, glitched wild Pokémon disguised as people show their true form (showsTrueForm in systems/npc.ts)
@@ -571,9 +694,18 @@ registerCutscene({
       speakerId: 'Prof.Algorithma',
       speakerName: ALGORITHMA,
       lines: [
-        { en: 'Wait — Core X4 sent a signal to your Pokédex. I am adding it to your scanner... done!', he: 'רגע — ליבה X4 שלחה אות לפוקידקס שלך. אני מוסיפה אותו לסורק שלך... מוכן!' },
-        { en: 'Some glitched Pokémon hide as people. From now on you will see what they really are!', he: 'יש פוקימונים משובשים שמתחפשים לאנשים. מעכשיו תראה מה הם באמת!' },
-        { en: 'But stay careful outside the cities — the glitch can still pop out with a question.', he: 'אבל תיזהר מחוץ לערים — השיבוש עדיין יכול לקפוץ עם שאלה.' },
+        {
+          en: 'Wait — Core X4 sent a signal to your Pokédex. I am adding it to your scanner... done!',
+          he: 'רגע — ליבה X4 שלחה אות לפוקידקס שלך. אני מוסיפה אותו לסורק שלך... מוכן!',
+        },
+        {
+          en: 'Some glitched Pokémon hide as people. From now on you will see what they really are!',
+          he: 'יש פוקימונים משובשים שמתחפשים לאנשים. מעכשיו תראה מה הם באמת!',
+        },
+        {
+          en: 'But stay careful outside the cities — the glitch can still pop out with a question.',
+          he: 'אבל תיזהר מחוץ לערים — השיבוש עדיין יכול לקפוץ עם שאלה.',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.GLITCH_SIGHT } },
@@ -599,8 +731,11 @@ registerCutscene({
       speakerId: 'rival-reminder',
       speakerName: 'Rei Minder / ריי מיינדר',
       lines: [
-        { en: "Okay, okay — you win this round.", he: 'בסדר, בסדר — ניצחת בסיבוב הזה.' },
-        { en: "But I'll beat you to the hills! Last one up there is a Slowpoke!", he: 'אבל אני אגיע לגבעות לפניך! מי שמגיע אחרון הוא סלופוק!' },
+        { en: 'Okay, okay — you win this round.', he: 'בסדר, בסדר — ניצחת בסיבוב הזה.' },
+        {
+          en: "But I'll beat you to the hills! Last one up there is a Slowpoke!",
+          he: 'אבל אני אגיע לגבעות לפניך! מי שמגיע אחרון הוא סלופוק!',
+        },
       ],
     },
   ],
@@ -630,22 +765,39 @@ registerCutscene({
       type: 'dialogue',
       speakerName: 'Rocket radio / קשר של רוקט',
       lines: [
-        { en: '*krrk* ...Collectors at 80%... the two big ones are burning nicely... *krrk*', he: '*קרררק* ...האוספים על 80%... שני הגדולים בוערים יפה... *קרררק*' },
-        { en: '*krrk* ...keep everyone off the hills. Admin Kelvin\'s orders. *krrk*', he: '*קרררק* ...אף אחד לא עולה לגבעות. פקודה של האדמין קלווין. *קרררק*' },
+        {
+          en: '*krrk* ...Collectors at 80%... the two big ones are burning nicely... *krrk*',
+          he: '*קרררק* ...האוספים על 80%... שני הגדולים בוערים יפה... *קרררק*',
+        },
+        {
+          en: "*krrk* ...keep everyone off the hills. Admin Kelvin's orders. *krrk*",
+          he: '*קרררק* ...אף אחד לא עולה לגבעות. פקודה של האדמין קלווין. *קרררק*',
+        },
       ],
     },
     {
       type: 'dialogue',
       speakerName: PLAYER,
-      lines: [{ en: 'The hills are on fire... Every wild Pokémon here could be glitched.', he: 'הגבעות בוערות... כל פוקימון בר כאן עלול להיות נגוע.' }],
+      lines: [
+        {
+          en: 'The hills are on fire... Every wild Pokémon here could be glitched.',
+          he: 'הגבעות בוערות... כל פוקימון בר כאן עלול להיות נגוע.',
+        },
+      ],
     },
     {
       type: 'dialogue',
       speakerId: 'officer-Jenny',
       speakerName: "Officer Jenny (radio) / השוטרת ג'ני (קשר)",
       lines: [
-        { en: '*krrk* Officer Jenny to all units! Team Rocket is all over Route 12!', he: "*קרררק* השוטרת ג'ני לכל הניידות! צוות רוקט נמצא בכל דרך 12!" },
-        { en: '*krrk* Grunts are hiding in the tall grass. Find them, and stop those Heat Collectors! *krrk*', he: '*קרררק* סוכנים מתחבאים בדשא הגבוה. מצאו אותם, ועצרו את אוספי החום! *קרררק*' },
+        {
+          en: '*krrk* Officer Jenny to all units! Team Rocket is all over Route 12!',
+          he: "*קרררק* השוטרת ג'ני לכל הניידות! צוות רוקט נמצא בכל דרך 12!",
+        },
+        {
+          en: '*krrk* Grunts are hiding in the tall grass. Find them, and stop those Heat Collectors! *krrk*',
+          he: '*קרררק* סוכנים מתחבאים בדשא הגבוה. מצאו אותם, ועצרו את אוספי החום! *קרררק*',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_R12_ENTERED } },
@@ -658,6 +810,102 @@ registerStoryEvent({
   trigger: { type: 'map-enter', mapId: R12 },
   conditions: [{ type: 'infection-level', mapId: R12, value: 'critical' }],
   actions: [{ type: 'set-infection', mapId: R12, value: R12_INFECTION }],
+});
+
+// ── Beat 5: Heat Collector #1 — four glitched guardians, then its grunt ─────
+// The 4 wild Pokémon around the machine come one by one (route-12 spawnAfter chain). When the
+// last one falls, guard-1 appears (spawnAfter its defeat flag) and charges the player.
+
+const COLLECTOR_1 = { x: 33, y: 54 }; // center of the 3×3 lab-equip at 32,53
+const COLLECTOR_1_LAST_WILD = 'wild-r12-glitch-arcanine';
+
+registerStoryEvent({
+  id: 'evt-pct-collector-1-guard-arrives',
+  trigger: { type: 'trainer-defeated', trainerId: COLLECTOR_1_LAST_WILD },
+  conditions: [{ type: 'flag-not', flag: 'trainer-npc-pct-guard-1-defeated' }],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-collector-1-guard' }],
+});
+
+registerCutscene({
+  id: 'cutscene-pct-collector-1-guard',
+  steps: [
+    { type: 'wait', durationMs: 300 },
+    {
+      type: 'dialogue',
+      speakerId: 'npc-pct-guard-1',
+      speakerName: 'Rocket Grunt / סוכן צוות רוקט',
+      lines: [
+        {
+          en: 'Hey! You beat all four guards of my Heat Collector?!',
+          he: 'היי! ניצחת את כל ארבעת השומרים של אוסף החום שלי?!',
+        },
+      ],
+    },
+    { type: 'start-battle', trainerId: 'npc-pct-guard-1' },
+  ],
+});
+
+// Guard-1 beaten → the overheated machine blows up (registered before the machines-off events,
+// which run after this cutscene ends)
+registerStoryEvent({
+  id: 'evt-pct-collector-1-destroyed',
+  trigger: { type: 'trainer-defeated', trainerId: 'npc-pct-guard-1' },
+  conditions: [{ type: 'flag-not', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED }],
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-collector-1-destroyed' }],
+});
+
+// Saves that beat guard-1 before the machine could blow up → remove it quietly
+registerStoryEvent({
+  id: 'evt-pct-collector-1-destroyed-on-enter',
+  trigger: { type: 'map-enter', mapId: R12 },
+  conditions: [
+    { type: 'flag', flag: 'trainer-npc-pct-guard-1-defeated' },
+    { type: 'flag-not', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED },
+  ],
+  actions: [{ type: 'set-flag', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED }],
+});
+
+registerCutscene({
+  id: 'cutscene-pct-collector-1-destroyed',
+  steps: [
+    { type: 'camera-pan', x: COLLECTOR_1.x, y: COLLECTOR_1.y, durationMs: 400 },
+    {
+      type: 'dialogue',
+      speakerName: PLAYER,
+      lines: [
+        {
+          en: 'The Heat Collector is shaking... it is overheating!',
+          he: 'אוסף החום רועד... הוא מתחמם יותר מדי!',
+        },
+      ],
+    },
+    { type: 'play-sfx', sfxId: 'move:Thunderbolt' },
+    { type: 'fx', kind: 'burst', at: COLLECTOR_1, durationMs: 400, radius: 1.5 },
+    { type: 'screen-shake', durationMs: 400, intensity: 1 },
+    { type: 'wait', durationMs: 500 },
+    { type: 'play-sfx', sfxId: 'move:Thunderbolt' },
+    { type: 'fx', kind: 'fire', at: COLLECTOR_1, durationMs: 1600, radius: 2 },
+    { type: 'wait', durationMs: 600 },
+    { type: 'play-sfx', sfxId: 'move:Earthquake' },
+    { type: 'screen-shake', durationMs: 1400, intensity: 2 },
+    { type: 'wait', durationMs: 700 },
+    { type: 'play-sfx', sfxId: 'move:Explosion' },
+    { type: 'fx', kind: 'burst', at: COLLECTOR_1, durationMs: 500, radius: 3 },
+    // Machine (route-12 flagListener) and its smoke (ambientFx) disappear
+    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_COLLECTOR_1_DESTROYED } },
+    { type: 'fx', kind: 'smoke', at: COLLECTOR_1, durationMs: 2200, radius: 3 },
+    { type: 'wait', durationMs: 1200 },
+    {
+      type: 'dialogue',
+      speakerName: PLAYER,
+      lines: [
+        {
+          en: 'BOOM! This Heat Collector is gone for good!',
+          he: 'בום! אוסף החום הזה נעלם לתמיד!',
+        },
+      ],
+    },
+  ],
 });
 
 // ── Beat 5 → 6: all 3 Heat Collectors down (after the lab beat) → shield drops ──
@@ -677,6 +925,15 @@ for (const guardId of GUARD_IDS) {
   });
 }
 
+// Safety net: conditions met without a guard battle firing the event (flags set from the admin page /
+// a snapshot, or a missed trigger) → drop the shield on entering Route 12
+registerStoryEvent({
+  id: 'evt-pct-machines-off-on-enter',
+  trigger: { type: 'map-enter', mapId: R12 },
+  conditions: MACHINES_OFF_CONDITIONS,
+  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-machines-off' }],
+});
+
 // Guards beaten before Suicune is freed: SUICUNE_DONE is set inside a cutscene, so just
 // drop the shield here (no second cutscene while one is running).
 registerStoryEvent({
@@ -694,12 +951,17 @@ registerCutscene({
   id: 'cutscene-pct-machines-off',
   steps: [
     { type: 'screen-shake', durationMs: 700, intensity: 1.2 },
+    // The heat dome around Admin Kelvin (route-12 ambientFx 'shield') pops
+    { type: 'fx', kind: 'burst', at: { x: 42, y: 38 }, durationMs: 500, radius: 2 },
     { type: 'wait', durationMs: 700 },
     {
       type: 'dialogue',
       speakerName: PLAYER,
       lines: [
-        { en: 'All three Heat Collectors are dark. The admin\'s shield must be down!', he: 'כל שלושת אוספי החום כבו. המגן של האדמין בטח נפל!' },
+        {
+          en: "All three Heat Collectors are dark. The admin's shield must be down!",
+          he: 'כל שלושת אוספי החום כבו. המגן של האדמין בטח נפל!',
+        },
       ],
     },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-hills' } },
@@ -713,7 +975,10 @@ registerCutscene({
 registerStoryEvent({
   id: 'evt-pct-admin-defeated',
   trigger: { type: 'trainer-defeated', trainerId: 'npc-pct-admin' },
-  actions: [{ type: 'start-cutscene', cutsceneId: 'cutscene-pct-hilltop' }],
+  actions: [
+    { type: 'start-cutscene', cutsceneId: 'cutscene-pct-hilltop' },
+    { type: 'lower-infection', mapIds: [R12, CITY], levels: 2 },
+  ],
 });
 
 /** One scripted attack: sound, flash at the target, flames, shake. */
@@ -733,18 +998,20 @@ function attack(moveName: string, targetNpcId: string, cryOf: number): CutsceneS
 registerCutscene({
   id: 'cutscene-pct-hilltop',
   steps: [
-    { type: 'face-npc', npcId: 'npc-pct-reminder-r12', dir: 'left' },
+    // Rei already ran off after the grunts (despawns on trainer-npc-pct-admin-defeated) — he shouts from afar
     {
       type: 'dialogue',
-      speakerId: 'npc-pct-reminder-r12',
+      speakerId: 'rival-reminder',
       speakerName: 'Rei Minder / ריי מיינדר',
       lines: [
-        { en: 'You did it! The other grunts are running — I\'ll keep them off your back.', he: 'עשית את זה! שאר הסוכנים בורחים — אני אדאג שלא יפריעו לך.' },
+        {
+          en: "You did it! The other grunts are running — I'll keep them off your back.",
+          he: 'עשית את זה! שאר הסוכנים בורחים — אני אדאג שלא יפריעו לך.',
+        },
         { en: 'Go up to the plateau. Something huge is up there!', he: 'תעלה לרמה. משהו ענק נמצא שם למעלה!' },
       ],
     },
-    // Reminder leaves; Max, Entei and Moltres appear on the plateau
-    { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_ADMIN_DEFEATED } },
+    // Max, Entei and Moltres are already on the plateau (spawnAfter trainer-npc-pct-admin-defeated)
     { type: 'screen-fade', direction: 'out', durationMs: 300 },
     { type: 'camera-snap', x: 37, y: 30 },
     { type: 'screen-fade', direction: 'in', durationMs: 300 },
@@ -755,14 +1022,24 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'npc-pct-max',
       speakerName: MAX,
-      lines: [{ en: 'You will not burn my city, Moltres! Arcanine — Flame Wheel!', he: 'לא תשרוף את העיר שלי, מולטרס! ארקנין — גלגל להבה!' }],
+      lines: [
+        {
+          en: 'You will not burn my city, Moltres! Arcanine — Flame Wheel!',
+          he: 'לא תשרוף את העיר שלי, מולטרס! ארקנין — גלגל להבה!',
+        },
+      ],
     },
     { type: 'pokemon-anim', pokemonId: ARCANINE, motion: 'walk', from: { npcId: 'npc-pct-max' }, path: ['up', 'up'] },
     ...attack('Flame Wheel', 'npc-pct-moltres-fight', MOLTRES),
     {
       type: 'dialogue',
       speakerName: 'Moltres / מולטרס',
-      lines: [{ en: 'Kyaaaaah!! (It shrugs off the flames — fire only feeds it!)', he: 'קיאאאאה!! (הוא מתעלם מהלהבות — אש רק מזינה אותו!)' }],
+      lines: [
+        {
+          en: 'Kyaaaaah!! (It shrugs off the flames — fire only feeds it!)',
+          he: 'קיאאאאה!! (הוא מתעלם מהלהבות — אש רק מזינה אותו!)',
+        },
+      ],
     },
     ...attack('Fire Blast', 'npc-pct-max', ARCANINE),
     { type: 'play-sfx', sfxId: `cry:${ENTEI}` },
@@ -773,15 +1050,19 @@ registerCutscene({
       type: 'dialogue',
       speakerId: 'npc-pct-max',
       speakerName: MAX,
-      lines: [
-        { en: 'Entei too?! I cannot hold both of them!', he: 'גם אנטאיי?! אני לא יכול להחזיק את שניהם!' },
-      ],
+      lines: [{ en: 'Entei too?! I cannot hold both of them!', he: 'גם אנטאיי?! אני לא יכול להחזיק את שניהם!' }],
     },
     // Suicune — freed in the Rocket Base — surfs in on the rain
     { type: 'fx', kind: 'rain', at: { x: 37, y: 30 }, durationMs: 9000, radius: 10 },
     { type: 'wait', durationMs: 800 },
     { type: 'play-sfx', sfxId: `cry:${SUICUNE}` },
-    { type: 'pokemon-anim', pokemonId: SUICUNE, motion: 'surf', from: { npcId: 'npc-pct-max' }, path: ['left', 'left', 'left', 'left'] },
+    {
+      type: 'pokemon-anim',
+      pokemonId: SUICUNE,
+      motion: 'surf',
+      from: { npcId: 'npc-pct-max' },
+      path: ['left', 'left', 'left', 'left'],
+    },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_SUICUNE_ARRIVED } },
     { type: 'play-sfx', sfxId: 'move:Surf' },
     { type: 'fx', kind: 'smoke', at: { npcId: 'npc-pct-moltres-fight' }, durationMs: 1500, radius: 2 },
@@ -792,9 +1073,18 @@ registerCutscene({
       speakerId: 'npc-pct-max',
       speakerName: MAX,
       lines: [
-        { en: 'Rain?! And... Suicune! The one you freed from the steam plant!', he: 'גשם?! ו... סוויקון! זה ששחררת ממפעל הקיטור!' },
-        { en: 'Its rain turns their flames into steam. Now we have a chance!', he: 'הגשם שלו הופך את הלהבות שלהם לקיטור. עכשיו יש לנו סיכוי!' },
-        { en: 'Young trainer — you take Entei! Suicune and I will keep Moltres busy!', he: 'מאמן צעיר — אתה תיקח את אנטאיי! סוויקון ואני נעסיק את מולטרס!' },
+        {
+          en: 'Rain?! And... Suicune! The one you freed from the steam plant!',
+          he: 'גשם?! ו... סוויקון! זה ששחררת ממפעל הקיטור!',
+        },
+        {
+          en: 'Its rain turns their flames into steam. Now we have a chance!',
+          he: 'הגשם שלו הופך את הלהבות שלהם לקיטור. עכשיו יש לנו סיכוי!',
+        },
+        {
+          en: 'Young trainer — you take Entei! Suicune and I will keep Moltres busy!',
+          he: 'מאמן צעיר — אתה תיקח את אנטאיי! סוויקון ואני נעסיק את מולטרס!',
+        },
       ],
     },
     { type: 'action', action: { type: 'complete-quest', questId: 'main-act4-pct-admin' } },
@@ -821,7 +1111,10 @@ registerCutscene({
       type: 'dialogue',
       speakerName: PLAYER,
       lines: [
-        { en: 'The glitch left Entei and it ran off... and it dropped NULL-X Core X5!', he: 'הגליץ\' עזב את אנטאיי והוא ברח... והוא הפיל את ליבת נאל-איקס X5!' },
+        {
+          en: 'The glitch left Entei and it ran off... and it dropped NULL-X Core X5!',
+          he: "הגליץ' עזב את אנטאיי והוא ברח... והוא הפיל את ליבת נאל-איקס X5!",
+        },
         { en: 'This must be the Chance module.', he: 'זה בטח מודול הסיכוי.' },
       ],
     },
@@ -834,8 +1127,14 @@ registerCutscene({
       speakerName: MAX,
       lines: [
         { en: 'Ugh... Arcanine is down. My whole team is exhausted.', he: 'אוף... ארקנין נפל. כל הצוות שלי מותש.' },
-        { en: 'Listen. Fire needs three things: fuel, air and heat. Take one away and the fire goes out.', he: 'תקשיב. אש צריכה שלושה דברים: דלק, אוויר וחום. תוריד אחד והאש כבה.' },
-        { en: "Moltres burns on the glitch — that's its fuel. Weaken it and the core will fall out!", he: 'מולטרס בוער על הגליץ\' — זה הדלק שלו. תחליש אותו והליבה תיפול!' },
+        {
+          en: 'Listen. Fire needs three things: fuel, air and heat. Take one away and the fire goes out.',
+          he: 'תקשיב. אש צריכה שלושה דברים: דלק, אוויר וחום. תוריד אחד והאש כבה.',
+        },
+        {
+          en: "Moltres burns on the glitch — that's its fuel. Weaken it and the core will fall out!",
+          he: "מולטרס בוער על הגליץ' — זה הדלק שלו. תחליש אותו והליבה תיפול!",
+        },
         { en: 'Your turn, young mathematician!', he: 'תורך, מתמטיקאי צעיר!' },
       ],
     },
@@ -860,13 +1159,22 @@ registerCutscene({
   id: 'cutscene-pct-moltres-defeated',
   steps: [
     { type: 'play-sfx', sfxId: `cry:${MOLTRES}` },
-    { type: 'pokemon-anim', pokemonId: MOLTRES, motion: 'fly', from: { npcId: 'npc-pct-max' }, path: ['up', 'up', 'up', 'up', 'up'] },
+    {
+      type: 'pokemon-anim',
+      pokemonId: MOLTRES,
+      motion: 'fly',
+      from: { npcId: 'npc-pct-max' },
+      path: ['up', 'up', 'up', 'up', 'up'],
+    },
     { type: 'play-sfx', sfxId: 'item-found' },
     {
       type: 'dialogue',
       speakerName: PLAYER,
       lines: [
-        { en: 'Moltres flew away, free of the glitch... and it dropped NULL-X Core X6!', he: 'מולטרס עף משם, חופשי מהגליץ\'... והוא הפיל את ליבת נאל-איקס X6!' },
+        {
+          en: 'Moltres flew away, free of the glitch... and it dropped NULL-X Core X6!',
+          he: "מולטרס עף משם, חופשי מהגליץ'... והוא הפיל את ליבת נאל-איקס X6!",
+        },
       ],
     },
     { type: 'fx', kind: 'smoke', at: { x: 34, y: 30 }, durationMs: 1800, radius: 3 },
@@ -877,8 +1185,14 @@ registerCutscene({
       speakerId: 'npc-pct-max',
       speakerName: MAX,
       lines: [
-        { en: 'Ho ho! The Heat Collectors lost their power — Team Rocket is running down the hills!', he: 'הו הו! אוספי החום איבדו את הכוח — צוות רוקט בורח במורד הגבעות!' },
-        { en: 'Feel that? The air is cooling. Chance is coming back to Percentile.', he: 'מרגיש? האוויר מתקרר. הסיכוי חוזר לפרסנטייל.' },
+        {
+          en: 'Ho ho! The Heat Collectors lost their power — Team Rocket is running down the hills!',
+          he: 'הו הו! אוספי החום איבדו את הכוח — צוות רוקט בורח במורד הגבעות!',
+        },
+        {
+          en: 'Feel that? The air is cooling. Chance is coming back to Percentile.',
+          he: 'מרגיש? האוויר מתקרר. הסיכוי חוזר לפרסנטייל.',
+        },
       ],
     },
     { type: 'pokemon-anim', pokemonId: GROWLITHE, motion: 'walk', from: { npcId: 'npc-pct-max' }, path: ['down'] },
@@ -886,7 +1200,10 @@ registerCutscene({
       type: 'dialogue',
       speakerName: PLAYER,
       lines: [
-        { en: 'A Growlithe was hiding behind Max — it\'s Jimmy\'s! It follows you happily.', he: 'גרוליית\' הסתתר מאחורי מקס — זה של ג\'ימי! הוא הולך אחריך בשמחה.' },
+        {
+          en: "A Growlithe was hiding behind Max — it's Jimmy's! It follows you happily.",
+          he: "גרוליית' הסתתר מאחורי מקס — זה של ג'ימי! הוא הולך אחריך בשמחה.",
+        },
       ],
     },
     {
@@ -894,17 +1211,34 @@ registerCutscene({
       speakerId: 'npc-pct-max',
       speakerName: MAX,
       lines: [
-        { en: 'Take those cores to the lab in the city. Then come to my gym...', he: 'קח את הליבות למעבדה בעיר. ואז בוא למכון שלי...' },
-        { en: '...I want to battle the trainer who cooled down two legends!', he: '...אני רוצה להילחם במאמן שקירר שני אגדיים!' },
+        {
+          en: 'Take those cores to the lab in the city. Then come to my gym...',
+          he: 'קח את הליבות למעבדה בעיר. ואז בוא למכון שלי...',
+        },
+        {
+          en: '...I want to battle the trainer who cooled down two legends!',
+          he: '...אני רוצה להילחם במאמן שקירר שני אגדיים!',
+        },
       ],
     },
     { type: 'play-sfx', sfxId: `cry:${SUICUNE}` },
     {
       type: 'dialogue',
       speakerName: 'Suicune / סוויקון',
-      lines: [{ en: '(Suicune looks at you for a moment... then runs off into the rain.)', he: '(סוויקון מביט בך לרגע... ואז רץ אל תוך הגשם.)' }],
+      lines: [
+        {
+          en: '(Suicune looks at you for a moment... then runs off into the rain.)',
+          he: '(סוויקון מביט בך לרגע... ואז רץ אל תוך הגשם.)',
+        },
+      ],
     },
-    { type: 'pokemon-anim', pokemonId: SUICUNE, motion: 'walk', from: { npcId: 'npc-pct-suicune-ally' }, path: ['left', 'left', 'left', 'left', 'left'] },
+    {
+      type: 'pokemon-anim',
+      pokemonId: SUICUNE,
+      motion: 'walk',
+      from: { npcId: 'npc-pct-suicune-ally' },
+      path: ['left', 'left', 'left', 'left', 'left'],
+    },
     { type: 'move-npc', npcId: 'npc-pct-max', path: ['down', 'down', 'right', 'right'], waitForComplete: true },
     { type: 'hide-npc', npcId: 'npc-pct-max' },
     { type: 'action', action: { type: 'lower-infection', mapIds: ARC_AREA, levels: 2 } },
@@ -943,7 +1277,10 @@ registerCutscene({
       speakerId: 'npc-percentile-mom',
       speakerName: 'Erika / אריקה',
       lines: [
-        { en: 'We cannot thank you enough. Please take this Charcoal.', he: 'אנחנו לא יודעים איך להודות לך. בבקשה קח את הפחם הזה.' },
+        {
+          en: 'We cannot thank you enough. Please take this Charcoal.',
+          he: 'אנחנו לא יודעים איך להודות לך. בבקשה קח את הפחם הזה.',
+        },
         { en: 'A Pokémon holding it gets stronger Fire moves.', he: 'פוקימון שמחזיק אותו מקבל מתקפות אש חזקות יותר.' },
       ],
     },
@@ -973,11 +1310,23 @@ registerCutscene({
       speakerId: 'npc-pct-oak',
       speakerName: 'Prof. Oak / פרופ׳ אוק',
       lines: [
-        { en: 'There you are! Algorithma sent me the moment the heat dropped.', he: 'הנה אתה! אלגוריתמה שלח אותי ברגע שהחום ירד.' },
-        { en: 'Let me scan the cores. X1 from Zapdos, X2 from Raikou, X3 from Articuno...', he: 'תן לי לסרוק את הליבות. X1 מזאפדוס, X2 מראיקו, X3 מארטיקונו...' },
-        { en: '...X4 from Suicune, the Flow module. X5 from Entei, Chance. X6 from Moltres, Energy.', he: '...X4 מסוויקון, מודול הזרימה. X5 מאנטאיי, הסיכוי. X6 ממולטרס, האנרגיה.' },
+        {
+          en: 'There you are! Algorithma sent me the moment the heat dropped.',
+          he: 'הנה אתה! אלגוריתמה שלח אותי ברגע שהחום ירד.',
+        },
+        {
+          en: 'Let me scan the cores. X1 from Zapdos, X2 from Raikou, X3 from Articuno...',
+          he: 'תן לי לסרוק את הליבות. X1 מזאפדוס, X2 מראיקו, X3 מארטיקונו...',
+        },
+        {
+          en: '...X4 from Suicune, the Flow module. X5 from Entei, Chance. X6 from Moltres, Energy.',
+          he: '...X4 מסוויקון, מודול הזרימה. X5 מאנטאיי, הסיכוי. X6 ממולטרס, האנרגיה.',
+        },
         { en: 'Six of eight! Only two are left.', he: 'שש מתוך שמונה! נשארו רק שתיים.' },
-        { en: 'Each core still hums a faint signal, calling to its missing brothers.', he: 'כל ליבה עדיין משדרת אות חלש, שקורא לאחים החסרים שלה.' },
+        {
+          en: 'Each core still hums a faint signal, calling to its missing brothers.',
+          he: 'כל ליבה עדיין משדרת אות חלש, שקורא לאחים החסרים שלה.',
+        },
         { en: 'With six signals I can triangulate the next one...', he: 'עם שישה אותות אני יכול למקם את הבא...' },
       ],
     },
@@ -988,9 +1337,18 @@ registerCutscene({
       speakerId: 'npc-pct-oak',
       speakerName: 'Prof. Oak / פרופ׳ אוק',
       lines: [
-        { en: "87% chance: the next signal comes from under Minusburg!", he: 'סיכוי של 87%: האות הבא מגיע מתחת למינוסבורג!' },
-        { en: 'Hmm, Officer Jenny closed the north side of that city... now I see why.', he: "הממ, השוטרת ג'ני סגרה את הצד הצפוני של העיר הזאת... עכשיו אני מבין למה." },
-        { en: 'And the last core... it hides inside NULL-X\'s own tower.', he: 'והליבה האחרונה... היא מסתתרת בתוך המגדל של נאל-איקס עצמו.' },
+        {
+          en: '87% chance: the next signal comes from under Minusburg!',
+          he: 'סיכוי של 87%: האות הבא מגיע מתחת למינוסבורג!',
+        },
+        {
+          en: 'Hmm, Officer Jenny closed the north side of that city... now I see why.',
+          he: "הממ, השוטרת ג'ני סגרה את הצד הצפוני של העיר הזאת... עכשיו אני מבין למה.",
+        },
+        {
+          en: "And the last core... it hides inside NULL-X's own tower.",
+          he: 'והליבה האחרונה... היא מסתתרת בתוך המגדל של נאל-איקס עצמו.',
+        },
       ],
     },
     { type: 'action', action: { type: 'set-flag', flag: FLAGS.ACT4_PCT_LAB_FINAL } },
@@ -1021,9 +1379,18 @@ registerCutscene({
       speakerId: 'npc-pct-lance',
       speakerName: 'Lance / לאנס',
       lines: [
-        { en: 'Good to see you again! Alice told me what you did in the forest.', he: 'טוב לראות אותך שוב! אליס סיפרה לי מה עשית ביער.' },
-        { en: 'I saw the fire on the hills from the sky — two legends, and you stopped both.', he: 'ראיתי את האש על הגבעות מהשמיים — שני אגדיים, ועצרת את שניהם.' },
-        { en: 'Oak told me about Minusburg. I have been tracking the glitch there with Officer Jenny.', he: "אוק סיפר לי על מינוסבורג. אני עוקב שם אחרי הגליץ' יחד עם השוטרת ג'ני." },
+        {
+          en: 'Good to see you again! Alice told me what you did in the forest.',
+          he: 'טוב לראות אותך שוב! אליס סיפרה לי מה עשית ביער.',
+        },
+        {
+          en: 'I saw the fire on the hills from the sky — two legends, and you stopped both.',
+          he: 'ראיתי את האש על הגבעות מהשמיים — שני אגדיים, ועצרת את שניהם.',
+        },
+        {
+          en: 'Oak told me about Minusburg. I have been tracking the glitch there with Officer Jenny.',
+          he: "אוק סיפר לי על מינוסבורג. אני עוקב שם אחרי הגליץ' יחד עם השוטרת ג'ני.",
+        },
         { en: 'She is on the line now.', he: 'היא על הקו עכשיו.' },
       ],
     },
@@ -1032,8 +1399,14 @@ registerCutscene({
       speakerId: 'officer-Jenny',
       speakerName: "Officer Jenny / השוטרת ג'ני",
       lines: [
-        { en: 'Thanks to you, we know what we are looking for under Minusburg.', he: 'בזכותך, אנחנו יודעים מה אנחנו מחפשים מתחת למינוסבורג.' },
-        { en: 'Win your seventh badge and learn to Fly — then come back. I will open the road for you.', he: 'תנצח את התג השביעי שלך ותלמד לעוף — ואז תחזור. אני אפתח לך את הדרך.' },
+        {
+          en: 'Thanks to you, we know what we are looking for under Minusburg.',
+          he: 'בזכותך, אנחנו יודעים מה אנחנו מחפשים מתחת למינוסבורג.',
+        },
+        {
+          en: 'Win your seventh badge and learn to Fly — then come back. I will open the road for you.',
+          he: 'תנצח את התג השביעי שלך ותלמד לעוף — ואז תחזור. אני אפתח לך את הדרך.',
+        },
       ],
     },
     {
@@ -1064,7 +1437,10 @@ registerStoryEvent({
     {
       type: 'show-message',
       lines: [
-        { en: 'You got HM02 Fly! Teach it to a flying Pokémon to travel between cities.', he: 'קיבלת את מכונת הלימוד תעופה! למד אותה לפוקימון מעופף כדי לטוס בין ערים.' },
+        {
+          en: 'You got HM02 Fly! Teach it to a flying Pokémon to travel between cities.',
+          he: 'קיבלת את מכונת הלימוד תעופה! למד אותה לפוקימון מעופף כדי לטוס בין ערים.',
+        },
         { en: 'Officer Jenny is waiting in Minusburg.', he: "השוטרת ג'ני מחכה במינוסבורג." },
       ],
     },

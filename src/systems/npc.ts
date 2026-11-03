@@ -448,13 +448,27 @@ export function createNPCManager(npcs: NPCData[]) {
       return npcs.some((npc) => npc.x === x && npc.y === y && isNPCVisible(npc, flags, party));
     },
 
-    /** Get the NPC at a given grid position. */
-    getNPCAt(x: number, y: number): NPCData | undefined {
-      return npcs.find((npc) => npc.x === x && npc.y === y);
+    /**
+     * Get the NPC at a given grid position. With `flags`, only a visible one — two NPCs can share a tile
+     * when one replaces the other by flag (e.g. Route 12 admin shield → admin trainer).
+     */
+    getNPCAt(
+      x: number,
+      y: number,
+      flags?: Record<string, boolean>,
+      party?: import('../types/index.js').Pokemon[],
+    ): NPCData | undefined {
+      return npcs.find((npc) => npc.x === x && npc.y === y && (!flags || isNPCVisible(npc, flags, party)));
     },
 
-    /** Get the NPC the player is facing (checks up to interactRange tiles in facing direction). */
-    getFacingNPC(playerX: number, playerY: number, facing: string): NPCData | undefined {
+    /** Get the visible NPC the player is facing (checks up to interactRange tiles in facing direction). */
+    getFacingNPC(
+      playerX: number,
+      playerY: number,
+      facing: string,
+      flags: Record<string, boolean>,
+      party?: import('../types/index.js').Pokemon[],
+    ): NPCData | undefined {
       const vec = FACING_VECTORS[facing];
       if (!vec) return undefined;
       // Check closest tile first, then further — return nearest match
@@ -462,7 +476,9 @@ export function createNPCManager(npcs: NPCData[]) {
       for (let dist = 1; dist <= maxRange; dist++) {
         const tx = playerX + vec.dx * dist;
         const ty = playerY + vec.dy * dist;
-        const npc = npcs.find((n) => n.x === tx && n.y === ty && (n.interactRange || 1) >= dist);
+        const npc = npcs.find(
+          (n) => n.x === tx && n.y === ty && (n.interactRange || 1) >= dist && isNPCVisible(n, flags, party),
+        );
         if (npc) return npc;
       }
       return undefined;
@@ -474,10 +490,21 @@ export function createNPCManager(npcs: NPCData[]) {
      * NPC is found in the facing direction — floating NPCs move freely so the player
      * can't reliably face them.
      */
-    getNearbyFloatingNPC(playerX: number, playerY: number): NPCData | undefined {
+    getNearbyFloatingNPC(
+      playerX: number,
+      playerY: number,
+      flags: Record<string, boolean>,
+      party?: import('../types/index.js').Pokemon[],
+    ): NPCData | undefined {
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
-          const npc = npcs.find((n) => n.autoWalk?.floating && n.x === playerX + dx && n.y === playerY + dy);
+          const npc = npcs.find(
+            (n) =>
+              n.autoWalk?.floating &&
+              n.x === playerX + dx &&
+              n.y === playerY + dy &&
+              isNPCVisible(n, flags, party),
+          );
           if (npc) return npc;
         }
       }
