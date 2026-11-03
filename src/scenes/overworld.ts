@@ -172,6 +172,8 @@ import {
 } from '../systems/trainer-rank.js';
 import { startRankUpCall } from '../systems/rank-up-call.js';
 const MOVE_DURATION = 0.2;
+/** A beforeDespawn walk that cannot move for this long (blocked by a wall, NPC or the player) ends — the NPC vanishes */
+const BEFORE_DESPAWN_GIVE_UP_S = 1.5;
 /** Seconds between trainer-rank re-checks (playtime counts as rank XP). */
 const RANK_CHECK_INTERVAL = 3;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
@@ -613,6 +615,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     beforeDespawnSteps: number;
     beforeDespawnWaiting: boolean;
     beforeDespawnTimer: number;
+    /** Seconds the beforeDespawn walk has been unable to move (blocked by a wall/NPC) — gives up after a while */
+    beforeDespawnStuck: number;
     // Cutscene-driven path walking (animated, one tile per frame)
     cutscenePathQueue: Array<'up' | 'down' | 'left' | 'right'>;
     cutsceneWalking: boolean;
@@ -662,6 +666,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         beforeDespawnSteps: 0,
         beforeDespawnWaiting: false,
         beforeDespawnTimer: 0,
+        beforeDespawnStuck: 0,
         cutscenePathQueue: [],
         cutsceneWalking: false,
       };
@@ -3326,6 +3331,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               st.beforeDespawnSteps = 0;
               st.beforeDespawnWaiting = false;
               st.beforeDespawnTimer = 0;
+              st.beforeDespawnStuck = 0;
             }
             st.wasPreviouslyVisible = false;
           }
@@ -3388,11 +3394,14 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
                 st.beforeDespawnWaiting,
                 st.beforeDespawnTimer,
               );
+              // No progress this frame (a blocked first step retries forever) → count it; give up after a while
+              const stuck = !st.moving && !r.waiting && r.idx === st.beforeDespawnIdx && r.steps === st.beforeDespawnSteps;
+              st.beforeDespawnStuck = stuck ? st.beforeDespawnStuck + dt : 0;
               st.beforeDespawnIdx = r.idx;
               st.beforeDespawnSteps = r.steps;
               st.beforeDespawnWaiting = r.waiting;
               st.beforeDespawnTimer = r.timer;
-              if (r.done) {
+              if (r.done || st.beforeDespawnStuck >= BEFORE_DESPAWN_GIVE_UP_S) {
                 st.isPreDespawning = false;
                 // Persist so re-entering the map doesn't replay it
                 if (hasActiveGame()) {
