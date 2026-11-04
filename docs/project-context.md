@@ -26,7 +26,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] `league-summit` door → `league/l1` is one-way: `l1` has no exit back to the summit yet
 - [ ] `forest/league-summit` is a world-map route label only — decide if it should be a Fly city (it has a Pokemon Center)
 - [ ] Legendary caves: Zapdos + Raikou done; remaining legendaries not placed
-- [ ] League (`league/*`) + NULL-X Tower: maps exist with 1 NPC each; `act5/quest-nullx-tower.ts` references `nullx-floor-1..5` which don't exist (only `tower`, `floor-6`)
+- [ ] League (`league/*`) + NULL-X Tower: maps exist with 1 NPC each; no door leads to `nullx/tower` yet; `act5/quest-nullx-tower.ts` references `nullx-floor-1..5` which don't exist (only `tower`, `floor-6`)
 
 ## Trainer Rank perks (`feature/player-rank`, stories: `docs/stories/player-rank.md`)
 - [ ] Stories 1–8 built + unit-tested, **not playtested** — run the QA checklist in the stories doc
@@ -56,7 +56,6 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] On hold: city guards stay open until you leave the map (in vs out)
 
 ## Libraries, labs & friendly NPCs (2026-10-29, not playtested)
-- [ ] Every built city has a library + lab now. New interiors replaced plain houses (doors re-pointed); the old house maps are no longer reachable — delete if not needed: `dividia/house-3`, `dividia/house-4`, `fractalis/template-house-open`, `fractalis/house-1`, `symmetrika/h1`, `minusburg/template-house-open`, `multiplia/h4`, `zeroville/h6`
 - [ ] Algebria has no houses yet — give it a library + lab when the city is built (its Word Board already has Master Ball prizes in `english/board-cities.ts`)
 - [ ] Friendly quiz NPCs (2 per city: `friendly-fan-*`, `friendly-kid-*`) in Zeroville, Minusburg, Multiplia, Dividia, Fractalis, Symmetrika — check spots + sprites in the editor
 - [ ] Only 10 later-gen Pokémon exist in `pokemon.json` for board prizes; fetch more to widen each city's rare list
