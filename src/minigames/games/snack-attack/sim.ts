@@ -14,7 +14,7 @@
  * - times: the target is a product; eat 2 berries whose product is the target. A first berry that can't be one
  *   of the 2 factors, or a wrong second berry, is a tummy ache.
  * - div: the belly starts at a product; eat the one berry that divides it down to the target. Any other is an ache.
- * - Rotten berries cost a heart, Golden berries start Fever (score ×2, faster spawns).
+ * - Rotten berries cost a heart, Golden berries give GOLDEN_POINTS and start Fever (score ×2, faster spawns).
  *   With `hazardFriendly` (the player shares the hazard's type, e.g. a Poison Bulbasaur and poison spores)
  *   a rotten berry is a snack instead: points, no heart lost, the combo stays.
  *
@@ -37,7 +37,10 @@ export const REACHABLE_Y = 0.5;
 
 const MOVE_SPEED = 1.35; // widths per second (keys)
 const POINTER_SPEED = 2.6; // widths per second (towards a drag / tap point)
-const FEVER_SECONDS = 5;
+/** How long Fever (points ×2) lasts after a golden berry. */
+export const FEVER_SECONDS = 12;
+/** Instant bonus for catching a golden berry (before Fever doubles anything). */
+export const GOLDEN_POINTS = 30;
 const FEVER_SPAWN_FACTOR = 0.6;
 const MAX_COMBO_MULT = 5;
 const BASE_POINTS = 10;
@@ -46,10 +49,10 @@ const MAX_BERRIES = 7;
 const FORCED_GAP = 0.35;
 
 /** Top speed (pace 1): fall in screens/s, seconds between spawns, rotten chance per spawn. */
-const TOP_SPEED = { fall: 0.3, spawn: 0.95, rotten: 0.12 };
+const TOP_SPEED = { fall: 0.25, spawn: 0.95, rotten: 0.12 };
 /** The slowest pace a level uses, and its spawn gap / rotten chance (slow levels drop items a bit more often). */
 export const MIN_PACE = 0.4;
-const SLOWEST = { spawn: 1.5, rotten: 0.05 };
+const SLOWEST = { spawn: 1.3, rotten: 0.05 };
 
 /** Fall speed (pace × top) and spawn gap / rotten chance (eased between slowest and top) of a pace. */
 export function speedOf(pace: number): { fall: number; spawn: number; rotten: number } {
@@ -90,7 +93,7 @@ export type SimEvent =
   | { type: 'ache'; berry: Berry }
   | { type: 'rotten'; berry: Berry; hearts: number }
   | { type: 'hazard-snack'; berry: Berry; points: number }
-  | { type: 'golden'; berry: Berry }
+  | { type: 'golden'; berry: Berry; points: number }
   | { type: 'fever-end' }
   | { type: 'new-target'; op: SnackOp; target: number; start: number }
   | { type: 'game-over' };
@@ -231,7 +234,7 @@ export function usefulValues(s: TargetView): number[] {
 /** The value that finishes the target in one bite, if a berry can carry it. */
 export function finisherValue(s: TargetView): number | null {
   const vals = usefulValues(s);
-  if (s.op === 'times') return s.factors.length === 1 ? (vals[0] ?? null) : null;
+  if (s.op === 'times') return s.factors.length === 1 ? vals[0] ?? null : null;
   if (s.op === 'div') return vals[0];
   const rest = s.target - s.belly;
   return vals.includes(rest) ? rest : null;
@@ -414,7 +417,8 @@ export function eatBerry(s: SimState, berry: Berry, events: SimEvent[] = []): Si
   }
   if (berry.kind === 'golden') {
     s.fever = FEVER_SECONDS;
-    events.push({ type: 'golden', berry });
+    s.score += GOLDEN_POINTS;
+    events.push({ type: 'golden', berry, points: GOLDEN_POINTS });
     return events;
   }
 

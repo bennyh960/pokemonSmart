@@ -14,6 +14,7 @@ import type { MiniGameProps } from '../../types.js';
 import type { SnackConfig, SnackOp } from './config.js';
 import {
   BERRY_R,
+  FEVER_SECONDS,
   PLAYER_HALF_W,
   PLAYER_Y,
   bellyFill,
@@ -196,6 +197,7 @@ export function SnackAttackGame({
           fx.tap();
           break;
         case 'golden':
+          h.addScore(ev.points, screenPos(s.playerX, PLAYER_Y - 0.24));
           h.floatText(sk.text.feverStart[loc], { ...screenPos(0.5, 0.35), color: '#fde047' });
           fx.cry(mon);
           break;
@@ -274,7 +276,7 @@ export function SnackAttackGame({
           <div className="mg-pop-in rounded-full bg-yellow-300 px-5 py-1.5 text-lg font-black text-amber-900 shadow-lg">
             {STR.fever[locale]}
             <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-amber-900/20">
-              <div className="h-full rounded-full bg-amber-600" style={{ width: `${(sim.fever / 5) * 100}%` }} />
+              <div className="h-full rounded-full bg-amber-600" style={{ width: `${(sim.fever / FEVER_SECONDS) * 100}%` }} />
             </div>
           </div>
         )}

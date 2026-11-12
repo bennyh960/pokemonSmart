@@ -49,7 +49,7 @@ type SnackMath = Omit<SnackConfig, 'pace' | 'roundSeconds' | 'starScores'>;
 interface SnackLevelData {
   math: SnackMath;
   /**
-   * 1★ ≈ 80% of careless-kid rounds · 2★ ≈ 90% and 3★ ≈ 70% of no-mistake rounds at a person's pace
+   * 1★ ≈ 80% of careless-kid rounds · 2★ ≈ 95% and 3★ ≈ 85% of no-mistake rounds at a person's pace
    * (KID / CAREFUL bots in __tests__/bots.ts; SNACK_TUNE=1 tune.test.ts prints the rates).
    */
   starScores: SnackConfig['starScores'];
@@ -70,7 +70,7 @@ const ADD_SUB = { targetMin: 10, targetMax: 20, berryMin: 1, berryMax: 9 };
 const SNACK_LEVELS: readonly SnackLevelData[] = [
   {
     math: { ops: ['add'], targetMin: 5, targetMax: 10, berryMin: 1, berryMax: 5 },
-    starScores: [40, 80, 150],
+    starScores: [80, 100, 120],
     adds: [
       prize('common', item('poke-ball')),
       prize('common', item('potion')),
@@ -84,13 +84,13 @@ const SNACK_LEVELS: readonly SnackLevelData[] = [
   },
   {
     math: { ops: ['sub'], targetMin: 5, targetMax: 10, berryMin: 1, berryMax: 5 },
-    starScores: [60, 190, 250],
+    starScores: [110, 230, 350],
     adds: [prize('common', item('great-ball')), prize('common', item('super-potion'))],
     threeStar: { from: 1, times: 3 },
   },
   {
     math: { ops: ['add', 'sub'], ...ADD_SUB },
-    starScores: [30, 130, 180],
+    starScores: [60, 160, 200],
     adds: [
       prize('good', item('ultra-ball')),
       prize('good', item('hyper-potion')),
@@ -101,37 +101,37 @@ const SNACK_LEVELS: readonly SnackLevelData[] = [
   },
   {
     math: { ops: ['times'], targetMin: 0, targetMax: 0, berryMin: 1, berryMax: 5, maxTable: 5 },
-    starScores: [70, 280, 350],
+    starScores: [140, 270, 360],
     adds: [prize('good', item('max-potion')), xItemPrize('good')],
     threeStar: { from: 3, times: 3 },
   },
   {
     math: { ops: ['add', 'times'], ...ADD_SUB, maxTable: 5 },
-    starScores: [50, 150, 290],
+    starScores: [110, 180, 210],
     adds: [prize('rare', item('max-ether')), prize('rare', money(10000))],
     threeStar: { from: 1, times: 4 },
   },
   {
     math: { ops: ['sub', 'times'], ...ADD_SUB, maxTable: 6 },
-    starScores: [60, 270, 350],
+    starScores: [100, 360, 420],
     adds: [prize('rare', item('elixir')), prize('rare', money(15000))],
     threeStar: { from: 1, times: 4 },
   },
   {
     math: { ops: ['add', 'sub', 'times'], ...ADD_SUB, maxTable: 7 },
-    starScores: [60, 330, 430],
+    starScores: [120, 280, 310],
     adds: [prize('rare', item('max-elixir')), vitaminPrize('rare', 1)],
     threeStar: { from: 1, times: 5 },
   },
   {
     math: { ops: ['div'], targetMin: 0, targetMax: 0, berryMin: 1, berryMax: 9, maxTable: 5 },
-    starScores: [340, 1000, 1150],
+    starScores: [350, 990, 1060],
     adds: [prize('epic', item('rare-candy')), prize('epic', money(20000))],
     threeStar: { from: 1, times: 5 },
   },
   {
     math: { ops: ['div', 'times'], targetMin: 0, targetMax: 0, berryMin: 1, berryMax: 9, maxTable: 7 },
-    starScores: [180, 570, 760],
+    starScores: [170, 800, 850],
     adds: [heldItemPrize('epic')],
     threeStar: { from: 1, times: 5 },
   },
@@ -145,7 +145,7 @@ const SNACK_LEVELS: readonly SnackLevelData[] = [
       maxTable: 10,
       feverOften: true,
     },
-    starScores: [90, 520, 680],
+    starScores: [160, 580, 590],
     adds: [],
     threeStar: [
       prize('epic', item('leftovers')),
@@ -180,8 +180,25 @@ function levelRewards(i: number): MiniGameLevelRewards {
       : SNACK_LEVELS.slice(three.from - 1, i + 1)
           .flatMap((l) => l.adds)
           .map((p) => timesPrize(p, three.times)),
-    replay: prize('common', money(50 * (i + 1))),
+    replay: replayPrize(i),
   };
+}
+
+/**
+ * Every later win (up to the daily replay cap) pays coins plus one surprise item: any common / good item from the
+ * level's ★★ list — so replaying to unlock the next level always feels rewarding.
+ */
+function replayPrize(i: number): MiniGamePrizeDef {
+  const coins = money(50 * (i + 1));
+  const items = twoStarPrizes(i)
+    .filter((p) => p.rarity === 'common' || p.rarity === 'good')
+    .flatMap((p) => ('oneOf' in p ? p.oneOf : [p.reward]))
+    .filter((r) => r.items);
+  return prizeOneOf(
+    i >= 2 ? 'good' : 'common',
+    items.map((r) => ({ ...r, ...coins })),
+    { en: 'Surprise item + coins', he: 'פרס הפתעה + מטבעות' },
+  );
 }
 
 const LEVEL_NAMES: Partial<Record<number, Bilingual>> = {
@@ -249,8 +266,8 @@ function snackGame(data: SnackGameData): MiniGameDef<SnackConfig> {
       goal: goalOf(config.ops),
       rewards: levelRewards(i),
       prizeStars: 2,
-      // Level N opens level N+1 after N wins with 3★
-      unlockWins: i + 1,
+      // One 3★ win opens the next level
+      unlockWins: 1,
       config: { ...config, ...data.configOverride },
     })),
     Component,

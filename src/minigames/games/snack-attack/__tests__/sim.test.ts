@@ -9,6 +9,8 @@ vi.mock('../../../../auth/supabase-client.js', () => ({ supabase: {} }));
 import { snorlaxSnack as def } from '../index.js';
 import type { SnackConfig, SnackOp } from '../config.js';
 import {
+  FEVER_SECONDS,
+  GOLDEN_POINTS,
   MIN_PACE,
   MOUTH_Y,
   PLAYER_MAX_X,
@@ -260,14 +262,15 @@ describe('eating', () => {
     expect(s.belly).toBe(3);
   });
 
-  it('golden berry starts 5 s of Fever: points ×2, then it ends', () => {
+  it('golden berry gives bonus points and starts Fever: points ×2, then it ends', () => {
     const s = withTarget(createSim(cfg(1), 1), 0, 5);
     eatBerry(s, berry(0, 'golden'));
-    expect(s.fever).toBe(5);
+    expect(s.fever).toBe(FEVER_SECONDS);
+    expect(s.score).toBe(GOLDEN_POINTS);
     eatBerry(s, berry(5));
-    expect(s.score).toBe(20);
+    expect(s.score).toBe(GOLDEN_POINTS + 20);
     const types: string[] = [];
-    for (let t = 0; t < 5.2; t += 0.05) types.push(...stepSim(s, 0.05, NO_INPUT).map((e) => e.type));
+    for (let t = 0; t < FEVER_SECONDS + 0.2; t += 0.05) types.push(...stepSim(s, 0.05, NO_INPUT).map((e) => e.type));
     expect(s.fever).toBe(0);
     expect(types).toContain('fever-end');
   });
@@ -341,18 +344,21 @@ describe('solvable spawner', () => {
   );
 
   it('spawns rotten and golden berries, and Fever-often levels drop more gold', () => {
+    // An idle player can lose early on a fast level, so add up a few seeds
     const count = (config: SnackConfig) => {
-      const s = createSim(config, 9);
-      const seen = new Set<number>();
       let golden = 0;
       let rotten = 0;
-      while (s.time < 60 && !s.over) {
-        stepSim(s, 1 / 30, NO_INPUT);
-        for (const b of s.berries) {
-          if (seen.has(b.id)) continue;
-          seen.add(b.id);
-          if (b.kind === 'golden') golden++;
-          if (b.kind === 'rotten') rotten++;
+      for (const seed of [1, 2, 3, 9]) {
+        const s = createSim(config, seed);
+        const seen = new Set<number>();
+        while (s.time < 60 && !s.over) {
+          stepSim(s, 1 / 30, NO_INPUT);
+          for (const b of s.berries) {
+            if (seen.has(b.id)) continue;
+            seen.add(b.id);
+            if (b.kind === 'golden') golden++;
+            if (b.kind === 'rotten') rotten++;
+          }
         }
       }
       return { golden, rotten };
@@ -390,9 +396,9 @@ describe('stars', () => {
         if (careful === 3) carefulThree++;
       }
       expect(kidClears / runs).toBeGreaterThanOrEqual(0.7);
-      expect(kidThree / runs).toBeLessThanOrEqual(0.15);
-      expect(carefulTwo / runs).toBeGreaterThanOrEqual(0.8);
-      expect(carefulThree / runs).toBeGreaterThanOrEqual(0.55);
+      expect(kidThree / runs).toBeLessThanOrEqual(0.5);
+      expect(carefulTwo / runs).toBeGreaterThanOrEqual(0.9);
+      expect(carefulThree / runs).toBeGreaterThanOrEqual(0.8);
       expect(config.starScores[0]).toBeLessThan(config.starScores[1]);
       expect(config.starScores[1]).toBeLessThan(config.starScores[2]);
     },
