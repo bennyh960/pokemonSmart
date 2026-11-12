@@ -48,10 +48,11 @@ export function SearchHeader({ value, onChange, caughtCount, seenCount, totalCou
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_6px_theme(colors.red.400)]" />
-          {t('pokedex.seen')} <b className="text-amber-400">{seenCount}</b>
-        </span>
-        <span>
-          / <b className="text-zinc-300">{totalCount}</b>
+          {t('pokedex.seen')}{' '}
+          {/* Fraction stays LTR so Hebrew reads seen/total, not total/seen */}
+          <bdi dir="ltr">
+            <b className="text-amber-400">{seenCount}</b> / <b className="text-zinc-300">{totalCount}</b>
+          </bdi>
         </span>
       </div>
     </div>
