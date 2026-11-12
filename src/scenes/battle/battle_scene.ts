@@ -3,7 +3,7 @@
  */
 
 import type { Scene, Pokemon, PokemonType, Move } from '../../types/index.js';
-import { GLITCH_DAMAGE_BONUS_MIN, GLITCH_DAMAGE_BONUS_MAX } from '../../engine/config.js';
+import { ENEMY_POWER_TIERS, type EnemyPowerTier } from '../../engine/config.js';
 import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../../types/battle-metadata.js';
 import { getMapWeather, isDaytime, renderNightOverlay } from '../../systems/weather-system.js';
 import { getCurrentMapId, getCachedMap } from '../../systems/map-manager.js';
@@ -241,12 +241,34 @@ function getCharacterRoles(spriteType: string): string[] {
   return chars[spriteType]?.roles ?? [];
 }
 
+/** League boss class from the character manifest roles (or sprite name for custom sprites). */
+function getLeagueBossClass(spriteType: string): 'elite' | 'gym' | null {
+  const roles = getCharacterRoles(spriteType);
+  const s = spriteType.toLowerCase();
+  if (roles.includes('elite-4') || roles.includes('champion') || s.includes('elite') || s.includes('champion'))
+    return 'elite';
+  if (roles.includes('gym-leader') || s.startsWith('gym-')) return 'gym';
+  return null;
+}
+
+/** Enemy Pokémon → its power tier for the current battle (set at battle start). */
+const enemyPowerTiers = new WeakMap<Pokemon, EnemyPowerTier>();
+
+function getPowerTier(pokemon: Pokemon): EnemyPowerTier | null {
+  return enemyPowerTiers.get(pokemon) ?? (pokemon.isGlitched ? ENEMY_POWER_TIERS.glitch : null);
+}
+
+function rollRange([min, max]: readonly [number, number]): number {
+  return min + Math.random() * (max - min);
+}
+
 function computeAiLevel(spriteType: string, explicit?: AiLevel): AiLevel {
   if (explicit) return explicit;
   const roles = getCharacterRoles(spriteType);
+  const bossClass = getLeagueBossClass(spriteType);
 
-  if (roles.includes('elite-4') || roles.includes('champion')) return 5;
-  if (roles.includes('gym-leader') || roles.includes('league3')) return Math.random() < 0.5 ? 4 : 5;
+  if (bossClass === 'elite') return 5;
+  if (bossClass === 'gym' || roles.includes('league3')) return Math.random() < 0.5 ? 4 : 5;
   if (roles.includes('story') || roles.includes('rival') || roles.includes('league2')) {
     const r = Math.random();
     if (r < 0.333) return 3;
@@ -263,8 +285,6 @@ function computeAiLevel(spriteType: string, explicit?: AiLevel): AiLevel {
 
   // Fallback: check sprite name patterns for unnamed/custom sprites
   const s = spriteType.toLowerCase();
-  if (s.includes('elite') || s.includes('champion')) return 5;
-  if (s.startsWith('gym-')) return Math.random() < 0.5 ? 4 : 5;
   if (s.includes('rocket') || s.includes('villain') || s.includes('null-x')) {
     const r = Math.random();
     if (r < 0.25) return 2;
@@ -495,14 +515,10 @@ function calcDamage(
   const critMultiplier = criticalHit ? 1.5 : 1;
   const rand = 0.7 + Math.random() * 0.3;
   let damage = Math.max(1, Math.floor(base * eff * stab * critMultiplier * defenderMultiplier * rand));
-  if (atk.isGlitched)
-    damage = Math.ceil(
-      damage * (1 + GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN)),
-    );
-  if (def.isGlitched)
-    damage = Math.floor(
-      damage * (1 - (GLITCH_DAMAGE_BONUS_MIN + Math.random() * (GLITCH_DAMAGE_BONUS_MAX - GLITCH_DAMAGE_BONUS_MIN))),
-    );
+  const atkTier = getPowerTier(atk);
+  const defTier = getPowerTier(def);
+  if (atkTier) damage = Math.ceil(damage * rollRange(atkTier.deal));
+  if (defTier) damage = Math.floor(damage * rollRange(defTier.take));
   return Math.max(1, damage);
 }
 
@@ -1491,6 +1507,9 @@ export function createBattleScene(
 
     if (isTrainerBattle && trainerData) {
       addHeldItemsToAiParty(trainerData.party, trainerAIState?.level ?? 3);
+      // Wild map Pokémon, gym leaders and the League hit harder / take less (overrides the glitch tier)
+      const tierId = isWildNpcBattle ? 'wildNpc' : getLeagueBossClass(trainerData.trainerSpriteType ?? '');
+      if (tierId) for (const p of trainerData.party) enemyPowerTiers.set(p, ENEMY_POWER_TIERS[tierId]);
     }
 
     animationDirector.clear();
