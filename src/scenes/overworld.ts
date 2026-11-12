@@ -172,11 +172,14 @@ import {
   updateTrainerRank,
 } from '../systems/trainer-rank.js';
 import { startRankUpCall } from '../systems/rank-up-call.js';
+import { startRematchCall } from '../systems/rematch-call.js';
 const MOVE_DURATION = 0.2;
 /** A beforeDespawn walk that cannot move for this long (blocked by a wall, NPC or the player) ends — the NPC vanishes */
 const BEFORE_DESPAWN_GIVE_UP_S = 1.5;
 /** Seconds between trainer-rank re-checks (playtime counts as rank XP). */
 const RANK_CHECK_INTERVAL = 3;
+/** Seconds of calm on a new map before a ready rematch trainer there phones the player. */
+const REMATCH_CALL_DELAY = 1.5;
 // Encounter chance is now per-map, loaded from encounter-tables.json via getEncounterRate()
 const TRANSITION_FADE_TIME = 0.3;
 
@@ -296,6 +299,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   // Tracks where to return when exiting an interior map (e.g. Pokemon Center)
   let previousMapReturn: { mapId: string; x: number; y: number } | null = null;
   let rankCheckTimer = 0;
+  /** Counts calm time on the current map; null once the rematch call check ran for this entry. */
+  let rematchCallTimer: number | null = null;
 
   /** NPC dialogue lines, plus generated rank lines (rank gate requirement, or a lab rank advisor). */
   function npcDialogueLines(npc: NPCData, dialogue = npc.dialogue): string[] {
@@ -2215,6 +2220,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       queueCutscene(ENGLISH_BOARD_INTRO_CUTSCENE);
     }
 
+    rematchCallTimer = 0; // a ready rematch trainer on this map calls once things are calm
+
     // Fire map-enter story trigger
     if (currentMapData.id) fireStoryTrigger({ type: 'map-enter', mapId: currentMapData.id as MapId });
 
@@ -2762,6 +2769,10 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         if (hasUnannouncedRanks()) {
           autoSave(); // persist the new rank flags so a reload doesn't replay the call
           void startRankUpCall(getPlayerData());
+        }
+        if (rematchCallTimer !== null && currentMapData && (rematchCallTimer += dt) >= REMATCH_CALL_DELAY) {
+          rematchCallTimer = null;
+          if (startRematchCall(getPlayerData(), currentMapData)) autoSave();
         }
       }
 

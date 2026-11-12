@@ -158,6 +158,8 @@ export interface PCBox {
 export interface TrainerEncounterState {
   count: number; // how many times player has defeated this trainer (including first)
   lastDefeatedAt: number; // timestamp (ms) of last defeat
+  /** Defeat count the "ready for a rematch" phone call was made for (systems/rematch-call.ts). */
+  rematchCalledAt?: number;
 }
 
 /** Story-mode infection level for a map/region. */
