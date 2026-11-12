@@ -179,6 +179,35 @@ export const MINI_GAME_GATE_LINES = {
   ],
 };
 
+/**
+ * What the guard says when the player shows a gate card (systems/gate-cards.ts), by card.
+ * One is picked at random, never the same one twice in a row, so kids don't read the same line every time.
+ */
+export const GATE_CARD_LINES = {
+  bypass: [
+    { en: 'I know you already know that one! 😉', he: 'אני יודע שאת זה אתה כבר יודע! 😉' },
+    { en: 'A smart trainer like you? Easy! Walk right in.', he: 'מאמן חכם כמוך? קלי קלות! תיכנס.' },
+    { en: "Card scanned! ✔ You'd have solved it anyway.", he: 'הכרטיס נסרק! ✔ היית פותר את זה בכל מקרה.' },
+    { en: "Shhh… a VIP trainer is coming through! 😎", he: 'ששש… מאמן חשוב עובר כאן! 😎' },
+    { en: "Beep boop! NULL-X can't stop a card like this.", he: 'ביפ בופ! נאל-איקס לא יכול לעצור כרטיס כזה.' },
+    { en: 'Even Pikachu can see you know this one. ⚡', he: 'אפילו פיקאצ׳ו רואה שאת זה אתה יודע. ⚡' },
+    { en: 'Your brain is already warmed up — skip ahead!', he: 'המוח שלך כבר מחומם — דלג קדימה!' },
+    { en: "The guard winks: 'Fast lane for card holders!'", he: 'השומר קורץ: "מסלול מהיר לבעלי כרטיס!"' },
+    { en: 'Too easy for you? Then show me the bonus!', he: 'קל מדי בשבילך? אז תראה לי את שאלת הבונוס!' },
+    { en: "Saving time for the real adventure. Let's go!", he: 'חוסכים זמן להרפתקה האמיתית. יוצאים!' },
+  ],
+  skip: [
+    { en: 'I know you already know that one! 😉', he: 'אני יודע שאת זה אתה כבר יודע! 😉' },
+    { en: "Next! You've got this one in your pocket.", he: 'הבאה! את זאת כבר יש לך בכיס.' },
+    { en: "One down — the guard didn't even blink. 😄", he: 'אחת פחות — השומר אפילו לא מצמץ. 😄' },
+    { en: 'Skipped! Save your brain power for the next one.', he: 'דילגת! שמור את כוח המוח לשאלה הבאה.' },
+    { en: 'Psst… that was the answer. Now try the next one!', he: 'פססט… זאת הייתה התשובה. עכשיו נסה את הבאה!' },
+    { en: 'Easy peasy — on to the next question!', he: 'קלי קלות — ממשיכים לשאלה הבאה!' },
+    { en: "The card beeps: 'Question solved!' ✔", he: 'הכרטיס מצפצף: "השאלה נפתרה!" ✔' },
+    { en: 'Even Snorlax would skip this one. 😴', he: 'אפילו סנורלקס היה מדלג על זאת. 😴' },
+  ],
+};
+
 // ─── Register global auto-gate defs ──────────────────────────────────────────
 
 registerGate({

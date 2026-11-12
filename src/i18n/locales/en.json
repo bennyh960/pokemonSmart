@@ -803,6 +803,7 @@
   "minigames.pickLevel": "Select difficulty level",
   "minigames.prize.bonus": "Lucky find!",
   "minigames.prize.dust": "Cleaning bonus! 🧹",
+  "minigames.prize.card": "Lucky find! 🎫",
   "minigames.prize.board": "Word Board prize!",
   "admin.ambush.none": "Nothing to review yet — play some English first (ladder step 2+ or a played level).",
   "admin.care.none": "No Pokémon in the party has a care mini-game.",
@@ -856,6 +857,11 @@
   "gate.ui.leave": "🚪 Oops, wrong way",
   "gate.ui.waiting": "Trainer check…",
   "gate.ui.checkpoint": "Checkpoint",
+  "gate.ui.bypass": "🎫 Use a Bypass Card (×{count}) — skip!",
+  "gate.ui.bypassAnswer": "The answer: {answer}",
+  "gate.ui.bypassUsed": "🎫 Bypass Card used",
+  "gate.ui.skip": "⏭️ Skip Card (×{count}) — skip this one",
+  "gate.ui.skipUsed": "⏭️ Skip Cards used: {count}",
   "gate.youMayPass": "The road is open — good luck!",
   "gate.pathOpen": "The road is open!"
 }

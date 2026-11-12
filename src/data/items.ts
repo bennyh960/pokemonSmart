@@ -71,7 +71,7 @@ function buildItems(): Record<string, ItemDef> {
       effect: gameDef.effect,
       usableInBattle: gameDef.usableInBattle,
       usableInOverworld: gameDef.usableInOverworld,
-      sprite: raw?.sprite ?? `${SPRITE_BASE}/${slug}.png`,
+      sprite: raw?.sprite ?? `${SPRITE_BASE}/${gameDef.spriteSlug ?? slug}.png`,
       topColor: gameDef.topColor,
       keyFlag: gameDef.keyFlag,
       usedFlag: gameDef.usedFlag,

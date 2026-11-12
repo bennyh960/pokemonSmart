@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 26;
+export const CURRENT_SAVE_VERSION = 27;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -408,6 +408,14 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
     // Glitch sight (set in the Suicune-freed cutscene): saves already past that scene get it now
     if (data.flags?.['act4-pct-suicune-done']) data.flags['glitch-sight'] = true;
     data.saveVersion = 26;
+  },
+  27: (data) => {
+    // Bypass Card: Officer Jenny now gives one in Sumville's first scene — saves already past it get theirs here
+    if (data.flags?.['act1-oak-warning-heard'] && !data.flags['key-bypass-card-obtained'] && data.items) {
+      data.items['bypass-card'] = (data.items['bypass-card'] ?? 0) + 1;
+      data.flags['key-bypass-card-obtained'] = true;
+    }
+    data.saveVersion = 27;
   },
 };
 

@@ -33,6 +33,7 @@ import { registerGate } from '../../gates.js';
 import { registerStoryEvent } from '../../events.js';
 import { FLAGS } from '../../flags.js';
 import { DEFAULT_SESSION_CONFIG } from '../../global-gate-config.js';
+import { GATE_CARD_ITEMS } from '../../../../systems/gate-cards.js';
 import { MapId } from '../../../maps/map-ids.js';
 
 // ── Quests ───────────────────────────────────────────────────────────────────
@@ -242,6 +243,35 @@ registerCutscene({
         {
           en: 'Talk to a green light and it will show you how long your free pass lasts.',
           he: 'דבר עם אור ירוק והוא יראה לך כמה זמן נשאר למעבר החופשי שלך.',
+        },
+      ],
+    },
+    {
+      type: 'dialogue',
+      speakerName: 'Officer Jenny / שוטרת ג׳ני',
+      lines: [
+        {
+          en: 'So many questions can make a hero tired. Here, take this from the police!',
+          he: 'כל כך הרבה שאלות יכולות לעייף גם גיבור. הנה, קח את זה מהמשטרה!',
+        },
+      ],
+    },
+    { type: 'action', action: { type: 'give-item', itemId: GATE_CARD_ITEMS.bypass, quantity: 1 } },
+    {
+      type: 'dialogue',
+      speakerName: 'Officer Jenny / שוטרת ג׳ני',
+      lines: [
+        {
+          en: 'You got a Bypass Card! It helps you finish a question gate faster.',
+          he: 'קיבלת כרטיס מעבר מהיר! הוא יעזור לך לעבור שער שאלות מהר יותר.',
+        },
+        {
+          en: 'At a gate, press the yellow card button and skip the questions — one card per gate. Not at gyms, though!',
+          he: 'בשער, לחץ על כפתור הכרטיס הצהוב ודלג על השאלות — כרטיס אחד לכל שער. רק לא במכוני פוקימון!',
+        },
+        {
+          en: 'You might win more in libraries, labs and berry games. They are rare — keep them for hard days!',
+          he: 'אולי תזכה בעוד בספריות, במעבדות ובמשחקי פירות. הם נדירים — שמור אותם לימים קשים!',
         },
       ],
     },

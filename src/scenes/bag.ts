@@ -334,8 +334,9 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
           align: rtl ? 'right' : 'left',
         });
 
-        // Key items: show ✓ (used) or □ (pending) instead of quantity
-        if (item.def.category === 'key') {
+        // Story key items (with a usedFlag): show ✓ (used) or □ (pending) instead of quantity.
+        // Other key items (Bypass Card…) stack, so they show their quantity like any item.
+        if (item.def.category === 'key' && item.def.usedFlag) {
           const kPd = getPlayerData();
           const kUsed = !!(item.def.usedFlag && kPd.flags[item.def.usedFlag]);
           drawText(ctx, kUsed ? '\u2713' : '\u25a1', 8, cy + 1, {

@@ -11,6 +11,9 @@
  *  4. Once `correctCount >= config.questionsRequired`, session moves to
  *     optional bonus phase (if enabled).
  *  5. `getResult()` computes the final SessionResult with reward/penalty info.
+ *
+ * Gate cards (systems/gate-cards.ts): `bypass()` ends the main phase at once — no fine — and the bonus
+ * question still follows; `skipQuestion()` counts the current question as answered (not an attempt). Bonus questions come from a harder grade and avoid templates seen lately.
  */
 
 import { QuestionBuilder, buildSnapshot, getClassConfig, registry } from '../math/question-builder/index.js';
@@ -56,7 +59,17 @@ export interface SessionResult {
   rewardsEarned: GateReward[];
   /** The player left before finishing ("oops, wrong way") — nothing is applied. */
   exited?: boolean;
+  /** The player skipped the questions with a Bypass Card (the caller takes the card). */
+  bypassed?: boolean;
+  /** Questions skipped with Skip Cards (the caller takes the cards — also when the player left). */
+  skipsUsed?: number;
 }
+
+/** A bonus pool smaller than this widens to easier templates (the numbers stay at the harder grade). */
+const MIN_BONUS_POOL = 4;
+/** Bonus templates of the last gates (memory only) — skipped while other templates are left. */
+const RECENT_BONUS_MEMORY = 4;
+const recentBonusTemplates: string[] = [];
 
 // ─── GateSession ────────────────────────────────────────────────────────────────────
 
@@ -83,6 +96,10 @@ export class GateSession {
 
   private phase: 'main' | 'bonus' | 'done' = 'main';
   private bonusPassed: boolean | null = null;
+  private bypassed = false;
+  private skipsUsed = 0;
+  /** Templates served in this session — the bonus question picks another one. */
+  private readonly servedTemplates = new Set<string>();
 
   constructor(config: GateSessionConfig) {
     this.config = config;
@@ -114,9 +131,7 @@ export class GateSession {
    */
   nextQuestion(): AnyQuestion {
     // Bonus phase always uses a rich question at elevated difficulty
-    if (this.phase === 'bonus') {
-      return this._nextRichQuestion(this._buildBonusConfig());
-    }
+    if (this.phase === 'bonus') return this._nextBonusQuestion();
 
     // Decide whether to serve a simple input question.
     // Probability = remaining input questions / remaining total questions.
@@ -139,6 +154,23 @@ export class GateSession {
     const builder = new QuestionBuilder().withConfig(config).withSnapshot(this.snapshot);
     const q = builder.build();
     this.lastTemplateId = q.templateId;
+    this.servedTemplates.add(q.templateId);
+    return q;
+  }
+
+  /** A harder question than the regular ones, from a template not seen in this gate or the last few bonuses. */
+  private _nextBonusQuestion(): RichQuestion {
+    const cfg = this._buildBonusConfig();
+    const pool = registry.forConfig(cfg);
+    const notRecent = pool.filter((tpl) => !recentBonusTemplates.includes(tpl.id));
+    const fresh = notRecent.filter((tpl) => !this.servedTemplates.has(tpl.id));
+    const options = fresh.length > 0 ? fresh : notRecent.length > 0 ? notRecent : pool;
+    const template = options[Math.floor(Math.random() * options.length)];
+    recentBonusTemplates.push(template.id);
+    if (recentBonusTemplates.length > RECENT_BONUS_MEMORY) recentBonusTemplates.shift();
+    const q = new QuestionBuilder().withConfig(cfg).withSnapshot(this.snapshot).withTemplateId(template.id).build();
+    this.lastTemplateId = q.templateId;
+    this.servedTemplates.add(q.templateId);
     return q;
   }
 
@@ -206,6 +238,7 @@ export class GateSession {
       }
       const richRetry = builder.build();
       this.lastTemplateId = richRetry.templateId;
+      this.servedTemplates.add(richRetry.templateId);
       retryQuestion = richRetry;
     }
 
@@ -218,6 +251,31 @@ export class GateSession {
     };
   }
 
+  get wasBypassed(): boolean {
+    return this.bypassed;
+  }
+
+  /** Bypass Card: the main questions are done at once; the bonus question follows when the gate has one. */
+  bypass(): void {
+    if (this.phase !== 'main') return;
+    this.bypassed = true;
+    this.phase = this.config.bonusEnabled ? 'bonus' : 'done';
+  }
+
+  get questionsSkipped(): number {
+    return this.skipsUsed;
+  }
+
+  /** Skip Card: the current main question counts as answered (no attempt). Returns whether the main phase is done. */
+  skipQuestion(): boolean {
+    if (this.phase !== 'main') return false;
+    this.skipsUsed++;
+    this.correctCount++;
+    const done = this.correctCount >= this.requiredTotal;
+    if (done) this.phase = this.config.bonusEnabled ? 'bonus' : 'done';
+    return done;
+  }
+
   /** Skip bonus phase (player chose not to answer optional question). */
   skipBonus(): void {
     if (this.phase === 'bonus') {
@@ -228,12 +286,16 @@ export class GateSession {
 
   /** Compute the final result once the session is done. */
   getResult(): SessionResult {
-    const successRate = this.totalAttempts > 0 ? this.correctCount / this.totalAttempts : 1;
+    // Skipped questions are neither right nor wrong — the score counts the answered ones only
+    const answeredRight = this.correctCount - this.skipsUsed;
+    const successRate = this.totalAttempts > 0 ? answeredRight / this.totalAttempts : 1;
 
     const meetsRewardThreshold = successRate >= this.config.rewardThreshold;
     const belowPenaltyThreshold = successRate < this.config.penaltyThreshold;
 
-    const penaltyApplied = belowPenaltyThreshold && this.bonusPassed !== true ? this.config.penaltyAmount : 0;
+    // A Bypass Card never comes with a fine
+    const penaltyApplied =
+      belowPenaltyThreshold && this.bonusPassed !== true && !this.bypassed ? this.config.penaltyAmount : 0;
 
     let rewardsEarned: GateReward[] = [];
     if (meetsRewardThreshold) {
@@ -253,28 +315,26 @@ export class GateSession {
       bonusPassed: this.bonusPassed,
       penaltyApplied,
       rewardsEarned,
+      bypassed: this.bypassed,
+      skipsUsed: this.skipsUsed,
     };
   }
 
   // ── Private helpers ────────────────────────────────────────────────────────
 
+  /**
+   * The bonus grade (1–2 above the player's) with difficulty starting just above the player's top level.
+   * Too few templates there → the range widens down one level at a time; the bonus grade's bigger numbers
+   * and extra operations keep it harder than the regular questions.
+   */
   private _buildBonusConfig(): ClassConfig {
     const gradeNum = Number(this.gradeId.replace('grade', ''));
     const boost = Math.random() < 0.5 ? 1 : 2;
-    const bonusGradeId = `grade${Math.min(6, gradeNum + boost)}` as GradeId;
-    const bonusBase = getClassConfig(bonusGradeId);
-    const playerCfg = getClassConfig(this.gradeId);
-
-    // Raise difficultyRange[0] so that templates whose difficulty ceiling sits
-    // at the player's current level are excluded — they already appear in
-    // regular questions and feel the same difficulty to the player.
-    // min 4 is the lowest threshold that cuts out the four single-step templates
-    // (BasicDamage, PoisonSleep, PokeBallsNeeded, SingleItemCost all cap at 3).
-    const minDiff = Math.max(playerCfg.difficultyRange[1] + 1, 4) as MathDifficulty;
-
-    // Grade-6 players are already at the ceiling — fall back to the bonus grade base.
-    if (minDiff > bonusBase.difficultyRange[1]) return bonusBase;
-
-    return { ...bonusBase, difficultyRange: [minDiff, bonusBase.difficultyRange[1]] };
+    const bonusBase = getClassConfig(`grade${Math.min(6, gradeNum + boost)}` as GradeId);
+    const top = bonusBase.difficultyRange[1];
+    let min = Math.min(getClassConfig(this.gradeId).difficultyRange[1] + 1, top);
+    const withMin = (m: number): ClassConfig => ({ ...bonusBase, difficultyRange: [m as MathDifficulty, top] });
+    while (min > 1 && registry.forConfig(withMin(min)).length < MIN_BONUS_POOL) min--;
+    return withMin(min);
   }
 }

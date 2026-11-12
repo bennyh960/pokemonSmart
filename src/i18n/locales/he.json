@@ -802,6 +802,7 @@
   "minigames.pickLevel": "בחרו רמת קושי",
   "minigames.prize.bonus": "מציאה נדירה!",
   "minigames.prize.dust": "בונוס ניקיון! 🧹",
+  "minigames.prize.card": "מציאה נדירה! 🎫",
   "minigames.prize.board": "פרס מלוח המילים!",
   "admin.ambush.none": "אין עדיין מה לחזור עליו — שחקו קודם קצת אנגלית.",
   "admin.care.none": "לאף פוקימון בצוות אין מיני-משחק טיפול.",
@@ -855,6 +856,11 @@
   "gate.ui.leave": "🚪 אופס, טעיתי בדרך",
   "gate.ui.waiting": "בדיקת מאמנים…",
   "gate.ui.checkpoint": "מחסום",
+  "gate.ui.bypass": "🎫 כרטיס מעבר מהיר (×{count}) — דלג!",
+  "gate.ui.bypassAnswer": "התשובה: {answer}",
+  "gate.ui.bypassUsed": "🎫 השתמשת בכרטיס מעבר מהיר",
+  "gate.ui.skip": "⏭️ כרטיס דילוג (×{count}) — דלג על השאלה",
+  "gate.ui.skipUsed": "⏭️ השתמשת בכרטיסי דילוג: {count}",
   "gate.youMayPass": "הדרך פתוחה — בהצלחה!",
   "gate.pathOpen": "הדרך פתוחה!"
 }
