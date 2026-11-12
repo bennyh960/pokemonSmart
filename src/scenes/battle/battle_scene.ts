@@ -8,6 +8,7 @@ import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../..
 import { getMapWeather, isDaytime, renderNightOverlay } from '../../systems/weather-system.js';
 import { getCurrentMapId, getCachedMap } from '../../systems/map-manager.js';
 import { addPhoneContact, isPhoneTrainer } from '../../systems/phone-contacts.js';
+import { hasCaughtEvolutionLine } from '../../systems/pokedex.js';
 import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import type { AudioManager } from '../../audio/audio-manager.js';
@@ -1374,6 +1375,9 @@ export function createBattleScene(
     pendingBattleBackground = null;
     // V2 layout: opponent bar at (136,12), player bar position computed dynamically
     enemyHpBar = createHPBar(enemy.id, enemy.level, enemy.hp, enemy.maxHp, BTL.OPP_BAR.x, BTL.OPP_BAR.y, false);
+    // Wild Pokémon whose evolution line the player already caught get a pokeball by their name
+    enemyHpBar.caughtMark =
+      (!isTrainerBattle || isWildNpcBattle) && hasActiveGame() && hasCaughtEvolutionLine(getPlayerData(), enemy.id);
     playerHpBar = createHPBar(
       player.id,
       player.level,

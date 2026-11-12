@@ -14,6 +14,7 @@ import { BTL, getPlayerBarHeight, getPlayerBarY, getHpColor, STATUS_PILL_COLORS 
 import { getLocale, isRTL } from '../i18n/i18n.js';
 import { renderPartyBalls } from './battle-menu.js';
 import { drawTypeBadge, measureTypeBadge } from './type-badge.js';
+import { drawPokeballIcon } from './item-icons.js';
 import type { PokemonType } from '../types/index.js';
 
 export interface HPBarState {
@@ -33,6 +34,8 @@ export interface HPBarState {
   volatileStatuses: string[];
   gender: string;
   statChanges: { stat: string; stages: number }[];
+  /** Opponent only: draw a pokeball before the name (player already caught this evolution line). */
+  caughtMark: boolean;
 }
 
 export interface PartyBallState {
@@ -68,6 +71,7 @@ export function createHPBar(
     volatileStatuses: [],
     gender: '',
     statChanges: [],
+    caughtMark: false,
   };
 }
 
@@ -200,6 +204,7 @@ function renderPanelHeader(
   status: string,
   nameStyle: { dy: number; fs: number },
   levelStyle: { dy: number; fs: number },
+  caughtMark = false,
 ): void {
   const rtl = isRTL();
   const levelText = `Lv.${level}`;
@@ -213,9 +218,11 @@ function renderPanelHeader(
   const badgeGap = badgeW > 0 ? BTL.STATUS_BADGE_GAP : 0;
   const contentWidth = panelW - padding * 2;
   const reservedWidth = levelWidth + badgeGap + badgeW;
-  const nameClipW = Math.max(0, contentWidth - reservedWidth - gap);
-  const nameClipX = rtl ? panelX + padding + reservedWidth + gap : panelX + padding;
-  const nameAnchorX = rtl ? panelX + panelW - padding : panelX + padding;
+  const markSize = nameStyle.fs - 1;
+  const markW = caughtMark ? markSize + 1 : 0;
+  const nameClipW = Math.max(0, contentWidth - reservedWidth - gap - markW);
+  const nameClipX = rtl ? panelX + padding + reservedWidth + gap : panelX + padding + markW;
+  const nameAnchorX = rtl ? panelX + panelW - padding - markW : panelX + padding + markW;
   const levelX = rtl ? panelX + padding : panelX + panelW - padding;
   const badgeX = rtl
     ? panelX + padding + levelWidth + badgeGap
@@ -231,6 +238,13 @@ function renderPanelHeader(
   if (statusStyle && badgeLabel) {
     // console.debug('Rendering status badge:', badgeLabel, statusStyle);
     renderStatusBadge(ctx, badgeX, panelY, badgeW, badgeLabel, statusStyle);
+  }
+
+  if (caughtMark) {
+    const markX = rtl ? panelX + panelW - padding - markSize : panelX + padding;
+    // Centre on the name's line box (text is drawn with a 'top' baseline)
+    const markY = panelY + nameStyle.dy + (nameStyle.fs - markSize) / 2;
+    drawPokeballIcon(ctx, 'poke-ball', markX, markY, markSize);
   }
 
   if (nameClipW <= 0) return;
@@ -258,7 +272,7 @@ function renderOpponentBar(ctx: CanvasRenderingContext2D, bar: HPBarState, party
   const hpPct = bar.maxHp > 0 ? Math.ceil(ratio * 100) : 0;
 
   const name = getPokemonDisplayName(bar.pokemonId);
-  renderPanelHeader(ctx, B.x, B.y, B.w, name, bar.level, bar.status, BTL.OPP_NAME, BTL.OPP_LEVEL);
+  renderPanelHeader(ctx, B.x, B.y, B.w, name, bar.level, bar.status, BTL.OPP_NAME, BTL.OPP_LEVEL, bar.caughtMark);
 
   // HP label (right side)
   drawText(ctx, 'HP', B.x + BTL.OPP_HP_LABEL.dx, B.y + BTL.OPP_HP_LABEL.dy, {
