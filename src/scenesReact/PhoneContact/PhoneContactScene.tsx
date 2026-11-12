@@ -5,6 +5,7 @@ import { getMapDisplayName, loadMap } from '../../systems/map-manager';
 import type { PlayerData } from '../../types';
 import { usePlayerData } from '../../ui-react/hooks/usePlayerData';
 import { getReencounterStatus } from '../../systems/reencounter';
+import { addPhoneContact, findMissingPhoneContacts } from '../../systems/phone-contacts';
 import { useInputLayer } from '../../engine/input';
 import CHARACTERS_DATA from '../../data/sprites/characters.json';
 import { getDayCareEntry, getDayCarePhase } from '../../systems/day-care';
@@ -54,7 +55,7 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
 
   const [callActive, setCallActive] = useState<boolean>(false);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState<number>(0);
-  const [pd] = usePlayerData();
+  const [pd, mutate] = usePlayerData();
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleCallButtonClick = () => {
@@ -90,9 +91,14 @@ const PhoneContactScene = ({ onClose }: { onClose: () => void }) => {
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   useEffect(() => {
-    getPlayerPhoneData(pd).then((contacts) => {
-      setContacts(contacts);
-    });
+    // Restore contacts the save earned but the phone lost (v19 reset / old addToPhone check)
+    findMissingPhoneContacts(pd)
+      .then((missing) => {
+        if (missing.length) mutate((d) => missing.forEach((c) => addPhoneContact(d, c.npcId, c.mapId)));
+      })
+      .catch((err) => console.warn('Phone contact backfill failed:', err))
+      .then(() => getPlayerPhoneData(pd))
+      .then(setContacts);
 
     if (isLandscape) {
       rotateLandScape();
