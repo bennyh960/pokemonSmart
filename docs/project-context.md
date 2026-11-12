@@ -54,6 +54,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 ## Gates (kids-friendly pass)
 - [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
 - [ ] On hold: city guards stay open until you leave the map (in vs out)
+- [ ] Gate cards (2026-11-12, save v27, not playtested): Bypass Card (whole gate → bonus; not gym/League) + Skip Card (one question, any gate). Answer shown with a random guard line. Jenny gives the first Bypass Card in `act1-oak-arrives`; old saves past it get 1 in migration 27. Prizes: labs/care 3★ rolls (`GATE_CARD_ODDS`), Word Board by level (`BOARD_CARD_TIERS` — Bypass from level 4, Skip on every level). Check both buttons on a phone, a gym gate (only Skip shows), and that Skip-card prizes don't dilute the board's good/rare pools too much
 
 ## Libraries, labs & friendly NPCs (2026-10-29, not playtested)
 - [ ] Algebria has no houses yet — give it a library + lab when the city is built (its Word Board already has Master Ball prizes in `english/board-cities.ts`)

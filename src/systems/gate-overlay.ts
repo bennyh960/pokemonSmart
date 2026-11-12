@@ -12,6 +12,8 @@
  *   - No "reveal answer" button — player must pick and commit
  *   - Wrong answer: hint shown, new question generated (same template type, fresh numbers)
  *   - Correct: progress bar advances, next question auto-loaded
+ *   - Gate cards (systems/gate-cards.ts): a button per card the player has — reveals the answer with a
+ *     random guard line; Bypass → the bonus question, Skip → the next question
  *   - Bilingual: uses isRTL() + getLocale() from i18n system
  *   - Full-screen, z-index 500 so it covers canvas and all game UI
  */
@@ -23,6 +25,8 @@ import type { SessionResult, AnswerFeedback, AnyQuestion } from './gate-session.
 import type { RichQuestion, QuestionAsset } from '../math/question-builder/index.js';
 import type { SimpleInputQuestion } from '../math/simple-input-question.js';
 import { getItem } from '../data/items.js';
+import { GATE_CARD_LINES } from '../data/story/global-gate-config.js';
+import type { GateCard } from './gate-cards.js';
 
 // Re-export so gate-scene can use the same type
 export type { SessionResult };
@@ -43,6 +47,22 @@ export interface GateOverlayOptions {
   container: HTMLElement;
   /** Locale override. Defaults to getLocale(). */
   locale?: 'he' | 'en';
+  /**
+   * Gate cards the player can use here (0 = no button; Bypass is 0 at gyms / the League).
+   * The caller takes the cards: one Bypass on `bypassed`, `skipsUsed` Skip Cards.
+   */
+  cards?: Record<GateCard, number>;
+}
+
+/** Last guard line shown per card — the next one is a different line. */
+const lastCardLine: Record<GateCard, number> = { bypass: -1, skip: -1 };
+
+function pickCardLine(card: GateCard): number {
+  const n = GATE_CARD_LINES[card].length;
+  let i = Math.floor(Math.random() * n);
+  if (n > 1 && i === lastCardLine[card]) i = (i + 1 + Math.floor(Math.random() * (n - 1))) % n;
+  lastCardLine[card] = i;
+  return i;
 }
 
 /**
@@ -196,6 +216,7 @@ class GateOverlayController {
         <h2 class="go-title">${titleLabel}</h2>
         <p class="go-intro-text">${text}</p>
         <button class="go-btn go-btn-primary go-continue-btn">${continueLabel}</button>
+        ${this._cardButtonsHtml()}
         ${this._leaveButtonHtml()}
       </div>
     `;
@@ -204,6 +225,7 @@ class GateOverlayController {
       this._startMainPhase();
     });
     this._wireLeaveButton();
+    this._wireCardButtons();
   }
 
   // ── Phase: questions ───────────────────────────────────────────────────────
@@ -272,10 +294,12 @@ class GateOverlayController {
         </div>
 
         <div id="go-feedback-area" class="go-feedback-area"></div>
+        ${this._cardButtonsHtml()}
         ${this._leaveButtonHtml()}
       </div>
     `;
     this._wireLeaveButton();
+    this._wireCardButtons();
 
     const inputEl = this.el.querySelector<HTMLInputElement>('#go-iq-input')!;
     setTimeout(() => inputEl?.focus(), 50);
@@ -349,10 +373,12 @@ class GateOverlayController {
         ${choicesHtml}
 
         <div id="go-feedback-area" class="go-feedback-area"></div>
+        ${this._cardButtonsHtml()}
         ${this._leaveButtonHtml()}
       </div>
     `;
     this._wireLeaveButton();
+    this._wireCardButtons();
 
     this.el.querySelectorAll('.go-choice').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -520,6 +546,12 @@ class GateOverlayController {
          </div>`
       : '';
 
+    const cardLines = [
+      result.bypassed ? this._t('gate.ui.bypassUsed') : '',
+      result.skipsUsed ? this._t('gate.ui.skipUsed', { count: result.skipsUsed }) : '',
+    ].filter(Boolean);
+    const bypassHtml = cardLines.map((l) => `<div class="go-bypass-used">${l}</div>`).join('');
+
     const penaltyHtml = result.penaltyApplied > 0
       ? `<div class="go-penalty">${this._t('gate.ui.fine', { amount: result.penaltyApplied })}</div>`
       : '';
@@ -538,6 +570,7 @@ class GateOverlayController {
           <span>${result.correctCount} / ${result.totalAttempts}</span>
         </div>
 
+        ${bypassHtml}
         ${bonusBadge}
         ${rewardsHtml}
         ${penaltyHtml}
@@ -549,6 +582,87 @@ class GateOverlayController {
     this.el.querySelector('.go-done-btn')!.addEventListener('click', () => {
       this._unmount(result);
     });
+  }
+
+  // ── Gate cards ─────────────────────────────────────────────────────────────
+
+  /** Cards left to use on this screen (Skip Cards already used in this gate are gone). */
+  private _cardsLeft(card: GateCard): number {
+    const have = this.opts.cards?.[card] ?? 0;
+    return card === 'skip' ? have - this.session.questionsSkipped : have;
+  }
+
+  /** Bypass: intro + questions. Skip: on a question only. Never on the bonus question. */
+  private _cardButtonsHtml(): string {
+    if (this.session.isBonusPhase || this.session.isComplete) return '';
+    const buttons: string[] = [];
+    const bypass = this._cardsLeft('bypass');
+    if (bypass > 0) {
+      buttons.push(`<button class="go-btn go-btn-card go-card-bypass">${this._t('gate.ui.bypass', { count: bypass })}</button>`);
+    }
+    const skip = this._cardsLeft('skip');
+    if (skip > 0 && this.currentQuestion) {
+      buttons.push(`<button class="go-btn go-btn-card go-card-skip">${this._t('gate.ui.skip', { count: skip })}</button>`);
+    }
+    return buttons.length ? `<div class="go-card-row">${buttons.join('')}</div>` : '';
+  }
+
+  private _wireCardButtons(): void {
+    this.el.querySelector('.go-card-bypass')?.addEventListener('click', () => this._useCard('bypass'));
+    this.el.querySelector('.go-card-skip')?.addEventListener('click', () => this._useCard('skip'));
+  }
+
+  /** Show the answer on screen (if any) with a guard line; Bypass → the bonus question, Skip → the next question. */
+  private _useCard(card: GateCard): void {
+    if (this.inputLocked) return;
+    this.inputLocked = true;
+    this._stopTimer();
+    if (card === 'bypass') this.session.bypass();
+    else this.session.skipQuestion();
+
+    const line = GATE_CARD_LINES[card][pickCardLine(card)][this.locale];
+    const q = this.currentQuestion;
+    let answerHtml = '';
+    if (q) {
+      const answer = isSimpleInput(q) ? q.answer : (q as RichQuestion).correctAnswer;
+      this.el.querySelectorAll<HTMLButtonElement>('.go-choice').forEach((btn) => {
+        if (parseInt(btn.dataset.value ?? '', 10) === answer) btn.classList.add('go-correct');
+        btn.disabled = true;
+      });
+      const inputEl = this.el.querySelector<HTMLInputElement>('#go-iq-input');
+      if (inputEl) {
+        inputEl.value = String(answer);
+        inputEl.disabled = true;
+      }
+      const submitBtn = this.el.querySelector<HTMLButtonElement>('.go-iq-submit');
+      if (submitBtn) submitBtn.disabled = true;
+      answerHtml = `<div class="go-bypass-answer">${this._t('gate.ui.bypassAnswer', { answer: _fmtNum(answer) })}</div>`;
+    }
+
+    const bodyHtml = `
+      <div class="go-feedback go-feedback-bypass">
+        <div>${card === 'bypass' ? '🎫' : '⏭️'} ${line}</div>
+        ${answerHtml}
+      </div>
+      <button class="go-btn go-btn-primary go-card-continue">${this._t('gate.ui.continue')}</button>
+    `;
+    this.el.querySelector('.go-card-row')?.remove();
+    this.el.querySelector('.go-leave-btn')?.remove();
+    this.el.querySelector('.go-continue-btn')?.remove();
+    const area = this.el.querySelector('#go-feedback-area');
+    if (area) area.innerHTML = bodyHtml;
+    else this.el.querySelector('.go-panel')?.insertAdjacentHTML('beforeend', bodyHtml);
+
+    this.el.querySelector('.go-card-continue')!.addEventListener('click', () => {
+      if (this.session.isBonusPhase) this._showBonusIntro();
+      else if (this.session.isComplete) this._showResult();
+      else {
+        this.currentQuestion = this.session.nextQuestion();
+        this._showQuestion(false);
+      }
+    });
+    this._kbSelect(null);
+    this.inputLocked = false;
   }
 
   // ── Leave ("oops, wrong way") ──────────────────────────────────────────────
@@ -572,6 +686,7 @@ class GateOverlayController {
       bonusPassed: null,
       penaltyApplied: 0,
       rewardsEarned: [],
+      skipsUsed: this.session.questionsSkipped,
     });
   }
 
@@ -940,6 +1055,24 @@ class GateOverlayController {
         outline: 3px solid #ffcc44;
         outline-offset: 2px;
       }
+      .go-card-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      .go-btn-card {
+        flex: 1 1 140px;
+        padding: 10px 12px;
+        font-size: 13px;
+        background: linear-gradient(135deg, #ffcc44, #ff9900);
+        color: #2a1a00;
+      }
+      .go-card-skip { background: linear-gradient(135deg, #b9a4ff, #7b5cff); color: #12083a; }
+      .go-btn-card:hover { opacity: 0.88; }
+      .go-feedback-bypass {
+        background: rgba(255,204,68,0.10);
+        border: 1px solid #ffcc44;
+        color: #ffdd77;
+        margin-bottom: 10px;
+      }
+      .go-bypass-answer { font-size: 15px; font-weight: 700; color: #00ff88; }
+      .go-bypass-used { text-align: center; color: #ffcc44; font-size: 13px; font-weight: 700; }
       .go-leave-btn {
         display: block;
         margin: 12px auto 0;

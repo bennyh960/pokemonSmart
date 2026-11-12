@@ -43,6 +43,7 @@ import { getTrainerRank } from '../systems/trainer-rank.js';
 import { leaveBuilding } from './overworld.js';
 import { getItem } from '../data/items.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
+import { bypassAllowed, gateCardCount, useGateCard } from '../systems/gate-cards.js';
 
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
@@ -115,6 +116,7 @@ export function createGateScene(_input: unknown, stateMachine: StateMachine): Sc
         resolved = true;
         if (pendingResult.exited) {
           if (gateId) markGateExited(gateId);
+          _takeCards(pendingResult);
           stateMachine.pop();
           return;
         }
@@ -163,6 +165,12 @@ export function createGateScene(_input: unknown, stateMachine: StateMachine): Sc
       sessionConfig: cfg,
       introDialogues: dialogues,
       container: appContainer,
+      cards: hasActiveGame()
+        ? {
+            bypass: bypassAllowed(gate.triggerType) ? gateCardCount(getPlayerData(), 'bypass') : 0,
+            skip: gateCardCount(getPlayerData(), 'skip'),
+          }
+        : { bypass: 0, skip: 0 },
     });
 
     overlayRunning = false;
@@ -195,6 +203,8 @@ export function createGateScene(_input: unknown, stateMachine: StateMachine): Sc
     if (!gate || !hasActiveGame()) return;
     const pd = getPlayerData();
 
+    _takeCards(result);
+
     for (const reward of result.rewardsEarned) {
       if (reward.type === 'money' && reward.amount !== undefined) {
         pd.money += reward.amount;
@@ -213,6 +223,14 @@ export function createGateScene(_input: unknown, stateMachine: StateMachine): Sc
     }
 
     _unlockAndFire();
+  }
+
+  /** Take the gate cards the player used (Skip Cards count even when the player walked away). */
+  function _takeCards(result: SessionResult): void {
+    if (!hasActiveGame()) return;
+    const pd = getPlayerData();
+    if (result.bypassed) useGateCard(pd, 'bypass');
+    if (result.skipsUsed) useGateCard(pd, 'skip', result.skipsUsed);
   }
 
   /** A passed gate: open it for its cooldown, run its success actions, tell the story. */

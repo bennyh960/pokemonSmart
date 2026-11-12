@@ -101,6 +101,8 @@ export interface ItemGameDef {
   topColor?: string; // Pokeball top-half color for rendering
   name?: { en: string; he: string }; // Override name (used for TM/HM items not in items.json)
   description?: { en: string; he: string }; // Override description (bilingual)
+  /** Sprite slug on the PokeAPI item sprites (for custom items that have no sprite of their own). */
+  spriteSlug?: string;
   sellPrice?: number; // Custom sell price (TMs have explicit sell prices)
   // ── Key item fields ──
   /** Flag automatically set in pd.flags when this item is received. */
@@ -239,6 +241,9 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'super-repel': 9015,
   'hyper-repel': 9016,
   'max-repel': 9017,
+  // Gate helper (systems/bypass-card.ts)
+  'bypass-card': 9019,
+  'skip-card': 9020,
 
   // held items
   leftovers: 211,
@@ -1182,6 +1187,35 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
       en: 'Blocks wild encounters for 200 steps. Cannot stack with other Repels.',
       he: 'חוסם מפגשים עם פוקימון פראיים ל-200 צעדים. לא ניתן לצבור עם רפלים אחרים.',
     },
+  },
+
+  // Gate cards (systems/gate-cards.ts). Both stack — the bag shows how many.
+  9019: {
+    category: 'key',
+    price: 0,
+    effect: { type: 'none' },
+    usableInBattle: false,
+    usableInOverworld: false,
+    name: { en: 'Bypass Card', he: 'כרטיס מעבר מהיר' },
+    description: {
+      en: 'Show it at a question gate to skip all the questions. One card per gate — not at gyms or the League. Win more in libraries, labs and berry games.',
+      he: '.אפשר לזכות בעוד בספריות, במעבדות וגם בטבע ',
+    },
+    spriteSlug: 'card-key',
+    keyFlag: 'key-bypass-card-obtained',
+  },
+  9020: {
+    category: 'key',
+    price: 0,
+    effect: { type: 'none' },
+    usableInBattle: false,
+    usableInOverworld: false,
+    name: { en: 'Skip Card', he: 'כרטיס דילוג' },
+    description: {
+      en: 'Skips one question at a question gate — it counts as answered. Works at every gate. Win more in libraries, labs and berry games.',
+      he: 'מדלג על שאלה אחת בשער שאלות. אפשר לזכות בעוד בספריות, במעבדות וגם בטבע.',
+    },
+    spriteSlug: 'pass',
   },
 
   // ── HM items (reusable field-moves) — IDs 305-309 ──

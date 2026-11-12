@@ -28,6 +28,7 @@ import { HudBar } from './HudBar.js';
 import { useReducedMotion } from './hooks.js';
 import { IntroCard } from './IntroCard.js';
 import { PauseMenu } from './PauseMenu.js';
+import { gateCardPrize } from '../gate-card-prizes.js';
 import { PrizeReveal } from './PrizeReveal.js';
 import { Results } from './Results.js';
 import { miniGameSfx } from './sfx.js';
@@ -207,6 +208,10 @@ export function MiniGameShell({
         if (bonus) rec.prizes = [...rec.prizes, bonus];
         if (dust !== 'clean') rec.dust = dust;
       }
+      // Rare gate card, 3★ rounds only: labs and berry games here (the Word Board has them in its prize pool)
+      const cardSource = gate ? 'lab' : care ? 'care' : null;
+      const card = cardSource ? gateCardPrize(cardSource, rec.stars, Math.random) : null;
+      if (card) rec.prizes = [...rec.prizes, card];
       for (const prize of rec.prizes) grantReward(prize.reward, { silent: true });
     });
     const done = rec as RecordOutcome | null;

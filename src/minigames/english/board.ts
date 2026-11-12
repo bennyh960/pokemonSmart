@@ -33,6 +33,7 @@ import type {
   Stars,
 } from '../types.js';
 import { BOARD_CITIES } from './board-cities.js';
+import { boardCardPrizes } from '../gate-card-prizes.js';
 import { ENGLISH_LADDER, MASTER_BALL_EPIC, type EpicPrize, type LadderStep } from './ladder.js';
 import { WORDS_HOME } from './useWords.js';
 
@@ -63,11 +64,17 @@ export const BOARD_POKEMON: readonly number[] = getAllPokemon()
   .map((p) => p.id);
 
 /**
- * A ladder step as the board of `city`'s library gives it: + its specialty prize, its own rare Pokémon,
- * and the Master Ball on the top step only where the city has it. No city → the plain step.
+ * A ladder step as the board of `city`'s library gives it: + its gate cards (every board), its specialty
+ * prize, its own rare Pokémon, and the Master Ball on the top step only where the city has it.
  */
 export function boardStep(stepIndex: number, city?: string): LadderStep {
-  const step = ENGLISH_LADDER[stepIndex];
+  const base = ENGLISH_LADDER[stepIndex];
+  const cards = boardCardPrizes(stepIndex + 1);
+  const step: LadderStep = {
+    ...base,
+    prizes: [...base.prizes, ...cards.prizes],
+    epic: [...(base.epic ?? []), ...cards.epic],
+  };
   const flavor = city ? BOARD_CITIES[city] : undefined;
   if (!flavor) return step;
   const top = stepIndex === ENGLISH_LADDER.length - 1;

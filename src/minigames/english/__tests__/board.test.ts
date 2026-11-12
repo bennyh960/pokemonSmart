@@ -93,7 +93,7 @@ describe('Word Board prizes', () => {
   it('epic: never below 3 stars, at most one per round, Master Ball ≤ 2% and a rare Pokémon ≤ 5% of 3★ rounds', () => {
     const top = ENGLISH_LADDER.length - 1;
     for (const step of ENGLISH_LADDER)
-      expect(epicOdds(step, none).reduce((s, e) => s + e.chance, 0), step.name.en).toBeLessThan(1);
+      expect(epicOdds(boardStep(ENGLISH_LADDER.indexOf(step), 'percentile'), none).reduce((s, e) => s + e.chance, 0), step.name.en).toBeLessThan(1);
     const rng = createRng(7);
     const ROUNDS = 40000;
     let masterBalls = 0;
@@ -114,7 +114,7 @@ describe('Word Board prizes', () => {
 
   it('one prize per star, none without a clear, rarities only from the level pool', () => {
     for (let i = 0; i < ENGLISH_LADDER.length; i++) {
-      const rarities = new Set(boardPool(ENGLISH_LADDER[i], none).map((p) => p.rarity));
+      const rarities = new Set(boardPool(boardStep(i), none).map((p) => p.rarity));
       for (const stars of [0, 1, 2, 3] as const) {
         for (let seed = 1; seed <= 20; seed++) {
           const prizes = boardPrizes(i, stars, none, ALL_BADGES, createRng(seed));
