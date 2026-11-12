@@ -2,7 +2,8 @@
  * BattleScene - Turn-based battle with math challenges, type effectiveness, and XP.
  */
 
-import type { Scene, Pokemon, PokemonType, Move } from '../../types/index.js';
+import type { Scene, Pokemon, PokemonType, Move, InfectionLevel } from '../../types/index.js';
+import type { MapId } from '../../data/maps/map-ids.js';
 import { ENEMY_POWER_TIERS, type EnemyPowerTier } from '../../engine/config.js';
 import type { BattleStatId, MoveBattleEffectId, WeatherConditionId } from '../../types/battle-metadata.js';
 import { getMapWeather, isDaytime, renderNightOverlay } from '../../systems/weather-system.js';
@@ -13,6 +14,7 @@ import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import type { AudioManager } from '../../audio/audio-manager.js';
 import { clearScreen, fillRect, drawText } from '../../engine/renderer.js';
+import { drawGlitchDecay, drawGlitchedSprite, glitchStyleFor, GLITCH_DECAY_S, type GlitchStyleId } from './glitch-fx.js';
 import {
   createHPBar,
   updateHPBar,
@@ -825,6 +827,8 @@ export function createBattleScene(
   let lastMoveUsedInBattle: number | null = null; // for Copycat
   let trainerPartyIndex = 0;
   let isWildNpcBattle = false;
+  /** A fainted glitched enemy crumbling away (Pixel Decay, glitch-fx.ts). */
+  let glitchDecay: { pokemonId: number; startMs: number } | null = null;
   let disobeyHintShown = false; // obedience hint is shown once per battle
   let wildNpcFleeAfterTurns: number | null = null;
   let wildNpcFleeAtHpPct: number | null = null;
@@ -1349,6 +1353,7 @@ export function createBattleScene(
   function init(): void {
     isTrainerBattle = false;
     isWildNpcBattle = false;
+    glitchDecay = null;
     disobeyHintShown = false;
     wildNpcFleeAfterTurns = null;
     wildNpcFleeAtHpPct = null;
@@ -2568,6 +2573,24 @@ export function createBattleScene(
       rotation: 0,
       visible: true,
     });
+    if (enemy.isGlitched) {
+      // Glitched: it falls apart instead of sinking (drawn by drawGlitchDecay)
+      const pokemonId = enemy.id;
+      animationDirector.play(
+        sequenceStep(
+          callStep(() => {
+            audio.playCry(pokemonId);
+            animationDirector.setActorState('enemy', { visible: false, alpha: 0 });
+            glitchDecay = { pokemonId, startMs: Date.now() };
+          }),
+          waitStep(GLITCH_DECAY_S),
+          callStep(() => {
+            glitchDecay = null;
+          }),
+        ),
+      );
+      return;
+    }
     animationDirector.play(
       sequenceStep(
         callStep(() => audio.playCry(enemy.id)),
@@ -6149,11 +6172,6 @@ export function createBattleScene(
         const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
         if (enemySprite) {
           if (enemyBattleState?.substituteActive) ctx.globalAlpha = 0.45;
-          const glitchFlicker = enemy.isGlitched && Date.now() % 1800 < 90;
-          if (glitchFlicker) {
-            ctx.save();
-            ctx.translate((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 3);
-          }
           renderActorImage(
             ctx,
             'enemy',
@@ -6162,17 +6180,17 @@ export function createBattleScene(
             BTL.OPP_SPRITE.y,
             BTL.OPP_SPRITE.w,
             BTL.OPP_SPRITE.h,
+            enemy.isGlitched ? glitchStyleFor(enemy, glitchInfectionLevel()) : undefined,
           );
-          if (glitchFlicker) ctx.restore();
           ctx.globalAlpha = 1;
-          // Persistent glitch tint
-          if (enemy.isGlitched) {
-            ctx.save();
-            ctx.globalAlpha = 0.22;
-            ctx.fillStyle = '#7b00ff';
-            ctx.fillRect(BTL.OPP_SPRITE.x, BTL.OPP_SPRITE.y, BTL.OPP_SPRITE.w, BTL.OPP_SPRITE.h);
-            ctx.restore();
-          }
+        }
+      }
+      if (glitchDecay) {
+        const decaySprite = getCachedImage(`/sprites/pokemon/front/${glitchDecay.pokemonId}.png`);
+        const progress = (Date.now() - glitchDecay.startMs) / (GLITCH_DECAY_S * 1000);
+        if (decaySprite) {
+          const { x, y, w, h } = BTL.OPP_SPRITE;
+          drawGlitchDecay(ctx, decaySprite, x, y, w, h, progress, Date.now());
         }
       }
 
@@ -6302,6 +6320,12 @@ export function createBattleScene(
     }
   }
 
+  /** How infected the glitched enemy counts as: wild NPCs + glitched trainers are critical, random encounters use the map's level. */
+  function glitchInfectionLevel(): InfectionLevel | undefined {
+    if (isTrainerBattle) return 'critical';
+    return hasActiveGame() ? getPlayerData().story?.mapInfection[getCurrentMapId() as MapId] : undefined;
+  }
+
   function renderActorImage(
     ctx: CanvasRenderingContext2D,
     actor: 'player' | 'enemy' | 'trainer',
@@ -6310,6 +6334,7 @@ export function createBattleScene(
     y: number,
     w: number,
     h: number,
+    glitchStyle?: GlitchStyleId,
   ): void {
     const state = animationDirector.getActorState(actor);
     if (!state.visible || state.alpha <= 0) return;
@@ -6319,7 +6344,8 @@ export function createBattleScene(
     ctx.translate(x + w / 2 + state.x, y + h / 2 + state.y);
     ctx.rotate(state.rotation);
     ctx.scale(state.scaleX, state.scaleY);
-    ctx.drawImage(image, -w / 2, -h / 2, w, h);
+    if (glitchStyle) drawGlitchedSprite(ctx, image, -w / 2, -h / 2, w, h, Date.now(), glitchStyle);
+    else ctx.drawImage(image, -w / 2, -h / 2, w, h);
     ctx.restore();
   }
 

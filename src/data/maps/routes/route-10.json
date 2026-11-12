@@ -239,7 +239,7 @@
       "y": 26,
       "facing": "right",
       "type": "trainer",
-      "spriteType": "char_24117d",
+      "spriteType": "char_2c5fb3",
       "name": {
         "en": "Hiker Gil",
         "he": "גיל המטייל"
@@ -295,7 +295,7 @@
     },
     {
       "id": "npc-r10-picnic-noa",
-      "x": 8,
+      "x": 19,
       "y": 9,
       "facing": "right",
       "type": "trainer",
@@ -1710,6 +1710,26 @@
       "key": "td1",
       "x": 5,
       "y": 21
+    },
+    {
+      "key": "td1",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "key": "td1",
+      "x": 8,
+      "y": 4
+    },
+    {
+      "key": "td1",
+      "x": 10,
+      "y": 41
+    },
+    {
+      "key": "td1",
+      "x": 12,
+      "y": 41
     }
   ]
 }

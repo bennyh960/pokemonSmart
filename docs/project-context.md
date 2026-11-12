@@ -61,6 +61,9 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Friendly quiz NPCs (2 per city: `friendly-fan-*`, `friendly-kid-*`) in Zeroville, Minusburg, Multiplia, Dividia, Fractalis, Symmetrika — check spots + sprites in the editor
 - [ ] Only 10 later-gen Pokémon exist in `pokemon.json` for board prizes; fetch more to widen each city's rare list
 
+## Glitch look
+- [ ] Battle glitch styles (2026-11-12, `scenes/battle/glitch-fx.ts`, not seen in the app yet): zombie / vhs (Tracking Error) / code (Decompile) / missingno (Block Shuffle) / static (Dead Channel), one per glitched Pokémon per battle, rolled from `GLITCH_STYLE_ODDS` by the map's infection; wild NPCs + glitched trainers count as critical. A fainted glitched enemy crumbles away (Pixel Decay, `drawGlitchDecay`, 1.3 s) instead of sinking; fleeing is unchanged. Check each style in a real battle (sprite box is only 46×46) and the frame rate on a phone (static redraws noise every frame)
+
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
