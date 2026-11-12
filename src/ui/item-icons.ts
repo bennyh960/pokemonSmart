@@ -85,9 +85,10 @@ function drawPokeball(ctx: CanvasRenderingContext2D, x: number, y: number, size:
   ctx.arc(cx, cy, r, Math.PI, 0);
   ctx.fill();
 
-  // Divider line
+  // Divider line (thinner on tiny icons so the colours stay visible)
+  const lineH = size >= 12 ? 2 : 1;
   ctx.fillStyle = '#333333';
-  ctx.fillRect(x + size * 0.08, cy - 1, size * 0.84, 2);
+  ctx.fillRect(x + size * 0.08, cy - lineH / 2, size * 0.84, lineH);
 
   // Center button
   ctx.fillStyle = '#333333';

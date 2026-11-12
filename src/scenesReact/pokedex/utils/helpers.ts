@@ -1,6 +1,7 @@
 import { getPokemon } from '../../../services/pokemon-data';
 import type { PokedexPokemon } from '../types';
 import type { PlayerData } from '../../../types';
+import { isCaughtStatus } from '../../../systems/pokedex';
 
 // Also it been used for migration
 export function isPokemonStillWithPlayer(pd: PlayerData, id: number): boolean {
@@ -14,9 +15,7 @@ export function isPokemonStillWithPlayer(pd: PlayerData, id: number): boolean {
 }
 
 export function getCaughtCount(pd: PlayerData): number {
-  const count = pd.pokedex
-    ? Object.values(pd.pokedex).filter((status) => status === 'caught' || status === 'release').length
-    : 0;
+  const count = pd.pokedex ? Object.values(pd.pokedex).filter(isCaughtStatus).length : 0;
   return count;
 }
 
