@@ -4,6 +4,7 @@
  * Supports dynamic map loading, transitions, NPC interaction, shop and heal.
  */
 
+import { addPhoneContact } from '../systems/phone-contacts.js';
 import type { Scene, Pokemon, PokemonType } from '../types/index.js';
 import type { InputManager } from '../engine/input';
 import type { StateMachine } from '../engine/state-machine.js';
@@ -878,13 +879,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             const pokeName = getPokemonDisplayName(deposited.id);
             dayCareDeposit(pd, idx, dc);
             // Register phone contact on first deposit
-            if (!pd.phoneContacts?.some((c) => c.npcId === npc.id)) {
-              if (!pd.phoneContacts) pd.phoneContacts = [];
-              pd.phoneContacts.push({
-                npcId: npc.id,
-                mapId: currentMapData?.id ?? 'unknown',
-              });
-            }
+            addPhoneContact(pd, npc.id, currentMapData?.id ?? 'unknown');
             autoSave();
             activeTextBox = createTextBox([t('npc.daycare.deposited', { name: pokeName })], rtl, npcSpeaker);
           });
