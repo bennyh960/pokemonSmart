@@ -114,7 +114,7 @@ import {
   ADMIN_NAME,
   INFECTION_GLITCH_RATE,
 } from '../engine/config.js';
-import { findHMUser, canUseHM, checkSurfEligibility } from '../systems/hm.js';
+import { findHMUser, checkSurfEligibility, HM_CONFIG } from '../systems/hm.js';
 import { getReencounterStatus, buildReencounterParty } from '../systems/reencounter.js';
 import {
   isGateUnlocked,
@@ -151,7 +151,7 @@ import { createOverworldFx, updateOverworldFx, drawOverworldFx, type OverworldFx
 import { createShake, updateShake, applyShake, resetShake, type ShakeEffect } from '../ui/battle-animations/index.js';
 import { grantItem } from '../systems/item-effects.js';
 import { grantReward } from '../systems/rewards.js';
-import { setFlyCallback, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
+import { setFlyCallback, setFlyBlocked, FLY_DESTINATIONS, resolveFlySpawn } from './world-map.js';
 import { openSaveSlots } from './save-slots.js';
 import { mountInputMathOverlay } from '../systems/input-math-overlay.js';
 import charactersManifest from '../data/sprites/characters.json';
@@ -1932,20 +1932,26 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       return;
     }
     const pd = getPlayerData();
-    // Fly is only usable from outdoor city maps — not interiors, caves, or routes
-    if (!FLY_DESTINATIONS.includes(pd.position.mapId)) {
-      setFlyCallback(null);
+    const flyUser = findHMUser('fly', pd.party);
+    if (!flyUser) {
+      // Only explain the limits to a player who already has a Pokémon that knows Fly
+      const req = HM_CONFIG.fly;
+      const knowsFly = pd.party.some((p) => p.moves.some((m) => m.id === req.moveId));
+      setFlyBlocked(
+        knowsFly
+          ? { kind: 'requirements', level: req.minLevel, weightKg: req.minWeight, heightM: req.minHeight }
+          : null,
+      );
       return;
     }
-    const flyUser = canUseHM('fly', pd.party) ? findHMUser('fly', pd.party) : null;
-    if (flyUser) {
-      const capturedFlyUser = flyUser;
-      setFlyCallback((destMapId: string) => {
-        startFlyAnimation(capturedFlyUser.id, destMapId);
-      }, capturedFlyUser);
-    } else {
-      setFlyCallback(null);
+    // Fly works from any outdoor map (cities, routes, forests) — not interiors or caves
+    if (currentMapData?.outside == null) {
+      setFlyBlocked({ kind: 'indoors' });
+      return;
     }
+    setFlyCallback((destMapId: string) => {
+      startFlyAnimation(flyUser.id, destMapId);
+    }, flyUser);
   };
 
   /** Start surfing on a Pokemon — moves player onto the facing water tile. */

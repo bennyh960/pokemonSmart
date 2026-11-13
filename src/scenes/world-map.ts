@@ -26,7 +26,7 @@ import mapManifest from '../data/maps/map-manifest.js';
 import type { Scene, Pokemon } from '../types/index.js';
 import { type WildLocation } from '../scenesReact/pokedex/types.js';
 // ─── Fly destination registry ─────────────────────────────────────────────────
-/** All city mapIds from the manifest are valid Fly destinations. */
+/** All city mapIds from the manifest are valid Fly destinations (Fly can start from any outdoor map). */
 export const FLY_DESTINATIONS: string[] = mapManifest.cities.map((c) => c.id);
 
 // ─── Fly callback ─────────────────────────────────────────────────────────────
@@ -34,10 +34,35 @@ export const FLY_DESTINATIONS: string[] = mapManifest.cities.map((c) => c.id);
 let pendingFlyCallback: ((destinationMapId: string) => void) | null = null;
 let flyPokemon: Pokemon | null = null;
 
+/**
+ * Why Fly is off, shown on the map so the player knows what to do.
+ * 'indoors' = a party Pokémon can fly but the player is inside / in a cave;
+ * 'requirements' = a party Pokémon knows Fly but doesn't meet the HM limits.
+ */
+export type FlyBlockReason =
+  | { kind: 'indoors' }
+  | { kind: 'requirements'; level: number; weightKg: number | null; heightM: number | null };
+let flyBlockReason: FlyBlockReason | null = null;
+
 /** Pass the pokemon that will fly alongside the callback so the map can render it. */
 export function setFlyCallback(cb: ((destinationMapId: string) => void) | null, pokemon?: Pokemon): void {
   pendingFlyCallback = cb;
   flyPokemon = pokemon ?? null;
+  flyBlockReason = null;
+}
+
+/** Open the map without Fly and tell the player why (null = say nothing). */
+export function setFlyBlocked(reason: FlyBlockReason | null): void {
+  setFlyCallback(null);
+  flyBlockReason = reason;
+}
+
+function flyBlockText(reason: FlyBlockReason): string {
+  if (reason.kind === 'indoors') return t('worldMap.flyIndoors');
+  const parts = [t('worldMap.flyNeedLevel', { level: reason.level })];
+  if (reason.weightKg !== null) parts.push(t('worldMap.flyNeedWeight', { weight: reason.weightKg }));
+  if (reason.heightM !== null) parts.push(t('worldMap.flyNeedHeight', { height: reason.heightM }));
+  return t('worldMap.noFly', { needs: parts.join(', ') });
 }
 
 // Utility for location
@@ -205,6 +230,7 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
 
     exit(): void {
       pendingFlyCallback = null;
+      flyBlockReason = null;
       pokedexMapContext = null;
     },
 
@@ -440,6 +466,19 @@ export function createWorldMapScene(input: InputManager, stateMachine: StateMach
 
       // ── Footer hints ─────────────────────────────────────────────────────
       const barY = SCREEN_H - 11;
+
+      // Why Fly is off — one line just above the footer
+      if (flyBlockReason && pokedexMapContext === null) {
+        fillRect(ctx, 0, barY - 9, SCREEN_W, 9, 'rgba(0,0,0,0.6)');
+        drawText(ctx, flyBlockText(flyBlockReason), SCREEN_W / 2, barY - 7, {
+          size: 5,
+          color: '#ffd166',
+          align: 'center',
+          font: 'monospace',
+          direction: rtl ? 'rtl' : 'ltr',
+        });
+      }
+
       fillRect(ctx, 0, barY, SCREEN_W, 11, 'rgba(0,0,0,0.6)');
 
       const labelHint = `${t('worldMap.labelsHint')}${showLabels ? ' ●' : ''}`;
