@@ -68,6 +68,9 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Battle menu (2026-11-18, not playtested): click tabs (= keys 1–4), click a move to use it (from the tabs: opens the move list on it), hover moves the selection, ESC pill = run/back, wheel / page dots flip 8-move pages (`registerPointerRegions` in `ui/battle-menu.ts`, through `uiRegistry`). Next screens: switch grid, text boxes
 - [ ] Bag (2026-11-18, not playtested): click a category tab, click a row to select (hover only highlights), double-click or the Use button to use, wheel scrolls one item, TM warning Yes / No clickable. The list now scrolls only when the selection leaves the 5 visible rows (was: selection always pinned to the bottom row)
 
+## Moves calibration
+- [ ] `docs/moves-audit.md` (`npm run moves-audit`): every move → effect wired / partial / missing, animation, learners. Calibrate the ❌ rows top-down (most-learned first). Sucker Punch: `fails-if-target-not-attacking` is never read
+
 ## PC storage (`feature/pc-storage-react`, not playtested)
 - [ ] New React PC screen (`src/scenesReact/pc/`, replaces the canvas `scenes/pc.ts`; mockup `docs/mockups/pc-storage.html`): no modes — pick a Pokémon → send to box / add to team / swap when the team is full / release (hold 0.9 s). Undo on every action's toast (5 s). Search by name (he + en) and type chips across all boxes (box tabs show match counts), drag & drop team ⇄ box, box → box / box tab, help dialog, keyboard (arrows, Tab, Q/E, Enter, R, F, H, Esc). Check on a real save: touch (no d-pad on this scene), the release hold on a phone, and that Undo after a release restores the Pokédex status
 
