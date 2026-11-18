@@ -65,7 +65,8 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 - [ ] Battle glitch styles (2026-11-12, `scenes/battle/glitch-fx.ts`, not seen in the app yet): zombie / vhs (Tracking Error) / code (Decompile) / missingno (Block Shuffle) / static (Dead Channel), one per glitched Pokémon per battle, rolled from `GLITCH_STYLE_ODDS` by the map's infection; wild NPCs + glitched trainers count as critical. A fainted glitched enemy crumbles away (Pixel Decay, `drawGlitchDecay`, 1.3 s) instead of sinking; fleeing is unchanged. Check each style in a real battle (sprite box is only 46×46) and the frame rate on a phone (static redraws noise every frame)
 
 ## Mouse support (screen by screen)
-- [ ] Battle menu (2026-11-18, not playtested): click tabs (= keys 1–4), click a move to use it (from the tabs: opens the move list on it), hover moves the selection, ESC pill = run/back, wheel / page dots flip 8-move pages (`registerPointerRegions` in `ui/battle-menu.ts`, through `uiRegistry`). Next screens: switch grid, bag, text boxes
+- [ ] Battle menu (2026-11-18, not playtested): click tabs (= keys 1–4), click a move to use it (from the tabs: opens the move list on it), hover moves the selection, ESC pill = run/back, wheel / page dots flip 8-move pages (`registerPointerRegions` in `ui/battle-menu.ts`, through `uiRegistry`). Next screens: switch grid, text boxes
+- [ ] Bag (2026-11-18, not playtested): click a category tab, click a row to select (hover only highlights), double-click or the Use button to use, wheel scrolls one item, TM warning Yes / No clickable. The list now scrolls only when the selection leaves the 5 visible rows (was: selection always pinned to the bottom row)
 
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
