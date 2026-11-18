@@ -669,6 +669,25 @@ export function applyVolatileMoveEffects(
   return applied;
 }
 
+/**
+ * Thief: the target's held item stops working for the rest of this battle — it is NOT stolen.
+ * Undoes the item's start-of-battle stat stages and any choice lock. Returns the item, or null if none.
+ */
+export function neutralizeHeldItem(runtimeState: BattlePokemonRuntimeState): HeldItemDef | null {
+  const item = runtimeState.heldItem;
+  if (!item) return null;
+  for (const [stat, stages] of Object.entries(item.effect.config.stats ?? {})) {
+    const statId = stat as BattleStatId;
+    runtimeState.statModifiers[statId] = applyBattleStatDelta(runtimeState.statModifiers[statId], -(stages ?? 0));
+  }
+  runtimeState.heldItem = null;
+  runtimeState.softLockedInMovesId = null;
+  return item;
+}
+
+/** Thief hits harder when the target holds an item. */
+export const THIEF_ITEM_POWER_MULTIPLIER = 1.5;
+
 /** Hidden Power: no IVs in this game, so it takes the user's first type. */
 export function getHiddenPowerType(pokemon: Pick<Pokemon, 'types'>): PokemonType {
   return pokemon.types[0] ?? 'normal';

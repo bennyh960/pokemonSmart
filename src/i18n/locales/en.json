@@ -502,6 +502,7 @@
   "battle.statFellHarshly": "{name}'s {stat} fell harshly!",
   "battle.confused": "{name} became confused!",
   "battle.isConfused": "{name} is confused!",
+  "battle.thiefKnockedItem": "{name}'s {item} was knocked out of use!",
   "battle.fellInLove": "{name} fell in love!",
   "battle.inLove": "{name} is in love!",
   "battle.immobilizedByLove": "{name} is immobilized by love!",

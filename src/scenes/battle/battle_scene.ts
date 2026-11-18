@@ -172,6 +172,8 @@ import {
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   getHiddenPowerType,
+  neutralizeHeldItem,
+  THIEF_ITEM_POWER_MULTIPLIER,
   clearChargingMove,
   determineTurnOrder,
   doesMoveHit,
@@ -3963,6 +3965,7 @@ export function createBattleScene(
     const isMagnitude = moveBattleData?.behaviorTags?.includes('magnitude') ?? false;
     // TODO : isBatonPass didnt checked yet on enemy
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
+    const isThief = moveBattleData?.behaviorTags?.includes('thief') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4614,6 +4617,9 @@ export function createBattleScene(
         actor === 'player' ? calcHappiness(attacker, getPlayerData().party) : calcHappiness(attacker, [attacker]);
       m = { ...m, power: m.id === RETURN_MOVE_ID ? getReturnPower(h) : getFrustrationPower(h) };
     }
+    if (isThief && defenderBattleState.heldItem) {
+      m = { ...m, power: Math.round(m.power * THIEF_ITEM_POWER_MULTIPLIER) };
+    }
     const movePower = isWeightTarget
       ? getWeightTargetPower(computePokemonSize(defender).weightKg)
       : isWeightRatio
@@ -4753,6 +4759,10 @@ export function createBattleScene(
         }
         const et = effText(m.type, defender.types);
         if (et) msgs.push(et);
+        const knockedItem = isThief && !targetTypeImmune ? neutralizeHeldItem(defenderBattleState) : null;
+        if (knockedItem) {
+          msgs.push(t('battle.thiefKnockedItem', { name: defenderName, item: getLocalizedName(knockedItem.name) }));
+        }
         if (plannedDamage > 0 && defender.abilityId !== null) {
           const abilityMsg = getDefenderAbilityActivationMsg(
             defender,

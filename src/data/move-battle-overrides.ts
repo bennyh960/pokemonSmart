@@ -75,6 +75,12 @@ function usersFieldEffect(id: MoveBattleSideEffectId, turns = 5): MoveOverride {
   };
 }
 
+/** Roar / Whirlwind: sure stat drops on the target + 30% chance of Speed −1. */
+function debuffWithSpeedChance(...changes: Array<[BattleStatId, number]>): MoveOverride {
+  const base = targetStages(...changes);
+  return { ...base, statChanges: [...base.statChanges!, stageChange('speed', -1, 'target', 30)] };
+}
+
 function multiHit2to5(): MoveOverride {
   return { minHits: 2, maxHits: 5 };
 }
@@ -570,6 +576,11 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Kinesis: targetStages(['accuracy', -1]),
   'Grass Whistle': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
   'Teeter Dance': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  // Thief: does not steal — knocks the target's held item out of use for this battle, ×1.5 power if it has one
+  Thief: { behaviorTags: ['thief'] },
+  // Roar / Whirlwind: no forced switch (would let legendaries flee / break battle flow) — big debuffs instead
+  Roar: debuffWithSpeedChance(['attack', -2], ['specialAttack', -2]),
+  Whirlwind: debuffWithSpeedChance(['defense', -2], ['specialDefense', -2]),
   'Hidden Power': { behaviorTags: ['hidden-power'] },
   Attract: volatileEffect('infatuation', 100),
   'Toxic Thread': { ...targetStages(['speed', -1]), ...statusEffect('poison', 100) },

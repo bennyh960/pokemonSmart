@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 359 |
+| ✅ wired (override + battle code reads it) | 362 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 1 |
-| ❌ missing (effect described, no logic at all) | 206 |
+| ❌ missing (effect described, no logic at all) | 203 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,14 +25,12 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (206)
+## ❌ missing (203)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 117 | Bide (המתנה) | normal | physical | — | — | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 152 (7/145) | Waits 2-3 turns & hits back double. |  |
 | 102 | Mimic (חיקוי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 146 (1/145) | Copies a move used by the foe. |  |
-| 168 | Thief (גנב) | dark | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 120 (0/120) | An attack that may steal a held item. |  |
-| 46 | Roar (שאגה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 sound-based:blast | 63 (14/62) | Scares wild foes to end battle. |  |
 | 171 | Nightmare (סיוט) | ghost | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 51 (0/51) | A sleeper loses 1/4 HP every turn. |  |
 | 210 | Fury Cutter (חותך זעם) | bug | physical | 40 | 95 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 42 (0/42) | Successive hits raise power. |  |
 | 149 | Psywave (גל על חושי) | psychic | special | — | 100 | — | ❌ missing | — | description mentions an effect | 🎬 psychic-wave | 35 (1/34) | An attack with variable power. |  |
@@ -43,7 +41,6 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 | 363 | Natural Gift (מתנת טבע) | normal | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 22 (0/22) | The user draws power to attack by using its held Berry. The Berry determines its type and power. |  |
 | 445 | Captivate (שבייה) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 20 (1/20) | If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat. |  |
 | 6 | Pay Day (יום משכורת) | normal | physical | 40 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 19 (2/19) | Throws coins. Gets them back later. |  |
-| 18 | Whirlwind (סופת רוח) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 19 (6/17) | Blows away the foe & ends battle. |  |
 | 228 | Pursuit (מרדף) | dark | physical | 40 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 19 (19/0) | Heavily strikes switching POKéMON. |  |
 | 510 | Incinerate (שריפה) | fire | special | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 17 (0/17) | The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable. |  |
 | 270 | Helping Hand (יד עוזרת) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 16 (0/16) | A move that boosts the power of the ally's attack in a Double Battle. |  |
@@ -242,7 +239,7 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 389 | Sucker Punch (אגרוף ערמומי) | dark | physical | 70 | 100 | — | ⚠️ partial | priority +1, `fails-if-target-not-attacking` | tag not read by battle code: fails-if-target-not-attacking | 🎬 punch:dark | 2 (2/0) | This move enables the user to attack first. It fails if the foe is not readying an attack, however. |  |
 
-## ✅ wired (359)
+## ✅ wired (362)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -270,6 +267,7 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 | 63 | Hyper Beam (קרן היפר) | normal | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ beam | 141 (18/139) | 1st turn: Attack 2nd turn: Rest |  |
 | 249 | Rock Smash (ריסוק סלע) | fighting | physical | 40 | 100 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | 140 (1/140) | An attack that may lower DEFENSE. |  |
 | 34 | Body Slam (מכת גוף) | normal | physical | 85 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 body-slam | 132 (17/126) | An attack that may cause paralysis. |  |
+| 168 | Thief (גנב) | dark | physical | 60 | 100 | — | ✅ wired | `thief` | — | ▫️ lunge | 120 (0/120) | An attack that may steal a held item. |  |
 | 231 | Iron Tail (זנב ברזל) | steel | physical | 100 | 75 | 30 | ✅ wired | target defense -1 | — | ▫️ lunge | 115 (0/115) | An attack that may reduce DEFENSE. |  |
 | 197 | Detect (זיהוי) | fighting | status | — | — | — | ✅ wired | priority +4, `protect` | — | 🎬 protect-shield:protect | 106 (6/104) | Evades attack that turn. It may fail. |  |
 | 115 | Reflect (השתקפות) | psychic | status | — | — | — | ✅ wired | reflect 5t | — | ▫️ pulse | 103 (13/95) | Raises DEFENSE with a barrier. |  |
@@ -289,6 +287,7 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 | 94 | Psychic (על חושי) | psychic | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | 🎬 psychic-wave | 65 (19/65) | An attack that may lower SPCL.DEF. |  |
 | 61 | Bubble Beam (קרן בועות) | water | special | 65 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ beam | 64 (11/57) | An attack that may lower SPEED. |  |
 | 205 | Rollout (גלגול) | rock | physical | 30 | 90 | — | ✅ wired | `lock-in-rollout` | — | ▫️ lunge | 64 (12/64) | Attacks 5 turns with rising power. |  |
+| 46 | Roar (שאגה) | normal | status | — | — | — | ✅ wired | target attack -2, target specialAttack -2, target speed -1 | — | 🎬 sound-based:blast | 63 (14/62) | Scares wild foes to end battle. |  |
 | 58 | Ice Beam (קרן קרח) | ice | special | 90 | 100 | 10 | ✅ wired | freeze 10% | — | ▫️ beam | 63 (7/61) | An attack that may freeze the foe. |  |
 | 247 | Shadow Ball (כדור צל) | ghost | special | 80 | 100 | 20 | ✅ wired | target specialDefense -1 | — | 🎬 shadow-ball | 63 (1/63) | An attack that may lower SPCL.DEF. |  |
 | 76 | Solar Beam (קרן סולארית) | grass | special | 120 | 100 | — | ✅ wired | `requires-charge-turn` | — | 🎬 solar-beam | 61 (11/61) | 1st turn: Prepare 2nd turn: Attack |  |
@@ -341,6 +340,7 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 | 317 | Rock Tomb (קבר סלע) | rock | physical | 60 | 95 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | 22 (0/22) | Stops the foe from moving with rocks and cuts SPEED. |  |
 | 82 | Dragon Rage (זעם דרקון) | dragon | physical | 75 | 100 | — | ✅ wired | min dmg 40 | — | 🎬 dragon-aura | 21 (16/12) | Deals damage based on the user's stats, but always deals at least 40 HP. Type immunities still apply. |  |
 | 32 | Horn Drill (מקדח קרן) | normal | physical | — | 30 | — | ✅ wired | `ohko` | — | ▫️ lunge | 20 (7/19) | A one-hit KO, drill attack. |  |
+| 18 | Whirlwind (סופת רוח) | normal | status | — | — | — | ✅ wired | target defense -2, target specialDefense -2, target speed -1 | — | ▫️ pulse | 19 (6/17) | Blows away the foe & ends battle. |  |
 | 154 | Fury Swipes (מכות זעם) | normal | physical | 18 | 80 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 19 (19/0) | Quickly scratches 2-5 times. |  |
 | 416 | Giga Impact (פגיעת גיגה) | normal | physical | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ lunge | 19 (5/19) | The user charges at the foe using every bit of its power. The user must rest on the next turn. |  |
 | 13 | Razor Wind (רוח תער) | normal | special | 80 | 100 | — | ✅ wired | `requires-charge-turn` | — | ▫️ projectile | 18 (1/17) | 1st turn: Prepare 2nd turn: Attack |  |

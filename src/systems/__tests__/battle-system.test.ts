@@ -28,6 +28,7 @@ import {
   getDisplayedVolatileStatuses,
   getEffectiveSpeed,
   getHiddenPowerType,
+  neutralizeHeldItem,
   getSideDamageTakenMultiplier,
   getModifiedStatValue,
   isBattlePokemonTrapped,
@@ -386,6 +387,38 @@ describe('battle system helpers', () => {
     );
     expect(result.reason).toBe('immune');
     expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Thief neutralizes the held item for the battle (undoing its stat stages) without stealing it', () => {
+    const holder = createTestPokemon({ heldItemId: 'choice-band' }); // +1 Attack at battle start
+    const runtime = createBattleRuntimeStateForPokemon(holder);
+    expect(runtime.heldItem).not.toBeNull();
+    const before = runtime.statModifiers.attack;
+    runtime.softLockedInMovesId = [1, 2];
+
+    expect(neutralizeHeldItem(runtime)).not.toBeNull();
+    expect(runtime.heldItem).toBeNull();
+    expect(runtime.softLockedInMovesId).toBeNull();
+    expect(runtime.statModifiers.attack).toBeLessThan(before);
+    expect(holder.heldItemId).toBe('choice-band');
+    expect(neutralizeHeldItem(runtime)).toBeNull();
+    expect(getMoveByName('thief')?.battle.behaviorTags).toContain('thief');
+  });
+
+  it('Roar / Whirlwind debuff instead of forcing a switch', () => {
+    const roar = getMoveByName('roar')!.battle;
+    const whirlwind = getMoveByName('whirlwind')!.battle;
+    expect(roar.target).toBe('selected-pokemon');
+    expect(roar.statChanges.map((c) => [c.stat, c.stages, c.chance])).toEqual([
+      ['attack', -2, 100],
+      ['specialAttack', -2, 100],
+      ['speed', -1, 30],
+    ]);
+    expect(whirlwind.statChanges.map((c) => [c.stat, c.stages, c.chance])).toEqual([
+      ['defense', -2, 100],
+      ['specialDefense', -2, 100],
+      ['speed', -1, 30],
+    ]);
   });
 
   it('Hidden Power takes the user\'s first type', () => {
