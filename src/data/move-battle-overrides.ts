@@ -75,6 +75,17 @@ function usersFieldEffect(id: MoveBattleSideEffectId, turns = 5): MoveOverride {
   };
 }
 
+function multiHit2to5(): MoveOverride {
+  return { minHits: 2, maxHits: 5 };
+}
+
+/** All five battle stats +1 on the user, rolled together (Ancient Power family). */
+const ANCIENT_POWER_ALL_STATS: MoveOverride = {
+  statChanges: (['attack', 'defense', 'specialAttack', 'specialDefense', 'speed'] as const).map((stat) =>
+    stageChange(stat, 1, 'user', 100),
+  ),
+};
+
 export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Struggle: { recoilPercent: 25 },
   'Dragon Rage': { minimumDamage: 40 },
@@ -244,7 +255,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
     behaviorTags: ['synthesis'],
   },
   'Milk Drink': { healingPercent: 50, target: 'user' },
-  'Soft-Boiled': { healingPercent: 50, target: 'user' },
+  'Soft Boiled': { healingPercent: 50, target: 'user' },
 
   // Sweet Scent: lower target evasion by 2
   'Sweet Scent': targetStages(['evasion', -2]),
@@ -422,16 +433,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Foresight: { statChanges: [stageChange('accuracy', 2, 'user', 100)], target: 'user' },
 
   // --- Ancient Power: 20% chance to raise all stats by 1 stage (all-or-nothing roll) ---
-  'Ancient Power': {
-    groupedStatChance: 20,
-    statChanges: [
-      stageChange('attack', 1, 'user', 100),
-      stageChange('defense', 1, 'user', 100),
-      stageChange('specialAttack', 1, 'user', 100),
-      stageChange('specialDefense', 1, 'user', 100),
-      stageChange('speed', 1, 'user', 100),
-    ],
-  },
+  'Ancient Power': { ...ANCIENT_POWER_ALL_STATS, groupedStatChance: 20 },
 
   // --- Multi-hit ---
   Bonemerang: { minHits: 2, maxHits: 2 },
@@ -441,6 +443,134 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Twin Beam': { minHits: 2, maxHits: 2 },
   Twineedle: { minHits: 2, maxHits: 2, ...statusEffect('poison', 20) },
   'Triple Kick': { minHits: 3, maxHits: 3 },
+  'Double Kick': { minHits: 2, maxHits: 2 },
+  'Fury Attack': multiHit2to5(),
+  'Fury Swipes': multiHit2to5(),
+  'Double Slap': multiHit2to5(),
+  'Comet Punch': multiHit2to5(),
+  'Pin Missile': multiHit2to5(),
+  'Spike Cannon': multiHit2to5(),
+  Barrage: multiHit2to5(),
+  'Bone Rush': multiHit2to5(),
+  'Arm Thrust': multiHit2to5(),
+  'Bullet Seed': multiHit2to5(),
+  'Icicle Spear': multiHit2to5(),
+  'Rock Blast': multiHit2to5(),
+  'Tail Slap': multiHit2to5(),
+
+  // --- Fixed / level damage ---
+  'Seismic Toss': { behaviorTags: ['night-shade'] },
+  'Sonic Boom': { fixedDamage: 20 },
+
+  // --- Status on hit (calibration batch 1) ---
+  'Ice Punch': statusEffect('freeze', 10, { minTurns: 2, maxTurns: 5 }),
+  'Fire Punch': statusEffect('burn', 10),
+  'Thunder Punch': statusEffect('paralyze', 10),
+  'Heat Wave': statusEffect('burn', 10),
+  'Scorching Sands': statusEffect('burn', 30),
+  Scald: statusEffect('burn', 30),
+  'Poison Jab': statusEffect('poison', 30),
+  Sludge: statusEffect('poison', 30),
+  'Sludge Wave': statusEffect('poison', 10),
+  'Poison Tail': { critRate: 1, ...statusEffect('poison', 10) },
+  'Cross Poison': { critRate: 1, ...statusEffect('poison', 10) },
+  Discharge: statusEffect('paralyze', 30),
+  Nuzzle: statusEffect('paralyze', 100),
+  'Dizzy Punch': volatileEffect('confusion', 20, { minTurns: 2, maxTurns: 5 }),
+  'Rock Climb': volatileEffect('confusion', 20, { minTurns: 2, maxTurns: 5 }),
+  'Signal Beam': volatileEffect('confusion', 10, { minTurns: 2, maxTurns: 5 }),
+  'Sand Tomb': trappingEffect(),
+  Infestation: trappingEffect(),
+
+  // --- Flinch on hit ---
+  Waterfall: { flinchChance: 20 },
+  Twister: { flinchChance: 20 },
+  Astonish: { flinchChance: 30 },
+  'Heart Stamp': { flinchChance: 30 },
+  Steamroller: { flinchChance: 30 },
+
+  // --- Target stat-down on hit ---
+  'Mud Slap': { statChanges: [stageChange('accuracy', -1, 'target', 100)] },
+  Octazooka: { statChanges: [stageChange('accuracy', -1, 'target', 50)] },
+  'Leaf Tornado': { statChanges: [stageChange('accuracy', -1, 'target', 50)] },
+  'Muddy Water': { statChanges: [stageChange('accuracy', -1, 'target', 30)] },
+  'Mirror Shot': { statChanges: [stageChange('accuracy', -1, 'target', 30)] },
+  'Mud Bomb': { statChanges: [stageChange('accuracy', -1, 'target', 30)] },
+  'Rock Smash': { statChanges: [stageChange('defense', -1, 'target', 50)] },
+  'Crush Claw': { statChanges: [stageChange('defense', -1, 'target', 50)] },
+  'Razor Shell': { statChanges: [stageChange('defense', -1, 'target', 50)] },
+  'Iron Tail': { statChanges: [stageChange('defense', -1, 'target', 30)] },
+  Liquidation: { statChanges: [stageChange('defense', -1, 'target', 20)] },
+  Acid: { statChanges: [stageChange('defense', -1, 'target', 10)] },
+  'Bubble Beam': { statChanges: [stageChange('speed', -1, 'target', 10)] },
+  Bubble: { statChanges: [stageChange('speed', -1, 'target', 10)] },
+  Constrict: { statChanges: [stageChange('speed', -1, 'target', 10)] },
+  'Rock Tomb': { statChanges: [stageChange('speed', -1, 'target', 100)] },
+  Bulldoze: { statChanges: [stageChange('speed', -1, 'target', 100)] },
+  Pounce: { statChanges: [stageChange('speed', -1, 'target', 100)] },
+  'Aurora Beam': { statChanges: [stageChange('attack', -1, 'target', 10)] },
+  'Play Rough': { statChanges: [stageChange('attack', -1, 'target', 10)] },
+  'Chilling Water': { statChanges: [stageChange('attack', -1, 'target', 100)] },
+  Snarl: { statChanges: [stageChange('specialAttack', -1, 'target', 100)] },
+  'Struggle Bug': { statChanges: [stageChange('specialAttack', -1, 'target', 100)] },
+  'Earth Power': { statChanges: [stageChange('specialDefense', -1, 'target', 10)] },
+  'Focus Blast': { statChanges: [stageChange('specialDefense', -1, 'target', 10)] },
+  'Flash Cannon': { statChanges: [stageChange('specialDefense', -1, 'target', 10)] },
+  'Bug Buzz': { statChanges: [stageChange('specialDefense', -1, 'target', 10)] },
+  'Acid Spray': { statChanges: [stageChange('specialDefense', -2, 'target', 100)] },
+
+  // --- Self-boost on hit ---
+  'Steel Wing': { statChanges: [stageChange('defense', 1, 'user', 10)] },
+  'Metal Claw': { statChanges: [stageChange('attack', 1, 'user', 10)] },
+  'Meteor Mash': { statChanges: [stageChange('attack', 1, 'user', 20)] },
+  'Charge Beam': { statChanges: [stageChange('specialAttack', 1, 'user', 70)] },
+  'Psyshield Bash': {
+    statChanges: [stageChange('defense', 1, 'user', 100), stageChange('specialDefense', 1, 'user', 100)],
+  },
+  'Silver Wind': { ...ANCIENT_POWER_ALL_STATS, groupedStatChance: 10 },
+  'Ominous Wind': { ...ANCIENT_POWER_ALL_STATS, groupedStatChance: 10 },
+
+  // --- Crit / recharge / recoil / charge ---
+  'Air Cutter': { critRate: 1 },
+  'Drill Run': { critRate: 1 },
+  'Blast Burn': { behaviorTags: ['must-recharge'] },
+  'Hydro Cannon': { behaviorTags: ['must-recharge'] },
+  'Frenzy Plant': { behaviorTags: ['must-recharge'] },
+  'Head Smash': { recoilPercent: 50 },
+  'Solar Blade': chargingMove(),
+
+  // --- Status moves: self boosts ---
+  'Iron Defense': userStages(['defense', 2]),
+  'Nasty Plot': userStages(['specialAttack', 2]),
+  'Rock Polish': userStages(['speed', 2]),
+  Autotomize: userStages(['speed', 2]),
+  'Cotton Guard': userStages(['defense', 3]),
+  Howl: userStages(['attack', 1]),
+  'Hone Claws': userStages(['attack', 1], ['accuracy', 1]),
+  'Work Up': userStages(['attack', 1], ['specialAttack', 1]),
+  'Cosmic Power': userStages(['defense', 1], ['specialDefense', 1]),
+  'Quiver Dance': userStages(['specialAttack', 1], ['specialDefense', 1], ['speed', 1]),
+  'Shell Smash': userStages(
+    ['attack', 2],
+    ['specialAttack', 2],
+    ['speed', 2],
+    ['defense', -1],
+    ['specialDefense', -1],
+  ),
+  'Slack Off': { healingPercent: 50, target: 'user' },
+
+  // --- Status moves: target debuffs / status ---
+  'Feather Dance': targetStages(['attack', -2]),
+  'Fake Tears': targetStages(['specialDefense', -2]),
+  'Eerie Impulse': targetStages(['specialAttack', -2]),
+  Tickle: targetStages(['attack', -1], ['defense', -1]),
+  'Play Nice': targetStages(['attack', -1]),
+  'Tearful Look': targetStages(['attack', -1], ['specialAttack', -1]),
+  Confide: targetStages(['specialAttack', -1]),
+  Kinesis: targetStages(['accuracy', -1]),
+  'Grass Whistle': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
+  'Teeter Dance': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  'Toxic Thread': { ...targetStages(['speed', -1]), ...statusEffect('poison', 100) },
 };
 
 // console.log(Object.keys(MOVE_BATTLE_OVERRIDES));

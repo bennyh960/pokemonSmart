@@ -135,6 +135,8 @@ export interface MoveBattleMetadata {
   flags: string[];
   behaviorTags: MoveBattleBehaviorTag[];
   minimumDamage: number | null;
+  /** Always deals exactly this much damage (Sonic Boom). Type immunity still applies. */
+  fixedDamage: number | null;
   groupedStatChance: number | null;
 }
 
@@ -237,6 +239,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     flags: [],
     behaviorTags: [],
     minimumDamage: null,
+    fixedDamage: null,
     groupedStatChance: null,
   };
 }

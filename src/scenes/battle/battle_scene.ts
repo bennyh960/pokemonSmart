@@ -3954,6 +3954,7 @@ export function createBattleScene(
     const isHaze = moveBattleData?.behaviorTags?.includes('haze') ?? false;
     const isNightShade = moveBattleData?.behaviorTags?.includes('night-shade') ?? false;
     const isSuperFang = moveBattleData?.behaviorTags?.includes('super-fang') ?? false;
+    const fixedDamage = moveBattleData?.fixedDamage ?? null;
     const isSandstormMove = moveBattleData?.behaviorTags?.includes('sandstorm') ?? false;
     const isRainDanceMove = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMove = moveBattleData?.behaviorTags?.includes('sun') ?? false;
@@ -4643,6 +4644,7 @@ export function createBattleScene(
       if (!hitResult.hit || targetTypeImmune || absorbed || dreamEaterBlocked) return 0;
       if (isOhko) return defender.hp;
       if (isNightShade) return attacker.level;
+      if (fixedDamage !== null) return fixedDamage;
       if (isSuperFang) return Math.max(1, Math.floor(defender.hp / 2));
       if (effectivePower <= 0) return 0;
       const base = calcDamage(
@@ -4763,7 +4765,7 @@ export function createBattleScene(
       }
     } else if (isOhko && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
-    } else if ((isSuperFang || isNightShade) && hitResult.hit && !targetTypeImmune) {
+    } else if ((isSuperFang || isNightShade || fixedDamage !== null) && hitResult.hit && !targetTypeImmune) {
       if (isSuperFang) msgs.push(t('battle.superFangHit'));
     } else if (!hitResult.hit) {
       const messages = [

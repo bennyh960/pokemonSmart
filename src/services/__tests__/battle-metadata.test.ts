@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadHeavyData } from './heavy-data.js';
-import { getAbility, getAbilityBattleEffects, getMoveBattleData, getMoveByName } from '../pokemon-data.js';
+import { getAbility, getAbilityBattleEffects, getAllMoves, getMoveBattleData, getMoveByName } from '../pokemon-data.js';
+import { MOVE_BATTLE_OVERRIDES } from '../../data/move-battle-overrides.js';
 
 beforeAll(loadHeavyData);
 
@@ -113,5 +114,42 @@ describe('battle metadata', () => {
 
     expect(quickAttack).toBeDefined();
     expect(getMoveBattleData(quickAttack!.id)).toEqual(quickAttack!.battle);
+  });
+
+  it('every move override key names a real move', () => {
+    const names = new Set(getAllMoves().map((m) => m.name.en));
+    expect(Object.keys(MOVE_BATTLE_OVERRIDES).filter((k) => !names.has(k))).toEqual([]);
+  });
+
+  it('calibration batch 1: secondary effects, multi-hit and fixed damage', () => {
+    expect(getMoveByName('fire punch')?.battle.ailment).toMatchObject({ status: 'burn', chance: 10 });
+    expect(getMoveByName('ice punch')?.battle.ailment).toMatchObject({ status: 'freeze', chance: 10 });
+    expect(getMoveByName('thunder punch')?.battle.ailment).toMatchObject({ status: 'paralyze', chance: 10 });
+    expect(getMoveByName('iron tail')?.battle.statChanges).toEqual([
+      { stat: 'defense', stages: -1, target: 'target', chance: 30 },
+    ]);
+    expect(getMoveByName('metal claw')?.battle.statChanges).toEqual([
+      { stat: 'attack', stages: 1, target: 'user', chance: 10 },
+    ]);
+    expect(getMoveByName('waterfall')?.battle.flinchChance).toBe(20);
+    expect(getMoveByName('fury attack')?.battle).toMatchObject({ minHits: 2, maxHits: 5 });
+    expect(getMoveByName('double kick')?.battle).toMatchObject({ minHits: 2, maxHits: 2 });
+    expect(getMoveByName('seismic toss')?.battle.behaviorTags).toContain('night-shade');
+    expect(getMoveByName('sonic boom')?.battle.fixedDamage).toBe(20);
+    expect(getMoveByName('soft boiled')?.battle.healingPercent).toBe(50);
+    expect(getMoveByName('silver wind')?.battle.groupedStatChance).toBe(10);
+    expect(getMoveByName('silver wind')?.battle.statChanges).toHaveLength(5);
+    expect(getMoveByName('shell smash')?.battle.statChanges.map((c) => [c.stat, c.stages])).toEqual([
+      ['attack', 2],
+      ['specialAttack', 2],
+      ['speed', 2],
+      ['defense', -1],
+      ['specialDefense', -1],
+    ]);
+    expect(getMoveByName('toxic thread')?.battle).toMatchObject({
+      target: 'selected-pokemon',
+      ailment: { status: 'poison', chance: 100 },
+      statChanges: [{ stat: 'speed', stages: -1, target: 'target', chance: 100 }],
+    });
   });
 });

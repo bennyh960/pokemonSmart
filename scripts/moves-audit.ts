@@ -66,6 +66,12 @@ const unwiredTags = new Set(
     .filter((id) => id !== 'other' && !isRead(id)),
 );
 
+// Moves the battle code handles by id (e.g. `export const RETURN_MOVE_ID = 216;`) instead of metadata.
+const idHandled = new Map<number, string>();
+for (const [, name, id] of logicSrc.matchAll(/\b([A-Z_]+_MOVE_ID)\s*=\s*(\d+)/g)) {
+  if (logicSrc.split(name).length > 2) idHandled.set(Number(id), name);
+}
+
 // ── Learners (priority signal) ─────────────────────────────────────────────────────────────────
 const levelLearners = new Map<number, Set<string>>();
 const tmLearners = new Map<number, Set<string>>();
@@ -96,6 +102,7 @@ function summarizeOverride(o: Partial<MoveBattleMetadata>): string {
   if (o.healingPercent) parts.push(`heal ${o.healingPercent}%`);
   if (o.minHits) parts.push(`hits ${o.minHits}${o.maxHits !== o.minHits ? `-${o.maxHits}` : ''}`);
   if (o.minimumDamage) parts.push(`min dmg ${o.minimumDamage}`);
+  if (o.fixedDamage) parts.push(`fixed dmg ${o.fixedDamage}`);
   for (const t of o.behaviorTags ?? []) parts.push(`\`${t}\``);
   return parts.join(', ');
 }
@@ -111,6 +118,8 @@ function classify(m: MoveJson): { status: Status; logic: string; why: string } {
       why: unwired.length ? `tag not read by battle code: ${unwired.join(', ')}` : '',
     };
   }
+  const byId = idHandled.get(m.id);
+  if (byId) return { status: 'wired', logic: `handled by id in code (\`${byId}\`)`, why: '' };
   const desc = m.description.en.replace(/­\s*/g, '');
   if (m.damageClass !== 'status' && m.accuracy === null && /never misses|sure-hit|always hits|never miss|unavoidable|not miss|cannot be evaded|certain to hit/i.test(desc))
     return { status: 'implicit', logic: 'accuracy = null → always hits', why: '' };
