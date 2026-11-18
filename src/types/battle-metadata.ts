@@ -75,10 +75,11 @@ export type MoveBattleBehaviorTag =
   | 'haze'
   | 'night-shade'
   | 'super-fang'
-  | 'cut-pp';
+  | 'cut-pp'
+  | 'hidden-power';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
-export type MoveBattleEffectId = 'other' | 'confusion' | 'leech-seed' | 'trap' | 'curse';
+export type MoveBattleEffectId = 'other' | 'confusion' | 'leech-seed' | 'trap' | 'curse' | 'infatuation';
 
 export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';
 

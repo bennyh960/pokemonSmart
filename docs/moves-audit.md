@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 357 |
+| ✅ wired (override + battle code reads it) | 359 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 1 |
-| ❌ missing (effect described, no logic at all) | 208 |
+| ❌ missing (effect described, no logic at all) | 206 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,12 +25,10 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (208)
+## ❌ missing (206)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
-| 237 | Hidden Power (כוח נסתר) | normal | special | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 271 (1/270) | The power varies with the POKéMON. |  |
-| 213 | Attract (משיכה) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 252 (1/252) | Makes the opposite gender infatuated. |  |
 | 117 | Bide (המתנה) | normal | physical | — | — | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 152 (7/145) | Waits 2-3 turns & hits back double. |  |
 | 102 | Mimic (חיקוי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 146 (1/145) | Copies a move used by the foe. |  |
 | 168 | Thief (גנב) | dark | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 120 (0/120) | An attack that may steal a held item. |  |
@@ -244,10 +242,11 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 389 | Sucker Punch (אגרוף ערמומי) | dark | physical | 70 | 100 | — | ⚠️ partial | priority +1, `fails-if-target-not-attacking` | tag not read by battle code: fails-if-target-not-attacking | 🎬 punch:dark | 2 (2/0) | This move enables the user to attack first. It fails if the foe is not readying an attack, however. |  |
 
-## ✅ wired (357)
+## ✅ wired (359)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
+| 237 | Hidden Power (כוח נסתר) | normal | special | 60 | 100 | — | ✅ wired | `hidden-power` | — | ▫️ projectile | 271 (1/270) | The power varies with the POKéMON. |  |
 | 92 | Toxic (רעלן) | poison | status | — | 90 | — | ✅ wired | poison (toxic) 100% | — | ▫️ pulse | 270 (0/270) | A poison move with increasing damage. |  |
 | 104 | Double Team (צוות כפול) | normal | status | — | — | — | ✅ wired | user evasion +1 | — | 🎬 double-team | 270 (5/270) | Heightens evasiveness. |  |
 | 156 | Rest (מנוחה) | psychic | status | — | — | — | ✅ wired | `rest` | — | 🎬 heal-pulse | 270 (10/270) | Sleep for 2 turns to fully recover. |  |
@@ -258,6 +257,7 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 | 216 | Return (חזרה) | normal | physical | — | 100 | — | ✅ wired | handled by id in code (`RETURN_MOVE_ID`) | — | ▫️ lunge | 270 (0/270) | An attack that is based on loyalty. |  |
 | 218 | Frustration (תסכול) | normal | physical | — | 100 | — | ✅ wired | handled by id in code (`FRUSTRATION_MOVE_ID`) | — | ▫️ lunge | 270 (0/270) | An attack based on lack of loyalty. |  |
 | 173 | Snore (נחירות) | normal | special | 50 | 100 | 30 | ✅ wired | flinch 30% | — | 🎬 heal-pulse | 268 (3/268) | An attack useable only while asleep. |  |
+| 213 | Attract (משיכה) | normal | status | — | 100 | — | ✅ wired | infatuation 100% | — | ▫️ pulse | 252 (1/252) | Makes the opposite gender infatuated. |  |
 | 174 | Curse (קללה) | ghost | status | — | — | — | ✅ wired | user attack +1, user defense +1, user speed -1, curse 100%, `curse` | — | ▫️ pulse | 245 (7/245) | Works differently for ghost-types. |  |
 | 241 | Sunny Day (יום שמש) | fire | status | — | — | — | ✅ wired | `sun` | — | 🎬 celestial:sunny day | 202 (6/202) | Boosts fire-type moves for 5 turns. |  |
 | 29 | Headbutt (נגיחה) | normal | physical | 70 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 179 (16/173) | An attack that may make foe flinch. |  |

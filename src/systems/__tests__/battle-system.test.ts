@@ -27,6 +27,7 @@ import {
   getDisplayedStatChanges,
   getDisplayedVolatileStatuses,
   getEffectiveSpeed,
+  getHiddenPowerType,
   getSideDamageTakenMultiplier,
   getModifiedStatValue,
   isBattlePokemonTrapped,
@@ -346,6 +347,51 @@ describe('battle system helpers', () => {
     expect(slash).toBeDefined();
     expect(rollCriticalHit(slash!.id, defender, () => 0)).toBe(false);
     expect(rollCriticalHit(slash!.id, createTestPokemon({ id: 1, name: 'Bulbasaur' }), () => 0)).toBe(true);
+  });
+
+  it('Attract infatuates a different species, and the infatuation ends when its source leaves', () => {
+    const attacker = createTestPokemon({ id: 133, name: 'Eevee' });
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    const attract = { id: 'infatuation' as const, target: 'target' as const, chance: 100 };
+
+    expect(applyVolatileMoveEffects(target, runtime, [attract], 'target', () => 0, attacker)[0]).toMatchObject({
+      applied: true,
+    });
+    expect(runtime.infatuatedWith).toBe(attacker.uuid);
+    expect(applyVolatileMoveEffects(target, runtime, [attract], 'target', () => 0, attacker)[0].reason).toBe(
+      'already-active',
+    );
+
+    const stuck = processBeforeMoveEffects(target, runtime, () => 0.1, undefined, attacker);
+    expect(stuck).toMatchObject({ canAct: false, events: ['infatuated', 'immobilized-by-love'] });
+    const acts = processBeforeMoveEffects(target, runtime, () => 0.9, undefined, attacker);
+    expect(acts).toMatchObject({ canAct: true, events: ['infatuated'] });
+
+    const replacement = createTestPokemon({ id: 1, name: 'Bulbasaur' });
+    expect(processBeforeMoveEffects(target, runtime, () => 0.1, undefined, replacement).canAct).toBe(true);
+    expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Attract fails on the same species', () => {
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    const [result] = applyVolatileMoveEffects(
+      target,
+      runtime,
+      [{ id: 'infatuation', target: 'target', chance: 100 }],
+      'target',
+      () => 0,
+      createTestPokemon(),
+    );
+    expect(result.reason).toBe('immune');
+    expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Hidden Power takes the user\'s first type', () => {
+    expect(getHiddenPowerType(createTestPokemon({ types: ['fire', 'flying'] }))).toBe('fire');
+    expect(getMoveByName('hidden power')?.battle.behaviorTags).toContain('hidden-power');
+    expect(getMoveByName('attract')?.battle.effects[0]).toMatchObject({ id: 'infatuation', chance: 100 });
   });
 
   it('applies confusion as a battle-only volatile effect', () => {

@@ -39,6 +39,8 @@ export interface BattlePokemonRuntimeState {
   freezeTurnsRemaining: number;
   badlyPoisonTurns: number;
   confusionTurnsRemaining: number;
+  /** uuid of the Pokémon this one is infatuated with (Attract). Ends when that Pokémon leaves battle. */
+  infatuatedWith: string | null;
   leechSeeded: boolean;
   curseActive: boolean;
   trappedTurnsRemaining: number;
@@ -122,6 +124,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     freezeTurnsRemaining: 0,
     badlyPoisonTurns: 0,
     confusionTurnsRemaining: 0,
+    infatuatedWith: null,
     softLockedInMovesId: null,
     leechSeeded: false,
     trappedTurnsRemaining: 0,

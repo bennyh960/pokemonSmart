@@ -55,6 +55,8 @@ export interface BeforeMoveEffectResult {
     | 'confused'
     | 'snapped-out'
     | 'hurt-itself-confusion'
+    | 'infatuated'
+    | 'immobilized-by-love'
   >;
   selfDamage: number;
   skipAnimation?: boolean;
@@ -271,6 +273,9 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   }
   if (runtimeState.disabledMoveId !== null) {
     effects.push('disable');
+  }
+  if (runtimeState.infatuatedWith) {
+    effects.push('love');
   }
   return effects;
 }
@@ -557,10 +562,13 @@ function getEffectDurationRange(effect: MoveBattleEffect): { min: number; max: n
   };
 }
 
-function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect): boolean {
+function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect, source?: Pokemon): boolean {
   switch (effect.id) {
     case 'leech-seed':
       return target.types.includes('grass');
+    case 'infatuation':
+      // No genders in this game: Attract fails only on the same species (or with no known source).
+      return !source || source.id === target.id;
     default:
       return false;
   }
@@ -598,6 +606,8 @@ export function applyVolatileMoveEffects(
   effects: MoveBattleEffect[],
   effectTarget: 'user' | 'target',
   random: () => number = Math.random,
+  /** The Pokémon causing the effect (needed for infatuation). */
+  source?: Pokemon,
 ): AppliedVolatileEffect[] {
   const applied: AppliedVolatileEffect[] = [];
 
@@ -607,7 +617,7 @@ export function applyVolatileMoveEffects(
       applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'chance-failed' });
       continue;
     }
-    if (isVolatileEffectImmune(target, effect)) {
+    if (isVolatileEffectImmune(target, effect, source)) {
       applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'immune' });
       continue;
     }
@@ -632,6 +642,15 @@ export function applyVolatileMoveEffects(
         applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
         break;
       }
+      case 'infatuation': {
+        if (runtimeState.infatuatedWith) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.infatuatedWith = source!.uuid;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
       case 'trap': {
         if (runtimeState.trappedTurnsRemaining > 0) {
           applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
@@ -648,6 +667,11 @@ export function applyVolatileMoveEffects(
   }
 
   return applied;
+}
+
+/** Hidden Power: no IVs in this game, so it takes the user's first type. */
+export function getHiddenPowerType(pokemon: Pick<Pokemon, 'types'>): PokemonType {
+  return pokemon.types[0] ?? 'normal';
 }
 
 export function determineTurnOrder(
@@ -765,6 +789,8 @@ export function processBeforeMoveEffects(
   runtimeState: BattlePokemonRuntimeState,
   random: () => number = Math.random,
   moveId?: number,
+  /** The Pokémon currently facing this one — infatuation ends once its source is gone. */
+  opponent?: Pick<Pokemon, 'uuid'>,
 ): BeforeMoveEffectResult {
   const statusResult = processStartOfTurnStatus(pokemon, runtimeState, random, moveId);
   const events: BeforeMoveEffectResult['events'] = [];
@@ -800,6 +826,18 @@ export function processBeforeMoveEffects(
       pokemon.hp = Math.max(0, pokemon.hp - selfDamage);
       events.push('hurt-itself-confusion');
       return { canAct: false, events, selfDamage };
+    }
+  }
+
+  if (runtimeState.infatuatedWith) {
+    if (opponent && opponent.uuid !== runtimeState.infatuatedWith) {
+      runtimeState.infatuatedWith = null;
+    } else {
+      events.push('infatuated');
+      if (random() < 0.5) {
+        events.push('immobilized-by-love');
+        return { canAct: false, events, selfDamage: 0 };
+      }
     }
   }
 

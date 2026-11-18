@@ -70,6 +70,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 
 ## Moves calibration
 - [ ] `docs/moves-audit.md` (`npm run moves-audit`): every move → effect wired / partial / missing, animation, learners. Calibrate the ❌ rows top-down (most-learned first). Sucker Punch: `fails-if-target-not-attacking` is never read. Batch 1 done (2026-11-18, ~100 metadata-only moves, not playtested). Hyper Fang has the `super-fang` tag (halves HP) but it is a normal 80-power move — check
+- [ ] Hidden Power + Attract (2026-11-18, not playtested): Hidden Power = user's first type (no IVs); the battle menu still shows its type as Normal. Attract has no genders: fails only on the same species, 50% can't act, ends when the source leaves (`infatuatedWith` uuid)
 
 ## PC storage (`feature/pc-storage-react`, not playtested)
 - [ ] New React PC screen (`src/scenesReact/pc/`, replaces the canvas `scenes/pc.ts`; mockup `docs/mockups/pc-storage.html`): no modes — pick a Pokémon → send to box / add to team / swap when the team is full / release (hold 0.9 s). Undo on every action's toast (5 s). Search by name (he + en) and type chips across all boxes (box tabs show match counts), drag & drop team ⇄ box, box → box / box tab, help dialog, keyboard (arrows, Tab, Q/E, Enter, R, F, H, Esc). Check on a real save: touch (no d-pad on this scene), the release hold on a phone, and that Undo after a release restores the Pokédex status

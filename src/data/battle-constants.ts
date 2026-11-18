@@ -124,6 +124,13 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(160,80,200,0.25)',
     textColor: '#c878f0',
   },
+  love: {
+    label: 'מאוהב',
+    shortLabel: 'מאוהב',
+    bgColor: 'rgba(248,120,184,0.15)',
+    borderColor: 'rgba(248,120,184,0.3)',
+    textColor: '#f888c0',
+  },
   disable: {
     label: 'מושבת',
     shortLabel: 'מושבת',

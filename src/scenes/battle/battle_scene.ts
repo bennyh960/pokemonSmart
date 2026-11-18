@@ -171,6 +171,7 @@ import {
   isSubstituteBypass,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
+  getHiddenPowerType,
   clearChargingMove,
   determineTurnOrder,
   doesMoveHit,
@@ -621,6 +622,10 @@ function getTurnEffectLine(
       return t('battle.mustRecharge', { name });
     case 'flinched':
       return t('battle.flinched', { name });
+    case 'infatuated':
+      return t('battle.inLove', { name });
+    case 'immobilized-by-love':
+      return t('battle.immobilizedByLove', { name });
     default:
       return null;
   }
@@ -636,6 +641,8 @@ function getMoveEffectAppliedLine(name: string, effectId: MoveBattleEffectId): s
       return t('battle.trapped', { name });
     case 'curse':
       return t('battle.cursed', { name });
+    case 'infatuation':
+      return t('battle.fellInLove', { name });
     default:
       return '';
   }
@@ -2198,6 +2205,8 @@ export function createBattleScene(
         if (player.types.includes('grass')) return -Infinity; // Grass types immune to leech seed
       }
       if (appliesTrap && playerBattleState.trappedTurnsRemaining > 0) return -Infinity;
+      const appliesInfatuation = effects.some((e) => e.id === 'infatuation' && e.target === 'target');
+      if (appliesInfatuation && (playerBattleState.infatuatedWith || player.id === enemy.id)) return -Infinity;
 
       if (appliesConfusion || appliesLeechSeed || appliesTrap) {
         score += 300; // Volatile statuses are valuable
@@ -3526,7 +3535,14 @@ export function createBattleScene(
       }
     }
 
-    const userVolatileEffects = applyVolatileMoveEffects(attacker, attackerState, moveBattleData.effects, 'user');
+    const userVolatileEffects = applyVolatileMoveEffects(
+      attacker,
+      attackerState,
+      moveBattleData.effects,
+      'user',
+      Math.random,
+      attacker,
+    );
     for (const effectResult of userVolatileEffects) {
       if (effectResult.applied) {
         lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
@@ -3567,7 +3583,7 @@ export function createBattleScene(
         }
         for (const effect of moveBattleData.effects) {
           if (effect.target !== 'target') continue;
-          const [effectResult] = applyVolatileMoveEffects(attacker, attackerState, [effect], 'target');
+          const [effectResult] = applyVolatileMoveEffects(attacker, attackerState, [effect], 'target', Math.random, defender);
           if (!effectResult) continue;
           if (effectResult.applied) {
             lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
@@ -3645,7 +3661,7 @@ export function createBattleScene(
             continue;
           }
 
-          const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target');
+          const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target', Math.random, attacker);
           if (!effectResult) continue;
           if (effectResult.applied) {
             lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
@@ -3758,7 +3774,7 @@ export function createBattleScene(
       pendingChargeMoveId !== null &&
       attacker.moves[forcedMoveIndex]?.id === pendingChargeMoveId;
 
-    const startResult = processBeforeMoveEffects(attacker, attackerBattleState, Math.random, m.id);
+    const startResult = processBeforeMoveEffects(attacker, attackerBattleState, Math.random, m.id, defender);
 
     const turnEffectLines = [
       ...disobeyLines,
@@ -3917,6 +3933,10 @@ export function createBattleScene(
     // --- End Redirection ---
 
     const isChargeRelease = !isRedirected && pendingChargeMoveId !== null && pendingChargeMoveId === m.id;
+    // Hidden Power: its type is the user's (see getHiddenPowerType)
+    if (moveBattleData?.behaviorTags?.includes('hidden-power')) {
+      m = { ...m, type: getHiddenPowerType(attacker) };
+    }
     const isCurse = moveBattleData?.behaviorTags?.includes('curse') ?? false;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirected;

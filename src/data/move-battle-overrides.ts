@@ -570,6 +570,8 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Kinesis: targetStages(['accuracy', -1]),
   'Grass Whistle': statusEffect('sleep', 100, { minTurns: 2, maxTurns: 5 }),
   'Teeter Dance': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
+  'Hidden Power': { behaviorTags: ['hidden-power'] },
+  Attract: volatileEffect('infatuation', 100),
   'Toxic Thread': { ...targetStages(['speed', -1]), ...statusEffect('poison', 100) },
 };
 
