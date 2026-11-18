@@ -171,7 +171,7 @@ export function setSlotPin(slot: number, pin: string | null): void {
 // Schema version + migrations
 // ---------------------------------------------------------------------------
 
-export const CURRENT_SAVE_VERSION = 27;
+export const CURRENT_SAVE_VERSION = 28;
 
 function gaussianSizePercent(): number {
   let u = 0,
@@ -416,6 +416,14 @@ const migrations: Record<number, (data: Record<string, any>) => void> = {
       data.flags['key-bypass-card-obtained'] = true;
     }
     data.saveVersion = 27;
+  },
+  28: (data) => {
+    // Catching a wild Pokémon left its Pokédex entry at 'seen' (set at battle start) — fix every species the player owns
+    const owned = [...(data.party ?? []), ...(data.boxes ?? []).flatMap((b: { pokemon: unknown[] }) => b.pokemon)];
+    for (const mon of owned as ({ id: number } | null)[]) {
+      if (mon && data.pokedex) data.pokedex[mon.id] = 'caught';
+    }
+    data.saveVersion = 28;
   },
 };
 

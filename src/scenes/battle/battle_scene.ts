@@ -2532,9 +2532,8 @@ export function createBattleScene(
         void fireStoryTrigger({ type: 'trainer-defeated', trainerId: trainerData.trainerId });
       }
       enemy.caughtBall = outcome.itemId;
-      if (!pd.pokedex[enemy.id]) {
-        pd.pokedex[enemy.id] = 'caught';
-      }
+      // The species was already marked 'seen' when the battle started — catching upgrades it
+      pd.pokedex[enemy.id] = 'caught';
       xpGained = getCaptureXpReward();
       player.xp += xpGained;
 
