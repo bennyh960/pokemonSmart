@@ -1,0 +1,586 @@
+<title>PC Storage Mockup</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&family=Silkscreen&display=swap">
+<style>
+/* Layout: game-screen frame — party column | box grid | inspector; stacks on phones. Single dark look (the game's PC). */
+:root {
+  --bg: #08130e;
+  --panel: #0f2219;
+  --panel-2: #132c20;
+  --line: #1f4a33;
+  --line-soft: #173826;
+  --fg: #eaf5ee;
+  --fg-dim: #8fb19c;
+  --fg-mute: #5d7d69;
+  --green: #20d860;
+  --blue: #5b8cff;
+  --red: #ef5b5b;
+  --gold: #f8d030;
+  --font: 'Rubik', 'Segoe UI', Arial, sans-serif;
+  --pixel: 'Silkscreen', 'Courier New', monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px;
+}
+button { font: inherit; color: inherit; }
+button:focus-visible, .cell:focus-visible, .slot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.note { max-width: 1100px; margin: 0 auto 12px; color: var(--fg-dim); font-size: 13px; line-height: 1.5; }
+.note b { color: var(--fg); }
+
+.pc { max-width: 1100px; margin: 0 auto; background: var(--panel); border: 2px solid var(--line); border-radius: 14px; overflow: hidden; }
+
+.top { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #0b1b13; border-bottom: 2px solid var(--line); }
+.top h1 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: .3px; display: flex; align-items: center; gap: 8px; }
+.top h1 .pcicon { width: 22px; height: 18px; border: 2px solid var(--green); border-radius: 3px; position: relative; }
+.top h1 .pcicon::after { content: ''; position: absolute; left: 4px; right: 4px; bottom: -6px; height: 3px; background: var(--green); border-radius: 2px; }
+.top .spacer { flex: 1; }
+.chipbtn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-2); cursor: pointer; font-size: 13px; font-weight: 500; }
+.chipbtn:hover { border-color: var(--green); }
+.help-btn { background: var(--gold); color: #1b1600; border-color: var(--gold); font-weight: 700; }
+.help-btn:hover { filter: brightness(1.1); border-color: var(--gold); }
+.help-btn .q { width: 18px; height: 18px; border-radius: 50%; background: #1b1600; color: var(--gold); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
+kbd { font-family: var(--pixel); font-size: 10px; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); background: #0a1912; color: var(--fg-dim); }
+
+.main { display: grid; grid-template-columns: 210px minmax(0, 1fr) 270px; gap: 14px; padding: 14px; }
+.section-title { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--fg-dim); text-transform: uppercase; letter-spacing: .6px; }
+.count { font-family: var(--pixel); font-size: 11px; color: var(--fg-mute); letter-spacing: 0; }
+.count.full { color: var(--gold); }
+
+.party { display: grid; gap: 6px; }
+.slot { display: grid; grid-template-columns: 44px minmax(0,1fr); align-items: center; gap: 8px; padding: 4px 8px; min-height: 52px; border-radius: 10px; border: 1px solid var(--line-soft); background: var(--panel-2); cursor: pointer; text-align: start; transition: border-color .12s, background .12s; }
+.slot:hover { border-color: var(--green); }
+.slot.sel { border-color: var(--green); background: #183a28; box-shadow: inset 3px 0 0 var(--green); }
+[dir=rtl] .slot.sel { box-shadow: inset -3px 0 0 var(--green); }
+.slot.empty { border-style: dashed; color: var(--fg-mute); font-size: 12px; grid-template-columns: 1fr; text-align: center; cursor: default; }
+.slot.target { border-color: var(--gold); animation: pulse 1s infinite; }
+.slot.drop { border-color: var(--gold); background: #2a2a12; }
+.slot img { width: 56px; height: 56px; margin: -6px; image-rendering: pixelated; }
+.slot .nm { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slot .meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.lv { font-family: var(--pixel); font-size: 10px; color: var(--fg-dim); direction: ltr; }
+.hpbar { flex: 1; height: 4px; background: #0a1912; border-radius: 2px; overflow: hidden; }
+.hpbar i { display: block; height: 100%; background: var(--green); }
+@keyframes pulse { 50% { box-shadow: 0 0 0 3px rgba(248,208,48,.25); } }
+
+.boxbar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.arrow { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel-2); cursor: pointer; font-size: 16px; display: grid; place-items: center; flex: none; }
+.arrow:hover { border-color: var(--green); }
+.boxname { flex: 1; min-width: 0; text-align: center; padding: 6px; border-radius: 9px; background: #0b1b13; border: 1px solid var(--line); }
+.boxname b { display: block; font-size: 15px; }
+.boxname span { font-family: var(--pixel); font-size: 10px; color: var(--fg-mute); }
+.boxtabs { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 2px; }
+.boxtab { flex: none; min-width: 34px; padding: 4px 6px; border-radius: 7px; border: 1px solid var(--line-soft); background: transparent; cursor: pointer; font-family: var(--pixel); font-size: 10px; color: var(--fg-mute); }
+.boxtab:hover { border-color: var(--green); color: var(--fg); }
+.boxtab.on { background: var(--green); color: #04150b; border-color: var(--green); }
+.boxtab.drop { border-color: var(--gold); color: var(--gold); }
+.boxtab .fill { display: block; height: 3px; margin-top: 3px; border-radius: 2px; background: #0a1912; overflow: hidden; }
+.boxtab .fill i { display: block; height: 100%; background: currentColor; opacity: .7; }
+
+.grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; padding: 10px; border-radius: 12px; background: #0b1b13; border: 1px solid var(--line);
+  background-image: radial-gradient(var(--line-soft) 1px, transparent 1px); background-size: 14px 14px; }
+.cell { aspect-ratio: 1; max-width: 100%; border-radius: 9px; border: 1px solid var(--line-soft); background: rgba(15,34,25,.85); display: grid; place-items: center; cursor: pointer; padding: 0; position: relative; transition: transform .1s, border-color .1s; }
+.cell:hover { border-color: var(--green); transform: translateY(-1px); }
+.cell.sel { border: 2px solid var(--green); background: #183a28; }
+.cell.cur { border: 2px dashed var(--gold); }
+.cell.empty { background: rgba(10,25,18,.6); cursor: default; }
+.cell.empty:hover { transform: none; border-color: var(--line-soft); }
+.cell.drop { border-color: var(--gold); background: #2a2a12; }
+.cell img { width: 100%; height: 100%; image-rendering: pixelated; pointer-events: none; }
+.cell .clv { position: absolute; bottom: 2px; inset-inline-end: 4px; font-family: var(--pixel); font-size: 9px; color: var(--fg-dim); direction: ltr; }
+.dragging { opacity: .35; }
+
+.insp { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; align-self: start; }
+.insp .hero { display: grid; place-items: center; height: 120px; border-radius: 10px; background: radial-gradient(circle at 50% 65%, #1f4a33 0, #0b1b13 70%); }
+.insp .hero img { width: 150px; height: 150px; image-rendering: pixelated; }
+.insp h2 { margin: 0; font-size: 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.where { font-size: 12px; color: var(--fg-mute); }
+.types { display: flex; gap: 4px; }
+.type { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; color: #fff; text-transform: uppercase; letter-spacing: .4px; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 13px; margin: 0; }
+.facts dt { color: var(--fg-mute); }
+.facts dd { margin: 0; }
+.actions { display: grid; gap: 8px; }
+.act { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; font-weight: 700; font-size: 14px; text-align: start; }
+.act small { display: block; font-weight: 400; font-size: 12px; opacity: .8; }
+.act .ico { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 16px; flex: none; background: rgba(0,0,0,.25); }
+.act .k { margin-inline-start: auto; }
+.act.primary.withdraw { background: var(--green); color: #04150b; }
+.act.primary.deposit { background: var(--blue); color: #fff; }
+.act.secondary { background: transparent; border-color: var(--line); color: var(--fg); }
+.act.danger { background: transparent; border-color: rgba(239,91,91,.45); color: var(--red); }
+.act:hover:not(:disabled) { filter: brightness(1.1); }
+.act.danger:hover:not(:disabled) { background: rgba(239,91,91,.1); }
+.act:disabled { opacity: .45; cursor: not-allowed; }
+.hint { font-size: 12px; color: var(--gold); line-height: 1.45; margin: 0; }
+.empty-insp { text-align: center; color: var(--fg-mute); font-size: 13px; padding: 28px 8px; line-height: 1.6; }
+
+.keys { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 10px 14px; border-top: 2px solid var(--line); background: #0b1b13; font-size: 12px; color: var(--fg-mute); }
+.keys span { display: inline-flex; align-items: center; gap: 5px; }
+
+.banner { margin: 12px 14px 0; padding: 8px 12px; border-radius: 10px; background: #2a2a12; border: 1px solid var(--gold); color: var(--gold); font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+.banner button { margin-inline-start: auto; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: #0b1b13; border: 1px solid var(--green); border-radius: 12px; padding: 10px 12px 10px 16px; display: flex; align-items: center; gap: 14px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.5); max-width: calc(100% - 32px); z-index: 20; }
+.toast.err { border-color: var(--red); }
+.toast button { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-weight: 700; color: var(--gold); }
+
+.scrim { position: fixed; inset: 0; background: rgba(2,8,5,.72); display: grid; place-items: center; padding: 16px; z-index: 30; }
+.modal { width: min(460px, 100%); max-height: calc(100% - 32px); overflow: auto; background: var(--panel); border: 2px solid var(--line); border-radius: 16px; padding: 18px; }
+.modal h3 { margin: 0 0 6px; font-size: 19px; }
+.modal p { margin: 0 0 12px; color: var(--fg-dim); line-height: 1.55; font-size: 14px; }
+.release-hero { display: grid; place-items: center; margin: 4px 0 10px; }
+.release-hero img { width: 120px; height: 120px; image-rendering: pixelated; filter: drop-shadow(0 6px 0 rgba(0,0,0,.35)); }
+.row-btns { display: flex; gap: 8px; }
+.row-btns .act { justify-content: center; }
+.hold { position: relative; overflow: hidden; }
+.hold .bar { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; background: rgba(239,91,91,.3); }
+.help-list { display: grid; gap: 12px; margin: 0 0 14px; padding: 0; list-style: none; }
+.help-list li { display: grid; grid-template-columns: 38px 1fr; gap: 10px; align-items: start; }
+.help-list .ico { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font-size: 18px; }
+.help-list b { display: block; margin-bottom: 2px; }
+.help-list span { color: var(--fg-dim); font-size: 13px; line-height: 1.5; }
+.help-keys { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; font-size: 13px; color: var(--fg-dim); padding: 10px; border-radius: 10px; background: #0b1b13; margin-bottom: 14px; }
+
+@media (max-width: 900px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .party { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .slot { grid-template-columns: 36px minmax(0,1fr); padding: 4px 6px; }
+  .slot img { width: 46px; height: 46px; margin: -5px; }
+  .slot .nm { font-size: 12px; }
+}
+@media (max-width: 480px) {
+  .party { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid { gap: 4px; padding: 6px; }
+  .keys { display: none; }
+  .top h1 { font-size: 15px; }
+  .chipbtn .lbl { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<p class="note" id="note"></p>
+<div class="pc" id="app"></div>
+<div id="layer"></div>
+
+<script>
+const SPECIES = [{"id": 25, "en": "Pikachu", "he": "פיקאצ'ו", "types": ["electric"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAKlBMVEUAAAAAAAApKSlBQUpiMQhzc4OcUgDFIBjelADmWkH2vSD25lL/9qT////Vai+KAAAAAXRSTlMAQObYZgAAAdlJREFUWMPtlsFqwkAQhjclhB6ztRRReqiHXnoSbz0piLX2JcwliD6A0JsgEuoDlNJTQKzsnkJpSDN9A3PpG3U2ST12J4dCKftjNML/MTObndkwZmRkZPTX5Vb0Wxe/DrQq5nRSHehWBK4PQKtFAWpiU9wctTodygI0SsCZQqfTJgK+P3ZmgAClfltsJ9k+Qf8bKQACQZZlgHptqwC+lhh+ZNleAVz5HRjrAEwGUi4Tr/wX61JaSMzm8wrygo9BD5wjENVKYI3hNDnZbRiqlHJfAHrAuVQmeH9eqooJwB3AABN5egyL+rVF3MrldDtJ5/OwDKADbkSuHJAVgJf7kE1FTmg2lCNKheoOCa7froU2OSo5owLSHeG33s+aJQCuTfKzJhQBsNjRlpEAJHZSrY4tKBNkHeNSqk3XZXUKYEFSApH18D1BfgYAmwZ7CKJhsOsRgHUB7CAMgj5lGM9AIfgJ6wtGA2Ko45UK7lPmUjPGmRThlQr3zCMAM/BxhXz1MLhPAKyiBwCkEH2PkJIlCn+apiKklGDlPQBCYoSQdKBMxUG0o6hx8O9oh53VEAHnqndIj42x/kotpjWYrGgB7Djp5c6R8GgR+Gn5G0cVXwl41bcUIyMjo/+qLw92FGczGN4XAAAAAElFTkSuQmCC"}, {"id": 4, "en": "Charmander", "he": "צ'רמנדר", "types": ["fire"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAALVBMVEUAAAAIOYsQEBAYi7QxrO6LKQDeUjnmOQDmrFr2pAD/lEH/xWL/1Qj/1Xv///8NIPGPAAAAAXRSTlMAQObYZgAAAchJREFUWMPtlb9Lw0AUx49A7FwQB6dyYggdOol/h8ulpaDDQY4QF7dQ6FSwHILgFgouFsxwgoOj/gFFyCwi3CJ08a/wXX6s3ouTyH2HJMP75N67+753hDg5OTk5/UntxKxbfKpUJ+JcgQYdFnh5/g2wxgPpg1JFJwD+n6oCn9OeAfoCDxwDcNeP8MAXAI8HHYChAXZb4MIa7+8DcH/U1jC3A9UxiC6A2dS4AXq39hqmsEAccfgCB/bKGytAwasjwQlj3KywsWV0QijNIhEzpQywebUAXsyCmIkADFJAHVlWWjbWSxUfFlQI2ChKSJbP85+BACI5xINM3fNNaSnCC0QjbjZ2VtoAQ8SJFIJVBzFblTmxErGUy7TuoF6+yqwH4UVav7ctl43t9iMTrXXbcv4YYfBTAzRzw39CA3VOPmIa+NcAXDXAFANAvP6oAWYMZRMzwJspwmeYceMXJqUlmJVBayQIQCVaS3DrGhyYLDBTYyKlAQqwlRxggHUNiEDIBWouFaGUEfRPKBeYceZBQ4QyAoOHlyeo0Qepc3oID4aLB8D0TiQ4crZ6dXNOFRYYnVVTL0LfKR6l1Wu7/ex2vVM6IE5OTk7/Ud/V9spBc5Q2fAAAAABJRU5ErkJggg=="}, {"id": 1, "en": "Bulbasaur", "he": "בולבזאור", "types": ["grass", "poison"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAQEBAYSkoxc3M5lJRSYili1bRzrDGD7sWk1UGsADG9/3PNzc3uIDn/amL///87EAzGAAAAAXRSTlMAQObYZgAAAZ1JREFUWMPtlL9Lw0AUx9NUce1JwMGlLUfbrdAGcVAkl0fI5iSloxiOrg4hiJuWcP+AlPwLASm4lWzB0dG9/0HAunbwpbjfq6PcZ/5+8n5weZZlMBgMhv/F4b75KaOHj5L4ZppMWuT8Y1Gssge6gPmiSLKYINjtukBRvJ0kK5IQPrXHyGhwWxTZyz1BUGOlUjlQOyHRlwhDpSCUKq2FBWFqX6k5hKmU0Wkt6Hs6xwKgdsIqW8Q0IVQpoJBlSawdojmYKRz6+aMHXrYgCPZnqubh7HJZgtdPiALUwmYnTLTCxTpUoObrfAtCUISrZYAzRMtqCz7040S7pbM8kLjSvHoHANHXCx35C/Da0D8NfiyDO8yPGLjQhY7+dV/nUt512DdgiS4X+tfK/bzGBYEdcWhrhYbjv1aVC54D2BRBQAOnBeaAK7CKR/hHPYagwz0cgiAcyAg3KiQIhyZYrsQoD6I9BPAYh1oQQDlMgYw8K0Ch4bouRWhGtSCjll2WJeXqDYe8ZfUC7IYx0qlsMGbZm83Xfqee+HGDwWAwGP7KD5Vqm0oTWykbAAAAAElFTkSuQmCC"}, {"id": 16, "en": "Pidgey", "he": "פידג'י", "types": ["normal", "flying"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAALVBMVEUAAAAQEBBBKRhzSjGDg4OkYlq9KSC9vb3Ng1rmvWLuYkH/rHP/7pz/9r3///9WNuoZAAAAAXRSTlMAQObYZgAAAa5JREFUWMPt1LFKA0EQBuCLh9buaUAbSTZc1CBBPIQE4isIWRmIRZqgB2onvoAegQ3YeEHIQBqbFIe1jZWCkIPtbLSwEKx9BvcI1jdrYbV/vR+zs8Os49jY2NjY/CXutiFoGIJABiZi3pWRNAHdhpRGJTSIgo+YfqNXGe19vHED0O++I2KJChaODxHLjF7h7OGYeR6Qm154TO7qa55PB0kyEXWPt8mA1yYpcjpwqr2aUjGHRSqohSca+NCmirnkXqUcQF5RJ8G3FPrQkVIQhYt4qwtI2RcGoJMBKFEBwoYGAkpuQNhWDcYvflbA5w3ZiHKFm47VM8h+H0QMQUde5oGWUhqALiDiA909FQCIzaddaLPcAbauf8E4LbZXIicfTFXqg9BAsSLkfyDN1nSsR61bUKoIkH8lt4mDYZy1oK6XGCNMbiUYNtEXehzTG9KoC3rUGJcRByMacFYzgQxHeEkDhZkorw6oSzQTcZmRF7tQQRyS/75sT3ussmNwnFd7+vegg/X9sFcNQ/KV5i6+vPppcnROrsBY4es7ZMygaWf50+i4ftdFx8bGxsbm3/IDKBea6AbhhdgAAAAASUVORK5CYII="}, {"id": 41, "en": "Zubat", "he": "זובאט", "types": ["poison", "flying"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAJFBMVEUAAAAQEBBKQXtiYmJie7RzIFqLtO60Upy9zf/Vc73V1dX///9Jkh9xAAAAAXRSTlMAQObYZgAAActJREFUWMPtVbFOwzAQTUPZY6hYWMIpMl0rNlioda06RhUhYiRKj86VisVemfxAh478Bl+HnVAJJKhvYsFvyvCe353P7xJFAQEBAQF/jZ4QfhLi/kuIAWLi5Teb/elLUwH4+ea2O/6MEC7XDD6lLZ8auNQ69/D7ll+19Sw3oLX2GswMdYK4dnyGAe0Fi5JrQG0PcqIZgtagEwxLVkWtQVOxBa6i5Ua5WcmC1YLjA4KdnEScFIwWlpAh2LcRG7BfmB4WxIYUompe79pbXXnfUUyEiEOjV59j8PUcwbS2gle9tQLbcuGPQka1ap5ettFwodc5J2EZqUbvtm4MOS+TUppyl0eyXDNDHMtFsctjUzIM+m2YZVW85PGCYzBrKLMXVRU6H7IEk2dDYONgX8S04LR8rO9rm1BS84zm6fdCf8ZDMXMCwrqSar+jpkS/bqbj7axLkBOljo1E9aHdd9cYBdNOkDn2YbpLHLyLk07QHe7ZrHElzoWQ7mQcI2cP35xejZzAPtqxAMbN3sDp6E26VKDd2wzFUdQbvbtQWAOnSP2Sa5HRxQDHid32A1TAKIrGlpt0PwiGSY8evwzWmfgsRPL9H5dEAQEBAQH/Dx81ZJax6Qc1uQAAAABJRU5ErkJggg=="}, {"id": 7, "en": "Squirtle", "he": "סקווירטל", "types": ["water"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAQEBApc4NanKRiKQCDKQCLxc205u69agDNeynVlFLVzc3mrFr/1Wr/5pz///8R5ETqAAAAAXRSTlMAQObYZgAAAb1JREFUWMPtlL9KxEAQxi/JC2QvnihaeAkXCwtNBheus7eUPIBZXLGy82ohnZVi4cIl76A2h1ZqJaz2Bxd7C1PoCzgr9jcpBIv9uoX5sfPnm+l0rKysrKz+pwDCdvGjkWxDeBgv5RodWB+dIJCT491D80GLL1wMFm2ACIM5cJlSgYH5YeVWJFRgk0u5z26ADAwM0PukA31M6bgF4JqmHvS+yIBzwjEnAfSUumZqEIHvhZRRbG05iyIMB3uwxkmdjVOW9JTKIOEy8glOxWyC7SyDtCtzCmCMtB9hxcu3kjZrdJJIGVvVsaT1yQWAcV3rRy7AJ3U1hGFZT9UFprWDL8KqsuG7GtfTCJaKTigFYRbVx2vzMX1gk8LFmRPWomoQ0Hp3UkS03f4BSgROgeexmF+6equaaa3PJgsAcU4AqmelVT27uisg5ZLQ3Kqpmlk5u7w/hYTicq80NTw/pRtEgB/VL9glvDPXAMH8jDx5pJXWT+gpY0JGMTjWrB8RCCjxxuDbWqsLBPqMYj8HbZppfc4l9QwEmHnGWES+GxjJfjnaIRNxYlJ3cJNoG8ScnzhHLPb9Thv9glZWVlZWf69vfHii3k2wjfUAAAAASUVORK5CYII="}, {"id": 152, "en": "Chikorita", "he": "צ'יקוריטה", "types": ["grass"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAAAABBWhhBYhhiQVpiiylqtCmDlFKD5jG0zWrFKSnFxcXV9ovue3vu/8X////PwWzjAAAAAXRSTlMAQObYZgAAAZ1JREFUWMPtljFLw0AUx6+VUqSDOTs4OFgKUsEMLYfQbyBKFyuFDC4idHJQEErxcEvJ2i4lEJwcLcXdpQWphedn6BeQrAVdfDnaVBfzbhGE+w2XEv6/vNd7l1LGDAaDwfB3ZBqnQivuIXQl43iuEKLqCXK+4WAFVxANx1UdIeKgTMivuY635CJPEKpxvtNsViyCsIoj58kdeRWeb65ILJE6wUXwWCgnC5vRpaKq4JrUU1YCFNUnwTlnLJ8k3IUAUPh2I2Fj18PwHWBMP3ZSCT9K/M59GMJEwhU1n5NY4HZO7ylXw34Gn89kYeMRhY+Z1BSG9oTcUiQcD22wtISZJAvZWgDy4Sgg72sabg4DLAKjAlV4G0R56FhUYUF9zIoFHQGgRBu3VOHXS1zkiCLYSnhRF5Kwd7Z4PnJNEXbtzuL5AF3aNtXjr90jjXq1TVPf0hN8TWFKE9IQxHma4PeXDbWJgt8CGRVo+T2S0Pa7HOcw4bxPmgMrYSN4BEcW2yZNmu0/4Q+4Okcp2iuhYlvSYlrszDWFFDd/ngwGwz/hC6yy/iT7w3xsAAAAAElFTkSuQmCC"}, {"id": 155, "en": "Cyndaquil", "he": "סינדקוויל", "types": ["fire"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAQEBAYOUopUlI5Yntig5x7YiCsrKzFpGreAADmzWr/WgD/nAD/3gD/7qT///9vavPxAAAAAXRSTlMAQObYZgAAAcJJREFUWMPtlL9rwkAUx2MEIZuhIKVVu1ToqEgLjpITnJzMVgqBItIha2dR5HAIWQ+nbv0Xwtm/QLN1NIO0SOjw1q59iZ2959Kh3BcSMnw+vPfuRwxDR0dHR+cvE+IjThNCKzqBtyIrWp4qyJAKYz+WXEq6EApjeRAskmMJESIuI/wi9i8imQloquliu2nJXwErKfl2z3U6MuelIAhF13WHTo6v1oLQ0S0KjF3KlVzHmaAqYrKMZy35JjdJXkce320TacanLRmv4+1BOD7FNfIDgGk13iZbudpkgysFAPioxkmyjdERisFR6IMXpDUUMGsVnwmDXQBQS94zPlIuLA49mGNPZ8kj9qTmc6EOsGN3w7yEeuMYC3yAF9yOYZJsIuXRMPNFAhsF9149cib0kZ/yWQ9LdIT69JnDANIxXwAaDuXsNVxIbb7YwyfuoEO4no0HsA0fcG4UOgThBnZGCXx/DyljTcJt9ndlowAVmEOQsi5BKJTxVa9AfQ8w61J/et6TDRzgtUXkS3y8yMZO6cKc8wv44mVqS2M+4uec04UKn1Q8zidUvvDs4dqO6IJhYy9X3x65o0MZ+zReR0dHR+c/5QddL/9Cxte4YgAAAABJRU5ErkJggg=="}, {"id": 158, "en": "Totodile", "he": "טוטודייל", "types": ["water"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAKlBMVEUAAAAQEBAxWoMxg8VqtOZ7GACU1f+sgym0SlK0tLTNQSDme3v/xVL///9xhCIvAAAAAXRSTlMAQObYZgAAAaxJREFUWMPtlDFLHFEQx2dvtd/ZXTgjBHy7D4SQFHvzuLTu2z/WJmAjWJw57EMObGwshINgESGQ1sJmOzvhsLkU12xzVlrcd7HwAzjXyvvV7wfznzczRIFAIBB4F8QSF+u839j/4VCtIeyfWgDJGsIJINjRJxhblCtX6wVY/2V1XR8eHmgFFP9Wj4O2VQkbexbePD082u1bZeIShbm70grxKYDC3F1d45Oqot4YQM1/HhxqnQABAMCjvtUYESyMBXwO36qMHIZ6zJwD222q+O4lLyn6O73MAU5PRm8LCTFF0+kSDg7OqDpLH37PLmB/ARhphKFsze6X2P2vnfHh+OPs/js+z4GhSohHz7Pj3HdzKNcurvlyZX3XOSRE394WLHJOsdt1c1PR5o1iOgoP1OfdYtJIcnSjqoq5f76YNE6qVieYs343gUMpFe+oYn/tL+ABLyKVaquzn5N1BItMBBZAKaL5OysDEWcBZKIav1IkFckAMKua1CtFUskEje7ARtWglIRZF5iIoqYRQ0SpGOUJTxtDRJQ1jfYiv0aNvNef8NcJ4YQCgUAg8D54ATsmbzqVkmysAAAAAElFTkSuQmCC"}, {"id": 10, "en": "Caterpie", "he": "קטרפי", "types": ["bug"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAAAAAYWkEge0oxrEFKxSlSYkpq1TF7OUp7g0qs9kHmzZT27ov/QUH/e0H/tDlsaQRjAAAAAXRSTlMAQObYZgAAAbZJREFUGBntwbFrE2EYB+DfJXAk232mg5IMsU3p0CXWQAanu7xQ6I0iXRxSlYI0i8XjA6fg4i1FRRAkWZwKNzUmBI43SwcDId/SLcu1q5OzU7T/wb0OOn3PA8uyLMv6N+I+bsV9CJXe/wIQ/15BqHSz7hc2b9ZXECplP9/uxOvsClJn1z/i6yy7U4eQc5Zl2UrpDqTuZtlKaa2bkCm8ylZKR08OH0Om8DV+p/VT8z2AzE4SHyTR8mhGHkS23ySJjuZHNfIgsk10qKNLVSUPIsXkvKOjVA3Ig0g7OddtHfIkgEw72Io6ERH5kNnbf90K6FalDhFH60bQIvKpDpQ/IF9lk+5XyG/snwLDFAJKfVJqg8wpymaBfO6AOVWtUF/CNXPk6y2YeUyhHsGdTZGvly45fUnEHlzuIl81NcvhlIg8uNxFPufecG5GRD7gTiFRW3zmUcv3gHIXEq4xqupXPeBRFxK9oWGmyQWK1IREbcB8/CLc2GuFTUhUU57O5v7DsDGGiKO+fDSj3cbkWwcyjjGqQkEYeBCqMT+ngMaQck6mTAF7EHNPmHcf4C8Uj59twbIsy/o//gARmZNQERHLaQAAAABJRU5ErkJggg=="}, {"id": 13, "en": "Weedle", "he": "וידל", "types": ["bug", "poison"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAALVBMVEUAAAAYGBhaWmJqOQiLi5SUWgicKSDFxcXNcxDeWlLunIvurEH/3s3/5nv////6NZQnAAAAAXRSTlMAQObYZgAAAVJJREFUWMPtk7FKw0AcxpPUimOuwXDZxFUohoKkLyEula4ihCSbk1shBsMfgoMIgZudCi4SCoF7FMlgcXDKM3jXvsCXQRC53/z9uHx3XyzLYDAYDP+Eg6HC5cmvC9uBwuprcTUk7/T92WaI8dD3ldzg+aN29S2lPIeFqqNKCQUsPHWdyssGzY9k96GFFv2m0afc0bqoMFFpJREsxLGUkwGCL4S+pBYWgrd1rQQitHQgRK0PyNFrtYWIVR4XLHYbkcLFx8R1PmxwwVYnMHrHhcNX5t3sOpyitXm55lqYgj83o1JwXXoKNg+JYv1uTn+HrUlVJmYNEQrG9DCce0y40O+wF7AOmRY8lR0vMCGIyqTgx+PZElys7WV1TvmymD2C12oHz5zyhqI5usBQ7S8vrn2GrilNyiTK0wCeuB9ltR8yhg+czV9SPL5XQtcyGAwGwx/lByg/eOn1qW2DAAAAAElFTkSuQmCC"}, {"id": 19, "en": "Rattata", "he": "ראטאטה", "types": ["normal"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAQEBBKKUFaWlpiSgiLSoukGDmkcwi0c73NrGLNzc3VnNXmWnPmzXPu3rT///9wkIOdAAAAAXRSTlMAQObYZgAAAbNJREFUWMPtlDFLw0AYhi+hoeKUgFILUmohUuyvEDLYpWjpYUD7DxxUKNGl2MDhJ51akCpIwc1NLAiB+wHdhY4dCopkuaXgWi/pD7g70KXcO9wReB/u3sv3fQhpaWlp/ZUA1PxrlGIloEsxHKoB1A9VAItGhBRVCBdCUALMkqsGcPmd/wasFQDKyoAttOBlvcGNJGBRsiztd0nArKQl3R2lm3kkfpZLqJdKZXpclgU+wgql0ShoJa3gijOjJvfTLpm2QgsfygIRkOmk4wMR3yhAJnA/QHPS4au4Q2vnJvcRF4ifAOL+yXz53Lb7wpctKQAl/vBnATtO4oe6EDjhAU7PFnAbBFccEKf2CQwZi4M2Y58g80zWHVvK8w6kgAxj+3l+gpdGwGIAed7cGbI4sfsEY/GvXl/MnRqLSTcq97EMgF7nTpXFm5TmH0tY5k57z9tjNuMVlfeQi3vigYobT2NmV+ibh5AxEAMubgzaM8QB/pGvXgiBHK5XmW1SmgyYjZwwtHF9XzQcZNIosRqG8ACj10+27APYkqPLTo3tWG3kZb+ZrQQYhYIaIJNWS0tLS2uV9QujEKugSNyd7gAAAABJRU5ErkJggg=="}, {"id": 35, "en": "Clefairy", "he": "קלפיירי", "types": ["fairy"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAJ1BMVEUAAAAQEBBaMSBzSjmUlJScUlKcg3O0OSnme3vuQTn/rKz/1b3///+zM2eBAAAAAXRSTlMAQObYZgAAActJREFUWMPtlTFr20AUx69tDjr6CoXidIhduqRLkcBzC5lMhhgqMFI3g75Ch06BGkT1CTqKRhDeTSYRFfpl1JgPlcFy7Ul3nqPfdMP78efuHu8pNTAwMDDwfNHR1VH1r3MqXyMMPyuVA5VS6lUYnDnqX87SVaYBuFLTWboKXEKYfmINwDK7S9Nw4hI+BJBQR5YKZqvA+Ak5MTXchZM3LmF6vhUqC/wNjEtQ03NLBWwsiEx8hNud0NyWxoycguQQwdiCXBtz5myKEmiMEUBKYz66flzHACIAzXxhluve8hOlEsiBGrhvC5Nd9wqXX7SlfoAHcvjWlibrv/X3dQTVBjYkVA3zt/0BmrpK9oKlXUT9Qt5YMvsL7uv6dwI3i6z3lXQLZDnm/Sl1BsRF1v9KMQBs/vzcHuJi2X+JF9u6f51QSVE5euN0a/zgv+D46C6iI3ELuwgA6kYKXL0UHyY08u44QXwEexjgIWg5DJCxh2APAorY+UpadkYjIoWUzuEad4aIv7BnLO4hrqXcO+PSY5eIlFFXX5Q+WyIWkShaiogUXltFX8xlpLSIyMhrB508tkYpFd9ceArKGKWU0pePX4/bpB6DeGBgYOBZ8AQHOVcRdazSMAAAAABJRU5ErkJggg=="}, {"id": 39, "en": "Jigglypuff", "he": "ג'יגליפאף", "types": ["normal", "fairy"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAJ1BMVEUAAAAQEBAQSosQtO4Yc8VqUmKkECDN7v/mc4Pm5ub/rKT/zcX///+OUQTfAAAAAXRSTlMAQObYZgAAAXNJREFUWMPtlKFOA0EQhhdzOdkVmJMFAQQFb9BgkLUoUnHZbB8AyyEu07sXKBLR5vJVISBNx5IQEh4KcZTgbjTsp/8vk9nZGecSiUQi8ecoS2MwF3HOZaXqrS3fKnWZzfXlZmQSWlU64kanhUnIVRVg8+KHhVzkPlfdATA1CHPVbVTd0QErgxA9RFWIAFOGhenhJiqUAKzWgw1nK7+JsC4A4MkiaIS6oi4bi+Dijb4CVff4ubQJqs9AtRgffzQWIWu34nkqZu/j6wiGSc8Xk+ALZnfj80hnEOLbewRmk+PziNiEE+Dh6uq0MQrjE6A7uljS2YTJGdDPIRiEdnEZYd1Pem0RtiWB0AvcWrYHuvI7z/Dva3e7fVjqYljI9bX5zncilR/sIVMNP3mxvKr3QRpAREQq05HJ5IeR8UDu85XxUB6EPl8bC7hQBxERH4wVMpHKe++DtYd9MAhWwfeVTCvtnDvw+9cyCr+GOHKJRCKR+Jd8AePZ4EsvfrZHAAAAAElFTkSuQmCC"}, {"id": 54, "en": "Psyduck", "he": "פסיידאק", "types": ["water"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAJFBMVEUAAAAQEBB7e3uDWgCUWhDetFLmpFL23ov/1Ur/5qT/7r3////nESqMAAAAAXRSTlMAQObYZgAAAYtJREFUWMPtlsFKw0AQhhPNA3SpCUVP+gpLRXJqIYReS10Vc1qIQ1/Ai7dCLesbmAcIQm4eetqXc5K16q3/HoX9ep2P+SebyTaKAoFA4N9wyT9PQfgJ4mTkKcSeM8TiCmyRJFHBxCMBCmUpDFOg9RHXN01vgPWJNm9N887GDGwwMa6D2UKZEkqVcWw3c6SBruwDVyu1nZgNJNiLvTGv1t4aM0ISaWtZqD7tfgEKlV1JU7EGRWLhSeXdDUe6AwXK5GO7IqVoAg1Rkmy71b28JlSQXddOXz6WqHDaDbCg+TSAIXInPGeewpKKOSacfycqSJPZ6eNCOghtRlQTETB0rPoGChcioRjBxVSSRhZiIRhyIA0StzxD/XyGC87wEQwqLMwfo44KD4GNujje5I+w649i5teBQ3nNUAJCsj7kYTLgOSW0PpRzIuSDnNEPukbepfjXOEMOTk6XBwO6RfkboJyhhYIM0Rv9G572a4EYuUiHNZj2mwptXOQu6HzcjaXXPR1Jz78CgUAgEBj4AhfM2f9I+JD6AAAAAElFTkSuQmCC"}, {"id": 60, "en": "Poliwag", "he": "פוליוואג", "types": ["water"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAKlBMVEUAAAAQEBAYOXM5WoM5c6xSg8ViYmKLpOa0rL29WkrNzc3/amr/vaz///+Qf4AtAAAAAXRSTlMAQObYZgAAAclJREFUWMPtlD1r21AUhqUMnnXixhiBIb5GbT7QIJ1MgUxVloxuD80YLyYINAbPSSAYg5dsHpWkxlzI0q2/IVmUgimF+196LLVk8s1Vt8J9Bml5H533XAk5jsVisVgs/y0bQmzXyn+4oP52nfxoRHWM3hcWBPXNF6DRRV8FZDpCFAHR+9aL8Ygw2yLqFm3TERtHsBIGnRpCUwQRsGDWKdgp4udvfVgaC3Gw//S9JwSRWSc+on2Y8fVVGA7PNCtwbnc2C7++CsNHNT/TCad3s9vBlI3P0Z+8UrlOmIIIFUyIkpXQWOXVL2+tcEzFdADnP31KPq6EVJWsF5LTm6VSxfT8IcGoGvDjSCO4BydZtmypzuUDlgLXiXWVXDzxO+1F5uf3pZAphSFPXH+uzUO/pBIaUmGsPaVKmMtS8JxUYhzqduZOh2may3ySXrPQuOrFe4/aRrzEPF9AW/rcCDY5L6Vm5arTIpVysEDcFELsTKTMQfv1uShvoDW5xq7owng8vgTvje8VUEp5z4U4CfBmnEcAICL0PNP/TBM9frCLkWHeJfTKVdBwxBZF1e5kKDQ/VV3eUWS8QnVPDAUX/r6PyKkHeI7FYrFY/onfvTyeAQ/LMjoAAAAASUVORK5CYII="}, {"id": 63, "en": "Abra", "he": "אברה", "types": ["psychic"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAIVBMVEUAAAAQEBBaOQBaOQiDWhCDYgisgymsixjNvSD29qT/5iljXWWPAAAAAXRSTlMAQObYZgAAAhlJREFUWMPtlTFP3EAQhefwSdd6AlI2rnJER22kBCwqTrrCcRdFpgcJS6TKSUig65a7hIc7lCIxncWFLO9XpoAkNPjWbeRX77c7o/d2RqRTp06dOomISH+/JZAtw3ZAymU74H3JdkX1L7mciIhMPLned5LjsD/hoScwq27IOuPXaz9gdl9VJOmq2Ov8gPfVDUmeeAOsSJJX3zx944PufIG9uwfAIRSRs88rgYjRP2BQrgZ6jwAQisx+edjwqSZZbwBWZM8nVtEdWRsAVgIufJx2ZEoHWAlmHnFaG5KuJGBj2Sk8vNs6jqofAGwsXsDawfGr6gTb6ztHIns/PYA8/3h1rZoXxeuA9ChJc11/N9T8oAj9AFHdKg51lKsEpM88SEZFcaQvNJaAzgMIvhSbW8XQzEWiRmBw+gcY8WKUv9mNJSHCpn8QiogExpK8+MDb7bcA4ufvD7gvIkFiTUXCuN2pAebP3+/2d62IJEBUkTB2GtWAfb7VdJ5YkbNzaElOxs4a0jS8IH1kSxnQbtqUC605AdQ09RxckhsZa1iDcVYTC4sEceNfpqFDag2UNQGDuW0yzJApgG0YKJcPQKPPffIcQKiKaRkR9jSdrJgWvARURFTTyMFO52jO6svSqj6WFzlYhTZHL3Pjv69FQCi6YvE8jWYChKuH8PhJQ4vFSqD3tIJedttyWUdsuax7ZUtAtC3QqVOnTv+lfgOeJtsl3sb0QAAAAABJRU5ErkJggg=="}, {"id": 66, "en": "Machop", "he": "מאצ'ופ", "types": ["fighting"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAALVBMVEUAAAAAAAApSlJae2pqUiBzpKSUvb2snFqs1cW0AADNvWLuUlLu5ov/g4v///8odZBeAAAAAXRSTlMAQObYZgAAAiBJREFUWMPtlM9q20AQxvUnD+CViZzeLBkJerOz1LgUSg6BgvFFFmN6lRINvhYMutcQtg/QQCkNBAJ5CEOugbxBD7n3MTorxS4UJI0OpRd9pxXMb2fmm1kZRqdOnTr9Dx2dt4xfPJ6ftbr/afN02wKYL/JFvmmR4H6+eczzHh+4u5/nYtAGyD98wks+YN7mAxfxogWwGSBiwgamJydC+YhjLvB+ptTnX1NkN/GOgNcPIR94uybgJuQ1Iccl4N1MWYBU27HxpQAKm2xZH28ppVKpZlt1hTqDPVO1hO1SIEYfCVMRuWSHdBjWADNF88LoOPaD2MHEDxDXKqkeh60KADzxfbe7RgdAf6ptTYIrHCEARD+ed9cTeAFUZYqAAhJBcfDq+WeKmBFxSkVtq4FVmBieTvHtK/VPB0FbC8tKU4/BJ+8dCCLPWStMwTHcNKsGjD4Een+CoCgeI2EYrg9RtbGWEMV7wFI60FzCpHE/rDIeipuFGDa/uMKgmtL/VhhqwOEDI5emF/EzWLhqV5KZ6Y5jP+ICttQAFcXOoD1NA4AeuwetC58NBKtybjDkAqAJ8mnCrAiKl8MHQj0DrVj2mC2/AFKecoD+HpAkTtuurn4phGQCRUWOPjmSVZO7yvY70ZeS4ZOTHZbIpAyNPlkhHCZsUU1e4xC0RftrR/JNPGzeu+zwcHSKHmOzD5eaDCAk4E+MKP9TdRKMmE6dOnX6p/oNZIa0/Q1L20IAAAAASUVORK5CYII="}, {"id": 74, "en": "Geodude", "he": "ג'יאודוד", "types": ["rock", "ground"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAHlBMVEUAAAAQEBBBOTFqalKUnJyclIO0tJzF1azN3s3///+CLIGrAAAAAXRSTlMAQObYZgAAAZRJREFUGBntwTFunEAABdC/cAFmE1ZJN2ANTpk1YfYMKQf0t18QH6V1FFBKdzlCctusoxQuwHZrad5DFEVRFL11dY3XS0vcaCzwWulpLiR1e7zSaZFUy8niJYkFkC7yqmf1agHUJbYlfrBAevFDO82ia4F6WSw23c66ALtP79pWwbjmiGSalxZb0lleGXbfHnKa97/2rLNqkKbP2HCaNYwZkp8PPH/4+Lshs6qSpu9Yl87ychluf3yRhq9/GvLovLwmi1WnWYMCklmPhobkXXnupekeq06zH52zif4byapnpUH3WJMu6mmY7cS7sqwlkpVMIy9ZrEilsciZIe8kjdVIsh3yvD1fZLHGDzzkAdgfzxJbXlWGYU8jizVeRpc8w87x0Q3L5jw40rDHqkRSw4CD4z8lXde0jqTFulIaGXZy7Oq6IdmRoW4YsKWURuZs2ZBsyODY0o8ZNhmJgdbxqmOwCXuSGbYdRjIgyXkVLFCO7AKekRgyAGlhjLEAEslneFZBiycqXfACg6eSIkMURVEURSv+ApO/fV0rwDRoAAAAAElFTkSuQmCC"}, {"id": 92, "en": "Gastly", "he": "גאסטלי", "types": ["ghost", "poison"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAIVBMVEUAAAAQEBA5KTlzSmqLYoO0KRC9lLTVrM3eUjne3t7////m1jcrAAAAAXRSTlMAQObYZgAAAqtJREFUWMPtVrFuFDEQvQLJ9cIRKXTrcIBS3l1FtznL268UCdqTmRVUBq08Eh1d6jSw6RIkovgrmbGX5Bp790qkfdJV57dv3sx4xovFjBkzZiQg0B5HQMQjCa6dEMZBFAgTCIcfRcCpBBTiyTSOh4Ro7VNoOCk9QWJy+hl2MTmpGCGmlkE4BIB/rPHzFum8UXWMy443h3jWgSJo03WQkxhKjFhrFQC11sCVwJTVwXBnlJJSvlbKALR2IcCmCZQZTQLFi626kKwCaUIISaAxRhVnOzq8LskIdxNmSwBaVXKz3Sq1k0sm5BOFjgw8lxtW2MlSQZuphWB1p9jx2YYU1pIkwGHynob2cSFDxNisZRFiatMEzohT1XcZUX6mmBQ3SZZgKv8tEk78nvNUt5gJaYHmrb+LAl/8dcmlSCqwaSKc+/tAOPX+D5uo2UR6QDHBBwHv/QMRWMGKjAoTvjayeUUEzwo6JK+1SQKdvG1WLBAIhj0jJAlOUez3zerEDyHpthU8oGyqNVTFX16FiO7kUgN3U9oDdqq6+U2u/XsiUFrpRrTUTJi2YNTp9c9mdUPeH/ZMcC4zPAR390X/ScqPdL6XJV9StOkqEMGYisvwpu/7PXcrNZ8QFjMXyFR9ZOypvXXoVkRIVxpVdfuyGfqVm5VHmoBMUKZalpcfrs5/yXgdQs1ytjtFA+Pd1Y87WfAQoCs3ttcMM2RZhvMtAUcJRCmKZRxkODbDMUymiFCFMYKl2tXA49Wo4bwdWT/sE4A+rzWFP7q8qEpkk+qnjAkZHVsRIm44B1rruKbFhJ1IPwecosdUZFRwSJY7mHk558P2F3HDHezhsTeSiMtdxDUDmXI//mM5PxhazwFMeWtxARwcQQh6rCCYMPndMeoh8fo47rkojn0tzpgx47/BXzZ1RnAIYtZ6AAAAAElFTkSuQmCC"}, {"id": 129, "en": "Magikarp", "he": "מג'יקארפ", "types": ["water"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUAAAAAAABSUmJ7YlKDAEGLi6S9IFK9QUHFrHPNzdX2Yhj/nGL/3in/5sX/7qT///+A0hpoAAAAAXRSTlMAQObYZgAAAr5JREFUWMPt1jFIG1EYAOALFxwlDy0BrdhKS8kUIR0yyGHKYdrcIoUMncQSIigO1aM/poOKS4bSQXC4Lkf0SMrbLJLh3iQOlZKxqyA4NEMQFCTj63+X4Hjvj9ChND8hXML/8f//e4+707RhDGMY/1bogwJj9q+Dq4eDMmnm686slgkvRzx1egbB9ay+G/5YnSf0k0Fwlu2BwgwBtLMIqiGIg1wkTND+3GpVw5WNbcg7QolOC0EiuExuyAM1eIz5532QpoDYPYhD+o4wRAxHKJvmAl6BSwFaubQgmsI353HmJflEmR8XornWLBV4nW3kpgnAEihWuVfgnAkSgE+Ce5zX66aoSQJYEYJzXuCeJd6/kvKtKn9ECB+B51nNGXkr5a0KrAm/UUFgNVNS4kfZ05rg210E/nNX7m+5UnWasKOGlBVufXdc58YuYolFBfARfOWTh86Bm7Sd4pICBCPI6S6fTDlLMglbzl2xqNi2oELXE6kDiSDvuNHrFA82wZXdmp96J+ULSJoOAWwj4LhI8hkwMN/sR57tYNcastKoPHKKzi0kGIAZdeuINcu4zYBHo4Yt3UBCYwzsqFVdvyjxbx1EfBq34GnwH2MRYP3iQhS4EYjDdB9ExtQvU5zwI+Mnig9p9cnTJnNsXEzwIyzRgFxkM/2hPzJmTXBuYD7k8wn1HWB8mVnHCH4ArqdNuNfHclA6Adj8DWDnlwlg1ARbJGGzg/kLCQp4mQ8AGGYemEYCJ5Y/bpoGjlAlVdixxPGKjRVeV3sPCVVcxdh8PDfWqQZBKdF7gurtEFBKtHugcx7kU0qMhg8rY651vlfdHaOAnT5onWb3SO8B4RCGjkCngbAnBHOn/dcBSgn9Uj/Vz6jvJlhCv9QSGvklCMdGMEhcPQB8GRBoxiD5o7j82UF6auPyDNRT5v5rGMMYxn8QfwBD8VbGQHft5AAAAABJRU5ErkJggg=="}, {"id": 133, "en": "Eevee", "he": "איווי", "types": ["normal"], "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAHlBMVEUAAAAAAABSMSBzSkqkYkq9nHvVnErmxZT/5qz////1fjcxAAAAAXRSTlMAQObYZgAAAdZJREFUWMPt1T1v2zAQBmCZUndREjRbApuiW23S9lrFZ2VO4kJZlRDcjYJg/4E99xf3KPUD6MJTh058F2u4BzyS0jlJYmJiYv7O54X16dtCoBaD+tOyjqDOl4Hu3wGQANtWM8hgJAFRiAlkvSEC3k2/vf75EATNVKc0r/IFIDW8JQI21e3HoqF1lLAyXydpz1sqyO5exxwXaAXx/pTWptvzoiUukBpj+jc9cvALpOH3cG+mtMCxfOdyIniFBusHdw6CbF5Ab/H54OyFcEYzwB2njgLY93kJBDuHCba04lh97wHugAQaBB9r7YFFEOzprkTAPVAP52EgAIO7Lmo45OoE54dwT5nGFZoeDl8Bc3KnEGBGmb3RR+cqLyyEwJfKSKPhFziHwLvrc+XrD26YeoIQePlmBykl3pktp/pjELzcbnj8eGml8kAGwHC9Yayz7lFKFHIT+nysB1e85MdS+oQA+w2qGQTfpdYDNwwX6Hz9MfzFfcB6bEh4oNQmPATe4xFddv7WSnnsCJOGWTeUHQgPOGkyNfayBQ84T4jj/mmLGwi+FH8A8I3pcNPEegawLnAukYGAe1abUQhyR6JZ4dCg7tjPmfWq75f9UycNT2JiYmJi/l9+AMYgjhg81JkoAAAAAElFTkSuQmCC"}];
+const TYPE_COLORS = { normal:'#9a9a78', fire:'#e8762f', water:'#5b8cff', grass:'#4fae4a', electric:'#c9a000', ice:'#4fb3b3', fighting:'#c0302a', poison:'#9a45a0', ground:'#b08a34', flying:'#7f6fd8', psychic:'#e8457c', bug:'#84961a', rock:'#9c862c', ghost:'#6a5594', dragon:'#6c3cf2', dark:'#6b5848', steel:'#8a8aa8', fairy:'#d77aa0' };
+const TYPE_HE = { normal:'רגיל', fire:'אש', water:'מים', grass:'צמחים', electric:'חשמל', ice:'קרח', fighting:'לחימה', poison:'רעל', ground:'אדמה', flying:'מעופף', psychic:'על-חושי', bug:'חרק', rock:'סלע', ghost:'רוח', dragon:'דרקון', dark:'אופל', steel:'פלדה', fairy:'פיה' };
+const NATURES = ['Brave','Calm','Jolly','Modest','Timid','Adamant','Bold','Hasty'];
+const ABILITIES = ['Static','Blaze','Overgrow','Torrent','Keen Eye','Inner Focus','Swift Swim','Run Away'];
+const sp = Object.fromEntries(SPECIES.map(s => [s.id, s]));
+
+const STR = {
+  he: {
+    note: '<b>דוגמה אינטראקטיבית</b> למסך ה-PC החדש. אפשר ללחוץ, לגרור, להשתמש במקלדת ולפתוח את "איך זה עובד?". הנתונים הם דוגמה בלבד.',
+    title: 'מחשב האחסון', help: 'איך זה עובד?', lang: 'English', close: 'יציאה',
+    party: 'הצוות שלי', box: 'קופסה', emptySlot: 'מקום פנוי',
+    pickOne: 'בחר פוקימון מהצוות או מהקופסה כדי לראות מה אפשר לעשות איתו.',
+    inParty: 'בצוות', inBox: n => `בקופסה ${n}`,
+    nature: 'אופי', ability: 'יכולת', hp: 'חיים',
+    deposit: n => `שלח לקופסה ${n}`, depositSub: 'יישמר כאן במחשב',
+    withdraw: 'הוסף לצוות', withdrawSub: 'יצטרף אליך להרפתקה',
+    swap: 'החלף עם פוקימון מהצוות', swapSub: 'הצוות מלא (6/6)',
+    release: 'שחרר לטבע', releaseSub: 'לא יחזור אליך',
+    lastOne: 'זה הפוקימון האחרון בצוות. חייב להשאיר לפחות אחד.',
+    boxFull: n => `קופסה ${n} מלאה. עבור לקופסה אחרת.`,
+    swapBanner: name => `בחר מי מהצוות יתחלף עם ${name}`, cancel: 'ביטול',
+    depositedT: (a, n) => `${a} נשלח לקופסה ${n}`, withdrawnT: a => `${a} הצטרף לצוות`,
+    swappedT: (a, b) => `${a} ו-${b} החליפו מקומות`, movedT: a => `${a} הועבר`, releasedT: a => `${a} חזר לטבע. להתראות!`,
+    undo: 'בטל',
+    relTitle: name => `לשחרר את ${name}?`,
+    relText: 'הוא יחזור לטבע ולא תוכל להחזיר אותו. כדי לשחרר, החזק את הכפתור האדום.',
+    keep: 'השאר אותו', hold: 'החזק כדי לשחרר',
+    helpTitle: 'איך משתמשים במחשב?',
+    helpIntro: 'בצוות יש מקום ל-6 פוקימונים. כל השאר נשמרים כאן, בקופסאות של המחשב.',
+    h1: 'שליחה לקופסה', h1t: 'בחר פוקימון מהצוות ולחץ על "שלח לקופסה". אפשר גם לגרור אותו לקופסה.',
+    h2: 'הוספה לצוות', h2t: 'בחר פוקימון בקופסה ולחץ על "הוסף לצוות". הצוות מלא? בחר עם מי להחליף אותו.',
+    h3: 'שחרור', h3t: 'פוקימון ששוחרר חוזר לטבע. צריך להחזיק את הכפתור, כדי שזה לא יקרה בטעות.',
+    h4: 'סידור', h4t: 'גרור פוקימון לתא אחר, או ללשונית של קופסה אחרת.',
+    gotIt: 'הבנתי!',
+    kMove: 'תזוזה', kZone: 'צוות ⇄ קופסה', kBox: 'קופסה קודמת / הבאה', kAct: 'פעולה ראשית', kRel: 'שחרור', kHelp: 'עזרה', kClose: 'יציאה',
+    closeToast: 'במשחק זה יסגור את המחשב',
+  },
+  en: {
+    note: '<b>Interactive sample</b> of the new PC screen. Click, drag, use the keyboard, or open "How does it work?". The data is made up.',
+    title: 'PC Storage', help: 'How does it work?', lang: 'עברית', close: 'Exit',
+    party: 'My team', box: 'Box', emptySlot: 'Free spot',
+    pickOne: 'Pick a Pokémon from your team or a box to see what you can do with it.',
+    inParty: 'In your team', inBox: n => `In box ${n}`,
+    nature: 'Nature', ability: 'Ability', hp: 'HP',
+    deposit: n => `Send to box ${n}`, depositSub: 'It stays safe in the PC',
+    withdraw: 'Add to team', withdrawSub: 'It joins your adventure',
+    swap: 'Swap with a team member', swapSub: 'Your team is full (6/6)',
+    release: 'Release to the wild', releaseSub: "It won't come back",
+    lastOne: 'This is your last team member. Keep at least one.',
+    boxFull: n => `Box ${n} is full. Pick another box.`,
+    swapBanner: name => `Pick who in your team swaps with ${name}`, cancel: 'Cancel',
+    depositedT: (a, n) => `${a} went to box ${n}`, withdrawnT: a => `${a} joined your team`,
+    swappedT: (a, b) => `${a} and ${b} swapped places`, movedT: a => `${a} moved`, releasedT: a => `${a} went back to the wild. Bye!`,
+    undo: 'Undo',
+    relTitle: name => `Release ${name}?`,
+    relText: "It goes back to the wild and you can't get it back. To release it, hold the red button.",
+    keep: 'Keep it', hold: 'Hold to release',
+    helpTitle: 'How does the PC work?',
+    helpIntro: 'Your team has room for 6 Pokémon. Everyone else stays here, in the PC boxes.',
+    h1: 'Send to a box', h1t: 'Pick a team Pokémon and press "Send to box", or drag it into the box.',
+    h2: 'Add to your team', h2t: 'Pick a Pokémon in a box and press "Add to team". Team full? Pick who it swaps with.',
+    h3: 'Release', h3t: 'A released Pokémon goes back to the wild. You hold the button so it never happens by accident.',
+    h4: 'Tidy up', h4t: 'Drag a Pokémon to another cell, or onto another box tab.',
+    gotIt: 'Got it!',
+    kMove: 'Move', kZone: 'Team ⇄ box', kBox: 'Prev / next box', kAct: 'Main action', kRel: 'Release', kHelp: 'Help', kClose: 'Exit',
+    closeToast: 'In the game this closes the PC',
+  },
+};
+
+let lang = 'he';
+const S = () => STR[lang];
+const nameOf = p => sp[p.id][lang];
+
+let uid = 0;
+function mon(id, level) {
+  return { uid: ++uid, id, level, hp: Math.min(1, 0.45 + ((id * 37) % 55) / 100), nature: NATURES[id % NATURES.length], ability: ABILITIES[id % ABILITIES.length] };
+}
+
+let state = {
+  party: [mon(25, 18), mon(4, 14), mon(1, 12), mon(16, 9), mon(41, 8)],
+  boxes: Array.from({ length: 10 }, () => Array(30).fill(null)),
+};
+[[7,11,0],[152,6,1],[155,7,3],[158,5,4],[10,4,6],[13,3,7],[19,6,8],[35,9,12],[39,8,13],[54,10,15],[60,7,17],[63,12,18],[66,11,20],[74,9,23],[92,13,25],[129,5,29]]
+  .forEach(([id, lv, slot]) => state.boxes[0][slot] = mon(id, lv));
+[[133,15,2],[25,7,4],[16,4,9]].forEach(([id, lv, slot]) => state.boxes[1][slot] = mon(id, lv));
+
+// sel = the Pokémon shown in the inspector; zone/cursor = keyboard focus; swapFrom = box slot waiting for a team partner
+let ui = { box: 0, sel: { zone: 'box', idx: 0 }, zone: 'box', cursor: 0, swapFrom: null, modal: null, toast: null, dragOver: null };
+let undoSnap = null, toastTimer = null;
+
+const clone = o => JSON.parse(JSON.stringify(o));
+const selected = () => !ui.sel ? null : ui.sel.zone === 'party' ? state.party[ui.sel.idx] : state.boxes[ui.box][ui.sel.idx];
+const boxCount = b => state.boxes[b].filter(Boolean).length;
+
+function commit(msg, err) {
+  ui.toast = { msg, err, undo: !err && !!undoSnap };
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { ui.toast = null; undoSnap = null; renderLayer(); }, 5000);
+  render();
+}
+function snapshot() { undoSnap = { state: clone(state), box: ui.box, sel: ui.sel }; }
+function undo() {
+  if (!undoSnap) return;
+  state = undoSnap.state; ui.box = undoSnap.box; ui.sel = undoSnap.sel; undoSnap = null; ui.toast = null; render();
+}
+
+// ── Actions ──
+function deposit(pIdx, box = ui.box, slot = null) {
+  if (state.party.length <= 1) return commit(S().lastOne, true);
+  const target = slot ?? state.boxes[box].indexOf(null);
+  if (target < 0) return commit(S().boxFull(box + 1), true);
+  snapshot();
+  const p = state.party.splice(pIdx, 1)[0];
+  state.boxes[box][target] = p;
+  ui.box = box; ui.sel = { zone: 'box', idx: target }; ui.zone = 'box'; ui.cursor = target;
+  commit(S().depositedT(nameOf(p), box + 1));
+}
+function withdraw(bIdx) {
+  if (state.party.length >= 6) { ui.swapFrom = bIdx; ui.sel = { zone: 'box', idx: bIdx }; ui.zone = 'party'; ui.cursor = 0; return render(); }
+  snapshot();
+  const p = state.boxes[ui.box][bIdx]; state.boxes[ui.box][bIdx] = null; state.party.push(p);
+  ui.sel = { zone: 'party', idx: state.party.length - 1 };
+  commit(S().withdrawnT(nameOf(p)));
+}
+function swap(pIdx, bIdx, box = ui.box) {
+  snapshot();
+  const a = state.party[pIdx], b = state.boxes[box][bIdx];
+  state.party[pIdx] = b; state.boxes[box][bIdx] = a; ui.swapFrom = null;
+  ui.sel = { zone: 'party', idx: pIdx };
+  commit(S().swappedT(nameOf(b), nameOf(a)));
+}
+function moveInBox(from, to) {
+  snapshot();
+  const b = state.boxes[ui.box]; [b[from], b[to]] = [b[to], b[from]];
+  ui.sel = { zone: 'box', idx: to };
+  commit(S().movedT(nameOf(b[to])));
+}
+function moveToBox(fromIdx, box) {
+  const target = state.boxes[box].indexOf(null);
+  if (target < 0) return commit(S().boxFull(box + 1), true);
+  snapshot();
+  const p = state.boxes[ui.box][fromIdx]; state.boxes[ui.box][fromIdx] = null; state.boxes[box][target] = p;
+  ui.sel = null;
+  commit(S().movedT(nameOf(p)));
+}
+function release() {
+  const s = ui.sel, p = selected(); if (!p) return;
+  snapshot();
+  if (s.zone === 'party') state.party.splice(s.idx, 1); else state.boxes[ui.box][s.idx] = null;
+  ui.sel = null; ui.modal = null;
+  commit(S().releasedT(nameOf(p)));
+}
+function askRelease() {
+  if (!selected() || ui.swapFrom !== null) return;
+  if (ui.sel.zone === 'party' && state.party.length <= 1) return commit(S().lastOne, true);
+  ui.modal = 'release'; render();
+}
+function primary() {
+  if (ui.swapFrom !== null) { if (ui.zone === 'party' && state.party[ui.cursor]) swap(ui.cursor, ui.swapFrom); return; }
+  const s = ui.sel; if (!s || !selected()) return;
+  if (s.zone === 'party') deposit(s.idx); else withdraw(s.idx);
+}
+// activate = a click (in swap mode it picks the team partner); keyboard arrows only move the focus
+function pick(zone, idx, activate = true) {
+  if (ui.swapFrom !== null) {
+    if (activate) {
+      if (zone === 'party' && state.party[idx]) return swap(idx, ui.swapFrom);
+      ui.swapFrom = null;
+    } else {
+      ui.zone = zone; ui.cursor = idx; return render();
+    }
+  }
+  ui.zone = zone; ui.cursor = idx;
+  const exists = zone === 'party' ? state.party[idx] : state.boxes[ui.box][idx];
+  ui.sel = exists ? { zone, idx } : null;
+  render();
+}
+function setBox(b) { ui.box = (b + 10) % 10; if (ui.sel?.zone === 'box') ui.sel = null; ui.swapFrom = null; render(); }
+
+// ── Rendering ──
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+const typeChip = t => `<span class="type" style="background:${TYPE_COLORS[t]}">${lang === 'he' ? TYPE_HE[t] : t}</span>`;
+
+function partyHTML() {
+  const s = S(); let h = '';
+  for (let i = 0; i < 6; i++) {
+    const p = state.party[i];
+    if (!p) { h += `<div class="slot empty${ui.dragOver === `party:${i}` ? ' drop' : ''}" data-drop="party:${i}">${s.emptySlot}</div>`; continue; }
+    const sel = ui.swapFrom !== null ? ui.zone === 'party' && ui.cursor === i : ui.sel?.zone === 'party' && ui.sel.idx === i;
+    const cls = ['slot', sel && 'sel', ui.swapFrom !== null && 'target', ui.dragOver === `party:${i}` && 'drop'].filter(Boolean).join(' ');
+    h += `<button class="${cls}" data-pick="party:${i}" data-drag="party:${i}" data-drop="party:${i}" draggable="true">
+      <img src="${sp[p.id].img}" alt="">
+      <div style="min-width:0"><div class="nm">${esc(nameOf(p))}</div>
+      <div class="meta"><span class="lv">Lv${p.level}</span><span class="hpbar"><i style="width:${Math.round(p.hp * 100)}%"></i></span></div></div>
+    </button>`;
+  }
+  return h;
+}
+
+function gridHTML() {
+  let h = '';
+  state.boxes[ui.box].forEach((p, i) => {
+    const sel = ui.sel?.zone === 'box' && ui.sel.idx === i;
+    const cur = !sel && ui.zone === 'box' && ui.cursor === i;
+    const drop = ui.dragOver === `box:${i}`;
+    if (!p) { h += `<div class="cell empty${drop ? ' drop' : ''}${cur ? ' cur' : ''}" data-drop="box:${i}"></div>`; return; }
+    h += `<button class="cell${sel ? ' sel' : ''}${cur ? ' cur' : ''}${drop ? ' drop' : ''}" data-pick="box:${i}" data-drag="box:${i}" data-drop="box:${i}" draggable="true" title="${esc(nameOf(p))}">
+      <img src="${sp[p.id].img}" alt="${esc(nameOf(p))}"><span class="clv">${p.level}</span></button>`;
+  });
+  return h;
+}
+
+function inspectorHTML() {
+  const s = S(), p = selected();
+  if (!p) return `<div class="empty-insp">${s.pickOne}</div>`;
+  const inParty = ui.sel.zone === 'party';
+  const partyFull = state.party.length >= 6;
+  const boxFull = boxCount(ui.box) >= 30;
+  const lastOne = inParty && state.party.length <= 1;
+  let main;
+  if (inParty) {
+    main = `<button class="act primary deposit" data-act="primary" ${lastOne || boxFull ? 'disabled' : ''}>
+      <span class="ico">📦</span><span>${s.deposit(ui.box + 1)}<small>${s.depositSub}</small></span><kbd class="k">Enter</kbd></button>`;
+  } else if (partyFull) {
+    main = `<button class="act primary withdraw" data-act="primary"><span class="ico">⇄</span><span>${s.swap}<small>${s.swapSub}</small></span><kbd class="k">Enter</kbd></button>`;
+  } else {
+    main = `<button class="act primary withdraw" data-act="primary"><span class="ico">＋</span><span>${s.withdraw}<small>${s.withdrawSub}</small></span><kbd class="k">Enter</kbd></button>`;
+  }
+  const hint = lastOne ? s.lastOne : inParty && boxFull ? s.boxFull(ui.box + 1) : '';
+  return `
+    <div class="hero"><img src="${sp[p.id].img}" alt=""></div>
+    <div>
+      <h2>${esc(nameOf(p))} <span class="lv" style="font-size:12px">Lv ${p.level}</span></h2>
+      <div class="where">${inParty ? s.inParty : s.inBox(ui.box + 1)}</div>
+    </div>
+    <div class="types">${sp[p.id].types.map(typeChip).join('')}</div>
+    <dl class="facts">
+      <dt>${s.hp}</dt><dd><span class="hpbar" style="display:block;margin-top:7px"><i style="width:${Math.round(p.hp * 100)}%"></i></span></dd>
+      <dt>${s.nature}</dt><dd>${p.nature}</dd>
+      <dt>${s.ability}</dt><dd>${p.ability}</dd>
+    </dl>
+    <div class="actions">
+      ${ui.swapFrom !== null ? '' : main}
+      ${hint ? `<p class="hint">${hint}</p>` : ''}
+      ${ui.swapFrom !== null ? '' : `<button class="act danger" data-act="release" ${lastOne ? 'disabled' : ''}><span class="ico">🍃</span><span>${s.release}<small>${s.releaseSub}</small></span><kbd class="k">R</kbd></button>`}
+    </div>`;
+}
+
+function render() {
+  const s = S();
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  document.getElementById('note').innerHTML = s.note;
+  const full = state.party.length >= 6;
+  const swapName = ui.swapFrom !== null ? nameOf(state.boxes[ui.box][ui.swapFrom]) : '';
+  const prevArrow = lang === 'he' ? '›' : '‹', nextArrow = lang === 'he' ? '‹' : '›';
+  document.getElementById('app').innerHTML = `
+    <header class="top">
+      <h1><span class="pcicon"></span>${s.title}</h1>
+      <span class="spacer"></span>
+      <button class="chipbtn help-btn" data-act="help"><span class="q">?</span><span class="lbl">${s.help}</span></button>
+      <button class="chipbtn" data-act="lang"><kbd>L</kbd><span class="lbl">${s.lang}</span></button>
+      <button class="chipbtn" data-act="close"><kbd>Esc</kbd><span class="lbl">${s.close}</span></button>
+    </header>
+    ${ui.swapFrom !== null ? `<div class="banner">⇄ ${s.swapBanner(esc(swapName))}<button class="chipbtn" data-act="cancel-swap"><kbd>Esc</kbd>${s.cancel}</button></div>` : ''}
+    <div class="main">
+      <section>
+        <h2 class="section-title">${s.party}<span class="count${full ? ' full' : ''}">${state.party.length}/6</span></h2>
+        <div class="party">${partyHTML()}</div>
+      </section>
+      <section style="min-width:0">
+        <div class="boxbar">
+          <button class="arrow" data-act="prev-box" aria-label="previous box">${prevArrow}</button>
+          <div class="boxname"><b>${s.box} ${ui.box + 1}</b><span>${boxCount(ui.box)}/30</span></div>
+          <button class="arrow" data-act="next-box" aria-label="next box">${nextArrow}</button>
+        </div>
+        <div class="boxtabs">${state.boxes.map((_, b) => `<button class="boxtab${b === ui.box ? ' on' : ''}${ui.dragOver === `tab:${b}` ? ' drop' : ''}" data-box="${b}" data-drop="tab:${b}">${b + 1}<span class="fill"><i style="width:${boxCount(b) / 30 * 100}%"></i></span></button>`).join('')}</div>
+        <div class="grid">${gridHTML()}</div>
+      </section>
+      <aside class="insp">${inspectorHTML()}</aside>
+    </div>
+    <footer class="keys">
+      <span><kbd>←↑→↓</kbd>${s.kMove}</span><span><kbd>Tab</kbd>${s.kZone}</span><span><kbd>Q</kbd><kbd>E</kbd>${s.kBox}</span>
+      <span><kbd>Enter</kbd>${s.kAct}</span><span><kbd>R</kbd>${s.kRel}</span><span><kbd>?</kbd>${s.kHelp}</span><span><kbd>Esc</kbd>${s.kClose}</span>
+    </footer>`;
+  renderLayer();
+}
+
+function renderLayer() {
+  const s = S(), L = document.getElementById('layer');
+  let h = '';
+  if (ui.toast) h += `<div class="toast${ui.toast.err ? ' err' : ''}" role="status"><span>${esc(ui.toast.msg)}</span>${ui.toast.undo ? `<button data-act="undo">↶ ${s.undo}</button>` : ''}</div>`;
+  if (ui.modal === 'release') {
+    const p = selected();
+    h += `<div class="scrim" data-act="close-modal"><div class="modal" role="dialog" aria-modal="true" data-stop>
+      <div class="release-hero"><img src="${sp[p.id].img}" alt=""></div>
+      <h3>${s.relTitle(esc(nameOf(p)))}</h3><p>${s.relText}</p>
+      <div class="row-btns">
+        <button class="act secondary" data-act="close-modal" id="keep-btn">${s.keep}</button>
+        <button class="act danger hold" id="hold-btn"><span class="bar"></span><span style="position:relative">🍃 ${s.hold}</span></button>
+      </div></div></div>`;
+  }
+  if (ui.modal === 'help') {
+    h += `<div class="scrim" data-act="close-modal"><div class="modal" role="dialog" aria-modal="true" data-stop>
+      <h3>${s.helpTitle}</h3><p>${s.helpIntro}</p>
+      <ul class="help-list">
+        <li><span class="ico" style="background:var(--blue)">📦</span><div><b>${s.h1}</b><span>${s.h1t}</span></div></li>
+        <li><span class="ico" style="background:var(--green)">＋</span><div><b>${s.h2}</b><span>${s.h2t}</span></div></li>
+        <li><span class="ico" style="background:rgba(239,91,91,.25)">🍃</span><div><b>${s.h3}</b><span>${s.h3t}</span></div></li>
+        <li><span class="ico" style="background:var(--panel-2)">✋</span><div><b>${s.h4}</b><span>${s.h4t}</span></div></li>
+      </ul>
+      <div class="help-keys">
+        <kbd>←↑→↓</kbd><span>${s.kMove}</span><kbd>Tab</kbd><span>${s.kZone}</span><kbd>Q / E</kbd><span>${s.kBox}</span>
+        <kbd>Enter</kbd><span>${s.kAct}</span><kbd>R</kbd><span>${s.kRel}</span>
+      </div>
+      <button class="act primary withdraw" data-act="close-modal" style="justify-content:center">${s.gotIt}</button>
+    </div></div>`;
+  }
+  L.innerHTML = h;
+  if (ui.modal === 'release') { setupHold(); document.getElementById('keep-btn').focus(); }
+}
+
+// Hold-to-release: a 0.9 s press (mouse, touch, or holding Enter / Space on the button)
+function setupHold() {
+  const btn = document.getElementById('hold-btn'), bar = btn.querySelector('.bar');
+  let t0 = null, raf = null;
+  const tick = now => { const k = Math.min(1, (now - t0) / 900); bar.style.width = k * 100 + '%'; if (k >= 1) { stop(); release(); } else raf = requestAnimationFrame(tick); };
+  const start = e => { e.preventDefault(); if (t0 !== null) return; t0 = performance.now(); raf = requestAnimationFrame(tick); };
+  const stop = () => { cancelAnimationFrame(raf); t0 = null; bar.style.width = '0'; };
+  btn.addEventListener('pointerdown', start);
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+  btn.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) start(e); });
+  btn.addEventListener('keyup', e => { if (e.key === 'Enter' || e.key === ' ') stop(); });
+}
+
+// ── Events ──
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-act], [data-stop]');
+  if (a && a.dataset.act) {
+    const act = a.dataset.act;
+    if (act === 'help') { ui.modal = 'help'; return render(); }
+    if (act === 'lang') { lang = lang === 'he' ? 'en' : 'he'; return render(); }
+    if (act === 'close') return commit(S().closeToast, true);
+    if (act === 'close-modal') { ui.modal = null; return render(); }
+    if (act === 'undo') return undo();
+    if (act === 'primary') return primary();
+    if (act === 'release') return askRelease();
+    if (act === 'prev-box') return setBox(ui.box - 1);
+    if (act === 'next-box') return setBox(ui.box + 1);
+    if (act === 'cancel-swap') { ui.swapFrom = null; return render(); }
+  }
+  if (a) return; // clicks inside a modal body
+  const b = e.target.closest('[data-box]'); if (b) return setBox(+b.dataset.box);
+  const p = e.target.closest('[data-pick]');
+  if (p) { const [zone, idx] = p.dataset.pick.split(':'); pick(zone, +idx); }
+});
+document.addEventListener('dblclick', e => {
+  const p = e.target.closest('[data-pick]');
+  if (p && !ui.modal && ui.swapFrom === null) { const [zone, idx] = p.dataset.pick.split(':'); ui.sel = { zone, idx: +idx }; primary(); }
+});
+
+// Drag & drop: team ⇄ box cells, box cell → box cell, any → box tab
+let drag = null;
+document.addEventListener('dragstart', e => {
+  const d = e.target.closest('[data-drag]'); if (!d) return;
+  drag = d.dataset.drag; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', drag);
+  requestAnimationFrame(() => d.classList.add('dragging'));
+});
+document.addEventListener('dragend', () => { drag = null; ui.dragOver = null; render(); });
+document.addEventListener('dragover', e => {
+  const t = e.target.closest('[data-drop]'); if (!drag || !t) return;
+  e.preventDefault();
+  if (ui.dragOver !== t.dataset.drop) { ui.dragOver = t.dataset.drop; document.querySelectorAll('.drop').forEach(x => x.classList.remove('drop')); t.classList.add('drop'); }
+});
+document.addEventListener('drop', e => {
+  const t = e.target.closest('[data-drop]'); if (!drag || !t) return;
+  e.preventDefault();
+  const [fz, fi] = drag.split(':'), [tz, ti] = t.dataset.drop.split(':'), f = +fi, to = +ti;
+  drag = null; ui.dragOver = null; ui.swapFrom = null;
+  if (fz === 'party' && tz === 'box') return state.boxes[ui.box][to] ? swap(f, to) : deposit(f, ui.box, to);
+  if (fz === 'party' && tz === 'tab') return deposit(f, to);
+  if (fz === 'box' && tz === 'party') return state.party[to] ? swap(to, f) : withdraw(f);
+  if (fz === 'box' && tz === 'box' && f !== to) return moveInBox(f, to);
+  if (fz === 'box' && tz === 'tab' && to !== ui.box) return moveToBox(f, to);
+  render();
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (ui.modal) { if (e.key === 'Escape') { ui.modal = null; render(); } return; }
+  const k = e.key, rtl = lang === 'he';
+  if (k === '?') { ui.modal = 'help'; return render(); }
+  if (k === 'l' || k === 'L') { lang = lang === 'he' ? 'en' : 'he'; return render(); }
+  if (k === 'Escape') { if (ui.swapFrom !== null) { ui.swapFrom = null; render(); } else commit(S().closeToast, true); return; }
+  if (k === 'Tab') { e.preventDefault(); return pick(ui.zone === 'box' ? 'party' : 'box', 0, false); }
+  if (k === 'q' || k === 'Q') return setBox(ui.box - 1);
+  if (k === 'e' || k === 'E') return setBox(ui.box + 1);
+  if (k === 'Enter') { if (e.target.closest('button')) return; e.preventDefault(); return primary(); }
+  if (k === 'r' || k === 'R' || k === 'Delete') return askRelease();
+  const dir = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [rtl ? 1 : -1, 0], ArrowRight: [rtl ? -1 : 1, 0] }[k];
+  if (!dir) return;
+  e.preventDefault();
+  if (ui.zone === 'party') {
+    const n = Math.max(1, state.party.length);
+    pick('party', (ui.cursor + dir[1] + n) % n, false);
+  } else {
+    const c = Math.max(0, Math.min(5, ui.cursor % 6 + dir[0])), r = Math.max(0, Math.min(4, Math.floor(ui.cursor / 6) + dir[1]));
+    pick('box', r * 6 + c, false);
+  }
+});
+
+render();
+</script>
