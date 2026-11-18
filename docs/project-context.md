@@ -67,6 +67,9 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 ## Mouse support (screen by screen)
 - [ ] Battle menu (2026-11-18, not playtested): click tabs (= keys 1–4), click a move to use it (from the tabs: opens the move list on it), hover moves the selection, ESC pill = run/back, wheel / page dots flip 8-move pages (`registerPointerRegions` in `ui/battle-menu.ts`, through `uiRegistry`). Next screens: switch grid, bag, text boxes
 
+## PC storage (`feature/pc-storage-react`, not playtested)
+- [ ] New React PC screen (`src/scenesReact/pc/`, replaces the canvas `scenes/pc.ts`; mockup `docs/mockups/pc-storage.html`): no modes — pick a Pokémon → send to box / add to team / swap when the team is full / release (hold 0.9 s). Undo on every action's toast (5 s). Search by name (he + en) and type chips across all boxes (box tabs show match counts), drag & drop team ⇄ box, box → box / box tab, help dialog, keyboard (arrows, Tab, Q/E, Enter, R, F, H, Esc). Check on a real save: touch (no d-pad on this scene), the release hold on a phone, and that Undo after a release restores the Pokédex status
+
 ## Bugs
 - [ ] Erika (family house) has a gift AND a story scene on the same talk: the clue scene seemed not to run after the gift popup. Covered by a recovery event on entering the house — find the real cause (reward text box vs. pending cutscene)
 - [ ] Route 9 cave, Reminder's farewell (`quest-route9.ts` ~line 222): EN says "I am heading to Percentile", HE says "I'm debating whether to…"; typos "heared", "invastigate"
