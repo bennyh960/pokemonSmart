@@ -41,7 +41,7 @@ import {
   nextMoveLearningQueueStep,
   resetMoveLearningQueueState,
 } from '../systems/move-learning.js';
-import { uiRegistry } from '../engine/input/uiRegistry.js';
+import { uiRegistry, type ClickableRegion } from '../engine/input/uiRegistry.js';
 import { LOGICAL_WIDTH } from '../engine/config.js';
 import { createPartyReactScene } from '../scenesReact/party/index.js';
 // Screen is 240×160 — all coordinates hardcoded from bag_coordinated.md
@@ -124,6 +124,8 @@ const MAX_VISIBLE = 5; // cards visible before separator
 export function createBagScene(input: InputManager, stateMachine: StateMachine): Scene {
   let tabIndex = 0;
   let itemIndex = 0;
+  /** First visible card — only moves when the selection leaves the window, so a clicked row stays put. */
+  let scrollOffset = 0;
   let message = '';
   let messageTimer = 0;
   let waitingForPartyTarget = false;
@@ -234,6 +236,32 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     void pd;
   }
 
+  // ── Mouse / tap ──────────────────────────────────────────────────────
+
+  function selectTab(i: number): void {
+    tabIndex = i;
+    itemIndex = 0;
+  }
+
+  /** Wheel: one item per notch, no wrap-around (arrow keys wrap). */
+  function moveSelection(dir: 1 | -1, count: number): void {
+    if (count > 0) itemIndex = Math.max(0, Math.min(count - 1, itemIndex + dir));
+  }
+
+  /**
+   * Registers a clickable area of the bag screen and returns whether the mouse is over it.
+   * Off while the TM warning dialog is open, so only its Yes / No buttons take clicks.
+   */
+  function pointerRegion(
+    area: Pick<ClickableRegion, 'id' | 'x' | 'y' | 'width' | 'height' | 'onScroll'>,
+    onSelect: (e: { isDoubleClick?: boolean }) => void,
+  ): boolean {
+    if (tmWarning) return false;
+    let hovered = false;
+    uiRegistry.registerRegion({ ...area, onSelect }).render(({ isHovered }) => (hovered = isHovered));
+    return hovered;
+  }
+
   function render(ctx: CanvasRenderingContext2D): void {
     clearScreen(ctx, C.BG);
     const items = getTabItems();
@@ -264,12 +292,17 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     for (let i = 0; i < BAG_TABS.length; i++) {
       const tab = BAG_TABS[i];
       const isActive = i === tabIndex;
+      const isHovered = pointerRegion({ id: `bag-tab-${i}`, x: tab.x, y: 14, width: tab.w, height: 10 }, () =>
+        selectTab(i),
+      );
       if (isActive) {
         fillRect(ctx, tab.x, 14, tab.w, 10, C.TAB_ACT);
+      } else if (isHovered) {
+        fillRect(ctx, tab.x, 14, tab.w, 10, C.CARD_SEL);
       }
       drawText(ctx, t(tab.labelKey), tab.x + tab.w / 2, 15, {
         size: 6,
-        color: isActive ? C.TEXT_PRI : C.TEXT_MUT,
+        color: isActive || isHovered ? C.TEXT_PRI : C.TEXT_MUT,
         font: 'monospace',
         align: 'center',
       });
@@ -279,7 +312,9 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     if (items.length === 0) {
       drawText(ctx, t('bag.noItems'), 120, 60, { size: 7, color: C.TEXT_MUT, font: 'monospace', align: 'center' });
     } else {
-      const scrollOffset = Math.max(0, itemIndex - MAX_VISIBLE + 1);
+      if (itemIndex < scrollOffset) scrollOffset = itemIndex;
+      if (itemIndex >= scrollOffset + MAX_VISIBLE) scrollOffset = itemIndex - MAX_VISIBLE + 1;
+      scrollOffset = Math.max(0, Math.min(scrollOffset, items.length - MAX_VISIBLE));
       const visible = Math.min(items.length - scrollOffset, MAX_VISIBLE);
 
       for (let vi = 0; vi < visible; vi++) {
@@ -288,10 +323,26 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         const cy = ITEM_Y0 + vi * ITEM_STRIDE;
         const isSel = i === itemIndex;
         const style = getItemIconStyle(item.id);
+        // Click selects, double-click uses (= Enter), wheel scrolls. Hover only highlights — moving
+        // the mouse down to the Use button must not change the selection on the way
+        const isHovered = pointerRegion(
+          {
+            id: `bag-item-${i}`,
+            x: 4,
+            y: cy,
+            width: 232,
+            height: ITEM_H,
+            onScroll: (delta) => moveSelection(delta > 0 ? 1 : -1, items.length),
+          },
+          ({ isDoubleClick }) => {
+            itemIndex = i;
+            if (isDoubleClick) input.tapVirtualKey('Enter');
+          },
+        );
 
         // Card bg + border
         fillRect(ctx, 4, cy, 232, ITEM_H, isSel ? C.CARD_SEL : C.CARD_BG);
-        drawRect(ctx, 4, cy, 232, ITEM_H, isSel ? C.BORDER_SEL : C.BORDER);
+        drawRect(ctx, 4, cy, 232, ITEM_H, isSel || isHovered ? C.BORDER_SEL : C.BORDER);
 
         // Selection indicator (green bar on left)
         if (isSel) {
@@ -445,8 +496,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         const btnX = 8;
         const centerX = btnX + btnWidth / 2; // חישוב דינמי למרכז מדויק של הטקster
 
-        fillRect(ctx, btnX, 122, btnWidth, 12, C.USE_BTN_BG);
-        drawRect(ctx, btnX, 122, btnWidth, 12, C.USE_BTN_BRD);
+        const isHovered = pointerRegion({ id: 'bag-use-btn', x: btnX, y: 122, width: btnWidth, height: 12 }, () =>
+          input.tapVirtualKey('Enter'),
+        );
+        fillRect(ctx, btnX, 122, btnWidth, 12, isHovered ? C.KEY_BG_ACTIVE : C.USE_BTN_BG);
+        drawRect(ctx, btnX, 122, btnWidth, 12, isHovered ? C.KEY_BRD_ACTIVE : C.USE_BTN_BRD);
 
         const rawPrice = selItem.def.price / 2;
         const formattedPrice = rawPrice.toLocaleString('en-US', { useGrouping: true });
@@ -606,7 +660,24 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
         maxWidth: 200,
       });
 
-      // Yes / No buttons
+      // Yes / No buttons — hover picks, click confirms (same as arrows + Enter)
+      ([0, 1] as const).forEach((choice) => {
+        uiRegistry.registerRegion({
+          id: `bag-tm-warn-${choice}`,
+          x: choice === 0 ? 40 : 140,
+          y: 98,
+          width: 60,
+          height: 12,
+          onHover: (hovering) => {
+            if (hovering && tmWarning) tmWarning.choiceIndex = choice;
+          },
+          onSelect: () => {
+            if (!tmWarning) return;
+            tmWarning.choiceIndex = choice;
+            input.tapVirtualKey('Enter');
+          },
+        });
+      });
       const yesColor = w.choiceIndex === 0 ? C.SEL_BAR : C.TEXT_MUT;
       const noColor = w.choiceIndex === 1 ? C.SEL_BAR : C.TEXT_MUT;
       fillRect(ctx, 40, 98, 60, 12, w.choiceIndex === 0 ? C.TAB_ACT : C.CARD_BG);
@@ -769,13 +840,11 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
 
     // Left/Right: switch category tabs
     if (input.isKeyPressed('ArrowLeft')) {
-      tabIndex = tabIndex < BAG_TABS.length - 1 ? tabIndex + 1 : 0;
-      itemIndex = 0;
+      selectTab(tabIndex < BAG_TABS.length - 1 ? tabIndex + 1 : 0);
       return;
     }
     if (input.isKeyPressed('ArrowRight')) {
-      tabIndex = tabIndex > 0 ? tabIndex - 1 : BAG_TABS.length - 1;
-      itemIndex = 0;
+      selectTab(tabIndex > 0 ? tabIndex - 1 : BAG_TABS.length - 1);
       return;
     }
 
@@ -891,6 +960,7 @@ export function createBagScene(input: InputManager, stateMachine: StateMachine):
     enter(): void {
       tabIndex = 0;
       itemIndex = 0;
+      scrollOffset = 0;
       message = '';
       messageTimer = 0;
       pendingItem = null;
