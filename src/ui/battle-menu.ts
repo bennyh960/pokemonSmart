@@ -25,6 +25,7 @@ import { getTypeName } from '../data/type-constants.js';
 import { getCachedImage } from '../engine/sprite-loader.js';
 import { t, isRTL } from '../i18n/i18n.js';
 import { isMoveHackerOpen, openMoveHacker } from './admin-moves-hack.js';
+import { uiRegistry } from '../engine/input/uiRegistry.js';
 
 export type MainMenuChoice = 'FIGHT' | 'BAG' | 'POKEMON' | 'RUN' | 'POKEDEX';
 
@@ -52,7 +53,13 @@ export interface BattleMenuState {
   disabledMoveIds: number[];
   /** SturggleMode*/
   isStruggleMode?: boolean;
+  /** A mouse/tap pick made during render — consumed by the next updateBattleMenu (same result as the key). */
+  pointerPick: BattleMenuResult | 'escape' | null;
+  /** Tab under the mouse (null = none) — drawn as a hover highlight. */
+  hoverTab: number | null;
 }
+
+type BattleMenuResult = { type: 'main'; choice: MainMenuChoice } | { type: 'move'; index: number };
 
 const TAB_TO_CHOICE: MainMenuChoice[] = ['FIGHT', 'POKEMON', 'BAG', 'POKEDEX'];
 
@@ -71,6 +78,8 @@ export function createBattleMenu(moves: Move[]): BattleMenuState {
     activeWeather: null,
     disabledMoveIds: [],
     isStruggleMode: false,
+    pointerPick: null,
+    hoverTab: null,
   };
 }
 
@@ -93,10 +102,14 @@ export function showMoveMenu(menu: BattleMenuState): void {
  * For main: returns MainMenuChoice.
  * For moves: returns the Move index (0-7) or -1 for back.
  */
-export function updateBattleMenu(
-  menu: BattleMenuState,
-  input: InputManager,
-): { type: 'main'; choice: MainMenuChoice } | { type: 'move'; index: number } | null {
+export function updateBattleMenu(menu: BattleMenuState, input: InputManager): BattleMenuResult | null {
+  const pick = menu.pointerPick;
+  menu.pointerPick = null;
+  if (pick && !isMoveHackerOpen()) {
+    if (pick !== 'escape') return pick;
+    // ESC pill: run from the tabs, back to the tabs from the move grid — same as the Escape key
+    return menu.mode === 'main' ? { type: 'main', choice: 'RUN' } : { type: 'move', index: -1 };
+  }
   if (menu.mode === 'main') {
     return updateTabMode(menu, input);
   } else {
@@ -153,7 +166,6 @@ function updateMoveMode(
   if (input.isKeyPressed('Digit4')) return { type: 'main', choice: 'POKEDEX' };
 
   const totalMoves = menu.moves.length;
-  const totalPages = Math.ceil(totalMoves / 4);
   const pageStart = menu.movePage * 4;
   const pageEnd = Math.min(pageStart + 4, totalMoves);
   const pageCount = pageEnd - pageStart;
@@ -182,21 +194,15 @@ function updateMoveMode(
   if (input.isKeyPressed('ArrowDown')) {
     if (menu.cursorIndex + 2 < pageCount) {
       menu.cursorIndex += 2;
-    } else if (totalPages > 1) {
-      // Page down
-      const nextPage = (menu.movePage + 1) % totalPages;
-      menu.movePage = nextPage;
-      menu.cursorIndex = 0;
+    } else {
+      flipMovePage(menu, 1);
     }
   }
   if (input.isKeyPressed('ArrowUp')) {
     if (menu.cursorIndex - 2 >= 0) {
       menu.cursorIndex -= 2;
-    } else if (totalPages > 1) {
-      // Page up
-      const prevPage = (menu.movePage - 1 + totalPages) % totalPages;
-      menu.movePage = prevPage;
-      menu.cursorIndex = 0;
+    } else {
+      flipMovePage(menu, -1);
     }
   }
 
@@ -226,6 +232,8 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
   // Divider line
   fillRect(ctx, 0, BTL.DIVIDER_Y, SCREEN_W, 1, BTL.COLORS.divider);
 
+  registerPointerRegions(menu);
+
   // Prompt bar
   renderPromptBar(ctx, menu);
 
@@ -246,6 +254,83 @@ export function renderBattleMenu(ctx: CanvasRenderingContext2D, menu: BattleMenu
 
   // Bottom help bar
   // renderBottomBar(ctx);
+}
+
+// ─── Mouse / tap ──────────────────────────────────────────────────
+
+/** Next/previous move page (wraps) — shared by the arrow keys' page flip and the mouse wheel. */
+function flipMovePage(menu: BattleMenuState, dir: 1 | -1): void {
+  const totalPages = Math.ceil(menu.moves.length / 4);
+  if (totalPages <= 1) return;
+  menu.movePage = (menu.movePage + dir + totalPages) % totalPages;
+  menu.cursorIndex = 0;
+}
+
+/**
+ * Clickable areas of the menu (registered each frame it is drawn). Hovering moves the
+ * keyboard selection, so the existing highlight doubles as the hover state.
+ */
+function registerPointerRegions(menu: BattleMenuState): void {
+  // ESC pill + its label: run / back
+  const E = BTL.PROMPT_ESC;
+  uiRegistry.registerRegion({
+    id: 'battle-menu-escape',
+    x: 0,
+    y: BTL.PROMPT_BG.y,
+    width: E.labelX + 34,
+    height: BTL.PROMPT_BG.h,
+    onSelect: () => (menu.pointerPick = 'escape'),
+  });
+
+  BTL.TABS.forEach((tab, i) => {
+    uiRegistry.registerRegion({
+      id: `battle-menu-tab-${tab.id}`,
+      x: tab.x,
+      y: BTL.TABS_BG.y,
+      width: tab.w,
+      height: BTL.TABS_BG.h,
+      onHover: (hovering) => {
+        menu.hoverTab = hovering ? i : menu.hoverTab === i ? null : menu.hoverTab;
+        if (hovering && menu.mode === 'main') menu.activeTab = i;
+      },
+      onSelect: () => (menu.pointerPick = { type: 'main', choice: TAB_TO_CHOICE[i] }),
+    });
+  });
+
+  // Page dots (8-move Pokémon): click flips to the next page. Registered before the cells — first hit wins
+  if (menu.moves.length > 4) {
+    uiRegistry.registerRegion({
+      id: 'battle-menu-move-page',
+      x: SCREEN_W / 2 - 12,
+      y: 156,
+      width: 24,
+      height: 4,
+      onSelect: () => flipMovePage(menu, 1),
+    });
+  }
+
+  const M = BTL.MOVE;
+  const pageStart = menu.movePage * 4;
+  M.cells.forEach((cell, slotIdx) => {
+    const moveIdx = pageStart + slotIdx;
+    if (moveIdx >= menu.moves.length) return;
+    uiRegistry.registerRegion({
+      id: `battle-menu-move-${slotIdx}`,
+      x: cell.x,
+      y: cell.y,
+      width: M.W,
+      height: M.H,
+      onHover: (hovering) => {
+        if (hovering && menu.mode === 'moves') menu.cursorIndex = slotIdx;
+      },
+      onSelect: () => {
+        menu.cursorIndex = slotIdx;
+        // From the tabs the (dimmed) grid opens the move list on that move; in the grid it uses it
+        menu.pointerPick = menu.mode === 'main' ? { type: 'main', choice: 'FIGHT' } : { type: 'move', index: moveIdx };
+      },
+      onScroll: (delta) => flipMovePage(menu, delta > 0 ? 1 : -1),
+    });
+  });
 }
 
 // ─── Prompt Bar (y=85) ────────────────────────────────────────────
@@ -323,15 +408,19 @@ function renderTabs(ctx: CanvasRenderingContext2D, menu: BattleMenuState): void 
   for (let i = 0; i < BTL.TABS.length; i++) {
     const tab = BTL.TABS[i];
     const isActive = i === menu.activeTab;
+    const isHovered = !isActive && i === menu.hoverTab;
 
     if (isActive) {
       // Active tab underline
       fillRect(ctx, tab.x, TB.y + TB.h - 2, tab.w, 2, tab.color);
+    } else if (isHovered) {
+      fillRect(ctx, tab.x, TB.y, tab.w, TB.h - 1, tab.color + '22');
+      fillRect(ctx, tab.x, TB.y + TB.h - 1, tab.w, 1, tab.color + '99');
     }
 
     drawText(ctx, tab.text, tab.x + tab.w / 2, TB.y + BTL.TAB_TEXT_DY, {
       size: 6,
-      color: isActive ? tab.color : BTL.TAB_INACTIVE_C,
+      color: isActive ? tab.color : isHovered ? tab.color + 'cc' : BTL.TAB_INACTIVE_C,
       align: 'center',
     });
 
