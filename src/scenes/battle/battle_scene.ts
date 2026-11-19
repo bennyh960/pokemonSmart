@@ -121,7 +121,7 @@ import { noteGlitchBattleEnd } from '../../systems/unown-ambush.js';
 import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
 import { getBattleBackground } from '.././../engine/asset-generator.js';
 import { t, isRTL, getLocale } from '../../i18n/i18n.js';
-import { applyHeldItemEffectInBattle, getItem } from '../../data/items.js';
+import { applyHeldItemEffectInBattle, getItem, getItemFlingPower } from '../../data/items.js';
 import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText, type ReencounterConfig } from '../../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
@@ -179,6 +179,27 @@ import {
   isSubstituteBypass,
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
+  getHiddenPowerType,
+  getPayDayCoins,
+  capFalseSwipeDamage,
+  neutralizeHeldItem,
+  advanceBide,
+  BEAT_UP_HIT_POWER,
+  getBeatUpHits,
+  advanceTimedVolatiles,
+  applyEncore,
+  NEXT_TURN_EFFECT_TURNS,
+  startPerishSong,
+  tickPerishCount,
+  getBlockedMoveIds,
+  getFlailPower,
+  hasUsableHeldItem,
+  pickDragonTailTarget,
+  applyNightmareEffect,
+  doesSuckerPunchSucceed,
+  getPsywaveDamage,
+  pickTriAttackAilment,
+  THIEF_ITEM_POWER_MULTIPLIER,
   clearChargingMove,
   determineTurnOrder,
   doesMoveHit,
@@ -629,6 +650,10 @@ function getTurnEffectLine(
       return t('battle.mustRecharge', { name });
     case 'flinched':
       return t('battle.flinched', { name });
+    case 'infatuated':
+      return t('battle.inLove', { name });
+    case 'immobilized-by-love':
+      return t('battle.immobilizedByLove', { name });
     default:
       return null;
   }
@@ -644,6 +669,14 @@ function getMoveEffectAppliedLine(name: string, effectId: MoveBattleEffectId): s
       return t('battle.trapped', { name });
     case 'curse':
       return t('battle.cursed', { name });
+    case 'infatuation':
+      return t('battle.fellInLove', { name });
+    case 'nightmare':
+      return t('battle.nightmareApplied', { name });
+    case 'mean-look':
+      return t('battle.cantEscapeNow', { name });
+    case 'taunt':
+      return t('battle.tauntApplied', { name });
     default:
       return '';
   }
@@ -853,6 +886,14 @@ export function createBattleScene(
   let enemyGoesFirst = false;
   let enemySelectedMoveIndex = -1;
   let enemyAlreadyAttacked = false;
+  /** The move the player picked this turn (null on switch / item / run turns) — for Sucker Punch. */
+  let playerPlannedMoveId: number | null = null;
+  /** Player's Dragon Tail hit a trainer's Pokémon this turn — drag out another one once the attack resolves. */
+  let pendingDragonTail = false;
+  /** The current trainer switch came from Dragon Tail: the dragged-in Pokémon doesn't act, the turn ends. */
+  let dragonTailEndsTurn = false;
+  /** Pay Day coins the player scattered this battle — paid out on a win. */
+  let payDayCoins = 0;
   let pendingForcedPlayerMoveIndex: number | null = null;
   let turnNumber = 0;
   let lossDialogueShown = false;
@@ -1609,6 +1650,9 @@ export function createBattleScene(
     if (playerBattleState.lockedInMoveId !== null) {
       return findMoveIndexById(player, playerBattleState.lockedInMoveId);
     }
+    if (playerBattleState.encoreMoveId !== null) {
+      return findMoveIndexById(player, playerBattleState.encoreMoveId);
+    }
     return null;
   }
 
@@ -1622,23 +1666,17 @@ export function createBattleScene(
     return ['full-heal', 'antidote', 'full-restore', 'awakening', 'ice-heal', 'burn-heal', 'parlyz-heal'].includes(id);
   }
 
-  function isStatBoostItem(id: string): boolean {
-    return ['x-attack', 'x-defense', 'x-speed', 'x-special', 'x-sp-def'].includes(id);
+  function getStatBoostStat(id: string): BattleStatId | null {
+    const effect = getItem(id)?.effect;
+    return effect?.type === 'stat-boost' ? (effect.stat as BattleStatId) : null;
   }
 
-  function getStatBoostStat(id: string): BattleStatId | null {
-    const map: Record<string, BattleStatId> = {
-      'x-attack': 'attack',
-      'x-defense': 'defense',
-      'x-speed': 'speed',
-      'x-special': 'specialAttack',
-      'x-sp-def': 'specialDefense',
-    };
-    return (map[id] as BattleStatId) ?? null;
+  function isStatBoostItem(id: string): boolean {
+    return getStatBoostStat(id) !== null;
   }
 
   function getBestBoostItemId(bagItems: string[]): string | null {
-    const preferred = enemy.attack >= enemy.specialAttack ? 'x-attack' : 'x-special';
+    const preferred = enemy.attack >= enemy.specialAttack ? 'x-attack' : 'x-sp-atk';
     // Prefer the defensive boost that counters the player's dominant attack type
     const playerIsPhysical = player.attack > player.specialAttack * 1.1;
     const defPreferred = playerIsPhysical ? 'x-defense' : 'x-sp-def';
@@ -1817,6 +1855,7 @@ export function createBattleScene(
     const maxSwitches = ai.level >= 5 ? 3 : ai.level >= 4 ? 2 : 1;
     if (ai.switchesUsed >= maxSwitches) return null;
     if (ai.justSwitchedIn) return null; // 👈 no switching turn you came in
+    if (isBattlePokemonTrapped(enemyBattleState, player)) return null; // bound / Mean Look
 
     // Only switch when player has type advantage
     let playerHasAdvantage = false;
@@ -1864,7 +1903,7 @@ export function createBattleScene(
     enemyGoesFirst = true; // Player attacks after this text resolves
   }
 
-  function executeTrainerVoluntarySwitch(targetPartyIdx: number): void {
+  function executeTrainerVoluntarySwitch(targetPartyIdx: number, opts: { draggedOut?: boolean } = {}): void {
     const party = trainerData!.party;
     const current = party[trainerPartyIndex];
     const target = party[targetPartyIdx];
@@ -1878,6 +1917,7 @@ export function createBattleScene(
     trainerAIState!.seenPokemonIds.add(enemy.uuid);
 
     enemyBattleState = createBattleRuntimeStateForPokemon(enemy);
+    enemyBattleState.turnFlags.switchedInThisTurn = true;
     enemySelectedMoveIndex = -1;
     if (menu) menu.enemyTypes = (enemy.types ?? []) as import('../../types/index.js').PokemonType[];
     enemyAlreadyAttacked = false;
@@ -1895,7 +1935,7 @@ export function createBattleScene(
       }
     }
 
-    trainerAIState!.switchesUsed++;
+    if (!opts.draggedOut) trainerAIState!.switchesUsed++;
     // Clear item-use tracking for this slot so new Pokemon gets fresh item access
     trainerAIState!.itemsUsedByPartyIdx.delete(trainerPartyIndex);
 
@@ -1912,10 +1952,12 @@ export function createBattleScene(
 
     const trainerName = getLocalizedName(trainerData!.trainerName);
     textBox = createTextBox(
-      [
-        t('battle.trainerWithdrew', { trainer: trainerName, name: getPokemonDisplayName(current.id) }),
-        t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
-      ],
+      opts.draggedOut
+        ? [t('battle.draggedOut', { name: getPokemonDisplayName(enemy.id) })]
+        : [
+            t('battle.trainerWithdrew', { trainer: trainerName, name: getPokemonDisplayName(current.id) }),
+            t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
+          ],
       isRTL(),
     );
     trainerAIState!.justSwitchedIn = true;
@@ -1953,9 +1995,12 @@ export function createBattleScene(
       return -Infinity;
     }
     if (move.id === enemyBattleState.disabledMoveId) return -Infinity;
+    if (getBlockedMoveIds(enemy, enemyBattleState).includes(move.id)) return -Infinity;
 
-    const movePower = move.power ?? 0;
     const battleData = getMoveBattleData(move.id);
+    const movePower = battleData?.behaviorTags?.includes('reversal')
+      ? getFlailPower(enemy.hp, enemy.maxHp)
+      : (move.power ?? 0);
 
     const bayPassImmunity = battleData?.effects.find((e) => e.bayPassImuunity);
     const effectivenessScore = getCombinedTypeEffectiveness(move.type, player.types);
@@ -1968,15 +2013,9 @@ export function createBattleScene(
     const isCharging = battleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isRest = battleData?.behaviorTags?.includes('rest') ?? false;
     const isSelfHeal = (battleData?.healingPercent ?? 0) > 0 && battleData?.target === 'user';
-    const isReversal = battleData?.behaviorTags?.includes('reversal') ?? false;
     const leaveUserAtOneHp = battleData?.behaviorTags?.includes('leave-user-at-1-hp') ?? false;
     const isDreamEaterEnemy = battleData?.behaviorTags?.includes('dream-eater') ?? false;
     const isBellyDrumEnemy = battleData?.behaviorTags?.includes('belly-drum') ?? false;
-
-    if (isReversal) {
-      const power = Math.max(1, player.maxHp - player.hp);
-      move.power = power;
-    }
 
     const ai = trainerAIState;
     const enemyHpRatio = enemy.hp / enemy.maxHp;
@@ -2221,6 +2260,8 @@ export function createBattleScene(
         if (player.types.includes('grass')) return -Infinity; // Grass types immune to leech seed
       }
       if (appliesTrap && playerBattleState.trappedTurnsRemaining > 0) return -Infinity;
+      const appliesInfatuation = effects.some((e) => e.id === 'infatuation' && e.target === 'target');
+      if (appliesInfatuation && (playerBattleState.infatuatedWith || player.id === enemy.id)) return -Infinity;
 
       if (appliesConfusion || appliesLeechSeed || appliesTrap) {
         score += 300; // Volatile statuses are valuable
@@ -2258,6 +2299,10 @@ export function createBattleScene(
     if (enemyBattleState.lockedInMoveId !== null) {
       const lockedIndex = findMoveIndexById(enemy, enemyBattleState.lockedInMoveId);
       if (lockedIndex !== null) return lockedIndex;
+    }
+    if (enemyBattleState.encoreMoveId !== null) {
+      const encoreIndex = findMoveIndexById(enemy, enemyBattleState.encoreMoveId);
+      if (encoreIndex !== null) return encoreIndex;
     }
 
     // Randomness: AI level determines how often a random move is chosen instead of optimal
@@ -2333,9 +2378,11 @@ export function createBattleScene(
     menu.disabledMoveIds = [
       ...(playerBattleState.softLockedInMovesId ?? []),
       ...(playerBattleState.disabledMoveId !== null ? [playerBattleState.disabledMoveId] : []),
+      ...getBlockedMoveIds(player, playerBattleState),
     ];
 
-    if (player.moves.every((m) => m.currentPp <= 0)) {
+    // Struggle when nothing is usable (no PP, or every move disabled / taunted)
+    if (player.moves.every((m) => m.currentPp <= 0 || menu.disabledMoveIds.includes(m.id))) {
       menu.isStruggleMode = true;
       playerBattleState.isStruggleMode = true;
     } else {
@@ -2352,6 +2399,7 @@ export function createBattleScene(
     const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
     const playerMoveId =
       pendingForcedPlayerMoveIndex !== null ? (player.moves[pendingForcedPlayerMoveIndex]?.id ?? 0) : 0;
+    playerPlannedMoveId = pendingForcedPlayerMoveIndex !== null ? playerMoveId : null;
     const turnOrder = determineTurnOrder(
       player,
       playerBattleState,
@@ -2399,14 +2447,23 @@ export function createBattleScene(
   }
 
   /** Pay the active Pokémon for the defeated enemy and queue the shared XP for the bench. */
-  function awardDefeatXp(): void {
+  function awardDefeatXp(extraLines: string[] = []): void {
     xpGained = getDefeatXpReward();
     player.xp += xpGained;
     const capLines = queueSharedXp(xpGained);
     textBox = createTextBox(
-      [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }), ...capLines],
+      [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }), ...capLines, ...extraLines],
       isRTL(),
     );
+  }
+
+  /** Pay Day: hand the coins the player scattered this battle over on the win. */
+  function collectPayDayCoins(): string[] {
+    if (payDayCoins <= 0 || !hasActiveGame()) return [];
+    getPlayerData().money += payDayCoins;
+    const line = t('battle.payDayPickedUp', { money: payDayCoins });
+    payDayCoins = 0;
+    return [line];
   }
 
   /** The Pokémon the XP / level-up phases currently act on. */
@@ -3158,6 +3215,7 @@ export function createBattleScene(
 
   function startEndTurnStatusPhase(): void {
     const lines: string[] = [];
+    playerPlannedMoveId = null;
     clearEndOfTurnFlags(playerBattleState);
     clearEndOfTurnFlags(enemyBattleState);
 
@@ -3188,6 +3246,11 @@ export function createBattleScene(
         queueStatusTurnEffect('player', 'curse');
         lines.push(t('battle.curseDamage', { name: getPokemonDisplayName(player.id) }));
       }
+
+      if (applyNightmareEffect(player, playerBattleState).applied) {
+        queueStatusTurnEffect('player', 'curse');
+        lines.push(t('battle.nightmareDamage', { name: getPokemonDisplayName(player.id) }));
+      }
     }
     if (enemy.hp > 0) {
       const leechSeedResult = applyLeechSeedEffect(enemy, enemyBattleState, player);
@@ -3200,6 +3263,11 @@ export function createBattleScene(
       if (curseResult.applied) {
         queueStatusTurnEffect('enemy', 'curse');
         lines.push(t('battle.curseDamage', { name: getPokemonDisplayName(enemy.id) }));
+      }
+
+      if (applyNightmareEffect(enemy, enemyBattleState).applied) {
+        queueStatusTurnEffect('enemy', 'curse');
+        lines.push(t('battle.nightmareDamage', { name: getPokemonDisplayName(enemy.id) }));
       }
     }
 
@@ -3268,6 +3336,17 @@ export function createBattleScene(
       }
     }
 
+    // Taunt / Encore / Laser Focus / Lock-On countdown
+    for (const [mon, state] of [
+      [player, playerBattleState],
+      [enemy, enemyBattleState],
+    ] as const) {
+      const name = getPokemonDisplayName(mon.id);
+      for (const ended of advanceTimedVolatiles(state)) {
+        lines.push(t(ended === 'taunt' ? 'battle.tauntEnded' : 'battle.encoreEnded', { name }));
+      }
+    }
+
     // End Of turn held items effect
     applyHeldItemEffectInBattle({
       pokemon: player,
@@ -3333,6 +3412,20 @@ export function createBattleScene(
           battleWeather = null;
         }
         if (menu) menu.activeWeather = mapWeatherBase ?? null;
+      }
+    }
+
+    // Perish Song count — last, so nothing at end of turn (e.g. Leftovers) heals a Pokémon it knocked out
+    for (const [mon, state] of [
+      [player, playerBattleState],
+      [enemy, enemyBattleState],
+    ] as const) {
+      const wasCounting = state.perishCount > 0 && mon.hp > 0;
+      if (tickPerishCount(mon, state)) {
+        lines.push(t('battle.perishFainted', { name: getPokemonDisplayName(mon.id) }));
+        setHP(mon === player ? playerHpBar : enemyHpBar, 0);
+      } else if (wasCounting) {
+        lines.push(t('battle.perishCount', { name: getPokemonDisplayName(mon.id), count: state.perishCount }));
       }
     }
 
@@ -3614,7 +3707,14 @@ export function createBattleScene(
       }
     }
 
-    const userVolatileEffects = applyVolatileMoveEffects(attacker, attackerState, moveBattleData.effects, 'user');
+    const userVolatileEffects = applyVolatileMoveEffects(
+      attacker,
+      attackerState,
+      moveBattleData.effects,
+      'user',
+      Math.random,
+      attacker,
+    );
     for (const effectResult of userVolatileEffects) {
       if (effectResult.applied) {
         lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
@@ -3655,7 +3755,14 @@ export function createBattleScene(
         }
         for (const effect of moveBattleData.effects) {
           if (effect.target !== 'target') continue;
-          const [effectResult] = applyVolatileMoveEffects(attacker, attackerState, [effect], 'target');
+          const [effectResult] = applyVolatileMoveEffects(
+            attacker,
+            attackerState,
+            [effect],
+            'target',
+            Math.random,
+            defender,
+          );
           if (!effectResult) continue;
           if (effectResult.applied) {
             lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
@@ -3733,7 +3840,14 @@ export function createBattleScene(
             continue;
           }
 
-          const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target');
+          const [effectResult] = applyVolatileMoveEffects(
+            defender,
+            defenderState,
+            [effect],
+            'target',
+            Math.random,
+            attacker,
+          );
           if (!effectResult) continue;
           if (effectResult.applied) {
             lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
@@ -3846,7 +3960,7 @@ export function createBattleScene(
       pendingChargeMoveId !== null &&
       attacker.moves[forcedMoveIndex]?.id === pendingChargeMoveId;
 
-    const startResult = processBeforeMoveEffects(attacker, attackerBattleState, Math.random, m.id);
+    const startResult = processBeforeMoveEffects(attacker, attackerBattleState, Math.random, m.id, defender);
 
     const turnEffectLines = [
       ...disobeyLines,
@@ -3886,7 +4000,11 @@ export function createBattleScene(
     turnIntroLineCount = turnEffectLines.length;
     turnIntroBox = null;
 
-    if (m.id === attackerBattleState.disabledMoveId || attackerBattleState.softLockedInMovesId?.includes(m.id)) {
+    if (
+      m.id === attackerBattleState.disabledMoveId ||
+      attackerBattleState.softLockedInMovesId?.includes(m.id) ||
+      getBlockedMoveIds(attacker, attackerBattleState).includes(m.id)
+    ) {
       const msgs = [...turnEffectLines];
       msgs.push(
         t('battle.moveCantUseDisabled', { name: getPokemonDisplayName(attacker.id), move: getMoveDisplayName(m.id) }),
@@ -3916,7 +4034,12 @@ export function createBattleScene(
     const redirectTag =
       moveBattleData?.behaviorTags?.find(
         (tag) =>
-          tag === 'sleep-talk' || tag === 'metronome' || tag === 'assist' || tag === 'copycat' || tag === 'mirror-move',
+          tag === 'sleep-talk' ||
+          tag === 'metronome' ||
+          tag === 'assist' ||
+          tag === 'copycat' ||
+          tag === 'mirror-move' ||
+          tag === 'mimic',
       ) ?? null;
     let isRedirected = false;
     let redirectMsg: string | null = null;
@@ -3966,6 +4089,17 @@ export function createBattleScene(
         redirectId = lastMoveUsedInBattle;
       } else if (redirectTag === 'mirror-move') {
         redirectId = defenderBattleState.lastMoveUsedId;
+      } else if (redirectTag === 'mimic') {
+        if (attackerBattleState.mimickedMoveId === null) {
+          const foeMove = defenderBattleState.lastMoveUsedId;
+          const copyable =
+            foeMove !== null && foeMove > 0 && foeMove !== m.id && !METRONOME_EXCLUDED_MOVE_IDS.has(foeMove);
+          if (copyable) {
+            attackerBattleState.mimickedMoveId = foeMove;
+            redirectMsg = t('battle.mimicLearned', { name: attackerName, move: getMoveDisplayName(foeMove) });
+          }
+        }
+        redirectId = attackerBattleState.mimickedMoveId;
       }
 
       if (redirectId === null) {
@@ -3996,6 +4130,9 @@ export function createBattleScene(
         redirectMsg = t('battle.copiedMove', { name: attackerName, move: getMoveDisplayName(redirectId) });
       } else if (redirectTag === 'mirror-move') {
         redirectMsg = t('battle.mirroredMove', { name: attackerName, move: getMoveDisplayName(redirectId) });
+      } else if (redirectTag === 'mimic') {
+        // first copy already set "learned" — later uses just call the move
+        redirectMsg ??= t('battle.calledMove', { move: getMoveDisplayName(redirectId) });
       } else {
         redirectMsg = t('battle.calledMove', { move: getMoveDisplayName(redirectId) });
       }
@@ -4005,6 +4142,23 @@ export function createBattleScene(
     // --- End Redirection ---
 
     const isChargeRelease = !isRedirected && pendingChargeMoveId !== null && pendingChargeMoveId === m.id;
+    if (moveBattleData?.behaviorTags.includes('tri-attack')) {
+      moveBattleData = { ...moveBattleData, ailment: pickTriAttackAilment() };
+    }
+    const isPsywave = moveBattleData?.behaviorTags?.includes('psywave') ?? false;
+    const isPursuit = moveBattleData?.behaviorTags?.includes('pursuit') ?? false;
+    const isSuckerPunch = moveBattleData?.behaviorTags?.includes('fails-if-target-not-attacking') ?? false;
+    const isPayback = moveBattleData?.behaviorTags?.includes('payback') ?? false;
+    const isFling = moveBattleData?.behaviorTags?.includes('fling') ?? false;
+    const isAssurance = moveBattleData?.behaviorTags?.includes('assurance') ?? false;
+    const isFeint = moveBattleData?.behaviorTags?.includes('feint') ?? false;
+    const isBeatUp = moveBattleData?.behaviorTags?.includes('beat-up') ?? false;
+    // The target already moved this turn (Sucker Punch fails, Payback doubles)
+    const targetAlreadyActed = actor === 'player' ? enemySelectedMoveIndex < 0 : !enemyGoesFirst;
+    // Hidden Power: its type is the user's (see getHiddenPowerType)
+    if (moveBattleData?.behaviorTags?.includes('hidden-power')) {
+      m = { ...m, type: getHiddenPowerType(attacker) };
+    }
     const isCurse = moveBattleData?.behaviorTags?.includes('curse') ?? false;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirected;
@@ -4031,6 +4185,11 @@ export function createBattleScene(
     const isMagnitude = moveBattleData?.behaviorTags?.includes('magnitude') ?? false;
     // TODO : isBatonPass didnt checked yet on enemy
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
+    const isThief = moveBattleData?.behaviorTags?.includes('thief') ?? false;
+    const isBide = moveBattleData?.behaviorTags?.includes('bide') ?? false;
+    const isDragonTail = moveBattleData?.behaviorTags?.includes('dragon-tail') ?? false;
+    const isFalseSwipe = moveBattleData?.behaviorTags?.includes('false-swipe') ?? false;
+    const isPayDay = moveBattleData?.behaviorTags?.includes('pay-day') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4042,13 +4201,16 @@ export function createBattleScene(
     const isHaze = moveBattleData?.behaviorTags?.includes('haze') ?? false;
     const isNightShade = moveBattleData?.behaviorTags?.includes('night-shade') ?? false;
     const isSuperFang = moveBattleData?.behaviorTags?.includes('super-fang') ?? false;
+    const fixedDamage = moveBattleData?.fixedDamage ?? null;
     const isSandstormMove = moveBattleData?.behaviorTags?.includes('sandstorm') ?? false;
     const isRainDanceMove = moveBattleData?.behaviorTags?.includes('rain') ?? false;
     const isSunnyDayMove = moveBattleData?.behaviorTags?.includes('sun') ?? false;
     const isHailMove = moveBattleData?.behaviorTags?.includes('hail') ?? false;
     const isWeatherMove = isSandstormMove || isRainDanceMove || isSunnyDayMove || isHailMove;
     const healPercent = moveBattleData?.healingPercent ?? null;
+    if (isBeatUp) m = { ...m, power: BEAT_UP_HIT_POWER };
     const hitCount = (() => {
+      if (isBeatUp) return getBeatUpHits(attackerParty.length ? attackerParty : [attacker]);
       const min = moveBattleData?.minHits ?? null;
       const max = moveBattleData?.maxHits ?? null;
       if (min !== null && max !== null) return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -4279,6 +4441,46 @@ export function createBattleScene(
     }
 
     // Focus Punch: fails if the attacker took damage this turn
+    const flingPower =
+      isFling && hasUsableHeldItem(attacker, attackerBattleState) ? getItemFlingPower(attacker.heldItemId!) : null;
+    if (isFling && !flingPower) {
+      textBox = createTextBox(
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.moveFailed'),
+        ],
+        rtl,
+      );
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
+    if (isSuckerPunch) {
+      const targetMove =
+        actor === 'player'
+          ? enemySelectedMoveIndex >= 0
+            ? (enemy.moves[enemySelectedMoveIndex] ?? null)
+            : null
+          : playerPlannedMoveId !== null
+            ? (player.moves.find((pm) => pm.id === playerPlannedMoveId) ?? null)
+            : null;
+      if (!doesSuckerPunchSucceed(targetMove?.id ?? null, targetAlreadyActed)) {
+        textBox = createTextBox(
+          [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+            t('battle.moveFailed'),
+          ],
+          rtl,
+        );
+        phase = attackerPhase;
+        phaseTimer = 0;
+        return;
+      }
+    }
+
     if (isFocusPunch && attackerBattleState.turnFlags.tookDamageThisTurn) {
       const msgs = [
         ...turnEffectLines,
@@ -4566,6 +4768,9 @@ export function createBattleScene(
     }
 
     // Defender is protected — block the attack entirely
+    // Feint: goes through Protect / Detect and lifts it
+    const feintBrokeProtect = isFeint && defenderBattleState.turnFlags.protected;
+    if (feintBrokeProtect) defenderBattleState.turnFlags.protected = false;
     if (doesMoveTargetOpponent(moveBattleData) && defenderBattleState.turnFlags.protected) {
       const msgs = [
         ...turnEffectLines,
@@ -4575,6 +4780,113 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = attackerPhase;
       phaseTimer = 0;
+      return;
+    }
+
+    if (moveBattleData?.behaviorTags?.includes('fails-on-same-species') && attacker.id === defender.id) {
+      textBox = createTextBox(
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.moveFailed'),
+        ],
+        rtl,
+      );
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
+    const simpleStatusLine = (() => {
+      const tags = moveBattleData?.behaviorTags ?? [];
+      if (tags.includes('splash')) return t('battle.nothingHappened');
+      if (tags.includes('laser-focus')) {
+        attackerBattleState.laserFocusTurns = NEXT_TURN_EFFECT_TURNS;
+        return t('battle.laserFocus', { name: attackerName });
+      }
+      if (tags.includes('lock-on')) {
+        attackerBattleState.lockOnTurns = NEXT_TURN_EFFECT_TURNS;
+        return t('battle.lockOn', { name: attackerName, target: defenderName });
+      }
+      if (tags.includes('perish-song')) {
+        return startPerishSong([attackerBattleState, defenderBattleState]).length
+          ? t('battle.perishSong')
+          : t('battle.moveFailed');
+      }
+      if (moveBattleData?.effects.some((e) => e.id === 'encore')) {
+        return applyEncore(defender, defenderBattleState)
+          ? t('battle.encoreApplied', { name: defenderName })
+          : t('battle.moveFailed');
+      }
+      return null;
+    })();
+    if (simpleStatusLine !== null) {
+      textBox = createTextBox(
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          simpleStatusLine,
+        ],
+        rtl,
+      );
+      syncAttackerBar();
+      syncDefenderBar();
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
+    if (isBide) {
+      const moveName = getMoveDisplayName(m.id);
+      const step = advanceBide(attackerBattleState, m.id);
+      if (step.kind === 'store') {
+        textBox = createTextBox(
+          [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: moveName }),
+            t('battle.bideStoring', { name: attackerName }),
+          ],
+          rtl,
+        );
+        phase = attackerPhase;
+        phaseTimer = 0;
+        return;
+      }
+      const bideDamage = step.damage;
+      runMoveLifecycle({
+        move: m,
+        attackerActor: actor,
+        defenderActor,
+        context: battleAnimationContext,
+        hitTarget: true,
+        overrideNextPhase: attackerPhase,
+        canExecute: () => {
+          if (bideDamage <= 0 || defender.hp <= 0) {
+            audio.playSFX('menu-cancel');
+            return {
+              success: false,
+              errorMessages: [
+                ...turnEffectLines,
+                t('battle.bideUnleashed', { name: attackerName }),
+                t('battle.moveFailed'),
+              ],
+            };
+          }
+          return null;
+        },
+        onImpact: () => {
+          applyMoveImpact(
+            defender,
+            m,
+            defenderHpBar,
+            defenderSprite.x + defenderSprite.w / 2,
+            defenderSprite.y + 10,
+            bideDamage,
+            false,
+          );
+          return { endMessages: [...turnEffectLines, t('battle.bideUnleashed', { name: attackerName })] };
+        },
+      });
       return;
     }
 
@@ -4671,8 +4983,7 @@ export function createBattleScene(
 
     const isReversal = moveBattleData?.behaviorTags?.includes('reversal') ?? false;
     if (isReversal) {
-      const power = Math.max(1, attacker.maxHp - attacker.hp);
-      m = { ...m, power };
+      m = { ...m, power: getFlailPower(attacker.hp, attacker.maxHp) };
     }
 
     // Return / Frustration: power derived from happiness (enemy has no party — uses itself)
@@ -4680,6 +4991,18 @@ export function createBattleScene(
       const h =
         actor === 'player' ? calcHappiness(attacker, getPlayerData().party) : calcHappiness(attacker, [attacker]);
       m = { ...m, power: m.id === RETURN_MOVE_ID ? getReturnPower(h) : getFrustrationPower(h) };
+    }
+    if (isPursuit && defenderBattleState.turnFlags.switchedInThisTurn) {
+      m = { ...m, power: m.power * 2 };
+    }
+    if (isPayback && targetAlreadyActed) m = { ...m, power: m.power * 2 };
+    if (isAssurance && defenderBattleState.turnFlags.tookDamageThisTurn) m = { ...m, power: m.power * 2 };
+    if (flingPower) {
+      m = { ...m, power: flingPower };
+      neutralizeHeldItem(attacker, attackerBattleState);
+    }
+    if (isThief && hasUsableHeldItem(defender, defenderBattleState)) {
+      m = { ...m, power: Math.round(m.power * THIEF_ITEM_POWER_MULTIPLIER) };
     }
     const movePower = isWeightTarget
       ? getWeightTargetPower(computePokemonSize(defender).weightKg)
@@ -4731,6 +5054,8 @@ export function createBattleScene(
       if (!hitResult.hit || targetTypeImmune || absorbed || dreamEaterBlocked) return 0;
       if (isOhko) return defender.hp;
       if (isNightShade) return attacker.level;
+      if (fixedDamage !== null) return fixedDamage;
+      if (isPsywave) return getPsywaveDamage(attacker.level);
       if (isSuperFang) return Math.max(1, Math.floor(defender.hp / 2));
       if (effectivePower <= 0) return 0;
       const base = calcDamage(
@@ -4746,7 +5071,8 @@ export function createBattleScene(
         foulPlayAttackStat,
       );
       const min = moveBattleData?.minimumDamage ?? null;
-      return min !== null ? Math.max(min, base) : base;
+      const dealt = min !== null ? Math.max(min, base) : base;
+      return isFalseSwipe ? capFalseSwipeDamage(dealt, defender.hp) : dealt;
     })();
     const allowTargetEffects =
       hitResult.hit &&
@@ -4817,8 +5143,21 @@ export function createBattleScene(
         if (criticalHit) {
           msgs.push(t('battle.criticalHit'));
         }
+        if (feintBrokeProtect) msgs.push(t('battle.feintBrokeProtect', { name: defenderName }));
         const et = effText(m.type, defender.types);
         if (et) msgs.push(et);
+        if (isDragonTail && actor === 'player' && isTrainerBattle && !targetTypeImmune && plannedDamage > 0) {
+          pendingDragonTail = true;
+        }
+        if (isPayDay && actor === 'player') {
+          payDayCoins += getPayDayCoins(attacker.level);
+          msgs.push(t('battle.payDayCoins'));
+        }
+        const knockedItemId = isThief && !targetTypeImmune ? neutralizeHeldItem(defender, defenderBattleState) : null;
+        const knockedItem = knockedItemId ? getItem(knockedItemId) : undefined;
+        if (knockedItem) {
+          msgs.push(t('battle.thiefKnockedItem', { name: defenderName, item: getLocalizedName(knockedItem.name) }));
+        }
         if (plannedDamage > 0 && defender.abilityId !== null) {
           const abilityMsg = getDefenderAbilityActivationMsg(
             defender,
@@ -4851,7 +5190,11 @@ export function createBattleScene(
       }
     } else if (isOhko && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
-    } else if ((isSuperFang || isNightShade) && hitResult.hit && !targetTypeImmune) {
+    } else if (
+      (isSuperFang || isNightShade || isPsywave || fixedDamage !== null) &&
+      hitResult.hit &&
+      !targetTypeImmune
+    ) {
       if (isSuperFang) msgs.push(t('battle.superFangHit'));
     } else if (!hitResult.hit) {
       const messages = [
@@ -5116,6 +5459,7 @@ export function createBattleScene(
           const actualDamage = totalActualDamage;
           if (actualDamage > 0) {
             defenderBattleState.turnFlags.tookDamageThisTurn = true;
+            if (defenderBattleState.bideTurnsRemaining > 0) defenderBattleState.bideDamage += actualDamage;
             if (damageClass === 'physical') defenderBattleState.turnFlags.physicalDamageTakenThisTurn += actualDamage;
             else if (damageClass === 'special')
               defenderBattleState.turnFlags.specialDamageTakenThisTurn += actualDamage;
@@ -5307,7 +5651,7 @@ export function createBattleScene(
       phase = 'WAITING_BAG';
       stateMachine.push('BAG');
     } else if (choice === 'POKEMON') {
-      if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
+      if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState, enemy)) {
         textBox = createTextBox([t('battle.cantSwitchTrapped', { name: getPokemonDisplayName(player.id) })], isRTL());
         phase = 'INTRO';
       } else if (hasActiveGame()) {
@@ -5365,7 +5709,7 @@ export function createBattleScene(
       } else if (isTrainerBattle) {
         textBox = createTextBox([t('battle.cantRunTrainer')], isRTL());
         phase = 'INTRO';
-      } else if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState)) {
+      } else if (player.hp > 0 && isBattlePokemonTrapped(playerBattleState, enemy)) {
         textBox = createTextBox([t('battle.cantEscapeTrapped', { name: getPokemonDisplayName(player.id) })], isRTL());
         phase = 'INTRO';
       } else {
@@ -5585,13 +5929,14 @@ export function createBattleScene(
               if (m.currentPp <= 0 && !playerBattleState.isStruggleMode) {
                 textBox = createTextBox([t('battle.noPP')], isRTL());
                 phase = 'INTRO';
-              } else if (m.id === playerBattleState.disabledMoveId) {
+              } else if (!playerBattleState.isStruggleMode && menu.disabledMoveIds.includes(m.id)) {
                 textBox = createTextBox([t('battle.moveIsDisabled', { move: getMoveDisplayName(m.id) })], isRTL());
                 phase = 'INTRO';
               } else {
                 if (!handleTrainerTurnPriority()) {
                   if (trainerAIState) trainerAIState.justSwitchedIn = false;
                   enemySelectedMoveIndex = getPlannedEnemyMoveIndex();
+                  playerPlannedMoveId = m.id;
                   const enemyMove = enemy.moves[enemySelectedMoveIndex] ?? enemy.moves[0];
                   const turnOrder = determineTurnOrder(
                     player,
@@ -5672,6 +6017,11 @@ export function createBattleScene(
           break;
         }
         case 'CHECK_WIN': {
+          const dragTarget =
+            pendingDragonTail && enemy.hp > 0 && trainerData
+              ? pickDragonTailTarget(trainerData.party, trainerPartyIndex)
+              : null;
+          pendingDragonTail = false;
           if (enemy.hp <= 0) {
             enemy.status = null;
             enemyBattleState.majorStatus = null;
@@ -5690,6 +6040,10 @@ export function createBattleScene(
           } else if (player.hp <= 0) {
             const consolationXp = awardConsolationXp(player, activePartyIndex);
             handlePlayerFaintAfterAction(consolationXp);
+          } else if (dragTarget !== null) {
+            enemyAlreadyAttacked = false;
+            dragonTailEndsTurn = true;
+            executeTrainerVoluntarySwitch(dragTarget, { draggedOut: true });
           } else if (enemyAlreadyAttacked) {
             // Enemy already attacked this turn
             enemyAlreadyAttacked = false;
@@ -5745,6 +6099,13 @@ export function createBattleScene(
                 textBox = createTextBox(entryMsgs, isRTL());
                 break;
               }
+            }
+            if (dragonTailEndsTurn) {
+              // Dragged in by Dragon Tail — it doesn't act this turn
+              dragonTailEndsTurn = false;
+              enemyGoesFirst = false;
+              startEndTurnStatusPhase();
+              break;
             }
             // Transition to ENEMY_TURN; since enemyGoesFirst=true, player will attack the new Pokemon
             phase = 'ENEMY_TURN';
@@ -5806,7 +6167,7 @@ export function createBattleScene(
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            awardDefeatXp();
+            awardDefeatXp(collectPayDayCoins());
             if (isTrainerBattle && trainerData) {
               phase = 'TRAINER_REWARD';
             } else {
@@ -6037,6 +6398,7 @@ export function createBattleScene(
               // Only say "come back" if the previous Pokemon isn't fainted
               const prevPokemon = pd.party.find((p) => p.id === previousLeadId);
               if (prevPokemon && prevPokemon.hp > 0) {
+                playerBattleState.turnFlags.switchedInThisTurn = true;
                 switchMsgs.push(t('battle.comeBack', { name: getPokemonDisplayName(previousLeadId!) }));
                 // activate abilities of switching out such as regenerator or refresh
                 const switchOutMsgs = activateSwitchingOutAbilities(prevPokemon);

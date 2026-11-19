@@ -1057,6 +1057,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
             }
 
             shop.categoriesToExclude = npc.categoriesToExclude ?? [];
+            shop.categoryTags = npc.shopCategoryTags ?? {};
             openShop(shop);
             hideHUD();
             restoreNPCFacing(npc);

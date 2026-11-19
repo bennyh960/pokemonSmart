@@ -27,6 +27,24 @@ import {
   getDisplayedStatChanges,
   getDisplayedVolatileStatuses,
   getEffectiveSpeed,
+  getHiddenPowerType,
+  neutralizeHeldItem,
+  advanceBide,
+  getBeatUpHits,
+  advanceTimedVolatiles,
+  applyEncore,
+  startPerishSong,
+  tickPerishCount,
+  getBlockedMoveIds,
+  getFlailPower,
+  hasUsableHeldItem,
+  capFalseSwipeDamage,
+  getPayDayCoins,
+  pickDragonTailTarget,
+  applyNightmareEffect,
+  doesSuckerPunchSucceed,
+  getPsywaveDamage,
+  pickTriAttackAilment,
   getSideDamageTakenMultiplier,
   getModifiedStatValue,
   isBattlePokemonTrapped,
@@ -42,6 +60,7 @@ import {
   tryApplyFlinch,
 } from '../battle-system.js';
 import { createBattleSideRuntimeState } from '../battle-state.js';
+import { getItemFlingPower } from '../../data/items.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
   return {
@@ -346,6 +365,260 @@ describe('battle system helpers', () => {
     expect(slash).toBeDefined();
     expect(rollCriticalHit(slash!.id, defender, () => 0)).toBe(false);
     expect(rollCriticalHit(slash!.id, createTestPokemon({ id: 1, name: 'Bulbasaur' }), () => 0)).toBe(true);
+  });
+
+  it('Attract infatuates a different species, and the infatuation ends when its source leaves', () => {
+    const attacker = createTestPokemon({ id: 133, name: 'Eevee' });
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    const attract = { id: 'infatuation' as const, target: 'target' as const, chance: 100 };
+
+    expect(applyVolatileMoveEffects(target, runtime, [attract], 'target', () => 0, attacker)[0]).toMatchObject({
+      applied: true,
+    });
+    expect(runtime.infatuatedWith).toBe(attacker.uuid);
+    expect(applyVolatileMoveEffects(target, runtime, [attract], 'target', () => 0, attacker)[0].reason).toBe(
+      'already-active',
+    );
+
+    const stuck = processBeforeMoveEffects(target, runtime, () => 0.1, undefined, attacker);
+    expect(stuck).toMatchObject({ canAct: false, events: ['infatuated', 'immobilized-by-love'] });
+    const acts = processBeforeMoveEffects(target, runtime, () => 0.9, undefined, attacker);
+    expect(acts).toMatchObject({ canAct: true, events: ['infatuated'] });
+
+    const replacement = createTestPokemon({ id: 1, name: 'Bulbasaur' });
+    expect(processBeforeMoveEffects(target, runtime, () => 0.1, undefined, replacement).canAct).toBe(true);
+    expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Attract fails on the same species', () => {
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    const [result] = applyVolatileMoveEffects(
+      target,
+      runtime,
+      [{ id: 'infatuation', target: 'target', chance: 100 }],
+      'target',
+      () => 0,
+      createTestPokemon(),
+    );
+    expect(result.reason).toBe('immune');
+    expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Nightmare: only on a sleeping target, 1/4 HP per turn, ends on waking', () => {
+    const target = createTestPokemon({ status: 'sleep', hp: 100, maxHp: 100 });
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    const nightmare = { id: 'nightmare' as const, target: 'target' as const, chance: 100 };
+    expect(applyVolatileMoveEffects(target, runtime, [nightmare], 'target', () => 0)[0].applied).toBe(true);
+    expect(applyNightmareEffect(target, runtime)).toEqual({ applied: true, damage: 25 });
+    expect(target.hp).toBe(75);
+    runtime.majorStatus = null;
+    target.status = null;
+    expect(applyNightmareEffect(target, runtime).applied).toBe(false);
+    expect(runtime.nightmare).toBe(false);
+
+    const awake = createTestPokemon();
+    const awakeRuntime = createBattleRuntimeStateForPokemon(awake);
+    expect(applyVolatileMoveEffects(awake, awakeRuntime, [nightmare], 'target', () => 0)[0].reason).toBe('immune');
+  });
+
+  it('Psywave is 0.5-1.5x level; Tri Attack picks one status', () => {
+    expect(getPsywaveDamage(50, () => 0)).toBe(25);
+    expect(getPsywaveDamage(50, () => 0.999)).toBe(74);
+    expect(getPsywaveDamage(1, () => 0)).toBe(1);
+    expect(pickTriAttackAilment(() => 0).status).toBe('burn');
+    expect(pickTriAttackAilment(() => 0.5).status).toBe('paralyze');
+    expect(pickTriAttackAilment(() => 0.9)).toMatchObject({ status: 'freeze', chance: 20 });
+  });
+
+  it('Sucker Punch needs a target that has not moved yet and chose a damaging move', () => {
+    const tackle = getMoveByName('tackle')!.id;
+    expect(doesSuckerPunchSucceed(tackle, false)).toBe(true);
+    expect(doesSuckerPunchSucceed(getMoveByName('seismic toss')!.id, false)).toBe(true); // power 0 but attacks
+    expect(doesSuckerPunchSucceed(getMoveByName('growl')!.id, false)).toBe(false); // status move
+    expect(doesSuckerPunchSucceed(null, false)).toBe(false); // switch / item
+    expect(doesSuckerPunchSucceed(tackle, true)).toBe(false); // already attacked
+  });
+
+  it('Teleport raises evasion and speed by 1 instead of fleeing', () => {
+    expect(getMoveByName('teleport')?.battle.statChanges.map((c) => [c.stat, c.stages, c.target])).toEqual([
+      ['evasion', 1, 'user'],
+      ['speed', 1, 'user'],
+    ]);
+  });
+
+  it('Dragon Tail picks a benched trainer Pokemon that can still fight', () => {
+    const party = [createTestPokemon({ hp: 0 }), createTestPokemon(), createTestPokemon({ hp: 0 }), createTestPokemon()];
+    // active = index 1; only index 3 is benched and able
+    expect(pickDragonTailTarget(party, 1, () => 0)).toBe(3);
+    expect(pickDragonTailTarget(party, 3, () => 0)).toBeNull();
+    expect(getMoveByName('dragon tail')?.battle).toMatchObject({ priority: -6, behaviorTags: ['dragon-tail'] });
+  });
+
+  it('False Swipe leaves at least 1 HP; Pay Day pays level x 5', () => {
+    expect(capFalseSwipeDamage(80, 30)).toBe(29);
+    expect(capFalseSwipeDamage(10, 30)).toBe(10);
+    expect(capFalseSwipeDamage(10, 1)).toBe(0);
+    expect(getPayDayCoins(20)).toBe(100);
+  });
+
+  it('batch 5 metadata: Captivate, Dragon Cheer', () => {
+    expect(getMoveByName('captivate')?.battle).toMatchObject({
+      target: 'selected-pokemon',
+      behaviorTags: ['fails-on-same-species'],
+      statChanges: [{ stat: 'specialAttack', stages: -2, target: 'target', chance: 100 }],
+    });
+    expect(getMoveByName('dragon cheer')?.battle.behaviorTags).toContain('focus-energy');
+  });
+
+  it('Mean Look blocks switching / running only while its user is still the opponent', () => {
+    const user = createTestPokemon({ id: 94, name: 'Gengar' });
+    const target = createTestPokemon();
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    applyVolatileMoveEffects(target, runtime, [{ id: 'mean-look', target: 'target', chance: 100 }], 'target', () => 0, user);
+    expect(isBattlePokemonTrapped(runtime, user)).toBe(true);
+    expect(isBattlePokemonTrapped(runtime, createTestPokemon())).toBe(false);
+  });
+
+  it('Taunt blocks status moves (not 0-power attacks) for 3 turns', () => {
+    const mon = createTestPokemon({
+      moves: ['tackle', 'growl', 'seismic toss'].map((n) => {
+        const mv = getMoveByName(n)!;
+        return { id: mv.id, name: mv.name.en, type: mv.type, power: mv.power ?? 0, accuracy: mv.accuracy ?? 0, pp: mv.pp, currentPp: mv.pp } as Pokemon['moves'][number];
+      }),
+    });
+    const growl = mon.moves[1].id;
+    const runtime = createBattleRuntimeStateForPokemon(mon);
+    applyVolatileMoveEffects(mon, runtime, [{ id: 'taunt', target: 'target', chance: 100 }], 'target', () => 0);
+    expect(runtime.tauntTurnsRemaining).toBe(3);
+    expect(getBlockedMoveIds(mon, runtime)).toEqual([growl]);
+    runtime.tauntTurnsRemaining = 0;
+    expect(getBlockedMoveIds(mon, runtime)).toEqual([]);
+  });
+
+  it('Flail / Reversal power rises as HP falls; Fling uses the item fling power once', () => {
+    expect(getFlailPower(100, 100)).toBe(20);
+    expect(getFlailPower(30, 100)).toBe(80);
+    expect(getFlailPower(1, 100)).toBe(200);
+    expect(getMoveByName('flail')?.battle.behaviorTags).toContain('reversal');
+
+    expect(getItemFlingPower('leftovers')).toBe(10);
+    const holder = createTestPokemon({ heldItemId: 'leftovers' });
+    const runtime = createBattleRuntimeStateForPokemon(holder);
+    expect(hasUsableHeldItem(holder, runtime)).toBe(true);
+    neutralizeHeldItem(holder, runtime);
+    expect(hasUsableHeldItem(holder, runtime)).toBe(false);
+    expect(holder.heldItemId).toBe('leftovers');
+  });
+
+  it('Perish Song: both faint after 3 end-of-turn ticks; a second song does nothing', () => {
+    const a = createTestPokemon();
+    const b = createTestPokemon();
+    const sa = createBattleRuntimeStateForPokemon(a);
+    const sb = createBattleRuntimeStateForPokemon(b);
+    expect(startPerishSong([sa, sb])).toHaveLength(2);
+    expect(startPerishSong([sa, sb])).toHaveLength(0);
+    for (let turn = 1; turn <= 3; turn++) {
+      expect(tickPerishCount(a, sa)).toBe(false);
+      tickPerishCount(b, sb);
+    }
+    expect(sa.perishCount).toBe(1);
+    expect(tickPerishCount(a, sa)).toBe(true);
+    expect(a.hp).toBe(0);
+  });
+
+  it('Encore locks the last move for 3 turns; Laser Focus / Lock-On wear off after the next turn', () => {
+    const tackle = getMoveByName('tackle')!;
+    const mon = createTestPokemon({
+      moves: [{ id: tackle.id, name: 'Tackle', type: 'normal', power: 40, accuracy: 100, pp: 35, currentPp: 35 } as Pokemon['moves'][number]],
+    });
+    const state = createBattleRuntimeStateForPokemon(mon);
+    expect(applyEncore(mon, state)).toBe(false); // nothing used yet
+    state.lastMoveUsedId = tackle.id;
+    expect(applyEncore(mon, state)).toBe(true);
+    expect(state.encoreMoveId).toBe(tackle.id);
+    expect(advanceTimedVolatiles(state)).toEqual([]);
+    expect(advanceTimedVolatiles(state)).toEqual([]);
+    expect(advanceTimedVolatiles(state)).toEqual(['encore']);
+    expect(state.encoreMoveId).toBeNull();
+
+    state.lockOnTurns = 2;
+    state.laserFocusTurns = 2;
+    advanceTimedVolatiles(state);
+    expect(doesMoveHit(1, state, createBattleRuntimeStateForPokemon(mon), () => 0.99).hit).toBe(true);
+    expect(state.lockOnTurns).toBe(0);
+    advanceTimedVolatiles(state);
+    expect(state.laserFocusTurns).toBe(0);
+  });
+
+  it('Beat Up hits once per healthy party member; Feint has +2 priority', () => {
+    const party = [
+      createTestPokemon(),
+      createTestPokemon({ hp: 0 }),
+      createTestPokemon({ status: 'poison' }),
+      createTestPokemon(),
+    ];
+    expect(getBeatUpHits(party)).toBe(2);
+    expect(getBeatUpHits([createTestPokemon({ status: 'burn' })])).toBe(1);
+    expect(getMoveByName('feint')?.battle).toMatchObject({ priority: 2, behaviorTags: ['feint'] });
+  });
+
+  it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {
+    const runtime = createBattleRuntimeStateForPokemon(createTestPokemon());
+    const bideId = getMoveByName('bide')!.id;
+    expect(getMoveByName('bide')?.battle.behaviorTags).toContain('bide');
+
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'store' });
+    expect(runtime.lockedInMoveId).toBe(bideId);
+    runtime.bideDamage += 12;
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'store' });
+    runtime.bideDamage += 8;
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'release', damage: 40 });
+    expect(runtime.lockedInMoveId).toBeNull();
+    expect(runtime.bideTurnsRemaining).toBe(0);
+
+    // A new Bide starts fresh
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'store' });
+    expect(runtime.bideDamage).toBe(0);
+  });
+
+  it('Thief neutralizes the held item for the battle (undoing its stat stages) without stealing it', () => {
+    const holder = createTestPokemon({ heldItemId: 'choice-band' }); // +1 Attack at battle start
+    const runtime = createBattleRuntimeStateForPokemon(holder);
+    expect(runtime.heldItem).not.toBeNull();
+    const before = runtime.statModifiers.attack;
+    runtime.softLockedInMovesId = [1, 2];
+
+    expect(neutralizeHeldItem(holder, runtime)).toBe('choice-band');
+    expect(runtime.heldItem).toBeNull();
+    expect(runtime.softLockedInMovesId).toBeNull();
+    expect(runtime.statModifiers.attack).toBeLessThan(before);
+    expect(holder.heldItemId).toBe('choice-band');
+    expect(neutralizeHeldItem(holder, runtime)).toBeNull();
+    expect(getMoveByName('thief')?.battle.behaviorTags).toContain('thief');
+  });
+
+  it('Roar / Whirlwind debuff instead of forcing a switch', () => {
+    const roar = getMoveByName('roar')!.battle;
+    const whirlwind = getMoveByName('whirlwind')!.battle;
+    expect(roar.target).toBe('selected-pokemon');
+    expect(roar.statChanges.map((c) => [c.stat, c.stages, c.chance])).toEqual([
+      ['attack', -2, 100],
+      ['specialAttack', -2, 100],
+      ['speed', -1, 30],
+    ]);
+    expect(whirlwind.statChanges.map((c) => [c.stat, c.stages, c.chance])).toEqual([
+      ['defense', -2, 100],
+      ['specialDefense', -2, 100],
+      ['speed', -1, 30],
+    ]);
+  });
+
+  it('Hidden Power takes the user\'s first type', () => {
+    expect(getHiddenPowerType(createTestPokemon({ types: ['fire', 'flying'] }))).toBe('fire');
+    expect(getMoveByName('hidden power')?.battle.behaviorTags).toContain('hidden-power');
+    expect(getMoveByName('attract')?.battle.effects[0]).toMatchObject({ id: 'infatuation', chance: 100 });
   });
 
   it('applies confusion as a battle-only volatile effect', () => {

@@ -75,10 +75,40 @@ export type MoveBattleBehaviorTag =
   | 'haze'
   | 'night-shade'
   | 'super-fang'
-  | 'cut-pp';
+  | 'cut-pp'
+  | 'hidden-power'
+  | 'thief'
+  | 'bide'
+  | 'mimic'
+  | 'psywave'
+  | 'tri-attack'
+  | 'pursuit'
+  | 'dragon-tail'
+  | 'fails-on-same-species'
+  | 'pay-day'
+  | 'false-swipe'
+  | 'payback'
+  | 'fling'
+  | 'assurance'
+  | 'perish-song'
+  | 'splash'
+  | 'laser-focus'
+  | 'lock-on'
+  | 'feint'
+  | 'beat-up';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
-export type MoveBattleEffectId = 'other' | 'confusion' | 'leech-seed' | 'trap' | 'curse';
+export type MoveBattleEffectId =
+  | 'other'
+  | 'confusion'
+  | 'leech-seed'
+  | 'trap'
+  | 'curse'
+  | 'infatuation'
+  | 'nightmare'
+  | 'mean-look'
+  | 'taunt'
+  | 'encore';
 
 export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';
 
@@ -135,6 +165,8 @@ export interface MoveBattleMetadata {
   flags: string[];
   behaviorTags: MoveBattleBehaviorTag[];
   minimumDamage: number | null;
+  /** Always deals exactly this much damage (Sonic Boom). Type immunity still applies. */
+  fixedDamage: number | null;
   groupedStatChance: number | null;
 }
 
@@ -237,6 +269,7 @@ export function createDefaultMoveBattleMetadata(): MoveBattleMetadata {
     flags: [],
     behaviorTags: [],
     minimumDamage: null,
+    fixedDamage: null,
     groupedStatChance: null,
   };
 }

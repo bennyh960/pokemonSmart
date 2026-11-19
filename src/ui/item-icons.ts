@@ -295,7 +295,7 @@ const ITEM_ICONS: Record<string, (ctx: CanvasRenderingContext2D, x: number, y: n
   'x-attack': (ctx, x, y, s) => drawArrowUp(ctx, x, y, s, '#e04040'),
   'x-defense': (ctx, x, y, s) => drawArrowUp(ctx, x, y, s, '#4060e0'),
   'x-speed': (ctx, x, y, s) => drawArrowUp(ctx, x, y, s, '#40c040'),
-  'x-special': (ctx, x, y, s) => drawArrowUp(ctx, x, y, s, '#a040e0'),
+  'x-sp-atk': (ctx, x, y, s) => drawArrowUp(ctx, x, y, s, '#a040e0'),
 
   // Vitamins
   'rare-candy': (ctx, x, y, s) => drawCandy(ctx, x, y, s, '#e070b0'),
@@ -347,7 +347,7 @@ export const ITEM_ICON_STYLE: Record<string, { bg: string; stroke: string }> = {
   'x-attack': { bg: 'rgba(224,64,64,0.15)', stroke: '#e04040' },
   'x-defense': { bg: 'rgba(64,96,224,0.15)', stroke: '#4060e0' },
   'x-speed': { bg: 'rgba(64,192,64,0.15)', stroke: '#40c040' },
-  'x-special': { bg: 'rgba(160,64,224,0.15)', stroke: '#a040e0' },
+  'x-sp-atk': { bg: 'rgba(160,64,224,0.15)', stroke: '#a040e0' },
   // Vitamins
   'rare-candy': { bg: 'rgba(224,112,176,0.15)', stroke: '#e070b0' },
   // PP recovery

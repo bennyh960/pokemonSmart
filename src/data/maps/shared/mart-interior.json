@@ -63,7 +63,7 @@
       "y": 3,
       "facing": "down",
       "type": "shopkeeper",
-      "categoriesToExclude": ["held"],
+      "categoriesToExclude": ["held", "machine"],
       "dialogue": [
         {
           "en": "Hello! How can i help you?",
@@ -98,6 +98,7 @@
       "type": "shopkeeper",
       "enteredFrom": ["percentile/percentile"],
       "categoriesToExclude": [],
+      "shopCategoryTags": { "machine": ["shop-tm"] },
       "dialogue": [
         {
           "en": "Welcome to the best shop in Numeria!",

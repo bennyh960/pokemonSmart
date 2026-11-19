@@ -149,6 +149,8 @@ export interface NPCData {
 
   // for shopkeeper
   categoriesToExclude?: ItemCategory[];
+  /** Shop: per category, only sell items carrying one of these tags (e.g. `{ machine: ['shop-tm'] }`). */
+  shopCategoryTags?: Partial<Record<ItemCategory, string[]>>;
   // Story-ready fields
   hidden?: boolean; // NPC exists but not rendered/interactable until triggered
   spawnAfter?: string; // Flag — NPC appears only after this flag is set

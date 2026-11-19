@@ -31,6 +31,8 @@ export interface BattleTurnFlags {
   physicalDamageTakenThisTurn: number;
   specialDamageTakenThisTurn: number;
   magicCoatActive: boolean;
+  /** Switched in by choice this turn (Pursuit hits it ×2). */
+  switchedInThisTurn: boolean;
 }
 
 export interface BattlePokemonRuntimeState {
@@ -39,6 +41,8 @@ export interface BattlePokemonRuntimeState {
   freezeTurnsRemaining: number;
   badlyPoisonTurns: number;
   confusionTurnsRemaining: number;
+  /** uuid of the Pokémon this one is infatuated with (Attract). Ends when that Pokémon leaves battle. */
+  infatuatedWith: string | null;
   leechSeeded: boolean;
   curseActive: boolean;
   trappedTurnsRemaining: number;
@@ -50,6 +54,25 @@ export interface BattlePokemonRuntimeState {
   lockInTurnsRemaining: number;
   rolloutTurnsActive: number;
   rageActive: boolean;
+  /** Bide: storing turns left (0 = not biding) and damage taken from moves while storing. */
+  bideTurnsRemaining: number;
+  bideDamage: number;
+  /** Nightmare: loses 1/4 max HP each turn while asleep. */
+  nightmare: boolean;
+  /** Mean Look: uuid of the Pokémon that blocks this one from switching / running (ends when it leaves). */
+  blockedBy: string | null;
+  /** Taunt: turns left in which status moves can't be used. */
+  tauntTurnsRemaining: number;
+  /** Held item knocked out of use (Thief, Knock Off) or thrown (Fling) — for the rest of this battle. */
+  heldItemDisabled: boolean;
+  /** Perish Song: turns until this Pokémon faints (0 = not affected). Switching out clears it. */
+  perishCount: number;
+  /** Encore: move it must repeat, and turns left. */
+  encoreMoveId: number | null;
+  encoreTurnsRemaining: number;
+  /** Laser Focus / Lock-On: the next attack (until the end of next turn) is a sure crit / sure hit. */
+  laserFocusTurns: number;
+  lockOnTurns: number;
   uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
   isStruggleMode: boolean;
@@ -61,6 +84,8 @@ export interface BattlePokemonRuntimeState {
   weatherEvasionBonus: number;
   hasWeatherStatBoost: boolean;
   lastMoveUsedId: number | null;
+  /** Mimic: the foe's move this Pokémon copied — every later Mimic uses it, until it switches out. */
+  mimickedMoveId: number | null;
   disabledMoveId: number | null;
   disabledMoveTurnsRemaining: number;
   abilityActivationCount: number;
@@ -103,6 +128,7 @@ export function createBattleTurnFlags(): BattleTurnFlags {
     physicalDamageTakenThisTurn: 0,
     specialDamageTakenThisTurn: 0,
     magicCoatActive: false,
+    switchedInThisTurn: false,
   };
 }
 
@@ -122,6 +148,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     freezeTurnsRemaining: 0,
     badlyPoisonTurns: 0,
     confusionTurnsRemaining: 0,
+    infatuatedWith: null,
     softLockedInMovesId: null,
     leechSeeded: false,
     trappedTurnsRemaining: 0,
@@ -132,6 +159,17 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     lockInTurnsRemaining: 0,
     rolloutTurnsActive: 0,
     rageActive: false,
+    bideTurnsRemaining: 0,
+    bideDamage: 0,
+    nightmare: false,
+    blockedBy: null,
+    tauntTurnsRemaining: 0,
+    heldItemDisabled: false,
+    perishCount: 0,
+    encoreMoveId: null,
+    encoreTurnsRemaining: 0,
+    laserFocusTurns: 0,
+    lockOnTurns: 0,
     uproarTurnsRemaining: 0,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
@@ -142,6 +180,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     weatherEvasionBonus: 0,
     hasWeatherStatBoost: false,
     lastMoveUsedId: null,
+    mimickedMoveId: null,
     disabledMoveId: null,
     disabledMoveTurnsRemaining: 0,
     abilityActivationCount: 0,

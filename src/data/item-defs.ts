@@ -111,7 +111,66 @@ export interface ItemGameDef {
   usedFlag?: string;
   /** Description shown in the bag after the item has been used/delivered. */
   usedDescription?: { en: string; he: string };
+  /** Free-form labels a shopkeeper can filter on (`shopCategoryTags` on the NPC), e.g. 'shop-tm'. */
+  tags?: string[];
 }
+
+// ── Shop TMs: moves our Pokémon can learn only by TM (tm-learnsets.json) ──
+// [moveId, price]. TM numbers follow TM53, item ids start at SHOP_TM_FIRST_ITEM_ID. Price by power:
+// status 2000 · ≤60 3000 · ≤89 5000 · ≤119 7500 · 120+ 10000. Description comes from the move (items.ts).
+const SHOP_TMS: ReadonlyArray<readonly [moveId: number, price: number]> = [
+  [171, 2000], // TM54 Nightmare
+  [290, 5000], // TM55 Secret Power
+  [590, 2000], // TM56 Confide
+  [317, 3000], // TM57 Rock Tomb
+  [913, 2000], // TM58 Dragon Cheer
+  [799, 3000], // TM59 Scale Shot
+  [555, 3000], // TM60 Snarl
+  [411, 10000], // TM61 Focus Blast
+  [815, 5000], // TM62 Scorching Sands
+  [431, 7500], // TM63 Rock Climb
+  [257, 7500], // TM64 Heat Wave
+  [318, 3000], // TM65 Silver Wind
+  [397, 2000], // TM66 Rock Polish
+  [451, 3000], // TM67 Charge Beam
+  [522, 3000], // TM68 Struggle Bug
+  [886, 3000], // TM69 Chilling Water
+  [322, 2000], // TM70 Cosmic Power
+  [330, 7500], // TM71 Muddy Water
+  [503, 5000], // TM72 Scald
+  [583, 7500], // TM73 Play Rough
+  [313, 2000], // TM74 Fake Tears
+  [333, 3000], // TM75 Icicle Spear
+  [491, 3000], // TM76 Acid Spray
+  [598, 2000], // TM77 Eerie Impulse
+  [611, 3000], // TM78 Infestation
+  [710, 5000], // TM79 Liquidation
+];
+const SHOP_TM_FIRST_NUMBER = 54;
+const SHOP_TM_FIRST_ITEM_ID = 9101;
+/** Tag on every shop TM — the Percentile mart sells only these (shared/mart-interior, Penny). */
+export const SHOP_TM_TAG = 'shop-tm';
+const shopTmLabel = (index: number) => `TM${SHOP_TM_FIRST_NUMBER + index}`;
+
+const SHOP_TM_SLUGS: Record<string, number> = Object.fromEntries(
+  SHOP_TMS.map((_, i) => [shopTmLabel(i).toLowerCase(), SHOP_TM_FIRST_ITEM_ID + i]),
+);
+
+const SHOP_TM_DEFS: Record<number, ItemGameDef> = Object.fromEntries(
+  SHOP_TMS.map(([moveId, price], i) => [
+    SHOP_TM_FIRST_ITEM_ID + i,
+    {
+      category: 'machine',
+      price,
+      sellPrice: 1500,
+      effect: { type: 'tm', moveId, isHM: false },
+      usableInBattle: false,
+      usableInOverworld: true,
+      name: { en: shopTmLabel(i), he: shopTmLabel(i) },
+      tags: [SHOP_TM_TAG],
+    } satisfies ItemGameDef,
+  ]),
+);
 
 // ─── Slug ↔ ID mapping ───
 // Allows existing code using string slugs to transition gradually.
@@ -163,6 +222,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   tm51: 349, // dragon dance
   tm52: 350, // curse
   tm53: 351, // dragon rage (gift from Alice, small forest)
+  ...SHOP_TM_SLUGS, // tm54+ (shop TMs)
   // Pokeballs
   'master-ball': 1,
   'ultra-ball': 2,
@@ -207,7 +267,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'x-defense': 58,
   'x-speed': 59,
   'x-accuracy': 60,
-  'x-special': 61, // X Sp. Atk
+  'x-sp-atk': 61,
   'x-sp-def': 62, // X Sp. Def
   // Evolution stones
   'sun-stone': 80,
@@ -246,15 +306,16 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'skip-card': 9020,
 
   // held items
+  'exp-share': 193,
   leftovers: 211,
   'choice-band': 197,
-  'choice-spec': 274,
+  'choice-specs': 274,
   'choice-scarf': 264,
   'zoom-lens': 253,
   'wide-lens': 242,
   'life-orb': 247,
-  'soft-sand': 199,
-  'silver-powder': 214,
+  'silver-powder': 199,
+  'soft-sand': 214,
   'hard-stone': 215,
   'miracle-seed': 216,
   'black-glasses': 217,
@@ -1680,6 +1741,7 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     name: { en: 'TM53', he: 'TM53' },
     description: { en: 'Teaches Dragon Rage', he: 'מלמד זעם הדרקון' },
   },
+  ...SHOP_TM_DEFS,
 };
 
 // ─── Lookup helpers ───
