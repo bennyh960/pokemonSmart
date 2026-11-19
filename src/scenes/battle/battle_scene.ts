@@ -174,6 +174,8 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  applyHelpingHand,
+  pickDragonTailTarget,
   applyNightmareEffect,
   doesSuckerPunchSucceed,
   getFuryCutterPower,
@@ -859,6 +861,10 @@ export function createBattleScene(
   let enemyAlreadyAttacked = false;
   /** The move the player picked this turn (null on switch / item / run turns) — for Sucker Punch. */
   let playerPlannedMoveId: number | null = null;
+  /** Player's Dragon Tail hit a trainer's Pokémon this turn — drag out another one once the attack resolves. */
+  let pendingDragonTail = false;
+  /** The current trainer switch came from Dragon Tail: the dragged-in Pokémon doesn't act, the turn ends. */
+  let dragonTailEndsTurn = false;
   let pendingForcedPlayerMoveIndex: number | null = null;
   let turnNumber = 0;
   let lossDialogueShown = false;
@@ -1854,7 +1860,7 @@ export function createBattleScene(
     enemyGoesFirst = true; // Player attacks after this text resolves
   }
 
-  function executeTrainerVoluntarySwitch(targetPartyIdx: number): void {
+  function executeTrainerVoluntarySwitch(targetPartyIdx: number, opts: { draggedOut?: boolean } = {}): void {
     const party = trainerData!.party;
     const current = party[trainerPartyIndex];
     const target = party[targetPartyIdx];
@@ -1886,7 +1892,7 @@ export function createBattleScene(
       }
     }
 
-    trainerAIState!.switchesUsed++;
+    if (!opts.draggedOut) trainerAIState!.switchesUsed++;
     // Clear item-use tracking for this slot so new Pokemon gets fresh item access
     trainerAIState!.itemsUsedByPartyIdx.delete(trainerPartyIndex);
 
@@ -1903,10 +1909,12 @@ export function createBattleScene(
 
     const trainerName = getLocalizedName(trainerData!.trainerName);
     textBox = createTextBox(
-      [
-        t('battle.trainerWithdrew', { trainer: trainerName, name: getPokemonDisplayName(current.id) }),
-        t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
-      ],
+      opts.draggedOut
+        ? [t('battle.draggedOut', { name: getPokemonDisplayName(enemy.id) })]
+        : [
+            t('battle.trainerWithdrew', { trainer: trainerName, name: getPokemonDisplayName(current.id) }),
+            t('battle.trainerSentOut', { name: getPokemonDisplayName(enemy.id) }),
+          ],
       isRTL(),
     );
     trainerAIState!.justSwitchedIn = true;
@@ -4011,6 +4019,8 @@ export function createBattleScene(
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
     const isThief = moveBattleData?.behaviorTags?.includes('thief') ?? false;
     const isBide = moveBattleData?.behaviorTags?.includes('bide') ?? false;
+    const isDragonTail = moveBattleData?.behaviorTags?.includes('dragon-tail') ?? false;
+    const isHelpingHand = moveBattleData?.behaviorTags?.includes('helping-hand') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4584,6 +4594,30 @@ export function createBattleScene(
       return;
     }
 
+    if (isHelpingHand) {
+      // Allies = roster Pokémon already in this battle, not on the field (player: battleRoster; trainer: seen ones)
+      const allies =
+        actor === 'player'
+          ? hasActiveGame()
+            ? [...battleRoster].filter((i) => i !== activePartyIndex).map((i) => getPlayerData().party[i])
+            : []
+          : (trainerData?.party ?? []).filter((p) => p !== enemy && trainerAIState?.seenPokemonIds.has(p.uuid));
+      const healed = applyHelpingHand(allies.filter(Boolean));
+      textBox = createTextBox(
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          ...(healed.length
+            ? healed.map((p) => t('battle.helpingHandHealed', { name: getPokemonDisplayName(p.id) }))
+            : [t('battle.moveFailed')]),
+        ],
+        rtl,
+      );
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
     if (isBide) {
       const moveName = getMoveDisplayName(m.id);
       const step = advanceBide(attackerBattleState, m.id);
@@ -4887,6 +4921,9 @@ export function createBattleScene(
         }
         const et = effText(m.type, defender.types);
         if (et) msgs.push(et);
+        if (isDragonTail && actor === 'player' && isTrainerBattle && !targetTypeImmune && plannedDamage > 0) {
+          pendingDragonTail = true;
+        }
         const knockedItem = isThief && !targetTypeImmune ? neutralizeHeldItem(defenderBattleState) : null;
         if (knockedItem) {
           msgs.push(t('battle.thiefKnockedItem', { name: defenderName, item: getLocalizedName(knockedItem.name) }));
@@ -5746,6 +5783,11 @@ export function createBattleScene(
           break;
         }
         case 'CHECK_WIN': {
+          const dragTarget =
+            pendingDragonTail && enemy.hp > 0 && trainerData
+              ? pickDragonTailTarget(trainerData.party, trainerPartyIndex)
+              : null;
+          pendingDragonTail = false;
           if (enemy.hp <= 0) {
             enemy.status = null;
             enemyBattleState.majorStatus = null;
@@ -5764,6 +5806,10 @@ export function createBattleScene(
           } else if (player.hp <= 0) {
             const consolationXp = awardConsolationXp(player, activePartyIndex);
             handlePlayerFaintAfterAction(consolationXp);
+          } else if (dragTarget !== null) {
+            enemyAlreadyAttacked = false;
+            dragonTailEndsTurn = true;
+            executeTrainerVoluntarySwitch(dragTarget, { draggedOut: true });
           } else if (enemyAlreadyAttacked) {
             // Enemy already attacked this turn
             enemyAlreadyAttacked = false;
@@ -5819,6 +5865,13 @@ export function createBattleScene(
                 textBox = createTextBox(entryMsgs, isRTL());
                 break;
               }
+            }
+            if (dragonTailEndsTurn) {
+              // Dragged in by Dragon Tail — it doesn't act this turn
+              dragonTailEndsTurn = false;
+              enemyGoesFirst = false;
+              startEndTurnStatusPhase();
+              break;
             }
             // Transition to ENEMY_TURN; since enemyGoesFirst=true, player will attack the new Pokemon
             phase = 'ENEMY_TURN';

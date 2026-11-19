@@ -30,6 +30,8 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  applyHelpingHand,
+  pickDragonTailTarget,
   applyNightmareEffect,
   doesSuckerPunchSucceed,
   getFuryCutterPower,
@@ -434,6 +436,24 @@ describe('battle system helpers', () => {
       ['evasion', 1, 'user'],
       ['speed', 1, 'user'],
     ]);
+  });
+
+  it('Helping Hand heals benched allies that still have HP, by 25%', () => {
+    const hurt = createTestPokemon({ hp: 10, maxHp: 100 });
+    const fainted = createTestPokemon({ hp: 0, maxHp: 100 });
+    const full = createTestPokemon({ hp: 100, maxHp: 100 });
+    expect(applyHelpingHand([hurt, fainted, full])).toEqual([hurt]);
+    expect(hurt.hp).toBe(35);
+    expect(fainted.hp).toBe(0);
+    expect(applyHelpingHand([])).toEqual([]);
+  });
+
+  it('Dragon Tail picks a benched trainer Pokemon that can still fight', () => {
+    const party = [createTestPokemon({ hp: 0 }), createTestPokemon(), createTestPokemon({ hp: 0 }), createTestPokemon()];
+    // active = index 1; only index 3 is benched and able
+    expect(pickDragonTailTarget(party, 1, () => 0)).toBe(3);
+    expect(pickDragonTailTarget(party, 3, () => 0)).toBeNull();
+    expect(getMoveByName('dragon tail')?.battle).toMatchObject({ priority: -6, behaviorTags: ['dragon-tail'] });
   });
 
   it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {

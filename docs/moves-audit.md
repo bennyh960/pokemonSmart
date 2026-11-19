@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 372 |
+| ✅ wired (override + battle code reads it) | 374 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 0 |
-| ❌ missing (effect described, no logic at all) | 194 |
+| ❌ missing (effect described, no logic at all) | 192 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,7 +25,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (194)
+## ❌ missing (192)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -34,8 +34,6 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 445 | Captivate (שבייה) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 20 (1/20) | If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat. |  |
 | 6 | Pay Day (יום משכורת) | normal | physical | 40 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 19 (2/19) | Throws coins. Gets them back later. |  |
 | 510 | Incinerate (שריפה) | fire | special | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 17 (0/17) | The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable. |  |
-| 270 | Helping Hand (יד עוזרת) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 16 (0/16) | A move that boosts the power of the ally's attack in a Double Battle. |  |
-| 525 | Dragon Tail (זנב דרקון) | dragon | physical | 60 | 90 | — | ❌ missing | — | description mentions an effect | 🎬 dragon-aura | 16 (4/16) | The user knocks away the target and drags out another Pokémon in its party. In the wild, the battle ends. |  |
 | 913 | Dragon Cheer (עידוד דרקון) | dragon | status | 0 | 0 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 14 (0/14) | The user raises its allies' morale with a draconic cry so that their future attacks have a heightened chance of landing critical hits. This rouses Dragon types more. |  |
 | 206 | False Swipe (חיתוך שווא) | normal | physical | 40 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 13 (8/8) | Leaves the foe with at least 1HP. |  |
 | 212 | Mean Look (מבט מאיים) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 11 (11/0) | Prevents fleeing or switching. |  |
@@ -230,7 +228,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 
 
-## ✅ wired (372)
+## ✅ wired (374)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -352,7 +350,9 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 79 | Sleep Powder (אבקת שינה) | grass | status | — | 75 | — | ✅ wired | sleep 100% | — | 🎬 powder | 17 (17/0) | May cause the foe to fall asleep. |  |
 | 523 | Bulldoze (דחפור) | ground | physical | 60 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ burst | 17 (7/17) | The user stomps down on the ground and attacks everything in the area. Hit Pokémon's Speed stat is reduced. |  |
 | 83 | Fire Spin (סחרור אש) | fire | special | 35 | 85 | 100 | ✅ wired | trap 100% | — | 🎬 flamethrower | 16 (11/6) | Traps foe in fire for 2-5 turns. |  |
+| 270 | Helping Hand (יד עוזרת) | normal | status | — | — | — | ✅ wired | `helping-hand` | — | ▫️ pulse | 16 (0/16) | A move that boosts the power of the ally's attack in a Double Battle. |  |
 | 280 | Brick Break (שבירת לבנה) | fighting | physical | 75 | 100 | — | ✅ wired | `brick-break` | — | ▫️ lunge | 16 (0/16) | Destroys barriers such as REFLECT and causes damage. |  |
+| 525 | Dragon Tail (זנב דרקון) | dragon | physical | 60 | 90 | — | ✅ wired | priority -6, `dragon-tail` | — | 🎬 dragon-aura | 16 (4/16) | The user knocks away the target and drags out another Pokémon in its party. In the wild, the battle ends. |  |
 | 95 | Hypnosis (היפנוזה) | psychic | status | — | 60 | — | ✅ wired | sleep 100% | — | ▫️ pulse | 15 (15/0) | May put the foe to sleep. |  |
 | 133 | Amnesia (אמנזיה) | psychic | status | — | — | — | ✅ wired | user specialDefense +2 | — | 🎬 self-boost | 15 (14/1) | Sharply raises the user's SPCL.DEF. |  |
 | 421 | Shadow Claw (טופר צל) | ghost | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 15 (0/15) | The user slashes with a sharp claw made from shadows. It has a high critical-hit ratio. |  |

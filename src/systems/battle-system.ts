@@ -727,6 +727,31 @@ export function doesSuckerPunchSucceed(targetMovePower: number | null, targetAlr
   return !targetAlreadyActed && targetMovePower !== null && targetMovePower > 0;
 }
 
+/** Helping Hand (no double battles here): heals roster allies on the bench by this % of max HP. */
+export const HELPING_HAND_HEAL_PERCENT = 25;
+
+/** Heals every ally that still has HP and isn't full. Returns the allies healed. */
+export function applyHelpingHand(allies: Pokemon[], percent = HELPING_HAND_HEAL_PERCENT): Pokemon[] {
+  const healed: Pokemon[] = [];
+  for (const ally of allies) {
+    if (ally.hp <= 0 || ally.hp >= ally.maxHp) continue;
+    ally.hp = Math.min(ally.maxHp, ally.hp + Math.max(1, Math.floor((ally.maxHp * percent) / 100)));
+    healed.push(ally);
+  }
+  return healed;
+}
+
+/** Dragon Tail: a random benched trainer Pokémon that can still fight (party slots after the active one). */
+export function pickDragonTailTarget(
+  party: Pokemon[],
+  activeIndex: number,
+  random: () => number = Math.random,
+): number | null {
+  const candidates: number[] = [];
+  for (let i = activeIndex + 1; i < party.length; i++) if (party[i] && party[i].hp > 0) candidates.push(i);
+  return candidates.length ? candidates[Math.floor(random() * candidates.length)] : null;
+}
+
 export const BIDE_STORE_TURNS = 2;
 
 export type BideStep = { kind: 'store' } | { kind: 'release'; damage: number };

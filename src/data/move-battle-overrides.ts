@@ -590,6 +590,10 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Secret Power': statusEffect('paralyze', 30),
   // Pursuit: ×2 against a Pokémon that switched in by choice this turn
   Pursuit: { behaviorTags: ['pursuit'] },
+  // Dragon Tail: vs a trainer with another able Pokémon, drags it in (it doesn't act this turn). Wild: plain hit
+  'Dragon Tail': { behaviorTags: ['dragon-tail'], priority: -6 },
+  // Helping Hand (no double battles): heals benched roster allies that still have HP by 25%
+  'Helping Hand': { behaviorTags: ['helping-hand'], target: 'user' },
   // Bide: store 2 turns, then hit back 2× the damage taken (target 'user' so Protect doesn't block storing)
   Bide: { behaviorTags: ['bide'], target: 'user' },
   // Roar / Whirlwind: no forced switch (would let legendaries flee / break battle flow) — big debuffs instead

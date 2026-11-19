@@ -83,7 +83,9 @@ export type MoveBattleBehaviorTag =
   | 'fury-cutter'
   | 'psywave'
   | 'tri-attack'
-  | 'pursuit';
+  | 'pursuit'
+  | 'dragon-tail'
+  | 'helping-hand';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
 export type MoveBattleEffectId = 'other' | 'confusion' | 'leech-seed' | 'trap' | 'curse' | 'infatuation' | 'nightmare';
