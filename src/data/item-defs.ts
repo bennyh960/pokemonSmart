@@ -207,7 +207,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'x-defense': 58,
   'x-speed': 59,
   'x-accuracy': 60,
-  'x-special': 61, // X Sp. Atk
+  'x-sp-atk': 61,
   'x-sp-def': 62, // X Sp. Def
   // Evolution stones
   'sun-stone': 80,
@@ -248,13 +248,13 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   // held items
   leftovers: 211,
   'choice-band': 197,
-  'choice-spec': 274,
+  'choice-specs': 274,
   'choice-scarf': 264,
   'zoom-lens': 253,
   'wide-lens': 242,
   'life-orb': 247,
-  'soft-sand': 199,
-  'silver-powder': 214,
+  'silver-powder': 199,
+  'soft-sand': 214,
   'hard-stone': 215,
   'miracle-seed': 216,
   'black-glasses': 217,
