@@ -642,6 +642,19 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
   9018: { category: 'held', price: 0, effect: { type: 'none' }, usableInBattle: false, usableInOverworld: false }, // Dragon Scale
 
   // held items
+  // Exp Share — the holder watches battles from the bench (logic: src/systems/shared-xp.ts)
+  193: {
+    category: 'held',
+    price: 30000,
+    effect: { type: 'none' },
+    usableInBattle: false,
+    usableInOverworld: false,
+    name: { en: 'Exp Share', he: 'משתף ניסיון' },
+    description: {
+      en: 'The holder watches battles from the bench and gains EXP. Only for Pokémon that can still evolve, and only up to 10 levels below the weakest Pokémon in the fight.',
+      he: 'הפוקימון שמחזיק בו צופה בקרבות מהספסל ומקבל ניסיון. רק לפוקימון שעוד יכול להתפתח, ועד 10 רמות מתחת לפוקימון החלש ביותר בקרב.',
+    },
+  },
   // leftovers
   211: {
     category: 'held',

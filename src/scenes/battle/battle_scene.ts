@@ -14,7 +14,13 @@ import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import type { AudioManager } from '../../audio/audio-manager.js';
 import { clearScreen, fillRect, drawText } from '../../engine/renderer.js';
-import { drawGlitchDecay, drawGlitchedSprite, glitchStyleFor, GLITCH_DECAY_S, type GlitchStyleId } from './glitch-fx.js';
+import {
+  drawGlitchDecay,
+  drawGlitchedSprite,
+  glitchStyleFor,
+  GLITCH_DECAY_S,
+  type GlitchStyleId,
+} from './glitch-fx.js';
 import {
   createHPBar,
   updateHPBar,
@@ -107,6 +113,7 @@ import {
   getDefenderAbsorbMsg,
 } from '../../systems/ability-processor.js';
 import { sendCaughtToBox } from '../../systems/pc-storage.js';
+import { computeSharedXpAwards, type SharedXpAward } from '../../systems/shared-xp.js';
 import { recordTrainerDefeat } from '../../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../../systems/game-state.js';
 import { noteGlitchBattleEnd } from '../../systems/unown-ambush.js';
@@ -820,6 +827,9 @@ export function createBattleScene(
   let activePartyIndex = 0; // Index of the active Pokemon in the player's party
   let battleRoster = new Set<number>(); // Party indices that have entered this battle
   let battleTurnCounts = new Map<number, number>(); // Active turns per party slot this battle
+  let turnsVsEnemy = new Map<number, number>(); // Active turns per party slot against the current enemy
+  let sharedXpQueue: SharedXpAward[] = []; // Benched party members still to be paid for the last defeat
+  let xpSubjectIndex: number | null = null; // Party slot the XP/level-up phases act on (null = active Pokémon)
   let pendingTurnCredit = false; // Whether to credit a turn to active Pokemon after phase resolves
   let maxRosterSize = 0; // Max Pokemon player can use (= trainer's party size, or 6 for wild)
   let isTrainerBattle = false;
@@ -1244,6 +1254,7 @@ export function createBattleScene(
     arrangeNextTrainerPokemon();
     trainerPartyIndex++;
     enemy = trainerData!.party[trainerPartyIndex];
+    turnsVsEnemy = new Map<number, number>([[activePartyIndex, 0]]);
     trainerAIState!.justSwitchedIn = true;
     trainerAIState!.seenPokemonIds.add(enemy.uuid);
 
@@ -1322,7 +1333,11 @@ export function createBattleScene(
     // Build reward message lines
     // A wild Pokémon NPC is built from trainer data but pays no money — say what happened to it instead
     const lines: string[] = td.isWildNpc
-      ? [t(enemy.isGlitched ? 'battle.wildNpcGlitchCleared' : 'battle.wildNpcBeaten', { name: getPokemonDisplayName(enemy.id) })]
+      ? [
+          t(enemy.isGlitched ? 'battle.wildNpcGlitchCleared' : 'battle.wildNpcBeaten', {
+            name: getPokemonDisplayName(enemy.id),
+          }),
+        ]
       : [];
     if (td.reward.money > 0) lines.push(t('battle.trainerReward', { money: td.reward.money }));
     if (!isRematch && td.reward.items) {
@@ -1482,6 +1497,9 @@ export function createBattleScene(
     // Initialize battle roster: player's first Pokemon is automatically registered
     battleRoster = new Set<number>([activePartyIndex]);
     battleTurnCounts = new Map<number, number>([[activePartyIndex, 0]]);
+    turnsVsEnemy = new Map<number, number>([[activePartyIndex, 0]]);
+    sharedXpQueue = [];
+    xpSubjectIndex = null;
     // Wild NPC: player uses full 6-slot roster (behaves like wild encounter)
     maxRosterSize = isTrainerBattle && !isWildNpcBattle && trainerData ? trainerData.party.length : 6;
     activeBallId = null;
@@ -1573,6 +1591,7 @@ export function createBattleScene(
 
   function recordBattleTurn(partyIndex: number): void {
     battleTurnCounts.set(partyIndex, (battleTurnCounts.get(partyIndex) ?? 0) + 1);
+    turnsVsEnemy.set(partyIndex, (turnsVsEnemy.get(partyIndex) ?? 0) + 1);
   }
 
   function findMoveIndexById(pokemon: Pokemon, moveId: number): number | null {
@@ -2354,6 +2373,48 @@ export function createBattleScene(
 
   function getDefeatXpReward(): number {
     return calculateXpGain(enemy, { trainerBattle: isTrainerBattle });
+  }
+
+  /** Pay the active Pokémon for the defeated enemy and queue the shared XP for the bench. */
+  function awardDefeatXp(): void {
+    xpSubjectIndex = null;
+    xpGained = getDefeatXpReward();
+    player.xp += xpGained;
+    sharedXpQueue = hasActiveGame()
+      ? computeSharedXpAwards({
+          party: getPlayerData().party,
+          activePartyIndex,
+          winnerXp: xpGained,
+          turnsVsEnemy,
+          enemyLevel: enemy.level,
+        })
+      : [];
+    textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
+  }
+
+  /** The Pokémon the XP / level-up phases currently act on. */
+  function getXpSubject(): Pokemon {
+    return xpSubjectIndex === null ? player : getPlayerData().party[xpSubjectIndex];
+  }
+
+  function getXpSubjectPartyIndex(): number {
+    return xpSubjectIndex ?? activePartyIndex;
+  }
+
+  /** Hand the next queued benched Pokémon its shared XP. Returns false once the queue is empty. */
+  function startNextSharedXp(xpPhase: BattlePhase): boolean {
+    const award = sharedXpQueue.shift();
+    if (!award) {
+      xpSubjectIndex = null;
+      return false;
+    }
+    xpSubjectIndex = award.partyIndex;
+    const subject = getXpSubject();
+    subject.xp += award.xp;
+    const key = award.reason === 'watcher' ? 'battle.gainedWatcherXP' : 'battle.gainedParticipantXP';
+    textBox = createTextBox([t(key, { name: getPokemonDisplayName(subject.id), xp: award.xp })], isRTL());
+    phase = xpPhase;
+    return true;
   }
 
   function getConsolationXpReward(partyIndex: number): number {
@@ -3282,6 +3343,7 @@ export function createBattleScene(
   }
 
   function waitForXpResolution(): boolean {
+    if (xpSubjectIndex !== null) return false; // benched Pokémon have no XP bar on screen
     setXP(playerHpBar, player.xp, player.xpToNext);
     if (player.xp >= player.xpToNext) {
       return playerHpBar.displayXp < playerHpBar.xpToNext - 0.5;
@@ -3290,17 +3352,22 @@ export function createBattleScene(
   }
 
   function startLevelUp(levelPhase: BattlePhase): boolean {
-    const result = checkAndApplyLevelUp(player, hasActiveGame() ? getPlayerData().party : [player]);
+    const subject = getXpSubject();
+    const result = checkAndApplyLevelUp(subject, hasActiveGame() ? getPlayerData().party : [player]);
     if (!result.leveledUp) return false;
 
-    syncPlayerBar(true);
-    triggerLevelUpFx();
+    if (subject === player) {
+      syncPlayerBar(true);
+      triggerLevelUpFx();
+    } else {
+      audio.playLevelUp();
+    }
     pendingNewMoves = result.newMoves || [];
     activeMoveLearningPrompt = null;
     pendingEvolution = result.evolution ?? null;
     statGainsPopup = result.statGains ?? null;
     textBox = createTextBox(
-      [t('battle.levelUp', { name: getPokemonDisplayName(player.id), level: player.level })],
+      [t('battle.levelUp', { name: getPokemonDisplayName(subject.id), level: subject.level })],
       isRTL(),
     );
     phase = levelPhase;
@@ -3312,7 +3379,9 @@ export function createBattleScene(
     const evolution = pendingEvolution;
     pendingEvolution = null;
     phase = nextPhase;
-    setEvolutionData(player, evolution, () => {
+    const subject = getXpSubject();
+    setEvolutionData(subject, evolution, () => {
+      if (subject !== player) return;
       syncPlayerBar();
       menu.playerPokemon = player;
       loadImage(`/sprites/pokemon/back/${player.id}.png`).catch(() => {});
@@ -3340,7 +3409,7 @@ export function createBattleScene(
     pendingMoveLearningResolution = null;
     pendingMoveLearningPhase = phaseAfterResolution;
 
-    const session = createMoveLearningSession(activePartyIndex, prompt, (resolution) => {
+    const session = createMoveLearningSession(getXpSubjectPartyIndex(), prompt, (resolution) => {
       pendingMoveLearningResolution = resolution;
     });
     phase = 'WAITING_MOVE_LEARN';
@@ -3354,7 +3423,7 @@ export function createBattleScene(
   function showNextLearnedMove(movesPhase: BattlePhase): boolean {
     if (pendingNewMoves.length === 0) return false;
     activeMoveLearningPrompt = pendingNewMoves.shift()!;
-    const lines = getMoveLearningAnnouncementLines(player.id, activeMoveLearningPrompt);
+    const lines = getMoveLearningAnnouncementLines(getXpSubject().id, activeMoveLearningPrompt);
     textBox = createTextBox(lines, isRTL());
     phase = movesPhase;
     return true;
@@ -5669,12 +5738,7 @@ export function createBattleScene(
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            xpGained = getDefeatXpReward();
-            player.xp += xpGained;
-            textBox = createTextBox(
-              [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })],
-              isRTL(),
-            );
+            awardDefeatXp();
             phase = 'TRAINER_NEXT_XP';
           }
           break;
@@ -5689,7 +5753,7 @@ export function createBattleScene(
             }
           }
           if (waitForXpResolution()) break;
-          if (!startLevelUp('TRAINER_NEXT_LEVEL_UP')) {
+          if (!startLevelUp('TRAINER_NEXT_LEVEL_UP') && !startNextSharedXp('TRAINER_NEXT_XP')) {
             sendOutNextTrainerPokemon();
           }
           break;
@@ -5701,11 +5765,7 @@ export function createBattleScene(
             statGainsPopup = null;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_NEXT_XP')) break;
-              if (player.xp > 0) {
-                phase = 'TRAINER_NEXT_XP';
-              } else {
-                sendOutNextTrainerPokemon();
-              }
+              phase = 'TRAINER_NEXT_XP'; // the XP phase pays the bench, then moves on
             }
           }
           break;
@@ -5717,11 +5777,7 @@ export function createBattleScene(
             if (startMoveLearning('TRAINER_NEXT_LEVEL_UP_MOVES')) break;
             if (!showNextLearnedMove('TRAINER_NEXT_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_NEXT_XP')) break;
-              if (player.xp > 0) {
-                phase = 'TRAINER_NEXT_XP';
-              } else {
-                sendOutNextTrainerPokemon();
-              }
+              phase = 'TRAINER_NEXT_XP'; // the XP phase pays the bench, then moves on
             }
           }
           break;
@@ -5731,12 +5787,7 @@ export function createBattleScene(
             textBox = null;
           }
           if (!textBox && !animationDirector.isBusy()) {
-            xpGained = getDefeatXpReward();
-            player.xp += xpGained;
-            textBox = createTextBox(
-              [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })],
-              isRTL(),
-            );
+            awardDefeatXp();
             if (isTrainerBattle && trainerData) {
               phase = 'TRAINER_REWARD';
             } else {
@@ -5755,7 +5806,7 @@ export function createBattleScene(
             }
           }
           if (waitForXpResolution()) break;
-          if (!startLevelUp('TRAINER_REWARD_LEVEL_UP')) {
+          if (!startLevelUp('TRAINER_REWARD_LEVEL_UP') && !startNextSharedXp('TRAINER_REWARD')) {
             awardTrainerReward();
           }
           break;
@@ -5767,11 +5818,7 @@ export function createBattleScene(
             statGainsPopup = null;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_REWARD')) break;
-              if (player.xp > 0) {
-                phase = 'TRAINER_REWARD';
-              } else {
-                awardTrainerReward();
-              }
+              phase = 'TRAINER_REWARD'; // the XP phase pays the bench, then moves on
             }
           }
           break;
@@ -5783,11 +5830,7 @@ export function createBattleScene(
             if (startMoveLearning('TRAINER_REWARD_LEVEL_UP_MOVES')) break;
             if (!showNextLearnedMove('TRAINER_REWARD_LEVEL_UP_MOVES')) {
               if (startPendingEvolution('TRAINER_REWARD')) break;
-              if (player.xp > 0) {
-                phase = 'TRAINER_REWARD';
-              } else {
-                awardTrainerReward();
-              }
+              phase = 'TRAINER_REWARD'; // the XP phase pays the bench, then moves on
             }
           }
           break;
@@ -5801,7 +5844,7 @@ export function createBattleScene(
             }
           }
           if (waitForXpResolution()) break;
-          if (!startLevelUp('LEVEL_UP')) {
+          if (!startLevelUp('LEVEL_UP') && !startNextSharedXp('XP_GAIN')) {
             fade = createFade(false, 0.5);
             phase = 'RUN';
           }
@@ -5813,12 +5856,7 @@ export function createBattleScene(
             statGainsPopup = null;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
               if (startPendingEvolution('XP_GAIN')) break;
-              if (player.xp > 0) {
-                phase = 'XP_GAIN';
-              } else {
-                fade = createFade(false, 0.5);
-                phase = 'RUN';
-              }
+              phase = 'XP_GAIN'; // the XP phase pays the bench, then moves on
             }
           }
           break;
@@ -5829,12 +5867,7 @@ export function createBattleScene(
             if (startMoveLearning('LEVEL_UP_MOVES')) break;
             if (!showNextLearnedMove('LEVEL_UP_MOVES')) {
               if (startPendingEvolution('XP_GAIN')) break;
-              if (player.xp > 0) {
-                phase = 'XP_GAIN';
-              } else {
-                fade = createFade(false, 0.5);
-                phase = 'RUN';
-              }
+              phase = 'XP_GAIN'; // the XP phase pays the bench, then moves on
             }
           }
           break;
@@ -5948,6 +5981,7 @@ export function createBattleScene(
                 battleRoster.add(chosenIndex);
               }
               if (!battleTurnCounts.has(chosenIndex)) battleTurnCounts.set(chosenIndex, 0);
+              if (!turnsVsEnemy.has(chosenIndex)) turnsVsEnemy.set(chosenIndex, 0);
               activePartyIndex = chosenIndex;
               player = pd.party[activePartyIndex];
               playerBattleState = createBattleRuntimeStateForPokemon(player);
@@ -6072,33 +6106,20 @@ export function createBattleScene(
           pendingMoveLearningResolution = null;
           pendingMoveLearningPhase = null;
           refreshPlayerMoveState();
-          const followUpText = getMoveLearningResolutionMessage(player.id, resolution);
+          const followUpText = getMoveLearningResolutionMessage(getXpSubject().id, resolution);
           if (followUpText) {
             textBox = createTextBox([followUpText], isRTL());
             phase = resumePhase;
           } else if (!showNextLearnedMove(resumePhase)) {
             if (resumePhase === 'TRAINER_NEXT_LEVEL_UP_MOVES') {
               if (startPendingEvolution('TRAINER_NEXT_XP')) break;
-              if (player.xp > 0) {
-                phase = 'TRAINER_NEXT_XP';
-              } else {
-                sendOutNextTrainerPokemon();
-              }
+              phase = 'TRAINER_NEXT_XP'; // the XP phase pays the bench, then moves on
             } else if (resumePhase === 'TRAINER_REWARD_LEVEL_UP_MOVES') {
               if (startPendingEvolution('TRAINER_REWARD')) break;
-              if (player.xp > 0) {
-                phase = 'TRAINER_REWARD';
-              } else {
-                awardTrainerReward();
-              }
+              phase = 'TRAINER_REWARD'; // the XP phase pays the bench, then moves on
             } else if (resumePhase === 'LEVEL_UP_MOVES') {
               if (startPendingEvolution('XP_GAIN')) break;
-              if (player.xp > 0) {
-                phase = 'XP_GAIN';
-              } else {
-                fade = createFade(false, 0.5);
-                phase = 'RUN';
-              }
+              phase = 'XP_GAIN'; // the XP phase pays the bench, then moves on
             }
           }
           break;
