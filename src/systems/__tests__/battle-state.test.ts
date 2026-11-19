@@ -32,6 +32,7 @@ describe('battle state helpers', () => {
       physicalDamageTakenThisTurn: 0,
       specialDamageTakenThisTurn: 0,
       magicCoatActive: false,
+      switchedInThisTurn: false,
     });
   });
 

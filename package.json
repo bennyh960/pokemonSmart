@@ -13,6 +13,7 @@
     "deploy": "tsx scripts/deploy-gh-pages.ts",
     "add-pokemon": "tsx scripts/add-new-pokemon.ts",
     "download-moves-sfx": "tsx scripts/download-move-sfx.ts",
+    "moves-audit": "tsx scripts/moves-audit.ts",
     "cicd": "npm run build && npm run deploy"
   },
   "devDependencies": {

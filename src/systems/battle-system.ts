@@ -20,6 +20,7 @@ import {
 import {
   getAbilityBattleEffects,
   getCombinedTypeEffectiveness,
+  getMove,
   getMoveBattleData,
   getPokemonDisplayName,
 } from '../services/pokemon-data.js';
@@ -55,6 +56,8 @@ export interface BeforeMoveEffectResult {
     | 'confused'
     | 'snapped-out'
     | 'hurt-itself-confusion'
+    | 'infatuated'
+    | 'immobilized-by-love'
   >;
   selfDamage: number;
   skipAnimation?: boolean;
@@ -272,6 +275,24 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.disabledMoveId !== null) {
     effects.push('disable');
   }
+  if (runtimeState.infatuatedWith) {
+    effects.push('love');
+  }
+  if (runtimeState.nightmare) {
+    effects.push('nightmare');
+  }
+  if (runtimeState.blockedBy) {
+    effects.push('blocked');
+  }
+  if (runtimeState.tauntTurnsRemaining > 0) {
+    effects.push('taunt');
+  }
+  if (runtimeState.encoreTurnsRemaining > 0) {
+    effects.push('encore');
+  }
+  if (runtimeState.perishCount > 0) {
+    effects.push('perish');
+  }
   return effects;
 }
 
@@ -292,8 +313,94 @@ export function getDisplayedSideStatuses(runtimeState: BattleSideRuntimeState): 
   return effects;
 }
 
-export function isBattlePokemonTrapped(runtimeState: BattlePokemonRuntimeState): boolean {
-  return runtimeState.trappedTurnsRemaining > 0;
+/** Can't switch or run: bound (Wrap…) or blocked by Mean Look from the Pokémon still facing it. */
+export function isBattlePokemonTrapped(
+  runtimeState: BattlePokemonRuntimeState,
+  opponent?: Pick<Pokemon, 'uuid'>,
+): boolean {
+  if (runtimeState.trappedTurnsRemaining > 0) return true;
+  return runtimeState.blockedBy !== null && (!opponent || opponent.uuid === runtimeState.blockedBy);
+}
+
+/** Beat Up: one hit per party member that can fight and has no status (at least the user). */
+export const BEAT_UP_HIT_POWER = 10;
+export function getBeatUpHits(party: Pokemon[]): number {
+  return Math.max(1, party.filter((p) => p.hp > 0 && !p.status).length);
+}
+
+export const TAUNT_TURNS = 3;
+export const ENCORE_TURNS = 3;
+export const PERISH_SONG_TURNS = 3;
+/** Laser Focus / Lock-On last until the end of the next turn. */
+export const NEXT_TURN_EFFECT_TURNS = 2;
+
+/** Perish Song: starts the count on every Pokémon that isn't counting yet. Returns those it started on. */
+export function startPerishSong(states: BattlePokemonRuntimeState[]): BattlePokemonRuntimeState[] {
+  const started = states.filter((s) => s.perishCount === 0);
+  for (const s of started) s.perishCount = PERISH_SONG_TURNS + 1; // ticks at this turn's end → 3
+  return started;
+}
+
+/** End of turn: lowers the perish count; true when it hits 0 (the Pokémon faints). */
+export function tickPerishCount(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): boolean {
+  if (runtimeState.perishCount <= 0 || pokemon.hp <= 0) return false;
+  runtimeState.perishCount--;
+  if (runtimeState.perishCount > 0) return false;
+  pokemon.hp = 0;
+  return true;
+}
+
+/** End of turn: counts down short-lived effects (Taunt, Encore, Laser Focus, Lock-On). Returns the ones that ended. */
+export function advanceTimedVolatiles(runtimeState: BattlePokemonRuntimeState): Array<'taunt' | 'encore'> {
+  const ended: Array<'taunt' | 'encore'> = [];
+  if (runtimeState.tauntTurnsRemaining > 0 && --runtimeState.tauntTurnsRemaining === 0) ended.push('taunt');
+  if (runtimeState.encoreTurnsRemaining > 0 && --runtimeState.encoreTurnsRemaining === 0) {
+    runtimeState.encoreMoveId = null;
+    ended.push('encore');
+  }
+  if (runtimeState.laserFocusTurns > 0) runtimeState.laserFocusTurns--;
+  if (runtimeState.lockOnTurns > 0) runtimeState.lockOnTurns--;
+  return ended;
+}
+
+/** Moves Encore can't lock in (calling / copying moves, Encore itself, Struggle). */
+const ENCORE_FAILS_ON_TAGS = ['metronome', 'mirror-move', 'copycat', 'assist', 'sleep-talk', 'mimic'] as const;
+
+/** Encore: locks the target into its last move. False if there is nothing to repeat. */
+export function applyEncore(target: Pick<Pokemon, 'moves'>, runtimeState: BattlePokemonRuntimeState): boolean {
+  const moveId = runtimeState.lastMoveUsedId;
+  if (runtimeState.encoreTurnsRemaining > 0 || moveId === null || moveId <= 0) return false;
+  const known = target.moves.find((m) => m.id === moveId);
+  if (!known || known.currentPp <= 0) return false;
+  const tags = getMoveBattleData(moveId)?.behaviorTags ?? [];
+  if (tags.some((tag) => (ENCORE_FAILS_ON_TAGS as readonly string[]).includes(tag))) return false;
+  if (getMoveBattleData(moveId)?.effects.some((e) => e.id === 'encore')) return false;
+  runtimeState.encoreMoveId = moveId;
+  runtimeState.encoreTurnsRemaining = ENCORE_TURNS;
+  return true;
+}
+
+/** A move that deals damage (by damage class — Seismic Toss, Counter etc. have power 0 but still attack). */
+export function isAttackingMove(moveId: number): boolean {
+  const cls = getMove(moveId)?.damageClass;
+  return cls !== undefined && cls !== 'status';
+}
+
+/** Moves this Pokémon can't pick right now: status moves while taunted. */
+export function getBlockedMoveIds(pokemon: Pick<Pokemon, 'moves'>, runtimeState: BattlePokemonRuntimeState): number[] {
+  if (runtimeState.tauntTurnsRemaining <= 0) return [];
+  return pokemon.moves.filter((m) => !isAttackingMove(m.id)).map((m) => m.id);
+}
+
+/** Flail / Reversal: the lower the user's HP, the higher the power (20–200). */
+export function getFlailPower(hp: number, maxHp: number): number {
+  const ratio = Math.floor((48 * hp) / maxHp);
+  if (ratio < 2) return 200;
+  if (ratio < 5) return 150;
+  if (ratio < 10) return 100;
+  if (ratio < 17) return 80;
+  if (ratio < 33) return 40;
+  return 20;
 }
 
 export function getChargingMoveId(runtimeState: BattlePokemonRuntimeState): number | null {
@@ -325,6 +432,7 @@ export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): vo
   runtimeState.turnFlags.physicalDamageTakenThisTurn = 0;
   runtimeState.turnFlags.specialDamageTakenThisTurn = 0;
   runtimeState.turnFlags.magicCoatActive = false;
+  runtimeState.turnFlags.switchedInThisTurn = false;
 }
 
 export function tryApplyFlinch(
@@ -503,6 +611,10 @@ export function doesMoveHit(
   if (!moveAccuracy || moveAccuracy <= 0) {
     return { hit: true, chance: 100 };
   }
+  if (attackerState.lockOnTurns > 0) {
+    attackerState.lockOnTurns = 0; // Lock-On / Mind Reader: used up by this attack
+    return { hit: true, chance: 100 };
+  }
 
   const accuracyMultiplier = getBattleStatMultiplier(attackerState.statModifiers.accuracy);
   const evasionMultiplier = getBattleStatMultiplier(defenderState.statModifiers.evasion);
@@ -536,6 +648,10 @@ export function rollCriticalHit(
     );
     if (preventsCrit) return false;
   }
+  if (attackerState && attackerState.laserFocusTurns > 0) {
+    attackerState.laserFocusTurns = 0; // Laser Focus: used up by this attack
+    return true;
+  }
 
   let itemBoost = 0;
 
@@ -557,10 +673,17 @@ function getEffectDurationRange(effect: MoveBattleEffect): { min: number; max: n
   };
 }
 
-function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect): boolean {
+function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect, source?: Pokemon): boolean {
   switch (effect.id) {
     case 'leech-seed':
       return target.types.includes('grass');
+    case 'nightmare':
+      return target.status !== 'sleep';
+    case 'mean-look':
+      return !source;
+    case 'infatuation':
+      // No genders in this game: Attract fails only on the same species (or with no known source).
+      return !source || source.id === target.id;
     default:
       return false;
   }
@@ -598,6 +721,8 @@ export function applyVolatileMoveEffects(
   effects: MoveBattleEffect[],
   effectTarget: 'user' | 'target',
   random: () => number = Math.random,
+  /** The Pokémon causing the effect (needed for infatuation). */
+  source?: Pokemon,
 ): AppliedVolatileEffect[] {
   const applied: AppliedVolatileEffect[] = [];
 
@@ -607,7 +732,7 @@ export function applyVolatileMoveEffects(
       applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'chance-failed' });
       continue;
     }
-    if (isVolatileEffectImmune(target, effect)) {
+    if (isVolatileEffectImmune(target, effect, source)) {
       applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'immune' });
       continue;
     }
@@ -632,6 +757,42 @@ export function applyVolatileMoveEffects(
         applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
         break;
       }
+      case 'mean-look': {
+        if (runtimeState.blockedBy) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.blockedBy = source!.uuid;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+      case 'taunt': {
+        if (runtimeState.tauntTurnsRemaining > 0) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.tauntTurnsRemaining = TAUNT_TURNS;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+      case 'nightmare': {
+        if (runtimeState.nightmare) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.nightmare = true;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+      case 'infatuation': {
+        if (runtimeState.infatuatedWith) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.infatuatedWith = source!.uuid;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
       case 'trap': {
         if (runtimeState.trappedTurnsRemaining > 0) {
           applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
@@ -648,6 +809,106 @@ export function applyVolatileMoveEffects(
   }
 
   return applied;
+}
+
+/**
+ * Thief / Knock Off / Fling: the held item stops working for the rest of this battle — it is NOT lost.
+ * Undoes the item's start-of-battle stat stages and any choice lock. Returns the item id, or null if none.
+ */
+export function neutralizeHeldItem(
+  pokemon: Pick<Pokemon, 'heldItemId'>,
+  runtimeState: BattlePokemonRuntimeState,
+): string | null {
+  if (!hasUsableHeldItem(pokemon, runtimeState)) return null;
+  const item = runtimeState.heldItem;
+  for (const [stat, stages] of Object.entries(item?.effect.config.stats ?? {})) {
+    const statId = stat as BattleStatId;
+    runtimeState.statModifiers[statId] = applyBattleStatDelta(runtimeState.statModifiers[statId], -(stages ?? 0));
+  }
+  runtimeState.heldItem = null;
+  runtimeState.softLockedInMovesId = null;
+  runtimeState.heldItemDisabled = true;
+  return pokemon.heldItemId;
+}
+
+/** Holds an item that hasn't been knocked out of use / thrown this battle. */
+export function hasUsableHeldItem(
+  pokemon: Pick<Pokemon, 'heldItemId'>,
+  runtimeState: BattlePokemonRuntimeState,
+): boolean {
+  return !!pokemon.heldItemId && !runtimeState.heldItemDisabled;
+}
+
+/** Psywave: random damage between 0.5× and 1.5× the user's level. */
+export function getPsywaveDamage(level: number, random: () => number = Math.random): number {
+  return Math.max(1, Math.floor(level * (0.5 + random())));
+}
+
+/** Tri Attack: 20% chance of burn, paralysis or freeze (picked at random). */
+export function pickTriAttackAilment(random: () => number = Math.random): MoveStatusEffect {
+  const options: MoveStatusEffect[] = [
+    { status: 'burn', chance: 20, target: 'target' },
+    { status: 'paralyze', chance: 20, target: 'target' },
+    { status: 'freeze', chance: 20, target: 'target', minTurns: 2, maxTurns: 5 },
+  ];
+  return options[Math.floor(random() * options.length)];
+}
+
+/** Sucker Punch works only if the target hasn't acted yet this turn and chose an attacking move. */
+export function doesSuckerPunchSucceed(targetMoveId: number | null, targetAlreadyActed: boolean): boolean {
+  return !targetAlreadyActed && targetMoveId !== null && isAttackingMove(targetMoveId);
+}
+
+/** Dragon Tail: a random benched trainer Pokémon that can still fight (party slots after the active one). */
+export function pickDragonTailTarget(
+  party: Pokemon[],
+  activeIndex: number,
+  random: () => number = Math.random,
+): number | null {
+  const candidates: number[] = [];
+  for (let i = activeIndex + 1; i < party.length; i++) if (party[i] && party[i].hp > 0) candidates.push(i);
+  return candidates.length ? candidates[Math.floor(random() * candidates.length)] : null;
+}
+
+export const BIDE_STORE_TURNS = 2;
+
+export type BideStep = { kind: 'store' } | { kind: 'release'; damage: number };
+
+/**
+ * Bide: the first use starts storing (locks the user into Bide), the next turn keeps storing,
+ * the third turn releases 2× the move damage taken meanwhile. Call once per Bide turn.
+ */
+export function advanceBide(runtimeState: BattlePokemonRuntimeState, moveId: number): BideStep {
+  if (runtimeState.bideTurnsRemaining <= 0) {
+    runtimeState.lockedInMoveId = moveId;
+    runtimeState.bideTurnsRemaining = BIDE_STORE_TURNS;
+    runtimeState.bideDamage = 0;
+    return { kind: 'store' };
+  }
+  runtimeState.bideTurnsRemaining--;
+  if (runtimeState.bideTurnsRemaining > 0) return { kind: 'store' };
+  const damage = runtimeState.bideDamage * 2;
+  runtimeState.bideDamage = 0;
+  runtimeState.lockedInMoveId = null;
+  return { kind: 'release', damage };
+}
+
+/** Thief hits harder when the target holds an item. */
+export const THIEF_ITEM_POWER_MULTIPLIER = 1.5;
+
+/** Pay Day: coins scattered per use, picked up if the player wins. */
+export function getPayDayCoins(level: number): number {
+  return level * 5;
+}
+
+/** False Swipe: never knocks out — leaves the target with at least 1 HP. */
+export function capFalseSwipeDamage(damage: number, targetHp: number): number {
+  return Math.min(damage, Math.max(0, targetHp - 1));
+}
+
+/** Hidden Power: no IVs in this game, so it takes the user's first type. */
+export function getHiddenPowerType(pokemon: Pick<Pokemon, 'types'>): PokemonType {
+  return pokemon.types[0] ?? 'normal';
 }
 
 export function determineTurnOrder(
@@ -765,6 +1026,8 @@ export function processBeforeMoveEffects(
   runtimeState: BattlePokemonRuntimeState,
   random: () => number = Math.random,
   moveId?: number,
+  /** The Pokémon currently facing this one — infatuation ends once its source is gone. */
+  opponent?: Pick<Pokemon, 'uuid'>,
 ): BeforeMoveEffectResult {
   const statusResult = processStartOfTurnStatus(pokemon, runtimeState, random, moveId);
   const events: BeforeMoveEffectResult['events'] = [];
@@ -800,6 +1063,18 @@ export function processBeforeMoveEffects(
       pokemon.hp = Math.max(0, pokemon.hp - selfDamage);
       events.push('hurt-itself-confusion');
       return { canAct: false, events, selfDamage };
+    }
+  }
+
+  if (runtimeState.infatuatedWith) {
+    if (opponent && opponent.uuid !== runtimeState.infatuatedWith) {
+      runtimeState.infatuatedWith = null;
+    } else {
+      events.push('infatuated');
+      if (random() < 0.5) {
+        events.push('immobilized-by-love');
+        return { canAct: false, events, selfDamage: 0 };
+      }
     }
   }
 
@@ -910,6 +1185,18 @@ export function applyGhostCurseEffect(target: Pokemon, runtimeState: BattlePokem
   const damage = Math.max(1, Math.floor(target.maxHp / 5));
   target.hp = Math.max(0, target.hp - damage);
   return { applied: true, damage, fainted: target.hp <= 0 };
+}
+
+/** Nightmare: 1/4 max HP each turn while asleep; ends when the target wakes up. */
+export function applyNightmareEffect(target: Pokemon, runtimeState: BattlePokemonRuntimeState) {
+  if (!runtimeState.nightmare) return { applied: false, damage: 0 };
+  if (runtimeState.majorStatus !== 'sleep' || target.hp <= 0) {
+    runtimeState.nightmare = false;
+    return { applied: false, damage: 0 };
+  }
+  const damage = Math.max(1, Math.floor(target.maxHp / 4));
+  target.hp = Math.max(0, target.hp - damage);
+  return { applied: true, damage };
 }
 
 export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): number {
