@@ -158,6 +158,8 @@ export interface NPCData {
    * player entered from one of these maps.
    */
   enteredFrom?: string[];
+  /** The opposite of `enteredFrom`: hidden when the player entered from one of these maps. */
+  notEnteredFrom?: string[];
   /** NPC disappears once player has at least `count` Pokémon at or above `minLevel`. */
   despawnWhenParty?: { count: number; minLevel: number };
   /** When true, NPC uses line-of-sight to block the player until despawn conditions are met. */
@@ -361,6 +363,10 @@ export function setNpcEntryOrigin(mapId: string | null): void {
   _entryOrigin = mapId;
 }
 
+export function getNpcEntryOrigin(): string | null {
+  return _entryOrigin;
+}
+
 /** Check if an NPC should be visible given the current story flags and player party. */
 export function isNPCVisible(
   npc: NPCData,
@@ -369,6 +375,7 @@ export function isNPCVisible(
 ): boolean {
   if (npc.hidden) return false;
   if (npc.enteredFrom && !(_entryOrigin && npc.enteredFrom.includes(_entryOrigin))) return false;
+  if (npc.notEnteredFrom && _entryOrigin && npc.notEnteredFrom.includes(_entryOrigin)) return false;
   if (npc.spawnAfter && !flags[npc.spawnAfter]) return false;
   if (npc.despawnAfter && flags[npc.despawnAfter]) return false;
 

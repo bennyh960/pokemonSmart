@@ -879,6 +879,36 @@
           }
         ]
       }
+    },
+    {
+      "id": "npc-percentile-mart-fan",
+      "x": 23,
+      "y": 7,
+      "facing": "down",
+      "type": "dialogue",
+      "spriteType": "char_083dc8",
+      "name": {
+        "en": "Shir",
+        "he": "שיר"
+      },
+      "dialogue": [
+        {
+          "en": "Our Poké Mart is the best in all of Numeria!",
+          "he": "החנות שלנו היא הכי טובה בכל נומריה!"
+        },
+        {
+          "en": "It sells HELD ITEMS — gifts your Pokémon carries into battle.",
+          "he": "יש בה אביזרים — מתנות שהפוקימון לוקח איתו לקרב."
+        },
+        {
+          "en": "My Pidgey holds an Exp Share. It watches my battles and grows stronger!",
+          "he": "הפידג'י שלי מחזיק משתף ניסיון. הוא צופה בקרבות שלי ונהיה חזק יותר!"
+        },
+        {
+          "en": "Go in and ask Penny — she knows everything about them.",
+          "he": "תיכנס ותשאל את פני — היא יודעת עליהם הכול."
+        }
+      ]
     }
   ],
   "music": "town",

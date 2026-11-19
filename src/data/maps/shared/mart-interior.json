@@ -87,6 +87,36 @@
       "name": {
         "en": "Whitney",
         "he": "וויטני"
+      },
+      "notEnteredFrom": ["percentile/percentile"]
+    },
+    {
+      "id": "npc-pct-mart-keeper",
+      "x": 9,
+      "y": 3,
+      "facing": "down",
+      "type": "shopkeeper",
+      "enteredFrom": ["percentile/percentile"],
+      "categoriesToExclude": [],
+      "dialogue": [
+        {
+          "en": "Welcome to the best shop in Numeria!",
+          "he": "ברוך הבא לחנות הכי טובה בנומריה!"
+        },
+        {
+          "en": "Balls, potions — and held items you won't find anywhere else!",
+          "he": "כדורים, שיקויים — ואביזרים שאין בשום חנות אחרת!"
+        },
+        {
+          "en": "Are you here to buy or to sell?",
+          "he": "באת לקנות או למכור?"
+        }
+      ],
+      "spriteType": "npc-male",
+      "interactRange": 2,
+      "name": {
+        "en": "Penny",
+        "he": "פני"
       }
     },
     {

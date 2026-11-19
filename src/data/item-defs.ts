@@ -651,8 +651,8 @@ export const ITEM_GAME_DATA: Record<number, ItemGameDef> = {
     usableInOverworld: false,
     name: { en: 'Exp Share', he: 'משתף ניסיון' },
     description: {
-      en: 'The holder watches battles from the bench and gains EXP. Only for Pokémon that can still evolve, and only up to 10 levels below the weakest Pokémon in the fight.',
-      he: 'הפוקימון שמחזיק בו צופה בקרבות מהספסל ומקבל ניסיון. רק לפוקימון שעוד יכול להתפתח, ועד 10 רמות מתחת לפוקימון החלש ביותר בקרב.',
+      en: 'The holder watches battles from the bench and gains EXP. Only for Pokémon that can still evolve, and only while it is well below the weakest Pokémon in the fight.',
+      he: 'הפוקימון שמחזיק בו צופה בקרבות מהספסל ומקבל ניסיון. רק לפוקימון שעוד יכול להתפתח, וכל עוד הוא הרבה מתחת לפוקימון החלש ביותר בקרב.',
     },
   },
   // leftovers

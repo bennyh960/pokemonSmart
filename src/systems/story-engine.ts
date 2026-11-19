@@ -27,6 +27,7 @@ import { allTrainersDefeatedFlag } from '../data/story/flags.js';
 import { grantItem } from './item-effects.js';
 import { MapId } from '../data/maps/map-ids.js';
 import type { InfectionLevel } from '../types/index.js';
+import { getNpcEntryOrigin } from './npc.js';
 
 /** Infection strength order — 'cleared' (purified) counts as no infection. */
 const INFECTION_RANK: Record<InfectionLevel, number> = { none: 0, cleared: 0, low: 1, medium: 2, high: 3, critical: 4 };
@@ -43,7 +44,7 @@ export function initStoryEngine(sm: StateMachine): void {
 // Auto-gate service map registry
 // ---------------------------------------------------------------------------
 
-type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym' | 'lab';
+export type AutoGateService = 'pokecenter' | 'pokemarket' | 'gym' | 'lab';
 /** Services with one gate per building (own pass + overrides); the others share one gate (one pass for all). */
 const PER_MAP_GATE_SERVICES: readonly AutoGateService[] = ['gym', 'lab'];
 const _autoGateMapRegistry = new Map<string, { service: AutoGateService; gateId: string }>();
@@ -58,7 +59,7 @@ export interface AutoGateMapOverride {
 /** Register a map ID → service type mapping so entering it triggers the auto-gate. */
 export function registerAutoGateMap(mapId: string, service: AutoGateService, overrides?: AutoGateMapOverride): void {
   const perMap = PER_MAP_GATE_SERVICES.includes(service);
-  const gateId = perMap ? `${AUTO_GATE_IDS[service]}-${mapId}` : AUTO_GATE_IDS[service];
+  const gateId = getAutoGateId(service, mapId);
 
   if (perMap) {
     const baseGate = GATES[AUTO_GATE_IDS[service]];
@@ -78,6 +79,11 @@ export function registerAutoGateMap(mapId: string, service: AutoGateService, ove
   }
 
   _autoGateMapRegistry.set(mapId, { service, gateId });
+}
+
+/** Id of the auto gate for a service building — services with one gate per building add the map id. */
+export function getAutoGateId(service: AutoGateService, mapId: string): string {
+  return PER_MAP_GATE_SERVICES.includes(service) ? `${AUTO_GATE_IDS[service]}-${mapId}` : AUTO_GATE_IDS[service];
 }
 
 /** The gate that checks players entering this map (service interiors), if any. */
@@ -430,6 +436,12 @@ function checkCondition(cond: StoryCondition, pd: ReturnType<typeof getPlayerDat
       return pd.money >= cond.amount;
     case 'gate-locked':
       return !isGateUnlocked(cond.gateId);
+    case 'gate-open':
+      return isGateUnlocked(cond.gateId);
+    case 'entered-from': {
+      const origin = getNpcEntryOrigin();
+      return !!origin && cond.mapIds.includes(origin);
+    }
     default:
       return true;
   }
