@@ -278,6 +278,7 @@ export const FLAGS = {
 
   // ── Act 4: Percentile ───────────────────────────────────────────────────────
   VISITED_PERCENTILE: 'visited-percentile',
+  PERCENTILE_MART_INTRO: 'percentile-mart-intro', // the Percentile shopkeeper explained held items + Exp Share
   PERCENTILE_OCEAN_OPEN: 'percentile-ocean-open', // removes the west-ocean blockers in Percentile (set when Moltres is beaten)
 
   // ── Act 4: Percentile — "The Burning Chance" ───────────────────────────────
@@ -460,6 +461,7 @@ export const FLAG_DESCRIPTIONS: Record<string, string> = {
   [FLAGS.ACT3_FRACTALIS_GYM_INVITE]: 'Engineer invited player to power station gym',
   [FLAGS.GATE_FRACTALIS_GYM_PASS]: 'Passed Electric Gym entry gate',
   [FLAGS.VISITED_PERCENTILE]: 'First arrival at Percentile',
+  [FLAGS.PERCENTILE_MART_INTRO]: 'Percentile shopkeeper explained held items and the Exp Share',
   [FLAGS.PERCENTILE_OCEAN_OPEN]: 'Open ocean west of Percentile unlocked (swimmer blockers leave)',
   [FLAGS.ACT4_PCT_ARC_STARTED]: 'Burning Chance arc started — Percentile infection critical, Route 12 low',
   [FLAGS.ACT4_PCT_CLUE_COIN]: 'Clue: library coin lands heads every time (chance is broken)',

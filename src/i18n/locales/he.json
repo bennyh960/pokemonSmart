@@ -81,6 +81,8 @@
   "battle.fainted": "{name} התעלף!",
   "battle.youWon": "ניצחת!",
   "battle.gainedXP": "{name} קיבל {xp} XP!",
+  "battle.gainedParticipantXP": "{name} קיבל {xp} XP על העזרה בקרב!",
+  "battle.gainedWatcherXP": "{name} צפה בקרב ולמד! +{xp} XP",
   "battle.levelUp": "{name} עלה לרמה {level}!",
   "evolution.title": "התפתחות",
   "evolution.congrats": "מזל טוב! {from} התפתח ל-{to}!",

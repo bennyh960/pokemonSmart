@@ -26,7 +26,11 @@ export type StoryCondition =
   | { type: 'infection-level'; mapId: MapId; value: InfectionLevel }
   | { type: 'money-min'; amount: number }
   /** True when the named gate is NOT currently unlocked (i.e. should re-check). */
-  | { type: 'gate-locked'; gateId: string };
+  | { type: 'gate-locked'; gateId: string }
+  /** True when the player holds a pass for the named gate (entering won't ask questions). */
+  | { type: 'gate-open'; gateId: string }
+  /** True when the player came into the current map from one of these maps (for shared interiors). */
+  | { type: 'entered-from'; mapIds: string[] };
 
 export type StoryAction =
   | { type: 'set-flag'; flag: string; value?: boolean }
