@@ -124,7 +124,7 @@ import { t, isRTL, getLocale } from '../../i18n/i18n.js';
 import { applyHeldItemEffectInBattle, getItem, getItemFlingPower } from '../../data/items.js';
 import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText, type ReencounterConfig } from '../../systems/npc.js';
-import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenes/bag.js';
+import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenesReact/bag/bag-mode.js';
 import { selectedPartyIndex, clearSelectedPartyIndex } from '.././party';
 import { setEvolutionData } from '.././evolution.js';
 import {
