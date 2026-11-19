@@ -5,7 +5,7 @@
 
 import { mergeMapWithTemplate } from '../engine/tilemap.js';
 import type { TileMapData } from '../engine/tilemap.js';
-import { loadTileset } from '../engine/tileset.js';
+import { loadTileset, preloadAllTilesets } from '../engine/tileset.js';
 import { normalizeDialogue, type NPCData } from './npc.js';
 
 // ─── Auto-discover all maps (recursive, excludes templates/ and backup/) ─────
@@ -141,6 +141,15 @@ export async function prefetchNeighborMaps(mapData: TileMapData) {
       .catch(() => {})
       .finally(() => prefetchInFlight.delete(id));
   }
+}
+
+/**
+ * Warm up map assets in the background before the overworld opens: the given map first (its JSON +
+ * tileset sheet — e.g. where the last save stands), then every other tileset sheet. Never rejects.
+ */
+export async function preloadMapAssets(firstMapId: string | null): Promise<void> {
+  if (firstMapId && mapPathById[firstMapId]) await loadMap(firstMapId).catch(() => undefined);
+  await preloadAllTilesets();
 }
 
 /** Get all available map IDs (excludes templates and backups). */

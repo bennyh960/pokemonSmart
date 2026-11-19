@@ -78,6 +78,7 @@ import type { MapId } from '../data/maps/map-ids.js';
 import { getTileset } from '../engine/tileset.js';
 import { openShopScene, FULL_SHOP } from '../scenesReact/shop/index.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
+import { renderMapLoader, resetMapLoader } from '../ui/map-loader.js';
 import {
   createNPCManager,
   isNPCVisible,
@@ -4123,8 +4124,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     render(ctx: CanvasRenderingContext2D): void {
       clearScreen(ctx, '#000000');
 
-      // Show black screen while loading
-      if (mapLoading || !tileMap) return;
+      // Black screen while loading (+ a loader if it takes a while)
+      if (mapLoading || !tileMap) {
+        renderMapLoader(ctx);
+        return;
+      }
+      resetMapLoader();
 
       if (screenShake) applyShake(ctx, screenShake);
       tileMap.render(ctx, camera.x, camera.y);

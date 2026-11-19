@@ -476,6 +476,12 @@ export function loadGame(slot: number): PlayerData | null {
   }
 }
 
+/** Map of the most recently saved slot (null when there are no saves). */
+export function getLatestSaveMapId(): string | null {
+  const latest = [...getSlotIndex()].sort((a, b) => b.savedAt.localeCompare(a.savedAt))[0];
+  return latest ? (loadGame(latest.slot)?.position.mapId ?? null) : null;
+}
+
 export function hasSave(slot: number): boolean {
   return sessionStorage.getItem(`${SAVE_KEY_PREFIX}${slot}`) !== null;
 }
