@@ -2375,20 +2375,25 @@ export function createBattleScene(
     return calculateXpGain(enemy, { trainerBattle: isTrainerBattle });
   }
 
-  /** Pay the active Pokémon for the defeated enemy and queue the shared XP for the bench. */
-  function awardDefeatXp(): void {
+  /** Queue the bench's share of the XP the active Pokémon just earned (defeat or capture). */
+  function queueSharedXp(winnerXp: number): void {
     xpSubjectIndex = null;
-    xpGained = getDefeatXpReward();
-    player.xp += xpGained;
     sharedXpQueue = hasActiveGame()
       ? computeSharedXpAwards({
           party: getPlayerData().party,
           activePartyIndex,
-          winnerXp: xpGained,
+          winnerXp,
           turnsVsEnemy,
           enemyLevel: enemy.level,
         })
       : [];
+  }
+
+  /** Pay the active Pokémon for the defeated enemy and queue the shared XP for the bench. */
+  function awardDefeatXp(): void {
+    xpGained = getDefeatXpReward();
+    player.xp += xpGained;
+    queueSharedXp(xpGained);
     textBox = createTextBox([t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })], isRTL());
   }
 
@@ -2597,6 +2602,7 @@ export function createBattleScene(
       pd.pokedex[enemy.id] = 'caught';
       xpGained = getCaptureXpReward();
       player.xp += xpGained;
+      queueSharedXp(xpGained); // before the catch joins the party
 
       const catchMessages: string[] = [t('battle.caught', { name: getPokemonDisplayName(enemy.id) })];
       if (pd.party.length < 6) {
