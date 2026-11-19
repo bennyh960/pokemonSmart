@@ -177,6 +177,8 @@ import {
   capFalseSwipeDamage,
   neutralizeHeldItem,
   advanceBide,
+  BEAT_UP_HIT_POWER,
+  getBeatUpHits,
   advanceTimedVolatiles,
   applyEncore,
   getEndeavorDamage,
@@ -4049,6 +4051,8 @@ export function createBattleScene(
     const isFling = moveBattleData?.behaviorTags?.includes('fling') ?? false;
     const isAssurance = moveBattleData?.behaviorTags?.includes('assurance') ?? false;
     const isEndeavor = moveBattleData?.behaviorTags?.includes('endeavor') ?? false;
+    const isFeint = moveBattleData?.behaviorTags?.includes('feint') ?? false;
+    const isBeatUp = moveBattleData?.behaviorTags?.includes('beat-up') ?? false;
     // The target already moved this turn (Sucker Punch fails, Payback doubles)
     const targetAlreadyActed = actor === 'player' ? enemySelectedMoveIndex < 0 : !enemyGoesFirst;
     // Hidden Power: its type is the user's (see getHiddenPowerType)
@@ -4109,7 +4113,9 @@ export function createBattleScene(
     const isHailMove = moveBattleData?.behaviorTags?.includes('hail') ?? false;
     const isWeatherMove = isSandstormMove || isRainDanceMove || isSunnyDayMove || isHailMove;
     const healPercent = moveBattleData?.healingPercent ?? null;
+    if (isBeatUp) m = { ...m, power: BEAT_UP_HIT_POWER };
     const hitCount = (() => {
+      if (isBeatUp) return getBeatUpHits(attackerParty.length ? attackerParty : [attacker]);
       const min = moveBattleData?.minHits ?? null;
       const max = moveBattleData?.maxHits ?? null;
       if (min !== null && max !== null) return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -4665,6 +4671,9 @@ export function createBattleScene(
     }
 
     // Defender is protected — block the attack entirely
+    // Feint: goes through Protect / Detect and lifts it
+    const feintBrokeProtect = isFeint && defenderBattleState.turnFlags.protected;
+    if (feintBrokeProtect) defenderBattleState.turnFlags.protected = false;
     if (doesMoveTargetOpponent(moveBattleData) && defenderBattleState.turnFlags.protected) {
       const msgs = [
         ...turnEffectLines,
@@ -5056,6 +5065,7 @@ export function createBattleScene(
         if (criticalHit) {
           msgs.push(t('battle.criticalHit'));
         }
+        if (feintBrokeProtect) msgs.push(t('battle.feintBrokeProtect', { name: defenderName }));
         const et = effText(m.type, defender.types);
         if (et) msgs.push(et);
         if (isDragonTail && actor === 'player' && isTrainerBattle && !targetTypeImmune && plannedDamage > 0) {

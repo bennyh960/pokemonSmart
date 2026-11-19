@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { MOVE_BATTLE_OVERRIDES } from '../src/data/move-battle-overrides';
 import { getAttackAnimationProfile } from '../src/systems/move-animation';
 import type { MoveBattleMetadata } from '../src/types/battle-metadata';
+import { ITEM_GAME_DATA } from '../src/data/item-defs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'docs/moves-audit.md');
@@ -83,11 +84,43 @@ const add = (map: Map<number, Set<string>>, moveId: number, pid: string) =>
 for (const [pid, list] of Object.entries(learnsets)) for (const l of list) add(levelLearners, l.moveId, pid);
 for (const [pid, list] of Object.entries(tmLearnsets)) for (const l of list) add(tmLearners, l.moveId, pid);
 
+// ── Reachability: can a player actually meet this move? ───────────────────────────────────────
+// moves.json holds every move PokeAPI lists for our Pokémon (incl. modern TM lists). A move is only
+// reachable through level-up, a TM item that exists in the game, or a trainer's hand-picked moves.
+const tmItemMoves = new Set(
+  Object.values(ITEM_GAME_DATA).flatMap((d) => (d.effect.type === 'tm' ? [d.effect.moveId] : [])),
+);
+const trainerMoves = new Set<number>();
+function collectMoves(node: unknown): void {
+  if (Array.isArray(node)) return node.forEach(collectMoves);
+  if (!node || typeof node !== 'object') return;
+  for (const [k, v] of Object.entries(node)) {
+    if (k === 'moves' && Array.isArray(v)) v.forEach((id) => typeof id === 'number' && trainerMoves.add(id));
+    else collectMoves(v);
+  }
+}
+function listJson(dir: string): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) return e.name === 'backup' ? [] : listJson(p);
+    return e.name.endsWith('.json') ? [p] : [];
+  });
+}
+for (const f of listJson(path.join(ROOT, 'src/data/maps'))) collectMoves(JSON.parse(fs.readFileSync(f, 'utf8')));
+function reachability(moveId: number): { reachable: boolean; via: string } {
+  const via = [
+    levelLearners.get(moveId)?.size ? `lvl×${levelLearners.get(moveId)!.size}` : '',
+    tmItemMoves.has(moveId) ? 'TM' : '',
+    trainerMoves.has(moveId) ? 'trainer' : '',
+  ].filter(Boolean);
+  return { reachable: via.length > 0, via: via.length ? via.join(' · ') : 'TM list only' };
+}
+
 // ── Effect detection (no PokeAPI meta in moves.json → description heuristics) ─────────────────
 const EFFECT_HINTS =
   /critical|recoil|hurts the user|damaging the user|faints|2-5|twice|three times|double|turns?\b|steals|absorb|drain|user.s level|HP|switch|1st turn|KO|confus|immobile|first|stronger|weaker|\bpower\b|lower|raise|may |chance|flinch|burn|poison|paraly|freeze|sleep|trap|squeeze|wrap|money|coins|recharge|random|never misses|always|varies|depends|weight|priority|effective|item|stat|loyalty|in a row|2 to 5|two to five|drags out|Protect|Detect|Berry|damages the user|Defense|faster|retaliat|fixated|terrain|same type|party|physical damage|destroy|misses|used only|consecutive/i;
 
-type Status = 'wired' | 'partial' | 'missing' | 'implicit' | 'none';
+type Status = 'wired' | 'partial' | 'missing' | 'unreachable' | 'implicit' | 'none';
 
 function summarizeOverride(o: Partial<MoveBattleMetadata>): string {
   const parts: string[] = [];
@@ -168,24 +201,28 @@ if (fs.existsSync(OUT)) {
 // ── Build rows ─────────────────────────────────────────────────────────────────────────────────
 const STATUS_ICON: Record<Status, string> = {
   missing: '❌ missing',
+  unreachable: '💤 missing, not reachable',
   partial: '⚠️ partial',
   wired: '✅ wired',
   implicit: '✅ data',
   none: '➖ none',
 };
-const ORDER: Status[] = ['missing', 'partial', 'wired', 'implicit', 'none'];
+const ORDER: Status[] = ['missing', 'partial', 'unreachable', 'wired', 'implicit', 'none'];
 const esc = (s: string) => s.replace(/\|/g, '\\|').replace(/­\s*/g, '').replace(/\s+/g, ' ').trim();
 
 const rows = moves
   .filter((m) => m.id > 0)
   .map((m) => {
     const c = classify(m);
+    const reach = reachability(m.id);
+    if (c.status === 'missing' && !reach.reachable) c.status = 'unreachable';
     const lvl = levelLearners.get(m.id)?.size ?? 0;
     const tm = tmLearners.get(m.id)?.size ?? 0;
     return {
       m,
       ...c,
       anim: animation(m),
+      reach,
       lvl,
       tm,
       learners: new Set([...(levelLearners.get(m.id) ?? []), ...(tmLearners.get(m.id) ?? [])]).size,
@@ -198,10 +235,10 @@ const withEffect = rows.length - count('none');
 const dedicated = rows.filter((r) => r.anim.dedicated).length;
 
 const header =
-  '| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |\n' +
-  '|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|';
+  '| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |\n' +
+  '|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|';
 const row = (r: (typeof rows)[number]) =>
-  `| ${r.m.id} | ${esc(r.m.name.en)} (${esc(r.m.name.he)}) | ${r.m.type} | ${r.m.damageClass} | ${r.m.power ?? '—'} | ${r.m.accuracy ?? '—'} | ${r.m.effectChance ?? '—'} | ${STATUS_ICON[r.status]} | ${esc(r.logic) || '—'} | ${esc(r.why) || '—'} | ${r.anim.dedicated ? '🎬' : '▫️'} ${r.anim.family} | ${r.learners} (${r.lvl}/${r.tm}) | ${esc(r.m.description.en)} | ${notes.get(r.m.id) ?? ''} |`;
+  `| ${r.m.id} | ${esc(r.m.name.en)} (${esc(r.m.name.he)}) | ${r.m.type} | ${r.m.damageClass} | ${r.m.power ?? '—'} | ${r.m.accuracy ?? '—'} | ${r.m.effectChance ?? '—'} | ${STATUS_ICON[r.status]} | ${esc(r.logic) || '—'} | ${esc(r.why) || '—'} | ${r.anim.dedicated ? '🎬' : '▫️'} ${r.anim.family} | ${r.reach.reachable ? '✔' : '✖'} ${r.reach.via} | ${r.learners} (${r.lvl}/${r.tm}) | ${esc(r.m.description.en)} | ${notes.get(r.m.id) ?? ''} |`;
 
 const sections = ORDER.map((s) => {
   const list = rows.filter((r) => r.status === s);
@@ -222,7 +259,8 @@ const md = `# Moves audit
 | ✅ wired (override + battle code reads it) | ${count('wired')} |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | ${count('implicit')} |
 | ⚠️ partial (override uses a tag the battle code never reads) | ${count('partial')} |
-| ❌ missing (effect described, no logic at all) | ${count('missing')} |
+| ❌ missing (effect described, no logic at all — a player can meet it) | ${count('missing')} |
+| 💤 missing, not reachable (only in modern TM lists — no level-up, TM item or trainer uses it) | ${count('unreachable')} |
 | ➖ plain damage | ${count('none')} |
 | 🎬 dedicated animation / ▫️ generic fallback | ${dedicated} / ${rows.length - dedicated} |
 
@@ -233,11 +271,12 @@ Unwired tags in \`${TYPES_FILE}\`: ${unwiredTags.size ? [...unwiredTags].map((t)
   "Has an effect" is a heuristic (status class / effectChance / description keywords) — a ❌ on a damaging move may be a false positive; mark it in Notes.
 - ✅ wired means the metadata is read by the engine — not that it was play-tested. Manual QA lives in the admin page (Moves tab → "effect works" checkbox).
 - **Animation** — 🎬 dedicated profile in \`move-animation.ts\` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
+- **Reachable** — ✔ learned by level-up (lvl×N Pokémon), a TM item that exists in the game, or a trainer's hand-picked moves in the maps. ✖ = only in PokeAPI's modern TM lists: no player meets it (except Metronome, which can call any move). 💤 rows are the lowest priority.
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
 ${sections.join('\n')}`;
 
 fs.writeFileSync(OUT, md);
 console.log(
-  `Wrote ${path.relative(ROOT, OUT)} — ${rows.length} moves: missing ${count('missing')}, partial ${count('partial')}, wired ${count('wired')}, implicit ${count('implicit')}, none ${count('none')}`,
+  `Wrote ${path.relative(ROOT, OUT)} — ${rows.length} moves: missing ${count('missing')}, unreachable ${count('unreachable')}, partial ${count('partial')}, wired ${count('wired')}, implicit ${count('implicit')}, none ${count('none')}`,
 );

@@ -9,10 +9,11 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 398 |
+| ✅ wired (override + battle code reads it) | 400 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 0 |
-| ❌ missing (effect described, no logic at all) | 168 |
+| ❌ missing (effect described, no logic at all — a player can meet it) | 34 |
+| 💤 missing, not reachable (only in modern TM lists — no level-up, TM item or trainer uses it) | 132 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -23,648 +24,654 @@ Unwired tags in `src/types/battle-metadata.ts`: none
   "Has an effect" is a heuristic (status class / effectChance / description keywords) — a ❌ on a damaging move may be a false positive; mark it in Notes.
 - ✅ wired means the metadata is read by the engine — not that it was play-tested. Manual QA lives in the admin page (Moves tab → "effect works" checkbox).
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
+- **Reachable** — ✔ learned by level-up (lvl×N Pokémon), a TM item that exists in the game, or a trainer's hand-picked moves in the maps. ✖ = only in PokeAPI's modern TM lists: no player meets it (except Metronome, which can call any move). 💤 rows are the lowest priority.
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (168)
+## ❌ missing (34)
 
-| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
-|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
-| 851 | Tera Blast (פיצוץ טרה) | normal | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 25 (0/25) | If the user has Terastallized, it unleashes energy of its Tera Type. This move inflicts damage using the Attack or Sp. Atk stat—whichever is higher for the user. |  |
-| 364 | Feint (העמדת פנים) | normal | physical | 30 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 5 (5/0) | An attack that hits a foe using Protect or Detect. It also lifts the effects of those moves. |  |
-| 675 | Throat Chop (מכת גרון) | dark | physical | 80 | 100 | 100 | ❌ missing | — | effectChance 100% | ▫️ lunge | 5 (0/5) | The user attacks the target's throat, and the resultant suffering prevents the target from using moves that emit sound for two turns. |  |
-| 251 | Beat Up (מכות רבות) | dark | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (2/3) | Party POKéMON join in the attack. |  |
-| 271 | Trick (תעלול) | psychic | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | Tricks the foe into trading held items. |  |
-| 366 | Tailwind (רוח גב) | flying | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | The user whips up a turbulent whirlwind that ups the Speed of all party Pokémon for three turns. |  |
-| 473 | Psyshock (הלם פסיכו) | psychic | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 4 (0/4) | The user materializes an odd psychic wave to attack the target. This attack does physical damage. |  |
-| 477 | Telekinesis (טלקינזיס) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | The user makes the target float with its psychic power. The target is easier to hit for three turns. |  |
-| 502 | Ally Switch (החלפת בן ברית) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | The user teleports using a strange power and switches its place with one of its allies. |  |
-| 514 | Retaliate (תגמול) | normal | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (0/4) | The user gets revenge for a fainted ally. If an ally fainted in the previous turn, this attack's damage increases. |  |
-| 808 | Lash Out (התפרצות) | dark | physical | 75 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (0/4) | The user lashes out to vent its frustration toward the target. If the user's stats were lowered during this turn, the power of this move is doubled. |  |
-| 286 | Imprison (כליאה) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 3 (0/3) | Prevents foes from using moves known by the user. |  |
-| 289 | Snatch (חטיפה) | dark | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 3 (1/3) | Steals the effects of the move the foe uses next. |  |
-| 311 | Weather Ball (כדור מזג אוויר) | normal | special | 50 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 3 (0/3) | The move's type and power change with the weather. |  |
-| 369 | U Turn (סיבוב-חזרה) | bug | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 3 (0/3) | After making its attack, the user rushes back to switch places with a party Pokémon in waiting. |  |
-| 419 | Avalanche (מפולת שלג) | ice | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 3 (0/3) | An attack move that inflicts double the damage if the user has been hurt by the foe in the same turn. |  |
-| 450 | Bug Bite (נשיכת חרק) | bug | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | 🎬 bite:bite | 3 (0/3) | The user bites the foe. If the foe is holding a Berry, the user eats it and gains its effect. |  |
-| 497 | Echoed Voice (קול מהדהד) | normal | special | 40 | 100 | — | ❌ missing | — | description mentions an effect | 🎬 sound-based:blast | 3 (0/3) | The user attacks the target with an echoing voice. If this move is used every turn, it does greater damage. |  |
-| 796 | Steel Beam (קרן פלדה) | steel | special | 140 | 95 | — | ❌ missing | — | description mentions an effect | ▫️ beam | 3 (0/3) | The user fires a beam of steel that it collected from its entire body. This also damages the user. |  |
-| 917 | Psychic Noise (רעש פסיכי) | psychic | special | 75 | 100 | — | ❌ missing | — | description mentions an effect | 🎬 psychic-wave | 3 (0/3) | The user attacks the target with unpleasant sound waves. For two turns, the target is prevented from recovering HP through moves, Abilities, or held items. |  |
-| 144 | Transform (שינוי צורה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | The user assumes the foe's guise. |  |
-| 160 | Conversion (המרה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | Change user's type to a move's type. |  |
-| 169 | Spider Web (רשת עכביש) | bug | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | Prevents fleeing or switching. |  |
-| 176 | Conversion 2 (המרה 2) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | The user's type is made resistant. |  |
-| 215 | Heal Bell (פעמון ריפוי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 sound-based:blast | 2 (2/0) | Eliminates all status problems. |  |
-| 220 | Pain Split (חלוקת כאב) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (1/1) | Adds user & foe's HPs. Shares total. |  |
-| 291 | Dive (צלילה) | water | physical | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 2 (0/2) | Dives underwater the first turn and strikes next turn. |  |
-| 356 | Gravity (כבידה) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (0/2) | Gravity is intensified for five turns, making moves involving flying unusable and negating Levitation. |  |
-| 357 | Miracle Eye (עין נס) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | Enables a Dark-type target to be hit by Psychic-type attacks. This also enables an evasive target to be hit. |  |
-| 360 | Gyro Ball (כדור גירו) | steel | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 2 (0/2) | The user tackles the foe with a high-speed spin. The slower the user, the greater the damage. |  |
-| 362 | Brine (מי מלח) | water | special | 65 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 2 (0/2) | If the foe's HP is down to about half, this attack will hit with double the power. |  |
-| 373 | Embargo (אמברגו) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (1/2) | It prevents the foe from using its held item. Its Trainer is also prevented from using items on it. |  |
-| 382 | Me First (אני קודם) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | The user tries to cut ahead of the foe to steal and use the foe's intended move with greater power. TODO |  |
-| 393 | Magnet Rise (עלייה מגנטית) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 2 (2/0) | The user levitates using electrically generated magnetism for five turns. |  |
-| 500 | Stored Power (כוח מאוחסן) | psychic | special | 20 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 2 (0/2) | The user attacks the target with stored power. The more the user's stats are raised, the greater the damage. |  |
-| 506 | Hex (כישוף) | ghost | special | 65 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 2 (1/2) | This relentless attack does massive damage to a target affected by status problems. |  |
-| 706 | Psychic Fangs (ניבי פסיכו) | psychic | physical | 85 | 100 | — | ❌ missing | — | description mentions an effect | 🎬 psychic-wave | 2 (0/2) | The user bites the target with its psychic capabilities. This can also destroy Light Screen and Reflect. |  |
-| 776 | Body Press (לחיצת גוף) | fighting | physical | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 2 (0/2) | The user attacks by slamming its body into the target. The higher the user's Defense, the more damage it can inflict on the target. |  |
-| 797 | Expanding Force (כוח מתפשט) | psychic | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 2 (0/2) | The user attacks the target with its psychic power. This move's power goes up and damages all opposing Pokémon on Psychic Terrain. |  |
-| 813 | Triple Axel (גרזן משולש) | ice | physical | 20 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 2 (0/2) | A consecutive three-kick attack that becomes more powerful with each successful hit. |  |
-| 912 | Hard Press (לחיצה קשה) | steel | physical | 0 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 2 (0/2) | The target is crushed with an arm, a claw, or the like to inflict damage. The more HP the target has left, the greater the move's power. |  |
-| 916 | Supercell Slam (טריקת סופר-תא) | electric | physical | 100 | 95 | — | ❌ missing | — | description mentions an effect | 🎬 lightning | 2 (0/2) | The user electrifies its body and drops onto the target to inflict damage. If this move misses, the user takes damage instead. |  |
-| 26 | Jump Kick (בעיטת קפיצה) | fighting | physical | 100 | 95 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/0) | May miss, damaging the user. |  |
-| 136 | High Jump Kick (בעיטת קפיצה גבוהה) | fighting | physical | 130 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/0) | May miss and hurt the user. |  |
-| 166 | Sketch (סקיצה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | Copies the foe's move permanently. |  |
-| 217 | Present (מתנה) | normal | physical | — | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/0) | A bomb that may restore HP. |  |
-| 262 | Memento (זיכרון) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | The user faints and lowers the foe's abilities. |  |
-| 266 | Follow Me (לכו אחרי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | Draws attention to make foes attack only the user. |  |
-| 268 | Charge (טעינה) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/1) | Charges power to boost the electric move used next. |  |
-| 273 | Wish (משאלה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | A wish that restores HP. It takes time to work. |  |
-| 279 | Revenge (נקמה) | fighting | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/1) | An attack that gains power if injured by the foe. |  |
-| 281 | Yawn (פיהוק) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | Lulls the foe into yawning, then sleeping next turn. |  |
-| 285 | Skill Swap (החלפת כישורים) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (0/1) | The user swaps special abilities with the target. |  |
-| 287 | Refresh (רענון) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | Heals poisoning, paralysis, or a burn. |  |
-| 340 | Bounce (קפיצה) | flying | physical | 85 | 85 | 30 | ❌ missing | — | effectChance 30% | ▫️ lunge | 1 (0/1) | Bounces up, then down the next turn. May paralyze. |  |
-| 346 | Water Sport (ספורט מים) | water | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | The user becomes soaked to raise resistance to fire. |  |
-| 365 | Pluck (קטיפה) | flying | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user pecks the foe. If the foe is holding a Berry, the user plucks it and gains its effect. |  |
-| 384 | Power Swap (החלפת כוח) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (0/1) | The user employs its psychic power to switch changes to its Attack and Sp. Atk with the foe. |  |
-| 386 | Punishment (עונש) | dark | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/0) | This attack's power increases the more the foe has powered up with stat changes. |  |
-| 387 | Last Resort (מוצא אחרון) | normal | physical | 140 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/0) | This move can be used only after the user has used all the other moves it knows in the battle. |  |
-| 392 | Aqua Ring (טבעת מים) | water | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | The user envelops itself in a veil made of water. It regains some HP on every turn. |  |
-| 433 | Trick Room (חדר תעלול) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (0/1) | The user creates a bizarre area in which slower Pokémon get to move first for five turns. |  |
-| 472 | Wonder Room (חדר פלא) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (0/1) | The user creates a bizarre area in which Pokémon's Defense and Sp. Def stats are swapped for five turns. |  |
-| 479 | Smack Down (הפלה) | rock | physical | 50 | 100 | 100 | ❌ missing | — | effectChance 100% | ▫️ lunge | 1 (1/1) | The user throws a stone or projectile to attack an opponent. A flying Pokémon will fall to the ground when hit. |  |
-| 486 | Electro Ball (כדור חשמל) | electric | special | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ beam | 1 (1/1) | The user hurls an electric orb at the target. The faster the user is than the target, the greater the damage. |  |
-| 495 | After You (אחריך) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | The user helps the target and makes it use its move right after the user. |  |
-| 498 | Chip Away (ניפוץ) | normal | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (1/0) | Looking for an opening, the user strikes continually. The target's stat changes don't affect this attack's damage. |  |
-| 499 | Clear Smog (ערפיח נקי) | poison | special | 50 | — | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 1 (1/0) | The user attacks by throwing a clump of special mud. All status changes are returned to normal. |  |
-| 511 | Quash (השתקה) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (0/1) | The user suppresses the target and makes its move go last. |  |
-| 512 | Acrobatics (אקרובטיקה) | flying | physical | 55 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user nimbly strikes the target. If the user is not holding an item, this attack inflicts massive damage. |  |
-| 521 | Volt Switch (מתג וולט) | electric | special | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ beam | 1 (0/1) | After making its attack, the user rushes back to switch places with a party Pokémon in waiting. |  |
-| 566 | Phantom Force (כוח רפאים) | ghost | physical | 90 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user vanishes somewhere, then strikes the target on the next turn. This move hits even if the target protects itself. |  |
-| 569 | Ion Deluge (סערת יונים) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/0) | The user disperses electrically charged particles, which changes Normal-type moves to Electric-type moves. |  |
-| 604 | Electric Terrain (שטח חשמלי) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (1/1) | The user electrifies the ground under everyone's feet for five turns. Pokémon on the ground no longer fall asleep. |  |
-| 663 | Darkest Lariat (לריאט אפל) | dark | physical | 85 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user swings both arms and hits the target. The target's stat changes don't affect this attack's damage. |  |
-| 809 | Poltergeist (פולטרגייסט) | ghost | physical | 110 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user attacks the target by controlling the target's item. The move fails if the target doesn't have an item. |  |
-| 812 | Flip Turn (סיבוב חזרה) | water | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | After making its attack, the user rushes back to switch places with a party Pokémon in waiting. |  |
-| 861 | Ice Spinner (סחרור קרח) | ice | physical | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user covers its feet in thin ice and twirls around, slamming into the target. This move's spinning motion also destroys the terrain. |  |
-| 883 | Snowscape (נוף שלג) | ice | status | 0 | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 1 (0/1) | The user summons a snowstorm lasting five turns. This boosts the Defense stats of Ice types. |  |
-| 918 | Upper Hand (יד עליונה) | fighting | physical | 65 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 1 (0/1) | The user reacts to the target's movement and strikes with the heel of its palm, making the target flinch. This move fails if the target is not readying a priority move. |  |
-| 252 | Fake Out (הפתעה) | normal | physical | 40 | 100 | 100 | ❌ missing | — | effectChance 100% | ▫️ lunge | 0 (0/0) | A 1st-turn, 1st-strike move that causes flinching. |  |
-| 254 | Stockpile (אגירה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 self-boost | 0 (0/0) | Charges up power for up to 3 turns. |  |
-| 255 | Spit Up (פליטה) | normal | special | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | Releases stockpiled power (the more the better). |  |
-| 256 | Swallow (בליעה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Absorbs stockpiled power and restores HP. |  |
-| 265 | Smelling Salts (מלחי הרחה) | normal | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | Powerful against paralyzed foes, but also heals them. |  |
-| 267 | Nature Power (כוח טבע) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The type of attack varies depending on the location. |  |
-| 272 | Role Play (משחק תפקידים) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Mimics the target and copies its special ability. |  |
-| 275 | Ingrain (השרשה) | grass | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Lays roots that restore HP. The user can't switch out. |  |
-| 278 | Recycle (מיחזור) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Recycles a used item for one more use. |  |
-| 284 | Eruption (התפרצות) | fire | special | 150 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The higher the user's HP, the more damage caused. |  |
-| 288 | Grudge (טינה) | ghost | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | If the user faints, deletes the PP of the final move. |  |
-| 293 | Camouflage (הסוואה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Alters the POKéMON's type depending on the location. |  |
-| 300 | Mud Sport (ספורט בוץ) | ground | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Covers the user in mud to raise electrical resistance. |  |
-| 312 | Aromatherapy (ארומתרפיה) | grass | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Heals all status problems with a soothing scent. |  |
-| 316 | Odor Sleuth (עוקב ריח) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Negates the foe's efforts to heighten evasiveness. |  |
-| 323 | Water Spout (פרץ מים) | water | special | 150 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | Inflicts more damage if the user's HP is high. |  |
-| 335 | Block (חסימה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Blocks the foe's way to prevent escape. |  |
-| 343 | Covet (חמדנות) | normal | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | Cutely begs to obtain an item held by the foe. |  |
-| 358 | Wake Up Slap (סטירת השכמה) | fighting | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | This attack inflicts high damage on a sleeping foe. It also wakes the foe up, however. |  |
-| 361 | Healing Wish (משאלת ריפוי) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user faints. In return, the Pokémon taking its place will have its HP restored and status cured. |  |
-| 367 | Acupressure (דיקור) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user applies pressure to stress points, sharply boosting one of its stats. |  |
-| 368 | Metal Burst (פרץ מתכת) | steel | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user retaliates against the foe that last inflicted damage on it with much greater power. |  |
-| 375 | Psycho Shift (שינוי פסיכו) | psychic | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Using its psychic power of suggestion, the user transfers its status problems to the target. |  |
-| 376 | Trump Card (קלף מנצח) | normal | special | — | — | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The fewer PP this move has, the more power it has for attack. |  |
-| 377 | Heal Block (חסימת ריפוי) | psychic | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user prevents the foe from using any HP-recovery moves for five turns. |  |
-| 378 | Wring Out (סחיטה) | normal | special | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user powerfully wrings the foe. The more HP the foe has, the greater this attack's power. |  |
-| 379 | Power Trick (תעלול כוח) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user employs its psychic power to switch its Attack stat with its Defense stat. |  |
-| 380 | Gastro Acid (חומצת קיבה) | poison | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user hurls up its stomach acids on the foe. The fluid eliminates the effect of the foe's ability. |  |
-| 381 | Lucky Chant (שיר מזל) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user chants an incantation toward the sky, preventing the foe from landing critical hits. |  |
-| 385 | Guard Swap (החלפת הגנה) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user employs its psychic power to switch changes to its Defense and Sp. Def with the foe. |  |
-| 388 | Worry Seed (זרע דאגה) | grass | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | A seed that causes worry is planted on the foe. It prevents sleep by making its ability Insomnia. |  |
-| 415 | Switcheroo (החלפה) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user trades held items with the foe faster than the eye can follow. |  |
-| 469 | Wide Guard (הגנה רחבה) | rock | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user and its allies are protected from wide-ranging attacks for one turn. If used in succession, its chance of failing rises. |  |
-| 470 | Guard Split (פיצול הגנה) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user employs its psychic power to average its Defense and Sp. Def stats with those of its target's. |  |
-| 471 | Power Split (פיצול כוח) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user employs its psychic power to average its Attack and Sp. Atk stats with those of the target's. |  |
-| 474 | Venoshock (הלם רעל) | poison | special | 65 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user drenches the target in a special poisonous liquid. Its power is doubled if the target is poisoned. |  |
-| 476 | Rage Powder (אבקת זעם) | bug | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 powder | 0 (0/0) | The user scatters a cloud of irritating powder to draw attention to itself. Opponents aim only at the user. |  |
-| 478 | Magic Room (חדר קסם) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user creates a bizarre area in which Pokémon's held items lose their effects for five turns. |  |
-| 480 | Storm Throw (זריקת סערה) | fighting | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user strikes the target with a fierce blow. This attack always results in a critical hit. |  |
-| 485 | Synchronoise (סינכרו-רעש) | psychic | special | 120 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | Using an odd shock wave, the user inflicts damage on any Pokémon of the same type in the area around it. |  |
-| 487 | Soak (ספיגה) | water | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user shoots a torrent of water at the target and changes the target's type to Water. |  |
-| 493 | Simple Beam (קרן פשוטה) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user's mysterious psychic wave changes the target's Ability to Simple. |  |
-| 494 | Entrainment (הסחפות) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user dances with an odd rhythm that compels the target to mimic it, making the target's Ability the same as the user's. |  |
-| 501 | Quick Guard (שמירה מהירה) | fighting | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user protects itself and its allies from priority moves. If used in succession, its chance of failing rises. |  |
-| 505 | Heal Pulse (פולס ריפוי) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user emits a healing pulse which restores the target's HP by up to half of its max HP. |  |
-| 507 | Sky Drop (הפלה מהשמיים) | flying | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user takes the target into the sky, then drops it during the next turn. The target cannot attack while in the sky. |  |
-| 509 | Circle Throw (זריקת מעגל) | fighting | physical | 60 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user throws the target and drags out another Pokémon in its party. In the wild, the battle ends. |  |
-| 513 | Reflect Type (השתקפות סוג) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user reflects the target's type, making it the same type as the target. |  |
-| 515 | Final Gambit (הימור אחרון) | fighting | special | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user risks everything to attack its target. The user faints but does damage equal to the user's HP. |  |
-| 516 | Bestow (הענקה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user passes its held item to the target when the target isn't holding an item. |  |
-| 524 | Frost Breath (נשימת כפור) | ice | special | 60 | 90 | 100 | ❌ missing | — | effectChance 100% | ▫️ beam | 0 (0/0) | The user blows a cold breath on the target. This attack always results in a critical hit. |  |
-| 540 | Psystrike (מכת פסיכו) | psychic | special | 100 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user materializes an odd psychic wave to attack the target. This attack does physical damage. |  |
-| 562 | Belch (גיהוק) | poison | special | 120 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user lets out a damaging belch at the target. The user must eat a held Berry to use this move. |  |
-| 563 | Rototiller (חריש) | ground | status | — | — | 100 | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Tilling the soil, the user makes it easier for plants to grow. This raises the Attack and Sp. Atk stats of Grass-type Pokémon. |  |
-| 564 | Sticky Web (רשת דביקה) | bug | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user weaves a sticky net around the opposing team, which lowers their Speed stat upon switching into battle. |  |
-| 565 | Fell Stinger (עוקץ הפלה) | bug | physical | 50 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | When the user knocks out a target with this move, the user's Attack stat rises sharply. |  |
-| 573 | Freeze Dry (הקפאה יבשה) | ice | special | 70 | 100 | 10 | ❌ missing | — | effectChance 10% | ▫️ beam | 0 (0/0) | The user rapidly cools the target. This may also leave the target frozen. This move is super effective on Water types. |  |
-| 579 | Flower Shield (מגן פרחים) | fairy | status | — | — | 100 | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user raises the Defense stat of all Grass-type Pokémon in battle with a mysterious power. |  |
-| 580 | Grassy Terrain (שטח עשב) | grass | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user turns the ground under everyone's feet to grass for five turns. This restores the HP of Pokémon on the ground a little every turn. |  |
-| 581 | Misty Terrain (שטח ערפל) | fairy | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 mist-veil:mist | 0 (0/0) | The user covers the ground under everyone's feet with mist for five turns. This protects Pokémon on the ground from status conditions. |  |
-| 599 | Venom Drench (ניקוז ארס) | poison | status | — | 100 | 100 | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | Opposing Pokémon are drenched in an odd poisonous liquid. This lowers the Attack, Sp. Atk, and Speed stats of a poisoned target. |  |
-| 602 | Magnetic Flux (שטף מגנטי) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user manipulates magnetic fields, which raises the Defense and Sp. Def stats of ally Pokémon with the Plus or Minus Ability. |  |
-| 660 | First Impression (רושם ראשון) | bug | physical | 90 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | Although this move has great power, it only works the first turn the user is in battle. |  |
-| 664 | Sparkling Aria (אריה נוצצת) | water | special | 90 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user bursts into song, emitting many bubbles. Any Pokémon suffering from a burn will be healed by the touch of these bubbles. |  |
-| 668 | Strength Sap (ספיגת כוח) | grass | status | — | 100 | 100 | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user restores its HP by the same amount as the target's Attack stat. It also lowers the target's Attack stat. |  |
-| 671 | Spotlight (זרקור) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user shines a spotlight on the target so that only the target will be attacked during the turn. |  |
-| 676 | Pollen Puff (פולן גלולה) | bug | special | 90 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user attacks the enemy with a pollen puff that explodes. If the target is an ally, it gives the ally a pollen puff that restores its HP instead. |  |
-| 678 | Psychic Terrain (שטח פסיכי) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 psychic-wave | 0 (0/0) | This protects Pokémon on the ground from priority moves and powers up Psychic-type moves for five turns. |  |
-| 681 | Power Trip (מסע כוח) | dark | physical | 20 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user boasts its strength and attacks the target. The more the user's stats are raised, the greater the move's power. |  |
-| 682 | Burn Up (שריפה מוחלטת) | fire | special | 130 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type. |  |
-| 683 | Speed Swap (החלפת מהירות) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user exchanges Speed stats with the target. |  |
-| 694 | Aurora Veil (רעלה אורורה) | ice | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | This move reduces damage from physical and special moves for five turns. This can be used only in a hailstorm. |  |
-| 798 | Steel Roller (גלגל פלדה) | steel | physical | 130 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user attacks while destroying the terrain. This move fails when the ground hasn't turned into a terrain. |  |
-| 802 | Misty Explosion (פיצוץ ערפל) | fairy | special | 100 | 100 | — | ❌ missing | — | description mentions an effect | 🎬 mist-veil:mist | 0 (0/0) | The user attacks everything around it and faints upon using this move. This move's power is increased on Misty Terrain. |  |
-| 803 | Grassy Glide (החלקת עשב) | grass | physical | 55 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | Gliding on the ground, the user attacks the target. This move always goes first on Grassy Terrain. |  |
-| 804 | Rising Voltage (מתח עולה) | electric | special | 70 | 100 | — | ❌ missing | — | description mentions an effect | 🎬 sound-based:blast | 0 (0/0) | The user attacks with electric voltage rising from the ground. This move's power doubles when the target is on Electric Terrain. |  |
-| 805 | Terrain Pulse (פולס שטח) | normal | special | 50 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 0 (0/0) | The user utilizes the power of the terrain to attack. This move's type and power changes depending on the terrain when it's used. |  |
-| 810 | Corrosive Gas (גז מאכל) | poison | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user surrounds everything around it with highly acidic gas and melts away items they hold. |  |
-| 811 | Coaching (אימון) | fighting | status | — | — | 100 | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user properly coaches its ally Pokémon, boosting their Attack and Defense stats. |  |
-| 833 | Raging Fury (זעם משתולל) | fire | physical | 120 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user rampages and spews vicious flames to inflict damage on the target, then becomes fixated on using this move. |  |
-| 839 | Barb Barrage (מטח קוצים) | poison | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user launches countless toxic barbs to inflict damage. This may also poison the target. This move's power is doubled if the target has a status condition. |  |
-| 853 | Axe Kick (בעיטת גרזן) | fighting | physical | 120 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user attacks by kicking up into the air and slamming its heel down upon the target. This may also confuse the target. If it misses, the user takes damage instead. |  |
-| 873 | Raging Bull (שור זועם) | normal | physical | 90 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user performs a tackle like a raging bull. This move's type depends on the user's form. It can also break barriers, such as Light Screen and Reflect. |  |
-| 881 | Chilly Reception (קבלת פנים קרירה) | ice | status | 0 | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user tells a chillingly bad joke before switching places with a party Pokémon in waiting. This summons a snowstorm lasting five turns. |  |
-| 882 | Tidy Up (סידור) | normal | status | 0 | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 0 (0/0) | The user tidies up and removes the effects of Spikes, Stealth Rock, Sticky Web, Toxic Spikes, and Substitute. This also boosts the user's Attack and Speed stats. |  |
-| 887 | Hyper Drill (מקדח היפר) | normal | physical | 100 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user spins the pointed part of its body at high speed to pierce the target. This attack can hit a target using a move such as Protect or Detect. |  |
-| 889 | Rage Fist (אגרוף זעם) | ghost | physical | 50 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user converts its rage into energy to attack. The more times the user has been hit by attacks, the greater the move's power. |  |
-| 894 | Comeuppance (גמול) | dark | physical | 1 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 0 (0/0) | The user retaliates with much greater force against the opponent that last inflicted damage on it. |  |
+| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |
+|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|
+| 289 | Snatch (חטיפה) | dark | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 3 (1/3) | Steals the effects of the move the foe uses next. |  |
+| 144 | Transform (שינוי צורה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | The user assumes the foe's guise. |  |
+| 160 | Conversion (המרה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | Change user's type to a move's type. |  |
+| 169 | Spider Web (רשת עכביש) | bug | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | Prevents fleeing or switching. |  |
+| 176 | Conversion 2 (המרה 2) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | The user's type is made resistant. |  |
+| 215 | Heal Bell (פעמון ריפוי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 sound-based:blast | ✔ lvl×2 | 2 (2/0) | Eliminates all status problems. |  |
+| 220 | Pain Split (חלוקת כאב) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 2 (1/1) | Adds user & foe's HPs. Shares total. |  |
+| 357 | Miracle Eye (עין נס) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | Enables a Dark-type target to be hit by Psychic-type attacks. This also enables an evasive target to be hit. |  |
+| 373 | Embargo (אמברגו) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 2 (1/2) | It prevents the foe from using its held item. Its Trainer is also prevented from using items on it. |  |
+| 382 | Me First (אני קודם) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | The user tries to cut ahead of the foe to steal and use the foe's intended move with greater power. TODO |  |
+| 393 | Magnet Rise (עלייה מגנטית) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | The user levitates using electrically generated magnetism for five turns. |  |
+| 506 | Hex (כישוף) | ghost | special | 65 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | ✔ lvl×1 | 2 (1/2) | This relentless attack does massive damage to a target affected by status problems. |  |
+| 26 | Jump Kick (בעיטת קפיצה) | fighting | physical | 100 | 95 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | May miss, damaging the user. |  |
+| 136 | High Jump Kick (בעיטת קפיצה גבוהה) | fighting | physical | 130 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | May miss and hurt the user. |  |
+| 166 | Sketch (סקיצה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | Copies the foe's move permanently. |  |
+| 217 | Present (מתנה) | normal | physical | — | 90 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | A bomb that may restore HP. |  |
+| 262 | Memento (זיכרון) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | The user faints and lowers the foe's abilities. |  |
+| 266 | Follow Me (לכו אחרי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | Draws attention to make foes attack only the user. |  |
+| 268 | Charge (טעינה) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/1) | Charges power to boost the electric move used next. |  |
+| 273 | Wish (משאלה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | A wish that restores HP. It takes time to work. |  |
+| 279 | Revenge (נקמה) | fighting | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/1) | An attack that gains power if injured by the foe. |  |
+| 281 | Yawn (פיהוק) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | Lulls the foe into yawning, then sleeping next turn. |  |
+| 287 | Refresh (רענון) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | Heals poisoning, paralysis, or a burn. |  |
+| 346 | Water Sport (ספורט מים) | water | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | The user becomes soaked to raise resistance to fire. |  |
+| 386 | Punishment (עונש) | dark | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | This attack's power increases the more the foe has powered up with stat changes. |  |
+| 387 | Last Resort (מוצא אחרון) | normal | physical | 140 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | This move can be used only after the user has used all the other moves it knows in the battle. |  |
+| 392 | Aqua Ring (טבעת מים) | water | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | The user envelops itself in a veil made of water. It regains some HP on every turn. |  |
+| 479 | Smack Down (הפלה) | rock | physical | 50 | 100 | 100 | ❌ missing | — | effectChance 100% | ▫️ lunge | ✔ lvl×1 | 1 (1/1) | The user throws a stone or projectile to attack an opponent. A flying Pokémon will fall to the ground when hit. |  |
+| 486 | Electro Ball (כדור חשמל) | electric | special | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ beam | ✔ lvl×1 | 1 (1/1) | The user hurls an electric orb at the target. The faster the user is than the target, the greater the damage. |  |
+| 495 | After You (אחריך) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | The user helps the target and makes it use its move right after the user. |  |
+| 498 | Chip Away (ניפוץ) | normal | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | Looking for an opening, the user strikes continually. The target's stat changes don't affect this attack's damage. |  |
+| 499 | Clear Smog (ערפיח נקי) | poison | special | 50 | — | — | ❌ missing | — | description mentions an effect | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | The user attacks by throwing a clump of special mud. All status changes are returned to normal. |  |
+| 569 | Ion Deluge (סערת יונים) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | The user disperses electrically charged particles, which changes Normal-type moves to Electric-type moves. |  |
+| 604 | Electric Terrain (שטח חשמלי) | electric | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | ✔ lvl×1 | 1 (1/1) | The user electrifies the ground under everyone's feet for five turns. Pokémon on the ground no longer fall asleep. |  |
 
 ## ⚠️ partial (0)
 
-| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
-|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
+| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |
+|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|
 
 
-## ✅ wired (398)
+## 💤 missing, not reachable (132)
 
-| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
-|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
-| 237 | Hidden Power (כוח נסתר) | normal | special | 60 | 100 | — | ✅ wired | `hidden-power` | — | ▫️ projectile | 271 (1/270) | The power varies with the POKéMON. |  |
-| 92 | Toxic (רעלן) | poison | status | — | 90 | — | ✅ wired | poison (toxic) 100% | — | ▫️ pulse | 270 (0/270) | A poison move with increasing damage. |  |
-| 104 | Double Team (צוות כפול) | normal | status | — | — | — | ✅ wired | user evasion +1 | — | 🎬 double-team | 270 (5/270) | Heightens evasiveness. |  |
-| 156 | Rest (מנוחה) | psychic | status | — | — | — | ✅ wired | `rest` | — | 🎬 heal-pulse | 270 (10/270) | Sleep for 2 turns to fully recover. |  |
-| 182 | Protect (הגנה) | normal | status | — | — | — | ✅ wired | priority +4, `protect` | — | 🎬 protect-shield:protect | 270 (13/270) | Foils attack that turn. It may fail. |  |
-| 203 | Endure (עמידות) | normal | status | — | — | — | ✅ wired | priority +4, `endure` | — | 🎬 protect-shield:endure | 270 (10/270) | Always leaves at least 1HP. |  |
-| 207 | Swagger (יהירות) | normal | status | — | 85 | — | ✅ wired | target attack +2, confusion 100% | — | ▫️ pulse | 270 (3/270) | Causes confusion and raises ATTACK. |  |
-| 214 | Sleep Talk (נדודי שינה) | normal | status | — | — | — | ✅ wired | `sleep-talk` | — | 🎬 heal-pulse | 270 (0/270) | Randomly attacks while asleep. |  |
-| 216 | Return (חזרה) | normal | physical | — | 100 | — | ✅ wired | handled by id in code (`RETURN_MOVE_ID`) | — | ▫️ lunge | 270 (0/270) | An attack that is based on loyalty. |  |
-| 218 | Frustration (תסכול) | normal | physical | — | 100 | — | ✅ wired | handled by id in code (`FRUSTRATION_MOVE_ID`) | — | ▫️ lunge | 270 (0/270) | An attack based on lack of loyalty. |  |
-| 173 | Snore (נחירות) | normal | special | 50 | 100 | 30 | ✅ wired | flinch 30% | — | 🎬 heal-pulse | 268 (3/268) | An attack useable only while asleep. |  |
-| 213 | Attract (משיכה) | normal | status | — | 100 | — | ✅ wired | infatuation 100% | — | ▫️ pulse | 252 (1/252) | Makes the opposite gender infatuated. |  |
-| 174 | Curse (קללה) | ghost | status | — | — | — | ✅ wired | user attack +1, user defense +1, user speed -1, curse 100%, `curse` | — | ▫️ pulse | 245 (7/245) | Works differently for ghost-types. |  |
-| 241 | Sunny Day (יום שמש) | fire | status | — | — | — | ✅ wired | `sun` | — | 🎬 celestial:sunny day | 202 (6/202) | Boosts fire-type moves for 5 turns. |  |
-| 29 | Headbutt (נגיחה) | normal | physical | 70 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 179 (16/173) | An attack that may make foe flinch. |  |
-| 36 | Take Down (הסתערות) | normal | physical | 90 | 85 | — | ✅ wired | recoil 25% | — | ▫️ lunge | 178 (34/162) | A tackle that also hurts the user. |  |
-| 164 | Substitute (תחליף) | normal | status | — | — | — | ✅ wired | `substitute` | — | ▫️ pulse | 173 (1/173) | Makes a decoy with 1/4 user's max HP. |  |
-| 38 | Double Edge (להב כפול) | normal | physical | 120 | 100 | — | ✅ wired | recoil 25% | — | ▫️ lunge | 165 (21/154) | A tackle that also hurts the user. |  |
-| 189 | Mud Slap (סטירת בוץ) | ground | special | 20 | 100 | 100 | ✅ wired | target accuracy -1 | — | ▫️ projectile | 157 (3/157) | Reduces the foe's accuracy. |  |
-| 99 | Rage (זעם) | normal | physical | 20 | 100 | — | ✅ wired | `lock-in-rage` | — | ▫️ lunge | 155 (23/145) | Raises ATTACK if the user is hit. |  |
-| 117 | Bide (המתנה) | normal | physical | — | — | — | ✅ wired | `bide` | — | ▫️ lunge | 152 (7/145) | Waits 2-3 turns & hits back double. |  |
-| 240 | Rain Dance (ריקוד גשם) | water | status | — | — | — | ✅ wired | `rain` | — | ▫️ pulse | 148 (14/148) | Boosts water-type moves for 5 turns. |  |
-| 102 | Mimic (חיקוי) | normal | status | — | — | — | ✅ wired | `mimic` | — | ▫️ pulse | 146 (1/145) | Copies a move used by the foe. |  |
-| 63 | Hyper Beam (קרן היפר) | normal | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ beam | 141 (18/139) | 1st turn: Attack 2nd turn: Rest |  |
-| 249 | Rock Smash (ריסוק סלע) | fighting | physical | 40 | 100 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | 140 (1/140) | An attack that may lower DEFENSE. |  |
-| 34 | Body Slam (מכת גוף) | normal | physical | 85 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 body-slam | 132 (17/126) | An attack that may cause paralysis. |  |
-| 168 | Thief (גנב) | dark | physical | 60 | 100 | — | ✅ wired | `thief` | — | ▫️ lunge | 120 (0/120) | An attack that may steal a held item. |  |
-| 231 | Iron Tail (זנב ברזל) | steel | physical | 100 | 75 | 30 | ✅ wired | target defense -1 | — | ▫️ lunge | 115 (0/115) | An attack that may reduce DEFENSE. |  |
-| 197 | Detect (זיהוי) | fighting | status | — | — | — | ✅ wired | priority +4, `protect` | — | 🎬 protect-shield:protect | 106 (6/104) | Evades attack that turn. It may fail. |  |
-| 115 | Reflect (השתקפות) | psychic | status | — | — | — | ✅ wired | reflect 5t | — | ▫️ pulse | 103 (13/95) | Raises DEFENSE with a barrier. |  |
-| 130 | Skull Bash (נגיחת גולגולת) | normal | physical | 130 | 100 | 100 | ✅ wired | charge: defense +1, `requires-charge-turn` | — | ▫️ burst | 99 (3/99) | 1st turn: Prepare 2nd turn: Attack |  |
-| 148 | Flash (הבזק) | normal | status | — | 100 | — | ✅ wired | target accuracy -1 | — | ▫️ pulse | 94 (0/94) | Blinds the foe to reduce accuracy. |  |
-| 111 | Defense Curl (כריכת הגנה) | normal | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | 87 (22/87) | Heightens the user's DEFENSE. |  |
-| 59 | Blizzard (סופת שלג) | ice | special | 110 | 70 | 10 | ✅ wired | freeze 10% | — | ▫️ beam | 85 (6/85) | An attack that may freeze the foe. |  |
-| 196 | Icy Wind (רוח קפואה) | ice | special | 55 | 95 | 100 | ✅ wired | target speed -1 | — | 🎬 icy-wind | 85 (1/85) | An icy attack that lowers SPEED. |  |
-| 91 | Dig (חפירה) | ground | physical | 80 | 100 | — | ✅ wired | `requires-charge-turn`, `two-turn-dig` | — | ▫️ burst | 83 (8/83) | 1st turn: Burrow 2nd turn: Attack |  |
-| 223 | Dynamic Punch (אגרוף דינמי) | fighting | physical | 100 | 50 | 100 | ✅ wired | confusion 100% | — | 🎬 punch:fighting | 81 (0/81) | An attack that always confuses. |  |
-| 43 | Leer (מבט מאיים) | normal | status | — | 100 | 100 | ✅ wired | target defense -1 | — | ▫️ pulse | 77 (77/0) | Reduces the foe's DEFENSE. |  |
-| 126 | Fire Blast (פיצוץ אש) | fire | special | 110 | 85 | 10 | ✅ wired | burn 10% | — | 🎬 fire-blast | 75 (7/75) | An attack that may cause a burn. |  |
-| 192 | Zap Cannon (תותח זאפ) | electric | special | 120 | 50 | 100 | ✅ wired | paralyze 100% | — | 🎬 lightning | 75 (4/75) | An attack that always paralyzes. |  |
-| 87 | Thunder (סערת רעמים) | electric | special | 110 | 70 | 30 | ✅ wired | paralyze 30% | — | 🎬 lightning | 72 (10/72) | An attack that may cause paralysis. |  |
-| 244 | Psych Up (התעלות) | normal | status | — | — | — | ✅ wired | `psych-up` | — | ▫️ pulse | 69 (6/69) | Copies the foe's stat changes. |  |
-| 8 | Ice Punch (אגרוף קרח) | ice | physical | 75 | 100 | 10 | ✅ wired | freeze 10% | — | 🎬 punch:ice | 65 (2/65) | An icy punch. May cause freezing. |  |
-| 94 | Psychic (על חושי) | psychic | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | 🎬 psychic-wave | 65 (19/65) | An attack that may lower SPCL.DEF. |  |
-| 61 | Bubble Beam (קרן בועות) | water | special | 65 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ beam | 64 (11/57) | An attack that may lower SPEED. |  |
-| 205 | Rollout (גלגול) | rock | physical | 30 | 90 | — | ✅ wired | `lock-in-rollout` | — | ▫️ lunge | 64 (12/64) | Attacks 5 turns with rising power. |  |
-| 46 | Roar (שאגה) | normal | status | — | — | — | ✅ wired | target attack -2, target specialAttack -2, target speed -1 | — | 🎬 sound-based:blast | 63 (14/62) | Scares wild foes to end battle. |  |
-| 58 | Ice Beam (קרן קרח) | ice | special | 90 | 100 | 10 | ✅ wired | freeze 10% | — | ▫️ beam | 63 (7/61) | An attack that may freeze the foe. |  |
-| 247 | Shadow Ball (כדור צל) | ghost | special | 80 | 100 | 20 | ✅ wired | target specialDefense -1 | — | 🎬 shadow-ball | 63 (1/63) | An attack that may lower SPCL.DEF. |  |
-| 76 | Solar Beam (קרן סולארית) | grass | special | 120 | 100 | — | ✅ wired | `requires-charge-turn` | — | 🎬 solar-beam | 61 (11/61) | 1st turn: Prepare 2nd turn: Attack |  |
-| 201 | Sandstorm (סופת חול) | rock | status | — | — | — | ✅ wired | `sandstorm` | — | ▫️ pulse | 61 (13/61) | Inflicts damage every turn. |  |
-| 7 | Fire Punch (אגרוף אש) | fire | physical | 75 | 100 | 10 | ✅ wired | burn 10% | — | 🎬 punch:fire | 57 (5/57) | A fiery punch. May cause a burn. |  |
-| 138 | Dream Eater (אוכל חלומות) | psychic | special | 100 | 100 | — | ✅ wired | drain 50%, `dream-eater` | — | ▫️ projectile | 57 (6/57) | Steals HP from a sleeping victim. |  |
-| 202 | Giga Drain (ניקוז גיגה) | grass | special | 75 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 57 (3/57) | Steals 1/2 of the damage inflicted. |  |
-| 9 | Thunder Punch (אגרוף רעם) | electric | physical | 75 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 punch:electric | 56 (6/56) | An electric punch. It may paralyze. |  |
-| 85 | Thunderbolt (רעם) | electric | special | 90 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 lightning | 55 (5/54) | An attack that may cause paralysis. |  |
-| 66 | Submission (כניעה) | fighting | physical | 80 | 80 | — | ✅ wired | recoil 25% | — | ▫️ lunge | 53 (5/53) | An attack that also hurts the user. |  |
-| 69 | Seismic Toss (זריקה סייסמית) | fighting | physical | — | 100 | — | ✅ wired | `night-shade` | — | ▫️ lunge | 53 (6/53) | The user's level equals damage HP. |  |
-| 250 | Whirlpool (מערבולת) | water | special | 35 | 85 | 100 | ✅ wired | trap 100% | — | 🎬 water-flow | 52 (0/52) | Traps the foe for 2-5 turns. |  |
-| 68 | Counter (נגדית) | fighting | physical | — | 100 | — | ✅ wired | priority -5, `counter` | — | ▫️ lunge | 51 (6/46) | Returns a physical blow double. |  |
-| 171 | Nightmare (סיוט) | ghost | status | — | 100 | — | ✅ wired | nightmare 100% | — | ▫️ pulse | 51 (0/51) | A sleeper loses 1/4 HP every turn. |  |
-| 44 | Bite (נשיכה) | dark | physical | 60 | 100 | 30 | ✅ wired | flinch 30% | — | 🎬 bite:bite | 50 (50/0) | An attack that may cause flinching. |  |
-| 45 | Growl (נהמה) | normal | status | — | 100 | — | ✅ wired | target attack -1 | — | 🎬 sound-based:screech | 48 (48/0) | Reduces the foe's ATTACK. |  |
-| 157 | Rock Slide (מפולת סלעים) | rock | physical | 75 | 90 | 30 | ✅ wired | flinch 30% | — | 🎬 rock-slide | 47 (10/41) | An attack that may cause flinching. |  |
-| 103 | Screech (צרחה) | normal | status | — | 85 | — | ✅ wired | target defense -2 | — | 🎬 sound-based:screech | 46 (42/8) | Sharply reduces the foe's DEFENSE. |  |
-| 97 | Agility (זריזות) | psychic | status | — | — | — | ✅ wired | user speed +2 | — | 🎬 self-boost-cooler | 45 (44/4) | Sharply increases the user's SPEED. |  |
-| 39 | Tail Whip (הנפת זנב) | normal | status | — | 100 | — | ✅ wired | target defense -1 | — | ▫️ pulse | 44 (44/0) | Lowers the foe's DEFENSE. |  |
-| 86 | Thunder Wave (גל רעם) | electric | status | — | 90 | — | ✅ wired | paralyze 100% | — | 🎬 lightning | 42 (16/36) | A move that may cause paralysis. |  |
-| 210 | Fury Cutter (חותך זעם) | bug | physical | 40 | 95 | — | ✅ wired | `fury-cutter` | — | ▫️ lunge | 42 (0/42) | Successive hits raise power. |  |
-| 188 | Sludge Bomb (פצצת בוץ) | poison | special | 90 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | 41 (2/41) | An attack that may poison the foe. |  |
-| 14 | Swords Dance (ריקוד חרבות) | normal | status | — | — | — | ✅ wired | user attack +2 | — | 🎬 self-boost-cooler | 40 (10/39) | A dance that increases ATTACK. |  |
-| 184 | Scary Face (פנים מפחידות) | normal | status | — | 100 | — | ✅ wired | target speed -2 | — | ▫️ pulse | 39 (34/18) | Sharply reduces the foe's SPEED. |  |
-| 72 | Mega Drain (ניקוז מגה) | grass | special | 40 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 35 (7/29) | Steals 1/2 of the damage inflicted. |  |
-| 149 | Psywave (גל על חושי) | psychic | special | — | 100 | — | ✅ wired | `psywave` | — | 🎬 psychic-wave | 35 (1/34) | An attack with variable power. |  |
-| 98 | Quick Attack (מתקפה מהירה) | normal | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | 34 (34/0) | Lets the user get in the first hit. |  |
-| 100 | Teleport (שיגור) | psychic | status | — | — | — | ✅ wired | user evasion +1, user speed +1 | — | ▫️ pulse | 34 (5/32) | A move for fleeing from battle. |  |
-| 116 | Focus Energy (ריכוז אנרגיה) | normal | status | — | — | — | ✅ wired | `focus-energy` | — | ▫️ pulse | 34 (30/14) | Raises the critical hit ratio. |  |
-| 118 | Metronome (מטרונום) | normal | status | — | — | — | ✅ wired | `metronome` | — | 🎬 pulse | 34 (6/32) | Randomly uses any POKéMON move. |  |
-| 127 | Waterfall (מפל מים) | water | physical | 80 | 100 | 20 | ✅ wired | flinch 20% | — | 🎬 water-flow | 34 (2/34) | An aquatic charge attack. |  |
-| 230 | Sweet Scent (ריח מתוק) | normal | status | — | 100 | — | ✅ wired | target evasion -2 | — | ▫️ pulse | 34 (10/34) | Reduces the foe's evasiveness. |  |
-| 90 | Fissure (בקע) | ground | physical | — | 30 | — | ✅ wired | `ohko` | — | 🎬 earthquake | 33 (5/30) | A ground-type, one-hit KO attack. |  |
-| 163 | Slash (חיתוך) | normal | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 32 (32/0) | Has a high critical hit ratio. |  |
-| 211 | Steel Wing (כנף פלדה) | steel | physical | 70 | 90 | 10 | ✅ wired | user defense +1 | — | ▫️ lunge | 32 (1/32) | Stiff wings strike the foe. |  |
-| 19 | Fly (תעופה) | flying | physical | 90 | 95 | — | ✅ wired | `requires-charge-turn`, `two-turn-fly` | — | ▫️ lunge | 30 (1/30) | 1st turn: Fly 2nd turn: Attack |  |
-| 53 | Flamethrower (להביור) | fire | special | 90 | 100 | 10 | ✅ wired | burn 10% | — | 🎬 flamethrower | 30 (21/13) | An attack that may inflict a burn. |  |
-| 225 | Dragon Breath (נשימת דרקון) | dragon | special | 60 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 dragon-aura | 30 (11/19) | A strong breath attack. |  |
-| 263 | Facade (חזית) | normal | physical | 70 | 100 | — | ✅ wired | `facade-boost` | — | ▫️ lunge | 28 (0/28) | Boosts ATTACK when burned, paralyzed, or poisoned. |  |
-| 290 | Secret Power (כוח סודי) | normal | physical | 70 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | 28 (0/28) | An attack with effects that vary by location. |  |
-| 28 | Sand Attack (התקפת חול) | ground | status | — | 100 | — | ✅ wired | target accuracy -1 | — | ▫️ pulse | 26 (26/0) | Reduces accuracy by throwing sand. |  |
-| 161 | Tri Attack (מתקפה משולשת) | normal | special | 80 | 100 | 20 | ✅ wired | `tri-attack` | — | ▫️ beam | 26 (8/23) | Fires three kinds of beams at once. |  |
-| 219 | Safeguard (שמירה) | normal | status | — | — | — | ✅ wired | safeguard 5t | — | ▫️ pulse | 26 (26/2) | Prevents all status problems. |  |
-| 590 | Confide (סודות) | normal | status | — | — | 100 | ✅ wired | target specialAttack -1 | — | 🎬 sound-based:screech | 26 (0/26) | The user tells the target a secret, and the target loses its ability to concentrate. This lowers the target's Sp. Atk stat. |  |
-| 52 | Ember (גחלת) | fire | special | 40 | 100 | 10 | ✅ wired | burn 10% | — | ▫️ projectile | 25 (25/0) | An attack that may inflict a burn. |  |
-| 113 | Light Screen (מסך אור) | psychic | status | — | — | — | ✅ wired | light-screen 5t | — | ▫️ pulse | 25 (20/6) | Ups SPCL.DEF with a wall of light. |  |
-| 48 | Supersonic (על-קולי) | normal | status | — | 55 | — | ✅ wired | confusion 100% | — | 🎬 sound-based:screech | 24 (24/0) | Sound waves that cause confusion. |  |
-| 93 | Confusion (בלבול) | psychic | special | 50 | 100 | 10 | ✅ wired | confusion 10% | — | 🎬 psychic-wave | 24 (24/0) | An attack that may cause confusion. |  |
-| 109 | Confuse Ray (קרינת בלבול) | ghost | status | — | 100 | — | ✅ wired | confusion 100% | — | ▫️ pulse | 24 (22/4) | A move that causes confusion (bypasses type immunity). |  |
-| 120 | Self Destruct (השמדה עצמית) | normal | physical | 200 | 100 | — | ✅ wired | `leave-user-at-1-hp` | — | ▫️ lunge | 24 (9/22) | Powerful but makes the user faint. |  |
-| 242 | Crunch (כתישה) | dark | physical | 80 | 100 | 20 | ✅ wired | target defense -1 | — | 🎬 bite:crunch | 23 (21/15) | An attack that may lower SPCL.DEF. |  |
-| 77 | Poison Powder (אבקת רעל) | poison | status | — | 75 | — | ✅ wired | poison 100% | — | 🎬 powder | 22 (22/0) | A move that may poison the foe. |  |
-| 106 | Harden (הקשחה) | normal | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | 22 (22/0) | Raises the user's DEFENSE. |  |
-| 153 | Explosion (פיצוץ) | normal | physical | 250 | 100 | — | ✅ wired | `leave-user-at-1-hp` | — | ▫️ burst | 22 (9/20) | Very powerful but makes user faint. |  |
-| 317 | Rock Tomb (קבר סלע) | rock | physical | 60 | 95 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | 22 (0/22) | Stops the foe from moving with rocks and cuts SPEED. |  |
-| 363 | Natural Gift (מתנת טבע) | normal | physical | — | 100 | — | ✅ wired | `natural-gift` | — | ▫️ lunge | 22 (0/22) | The user draws power to attack by using its held Berry. The Berry determines its type and power. |  |
-| 82 | Dragon Rage (זעם דרקון) | dragon | physical | 75 | 100 | — | ✅ wired | min dmg 40 | — | 🎬 dragon-aura | 21 (16/12) | Deals damage based on the user's stats, but always deals at least 40 HP. Type immunities still apply. |  |
-| 32 | Horn Drill (מקדח קרן) | normal | physical | — | 30 | — | ✅ wired | `ohko` | — | ▫️ lunge | 20 (7/19) | A one-hit KO, drill attack. |  |
-| 445 | Captivate (שבייה) | normal | status | — | 100 | — | ✅ wired | target specialAttack -2, `fails-on-same-species` | — | ▫️ pulse | 20 (1/20) | If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat. |  |
-| 6 | Pay Day (יום משכורת) | normal | physical | 40 | 100 | — | ✅ wired | `pay-day` | — | ▫️ lunge | 19 (2/19) | Throws coins. Gets them back later. |  |
-| 18 | Whirlwind (סופת רוח) | normal | status | — | — | — | ✅ wired | target defense -2, target specialDefense -2, target speed -1 | — | ▫️ pulse | 19 (6/17) | Blows away the foe & ends battle. |  |
-| 154 | Fury Swipes (מכות זעם) | normal | physical | 18 | 80 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 19 (19/0) | Quickly scratches 2-5 times. |  |
-| 228 | Pursuit (מרדף) | dark | physical | 40 | 100 | — | ✅ wired | `pursuit` | — | ▫️ lunge | 19 (19/0) | Heavily strikes switching POKéMON. |  |
-| 416 | Giga Impact (פגיעת גיגה) | normal | physical | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ lunge | 19 (5/19) | The user charges at the foe using every bit of its power. The user must rest on the next turn. |  |
-| 13 | Razor Wind (רוח תער) | normal | special | 80 | 100 | — | ✅ wired | `requires-charge-turn` | — | ▫️ projectile | 18 (1/17) | 1st turn: Prepare 2nd turn: Attack |  |
-| 31 | Fury Attack (מתקפת זעם) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 18 (18/0) | Jabs the target 2-5 times. |  |
-| 200 | Outrage (התפרצות דרקון) | dragon | physical | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | 🎬 dragon-aura | 18 (16/15) | Works 2-3 turns and confuses user. |  |
-| 40 | Poison Sting (עקיצת רעל) | poison | physical | 15 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | 17 (17/0) | An attack that may poison the target. |  |
-| 50 | Disable (השבתה) | normal | status | — | 100 | — | ✅ wired | `disable` | — | ▫️ pulse | 17 (17/0) | Disables the foe's most recent move. |  |
-| 78 | Stun Spore (נבג שיתוק) | grass | status | — | 75 | — | ✅ wired | paralyze 100% | — | 🎬 powder | 17 (17/0) | A move that may paralyze the foe. |  |
-| 79 | Sleep Powder (אבקת שינה) | grass | status | — | 75 | — | ✅ wired | sleep 100% | — | 🎬 powder | 17 (17/0) | May cause the foe to fall asleep. |  |
-| 510 | Incinerate (שריפה) | fire | special | 60 | 100 | — | ✅ wired | `incinerate` | — | ▫️ projectile | 17 (0/17) | The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable. |  |
-| 523 | Bulldoze (דחפור) | ground | physical | 60 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ burst | 17 (7/17) | The user stomps down on the ground and attacks everything in the area. Hit Pokémon's Speed stat is reduced. |  |
-| 83 | Fire Spin (סחרור אש) | fire | special | 35 | 85 | 100 | ✅ wired | trap 100% | — | 🎬 flamethrower | 16 (11/6) | Traps foe in fire for 2-5 turns. |  |
-| 270 | Helping Hand (יד עוזרת) | normal | status | — | — | — | ✅ wired | `helping-hand` | — | ▫️ pulse | 16 (0/16) | A move that boosts the power of the ally's attack in a Double Battle. |  |
-| 280 | Brick Break (שבירת לבנה) | fighting | physical | 75 | 100 | — | ✅ wired | `brick-break` | — | ▫️ lunge | 16 (0/16) | Destroys barriers such as REFLECT and causes damage. |  |
-| 525 | Dragon Tail (זנב דרקון) | dragon | physical | 60 | 90 | — | ✅ wired | priority -6, `dragon-tail` | — | 🎬 dragon-aura | 16 (4/16) | The user knocks away the target and drags out another Pokémon in its party. In the wild, the battle ends. |  |
-| 95 | Hypnosis (היפנוזה) | psychic | status | — | 60 | — | ✅ wired | sleep 100% | — | ▫️ pulse | 15 (15/0) | May put the foe to sleep. |  |
-| 133 | Amnesia (אמנזיה) | psychic | status | — | — | — | ✅ wired | user specialDefense +2 | — | 🎬 self-boost | 15 (14/1) | Sharply raises the user's SPCL.DEF. |  |
-| 421 | Shadow Claw (טופר צל) | ghost | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 15 (0/15) | The user slashes with a sharp claw made from shadows. It has a high critical-hit ratio. |  |
-| 23 | Stomp (דריכה) | normal | physical | 65 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 14 (14/0) | An attack that may cause flinching. |  |
-| 60 | Psybeam (קרן על חושית) | psychic | special | 65 | 100 | 10 | ✅ wired | confusion 10% | — | ▫️ beam | 14 (13/1) | An attack that may confuse the foe. |  |
-| 108 | Smokescreen (מסך עשן) | normal | status | — | 100 | — | ✅ wired | target accuracy -1 | — | 🎬 smoke-screen:smoke | 14 (14/0) | Lowers the foe's accuracy. |  |
-| 145 | Bubble (בועה) | water | special | 40 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ projectile | 14 (14/0) | An attack that may reduce SPEED. |  |
-| 248 | Future Sight (ראיית עתיד) | psychic | special | 120 | 100 | — | ✅ wired | `future-sight` | — | 🎬 psychic-wave | 14 (11/4) | An attack that hits on 3rd turn. |  |
-| 434 | Draco Meteor (מטאור דרקו) | dragon | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | 🎬 dragon-aura | 14 (0/14) | Comets are summoned down from the sky. The attack's recoil sharply reduces the user's Sp. Atk stat. |  |
-| 442 | Iron Head (ראש ברזל) | steel | physical | 80 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 14 (0/14) | The foe slams the target with its steel-hard head. It may also make the target flinch. |  |
-| 468 | Hone Claws (חידוד טפרים) | dark | status | — | — | — | ✅ wired | user attack +1, user accuracy +1 | — | ▫️ pulse | 14 (2/14) | The user sharpens its claws to boost its Attack stat and accuracy. |  |
-| 913 | Dragon Cheer (עידוד דרקון) | dragon | status | 0 | 0 | — | ✅ wired | `focus-energy` | — | ▫️ pulse | 14 (0/14) | The user raises its allies' morale with a draconic cry so that their future attacks have a heightened chance of landing critical hits. This rouses Dragon types more. |  |
-| 35 | Wrap (עטיפה) | normal | physical | 15 | 90 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | 13 (13/0) | Squeezes the foe for 2-5 turns. |  |
-| 37 | Thrash (התפרעות) | normal | physical | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | ▫️ lunge | 13 (13/0) | Works 2-3 turns and confuses user. |  |
-| 84 | Thunder Shock (הלם רעם) | electric | special | 40 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 lightning | 13 (13/0) | An attack that may cause paralysis. |  |
-| 114 | Haze (אובך) | ice | status | — | — | — | ✅ wired | `haze` | — | 🎬 haze-clear:haze | 13 (11/2) | Eliminates all stat changes. |  |
-| 143 | Sky Attack (מתקפת שמיים) | flying | physical | 140 | 90 | 30 | ✅ wired | `requires-charge-turn` | — | ▫️ lunge | 13 (2/12) | 1st turn: Prepare 2nd turn: Attack |  |
-| 206 | False Swipe (חיתוך שווא) | normal | physical | 40 | 100 | — | ✅ wired | `false-swipe` | — | ▫️ lunge | 13 (8/8) | Leaves the foe with at least 1HP. |  |
-| 3 | Double Slap (סטירה כפולה) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 12 (12/0) | Repeatedly slaps 2-5 times. |  |
-| 105 | Recover (התאוששות) | normal | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | 12 (12/0) | Restores HP by 1/2 the max HP. |  |
-| 444 | Stone Edge (להב אבן) | rock | physical | 100 | 80 | — | ✅ wired | crit +1 | — | 🎬 rock-throw | 12 (1/12) | The user stabs the foe with a sharpened stone. It has a high critical-hit ratio. |  |
-| 67 | Low Kick (בעיטה נמוכה) | fighting | physical | — | 100 | — | ✅ wired | `weight-target` | — | ▫️ lunge | 11 (8/5) | Power depends on the foe's weight. As long as the foe is heavy the power is stronger. |  |
-| 193 | Foresight (ראיית עתיד) | normal | status | — | — | — | ✅ wired | user accuracy +2 | — | ▫️ pulse | 11 (11/0) | Negates accuracy reduction moves. |  |
-| 212 | Mean Look (מבט מאיים) | normal | status | — | — | — | ✅ wired | mean-look 100% | — | ▫️ pulse | 11 (11/0) | Prevents fleeing or switching. |  |
-| 239 | Twister (סחרור) | dragon | special | 40 | 100 | 20 | ✅ wired | flinch 20% | — | 🎬 twister-spin | 11 (11/0) | Whips up a tornado to attack. |  |
-| 246 | Ancient Power (כוח עתיק) | rock | special | 60 | 100 | 20 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 20% | — | 🎬 rock-slide | 11 (11/0) | An attack that may raise all stats. |  |
-| 269 | Taunt (ליגלוג) | dark | status | — | 100 | — | ✅ wired | taunt 100% | — | ▫️ pulse | 11 (5/11) | Taunts the foe into only using attack moves. |  |
-| 276 | Superpower (כוח על) | fighting | physical | 120 | 100 | 100 | ✅ wired | user attack -1, user defense -1 | — | 🎬 punch:fighting | 11 (3/11) | Boosts strength sharply, but lowers abilities. |  |
-| 374 | Fling (זריקה) | dark | physical | — | 100 | — | ✅ wired | `fling` | — | ▫️ lunge | 11 (1/11) | The user flings its held item at the foe to attack. Its power and effects depend on the item. |  |
-| 428 | Zen Headbutt (נגיחת זן) | psychic | physical | 80 | 90 | 20 | ✅ wired | flinch 20% | — | ▫️ lunge | 11 (5/11) | The user focuses its willpower to its head and rams the foe. It may also make the target flinch. |  |
-| 47 | Sing (שירה) | normal | status | — | 55 | — | ✅ wired | sleep 100% | — | 🎬 sound-based:sing | 10 (10/0) | May cause the foe to fall asleep. |  |
-| 51 | Acid (חומצה) | poison | special | 40 | 100 | 10 | ✅ wired | target defense -1 | — | ▫️ projectile | 10 (10/0) | An attack that may lower DEFENSE. |  |
-| 74 | Growth (צמיחה) | normal | status | — | — | — | ✅ wired | user specialAttack +1 | — | 🎬 self-boost | 10 (10/0) | Raises the SPCL. ATK rating. |  |
-| 75 | Razor Leaf (עלה תער) | grass | physical | 55 | 95 | — | ✅ wired | crit +1 | — | 🎬 leaf-spray | 10 (10/0) | Has a high critical hit ratio. |  |
-| 122 | Lick (ליקוק) | ghost | physical | 30 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | 10 (10/0) | An attack that may cause paralysis. |  |
-| 123 | Smog (ערפיח) | poison | special | 30 | 70 | 40 | ✅ wired | poison 40% | — | ▫️ projectile | 10 (10/0) | An attack that may poison the foe. |  |
-| 175 | Flail (התפרצות) | normal | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | 10 (10/0) | Stronger if the user's HP is low. |  |
-| 180 | Spite (טינה) | ghost | status | — | 100 | — | ✅ wired | `cut-pp` | — | 🎬 night-shade:spite | 10 (6/5) | Cuts the PP of the foe's last move. |  |
-| 226 | Baton Pass (מסירת שרביט) | normal | status | — | — | — | ✅ wired | `baton-pass` | — | ▫️ pulse | 10 (8/3) | Switch pokemon while keeping effects, also keeps substitutes. |  |
-| 232 | Metal Claw (טופר מתכת) | steel | physical | 50 | 95 | 10 | ✅ wired | user attack +1 | — | ▫️ lunge | 10 (6/7) | An attack that may up user's ATTACK. |  |
-| 235 | Synthesis (סינתזה) | grass | status | — | — | — | ✅ wired | heal 75%, `synthesis` | — | 🎬 celestial:synthesis | 10 (10/0) | Restores HP (varies by time). |  |
-| 253 | Uproar (מהומה) | normal | special | 90 | 100 | — | ✅ wired | `lock-in-uproar` | — | 🎬 sound-based:blast | 10 (2/10) | Causes an uproar for 2 to 5 turns and prevents sleep. |  |
-| 349 | Dragon Dance (ריקוד דרקון) | dragon | status | — | — | — | ✅ wired | user attack +1, user speed +1 | — | 🎬 self-boost-cooler | 10 (5/9) | A mystical dance that ups ATTACK and SPEED. |  |
-| 371 | Payback (תשלום) | dark | physical | 50 | 100 | — | ✅ wired | `payback` | — | ▫️ lunge | 10 (1/10) | If the user can use this attack after the foe attacks, its power is doubled. |  |
-| 414 | Earth Power (כוח אדמה) | ground | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 10 (6/10) | The user makes the ground under the foe erupt with power. It may also lower the target's Sp. Def. |  |
-| 422 | Thunder Fang (ניב רעם) | electric | physical | 65 | 95 | 10 | ✅ wired | paralyze 10%, flinch 10% | — | 🎬 lightning | 10 (1/10) | The user bites with electrified fangs. It may also make the foe flinch or become paralyzed. |  |
-| 424 | Fire Fang (ניב אש) | fire | physical | 65 | 95 | 10 | ✅ wired | burn 10%, flinch 10% | — | 🎬 bite:fire | 10 (2/10) | The user bites with flame-cloaked fangs. It may also make the foe flinch or sustain a burn. |  |
-| 446 | Stealth Rock (סלע התגנבות) | rock | status | — | — | — | ✅ wired | `stealth-rock` | — | ▫️ pulse | 10 (1/10) | The user lays a trap of levitating stones around the foe. The trap hurts foes that switch into battle. |  |
-| 707 | Stomping Tantrum (זעם דורס) | ground | physical | 75 | 100 | — | ✅ wired | `stomping-tantrum` | — | ▫️ burst | 10 (0/10) | Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles. |  |
-| 784 | Breaking Swipe (חיתוך פורץ) | dragon | physical | 60 | 100 | 100 | ✅ wired | target attack -1 | — | ▫️ lunge | 10 (3/10) | The user swings its tough tail wildly and attacks opposing Pokémon. This also lowers their Attack stats. |  |
-| 799 | Scale Shot (יריית קשקשים) | dragon | physical | 25 | 90 | — | ✅ wired | user speed +1, user defense -1, hits 2-5 | — | ▫️ projectile | 10 (0/10) | The user attacks by shooting scales two to five times in a row. This move boosts the user's Speed stat but lowers its Defense stat. |  |
-| 54 | Mist (ערפל) | ice | status | — | — | — | ✅ wired | mist 5t | — | 🎬 mist-veil:mist | 9 (9/0) | Prevents stat reduction. |  |
-| 71 | Absorb (ספיגה) | grass | special | 20 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 9 (9/0) | Steals 1/2 of the damage inflicted. |  |
-| 101 | Night Shade (צל לילה) | ghost | special | — | 100 | — | ✅ wired | `night-shade` | — | 🎬 night-shade:night shade | 9 (9/1) | The user's level equals damage HP. |  |
-| 110 | Withdraw (נסיגה) | water | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | 9 (9/0) | Heightens the user's DEFENSE. |  |
-| 132 | Constrict (לחיצה) | normal | physical | 10 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ lunge | 9 (9/0) | An attack that may lower SPEED. |  |
-| 141 | Leech Life (עלוקת חיים) | bug | physical | 80 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 9 (9/0) | Steals 1/2 of the damage inflicted. |  |
-| 229 | Rapid Spin (סיבוב מהיר) | normal | physical | 50 | 100 | 100 | ✅ wired | user speed +1, `rapid-spin-clear` | — | 🎬 rapid-spin | 9 (9/0) | A high-speed spinning attack. |  |
-| 264 | Focus Punch (אגרוף ממוקד) | fighting | physical | 150 | 100 | — | ✅ wired | `focus-punch` | — | 🎬 punch:fighting | 9 (0/9) | A powerful loyalty attack. The user flinches if hit. |  |
-| 341 | Mud Shot (יריית בוץ) | ground | special | 55 | 95 | 100 | ✅ wired | target speed -1 | — | ▫️ projectile | 9 (0/9) | Hurls mud at the foe and reduces SPEED. |  |
-| 398 | Poison Jab (דקירת רעל) | poison | physical | 80 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ lunge | 9 (2/9) | The foe is stabbed with a tentacle or arm steeped in poison. It may also poison the foe. |  |
-| 555 | Snarl (נהמה) | dark | special | 55 | 95 | 100 | ✅ wired | target specialAttack -1 | — | 🎬 sound-based:screech | 9 (0/9) | The user yells as if it is ranting about something, making the target's Sp. Atk stat decrease. |  |
-| 24 | Double Kick (בעיטה כפולה) | fighting | physical | 30 | 100 | — | ✅ wired | hits 2 | — | ▫️ lunge | 8 (8/0) | A double kicking attack. |  |
-| 62 | Aurora Beam (קרן זוהר) | ice | special | 65 | 100 | 10 | ✅ wired | target attack -1 | — | ▫️ beam | 8 (8/0) | An attack that may lower ATTACK. |  |
-| 73 | Leech Seed (שאיבת זרע) | grass | status | — | 90 | — | ✅ wired | leech-seed 100% | — | ▫️ pulse | 8 (8/0) | Steals HP from the foe on every turn. |  |
-| 107 | Minimize (מזעור) | normal | status | — | — | — | ✅ wired | user evasion +1 | — | 🎬 self-boost | 8 (8/0) | Heightens evasiveness. |  |
-| 179 | Reversal (היפוך) | fighting | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | 8 (4/4) | Stronger if the user's HP is low. |  |
-| 204 | Charm (קסם) | fairy | status | — | 100 | — | ✅ wired | target attack -2 | — | ▫️ pulse | 8 (8/1) | Sharply lowers the foe's ATTACK. |  |
-| 259 | Torment (עינוי) | dark | status | — | 100 | — | ✅ wired | torment 100% | — | ▫️ pulse | 8 (0/8) | Torments the foe and stops successive use of a move. |  |
-| 372 | Assurance (ביטחון) | dark | physical | 60 | 100 | — | ✅ wired | `assurance` | — | ▫️ lunge | 8 (7/8) | If the foe has already taken some damage in the same turn, this attack's power is doubled. |  |
-| 407 | Dragon Rush (דריסת דרקון) | dragon | physical | 100 | 75 | 20 | ✅ wired | flinch 20% | — | 🎬 dragon-aura | 8 (8/0) | The user tackles the foe while exhibiting overwhelming menace. It may also make the target flinch. |  |
-| 411 | Focus Blast (פיצוץ מיקוד) | fighting | special | 120 | 70 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 8 (0/8) | The user heightens its mental focus and unleashes its power. It may also lower the target's Sp. Def. |  |
-| 815 | Scorching Sands (חולות לוהטים) | ground | special | 70 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | 8 (0/8) | The user throws scorching sand at the target to attack. This may also leave the target with a burn. |  |
-| 12 | Guillotine (גיליוטינה) | normal | physical | — | 30 | — | ✅ wired | `ohko` | — | ▫️ lunge | 7 (7/0) | A one-hit KO, pincer attack. |  |
-| 49 | Sonic Boom (הדף קולי) | normal | special | — | 90 | — | ✅ wired | fixed dmg 20 | — | 🎬 sound-based:screech | 7 (7/0) | Always inflicts 20HP damage. |  |
-| 139 | Poison Gas (גז רעל) | poison | status | — | 90 | — | ✅ wired | poison (toxic) 100% | — | ▫️ pulse | 7 (7/0) | A move that may poison the foe. |  |
-| 186 | Sweet Kiss (נשיקה מתוקה) | fairy | status | — | 75 | — | ✅ wired | confusion 100% | — | ▫️ pulse | 7 (7/0) | A move that causes confusion. |  |
-| 195 | Perish Song (שיר אבדון) | normal | status | — | — | — | ✅ wired | `perish-song` | — | 🎬 sound-based:blast | 7 (7/0) | Both user and foe faint in 3 turns. |  |
-| 227 | Encore (הדרן) | normal | status | — | 100 | — | ✅ wired | encore 100% | — | ▫️ pulse | 7 (6/1) | Makes the foe repeat 2-6 times. |  |
-| 334 | Iron Defense (הגנת ברזל) | steel | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | 7 (2/7) | Hardens the body's surface to sharply raise DEFENSE. |  |
-| 352 | Water Pulse (פולס מים) | water | special | 60 | 100 | 20 | ✅ wired | confusion 20% | — | ▫️ projectile | 7 (1/7) | Attacks with ultrasonic waves. May confuse the foe |  |
-| 399 | Dark Pulse (פולס אופל) | dark | special | 80 | 100 | 20 | ✅ wired | flinch 20% | — | ▫️ projectile | 7 (3/7) | The user releases a horrible aura imbued with dark thoughts. It may also make the target flinch. |  |
-| 431 | Rock Climb (טיפוס סלע) | normal | physical | 90 | 85 | 20 | ✅ wired | confusion 20% | — | ▫️ lunge | 7 (0/7) | A charging attack that may also leave the foe confused. It can also be used to scale rocky walls. |  |
-| 612 | Power Up Punch (אגרוף התעצמות) | fighting | physical | 40 | 100 | 100 | ✅ wired | user attack +1 | — | 🎬 punch:fighting | 7 (0/7) | Striking opponents over and over makes the user's fists harder. Hitting a target raises the Attack stat. |  |
-| 885 | Trailblaze (פריצת דרך) | grass | physical | 50 | 100 | — | ✅ wired | user speed +1 | — | ▫️ lunge | 7 (0/7) | The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat. |  |
-| 150 | Splash (התזה) | normal | status | — | — | — | ✅ wired | `splash` | — | ▫️ pulse | 6 (6/0) | Has no effect whatsoever. |  |
-| 172 | Flame Wheel (גלגל אש) | fire | physical | 60 | 100 | 10 | ✅ wired | burn 10% | — | ▫️ lunge | 6 (6/0) | An attack that may cause a burn. |  |
-| 178 | Cotton Spore (נבג כותנה) | grass | status | — | 100 | — | ✅ wired | target speed -2 | — | 🎬 powder | 6 (6/0) | Sharply reduces the foe's SPEED. |  |
-| 194 | Destiny Bond (קשר גורל) | ghost | status | — | — | — | ✅ wired | `destiny-bond` | — | ▫️ pulse | 6 (6/0) | The foe faints if the user does. |  |
-| 257 | Heat Wave (גל חום) | fire | special | 95 | 90 | 10 | ✅ wired | burn 10% | — | 🎬 flamethrower | 6 (0/6) | Exhales a hot breath on the foe. May inflict a burn. |  |
-| 328 | Sand Tomb (קבר חול) | ground | physical | 35 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | 6 (6/6) | Traps and hurts the foe in quicksand for 2 to 5 turns. |  |
-| 417 | Nasty Plot (מזימה מרושעת) | dark | status | — | — | — | ✅ wired | user specialAttack +2 | — | 🎬 self-boost-cooler | 6 (5/6) | The user stimulates its brain by thinking bad thoughts. It sharply raises the user's Sp. Atk. |  |
-| 673 | Laser Focus (מיקוד לייזר) | normal | status | — | — | — | ✅ wired | `laser-focus` | — | ▫️ pulse | 6 (6/0) | The user concentrates intensely. The attack on the next turn always results in a critical hit. |  |
-| 2 | Karate Chop (מכת קראטה) | fighting | physical | 50 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 5 (5/0) | Has a high critical hit ratio. |  |
-| 80 | Petal Dance (ריקוד עלי כותרת) | grass | special | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | 🎬 leaf-spray | 5 (5/0) | Works 2-3 turns and confuses user. |  |
-| 119 | Mirror Move (מראה-מהלך) | flying | status | — | — | — | ✅ wired | `mirror-move` | — | 🎬 pulse | 5 (5/0) | Counters with the same move. |  |
-| 181 | Powder Snow (אבקת שלג) | ice | special | 40 | 100 | 10 | ✅ wired | freeze 10% | — | 🎬 icy-wind | 5 (5/0) | An attack that may cause freezing. |  |
-| 191 | Spikes (קוצים) | ground | status | — | — | — | ✅ wired | `spikes` | — | ▫️ pulse | 5 (4/1) | Hurts foes when they switch out. |  |
-| 199 | Lock On (נעילה) | normal | status | — | — | — | ✅ wired | `lock-on` | — | ▫️ pulse | 5 (5/0) | Ensures the next attack will hit. |  |
-| 222 | Magnitude (עוצמה) | ground | physical | — | 100 | — | ✅ wired | `magnitude` | — | 🎬 earthquake | 5 (5/0) | A ground attack with random power. |  |
-| 236 | Moonlight (אור ירח) | fairy | status | — | — | — | ✅ wired | heal 75%, `moonlight` | — | 🎬 celestial:moonlight | 5 (5/0) | Restores HP (varies by time). |  |
-| 238 | Cross Chop (מכה צולבת) | fighting | physical | 100 | 80 | — | ✅ wired | crit +1 | — | ▫️ lunge | 5 (5/0) | Has a high critical hit ratio. |  |
-| 243 | Mirror Coat (מעיל מראה) | psychic | special | — | 100 | — | ✅ wired | priority -5, `mirror-coat` | — | ▫️ projectile | 5 (5/0) | Counters a SPCL. ATK. move double. |  |
-| 282 | Knock Off (הפלה) | dark | physical | 65 | 100 | — | ✅ wired | `thief` | — | ▫️ lunge | 5 (1/4) | Knocks down the foe's held item to prevent its use. |  |
-| 347 | Calm Mind (מנוחת נפש) | psychic | status | — | — | — | ✅ wired | user specialAttack +1, user specialDefense +1 | — | 🎬 self-boost-cooler | 5 (1/4) | Raises SP. ATK and SP. DEF by focusing the mind. |  |
-| 355 | Roost (נחיתה ומנוחה) | flying | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | 5 (1/5) | The user lands and rests its body. It restores the user's HP by up to half of its max HP. |  |
-| 403 | Air Slash (חיתוך אוויר) | flying | special | 75 | 95 | 30 | ✅ wired | flinch 30% | — | ▫️ projectile | 5 (1/5) | The user attacks with a blade of air that slices even the sky. It may also make the target flinch. |  |
-| 427 | Psycho Cut (חיתוך פסיכו) | psychic | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 5 (1/5) | The user tears at the foe with blades formed by psychic power. It has a high critical-hit ratio. |  |
-| 430 | Flash Cannon (תותח הבזק) | steel | special | 80 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 5 (2/5) | The user gathers all its light energy and releases it at once. It may also lower the foe's Sp. Def stat. |  |
-| 530 | Dual Chop (חיתוך כפול) | dragon | physical | 40 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | 5 (5/0) | The user attacks its target by hitting it with brutal strikes. The target is hit twice in a row. |  |
-| 4 | Comet Punch (אגרוף שביט) | normal | physical | 18 | 85 | — | ✅ wired | hits 2-5 | — | 🎬 punch:normal | 4 (4/0) | Repeatedly punches 2-5 times. |  |
-| 20 | Bind (כבילה) | normal | physical | 15 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | 4 (4/0) | Binds the target for 2-5 turns. |  |
-| 81 | String Shot (יריית חוט) | bug | status | — | 95 | — | ✅ wired | target speed -1 | — | ▫️ pulse | 4 (4/0) | A move that lowers the foe's SPEED. |  |
-| 96 | Meditate (מדיטציה) | psychic | status | — | — | — | ✅ wired | user attack +1 | — | ▫️ pulse | 4 (4/0) | Raises the user's ATTACK. |  |
-| 112 | Barrier (מחסום) | psychic | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | 4 (4/0) | Sharply increases user's DEFENSE. |  |
-| 124 | Sludge (בוץ) | poison | special | 65 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | 4 (4/0) | An attack that may poison the foe. |  |
-| 131 | Spike Cannon (תותח קוצים) | normal | physical | 20 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 4 (4/0) | Fires spikes to hit 2-5 times. |  |
-| 209 | Spark (ניצוץ) | electric | physical | 65 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | 4 (4/0) | An attack that may cause paralysis. |  |
-| 258 | Hail (ברד) | ice | status | — | — | — | ✅ wired | `hail` | — | ▫️ pulse | 4 (0/4) | Summons a hailstorm that strikes every turn. |  |
-| 283 | Endeavor (מאמץ) | normal | physical | — | 100 | — | ✅ wired | `endeavor` | — | ▫️ lunge | 4 (0/4) | Gains power if the user's HP is lower than the foe's HP. |  |
-| 318 | Silver Wind (רוח כסף) | bug | special | 60 | 100 | 10 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 10% | — | ▫️ projectile | 4 (0/4) | A powdery attack that may raise abilities. |  |
-| 423 | Ice Fang (ניב קרח) | ice | physical | 65 | 95 | 10 | ✅ wired | freeze 10%, flinch 10% | — | 🎬 bite:ice | 4 (0/4) | The user bites with cold-infused fangs. It may also make the foe flinch or freeze. |  |
-| 432 | Defog (פיזור ערפל) | flying | status | — | — | — | ✅ wired | target evasion -1, `defog` | — | ▫️ pulse | 4 (0/4) | Obstacles are moved, reducing the foe's evasion stat. It can also be used to clear deep fog, etc. |  |
-| 447 | Grass Knot (קשר עשב) | grass | special | — | 100 | — | ✅ wired | `weight-target` | — | ▫️ projectile | 4 (0/4) | The user snares the foe with grass and trips it. The heavier the foe, the greater the damage. |  |
-| 490 | Low Sweep (סחיפה נמוכה) | fighting | physical | 65 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | 4 (0/4) | The user attacks the target's legs swiftly, reducing the target's Speed stat. |  |
-| 526 | Work Up (עבודה) | normal | status | — | — | — | ✅ wired | user attack +1, user specialAttack +1 | — | ▫️ pulse | 4 (3/4) | The user is roused, and its Attack and Sp. Atk stats increase. |  |
-| 814 | Dual Wingbeat (כנף כפולה) | flying | physical | 40 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | 4 (1/4) | The user slams the target with its wings. The target is hit twice in a row. |  |
-| 915 | Temper Flare (להבת עצבים) | fire | physical | 75 | 100 | — | ✅ wired | `stomping-tantrum` | — | ▫️ lunge | 4 (0/4) | Spurred by desperation, the user attacks the target. This move's power is doubled if the user's previous move failed. |  |
-| 42 | Pin Missile (טיל סיכה) | bug | physical | 25 | 95 | — | ✅ wired | hits 2-5 | — | ▫️ projectile | 3 (3/0) | Fires pins that strike 2-5 times. |  |
-| 135 | Soft Boiled (ביצה רכה) | normal | status | — | — | — | ✅ wired | heal 50% | — | ▫️ pulse | 3 (2/2) | Restores HP by 1/2 the user's max HP. |  |
-| 137 | Glare (מבט מאיים) | normal | status | — | 100 | — | ✅ wired | paralyze 100% | — | ▫️ pulse | 3 (3/0) | A move that may cause paralysis. |  |
-| 147 | Spore (נבג) | grass | status | — | 100 | — | ✅ wired | sleep 100% | — | 🎬 powder | 3 (2/1) | A move that induces sleep. |  |
-| 151 | Acid Armor (שריון חומצה) | poison | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | 3 (3/0) | Sharply raises the user's DEFENSE. |  |
-| 170 | Mind Reader (קורא מחשבות) | normal | status | — | — | — | ✅ wired | `lock-on` | — | ▫️ pulse | 3 (3/0) | Ensures the next attack will hit. |  |
-| 187 | Belly Drum (תוף בטן) | normal | status | — | — | — | ✅ wired | user attack +6, `belly-drum` | — | ▫️ pulse | 3 (3/0) | Reduces own HP to maximize ATTACK. |  |
-| 198 | Bone Rush (מטח עצמות) | ground | physical | 25 | 90 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 3 (3/0) | An attack that hits 2-5 times. |  |
-| 245 | Extreme Speed (מהירות קיצונית) | normal | physical | 80 | 100 | — | ✅ wired | priority +2 | — | ▫️ lunge | 3 (3/0) | A powerful first- strike move. |  |
-| 261 | Will O Wisp (אש רפאים) | fire | status | — | 85 | — | ✅ wired | burn 100% | — | ▫️ pulse | 3 (0/3) | Inflicts a burn on the foe with intense fire. |  |
-| 310 | Astonish (הפתעה) | ghost | physical | 30 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 3 (3/0) | An attack that may shock the foe into flinching. |  |
-| 314 | Air Cutter (חותך אוויר) | flying | special | 60 | 95 | — | ✅ wired | crit +1 | — | ▫️ projectile | 3 (1/2) | Hacks with razorlike wind. High critical-hit ratio. |  |
-| 339 | Bulk Up (בניית גוף) | fighting | status | — | — | — | ✅ wired | user attack +1, user defense +1 | — | 🎬 self-boost-cooler | 3 (0/3) | Bulks up the body to boost both ATTACK and DEFENSE. |  |
-| 370 | Close Combat (קרב מגע) | fighting | physical | 120 | 100 | 100 | ✅ wired | user defense -1, user specialDefense -1 | — | ▫️ lunge | 3 (1/2) | The user fights the foe in close without guarding itself. It also cuts the user's Defense and Sp. Def. |  |
-| 397 | Rock Polish (ליטוש סלע) | rock | status | — | — | — | ✅ wired | user speed +2 | — | 🎬 self-boost-cooler | 3 (0/3) | The user polishes its body to reduce drag. It can sharply raise the Speed stat. |  |
-| 409 | Drain Punch (אגרוף מנקז) | fighting | physical | 75 | 100 | — | ✅ wired | drain 50% | — | 🎬 punch:fighting | 3 (0/3) | An energy-draining punch. The user's HP is restored by half the damage taken by the target. |  |
-| 451 | Charge Beam (קרן טעינה) | electric | special | 50 | 90 | 70 | ✅ wired | user specialAttack +1 | — | 🎬 lightning | 3 (0/3) | The user fires a concentrated bundle of electricity. It may also raise the user's Sp. Atk stat. |  |
-| 484 | Heavy Slam (טריקה כבדה) | steel | physical | — | 100 | — | ✅ wired | `weight-ratio` | — | ▫️ lunge | 3 (0/3) | The user slams into the target with its heavy body. The more the user outweighs the target, the greater its damage. |  |
-| 492 | Foul Play (משחק מלוכלך) | dark | physical | 95 | 100 | — | ✅ wired | `foul-play` | — | ▫️ lunge | 3 (0/3) | The user turns the target's power against it. The higher the target's Attack stat, the greater the damage. |  |
-| 522 | Struggle Bug (חרק נאבק) | bug | special | 50 | 100 | 100 | ✅ wired | target specialAttack -1 | — | ▫️ projectile | 3 (0/3) | While resisting, the user attacks the opposing Pokémon. The targets' Sp. Atk stat is reduced. |  |
-| 800 | Meteor Beam (קרן מטאור) | rock | special | 120 | 90 | 100 | ✅ wired | charge: specialAttack +1, `requires-charge-turn` | — | ▫️ beam | 3 (0/3) | In this two-turn attack, the user gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn. |  |
-| 886 | Chilling Water (מים מצננים) | water | special | 50 | 100 | — | ✅ wired | target attack -1 | — | ▫️ projectile | 3 (0/3) | The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat. |  |
-| 27 | Rolling Kick (בעיטה מתגלגלת) | fighting | physical | 60 | 85 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 2 (2/0) | A fast, spinning kick. |  |
-| 125 | Bone Club (מועדון עצם) | ground | physical | 65 | 85 | 10 | ✅ wired | flinch 10% | — | ▫️ burst | 2 (2/0) | An attack that may cause flinching. |  |
-| 128 | Clamp (מלחציים) | water | physical | 35 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | 2 (2/0) | Traps the foe for 2-5 turns. |  |
-| 134 | Kinesis (טלקינזיס) | psychic | status | — | 80 | — | ✅ wired | target accuracy -1 | — | ▫️ pulse | 2 (2/0) | Reduces the foe's accuracy. |  |
-| 140 | Barrage (מטח) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 2 (2/0) | Throws orbs to hit 2-5 times. |  |
-| 152 | Crabhammer (פטיש סרטן) | water | physical | 100 | 90 | — | ✅ wired | crit +1 | — | ▫️ lunge | 2 (2/0) | Has a high critical hit ratio. |  |
-| 155 | Bonemerang (בומרנג עצם) | ground | physical | 50 | 90 | — | ✅ wired | hits 2 | — | ▫️ burst | 2 (2/0) | An attack that strikes twice. |  |
-| 158 | Hyper Fang (ניב היפר) | normal | physical | 80 | 90 | 10 | ✅ wired | flinch 10%, `super-fang` | — | 🎬 bite:bite | 2 (2/0) | An attack that may cause flinching. |  |
-| 162 | Super Fang (ניב על) | normal | physical | — | 90 | — | ✅ wired | `super-fang` | — | 🎬 bite:bite | 2 (2/0) | Cuts the foe's HP by 1/2. |  |
-| 309 | Meteor Mash (פגיעת מטאור) | steel | physical | 90 | 90 | 20 | ✅ wired | user attack +1 | — | ▫️ lunge | 2 (2/0) | Fires a meteor-like punch. May raise ATTACK. |  |
-| 319 | Metal Sound (צליל מתכת) | steel | status | — | 85 | — | ✅ wired | target specialDefense -2 | — | 🎬 sound-based:blast | 2 (1/1) | Emits a horrible screech that sharply lowers SP. DEF. |  |
-| 322 | Cosmic Power (כוח קוסמי) | psychic | status | — | — | — | ✅ wired | user defense +1, user specialDefense +1 | — | ▫️ pulse | 2 (0/2) | Raises DEFENSE and SP. DEF with a mystic power. |  |
-| 326 | Extrasensory (חוש שישי) | psychic | special | 80 | 100 | 10 | ✅ wired | flinch 10% | — | 🎬 psychic-wave | 2 (2/0) | Attacks with a peculiar power. May cause flinching. |  |
-| 330 | Muddy Water (מים עכורים) | water | special | 90 | 85 | 30 | ✅ wired | target accuracy -1 | — | ▫️ projectile | 2 (0/2) | Attacks with muddy water. May lower accuracy. |  |
-| 359 | Hammer Arm (זרוע פטיש) | fighting | physical | 100 | 90 | 100 | ✅ wired | user speed -1 | — | 🎬 punch:fighting | 2 (2/0) | The user swings and hits with its strong and heavy fist. It lowers the user's Speed, however. |  |
-| 389 | Sucker Punch (אגרוף ערמומי) | dark | physical | 70 | 100 | — | ✅ wired | priority +1, `fails-if-target-not-attacking` | — | 🎬 punch:dark | 2 (2/0) | This move enables the user to attack first. It fails if the foe is not readying an attack, however. |  |
-| 395 | Force Palm (כף כוח) | fighting | physical | 60 | 100 | 30 | ✅ wired | paralyze 30%, flinch 10% | — | ▫️ lunge | 2 (2/0) | The user strikes the target with its palm. This may also leave the target with paralysis. |  |
-| 400 | Night Slash (חיתוך לילה) | dark | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 2 (2/0) | The user slashes the foe the instant an opportunity arises. It has a high critical-hit ratio. |  |
-| 405 | Bug Buzz (זמזום חרק) | bug | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | 🎬 sound-based:blast | 2 (2/2) | The user vibrates its wings to generate a damaging sound wave. It may also lower the foe's Sp. Def stat. |  |
-| 418 | Bullet Punch (אגרוף רובה) | steel | physical | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 punch:steel | 2 (2/0) | The user strikes with a tough punch as fast as a bullet. This move always goes first. |  |
-| 458 | Double Hit (מכה כפולה) | normal | physical | 35 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | 2 (2/0) | The user slams the foe with a tail, etc. The target is hit twice in a row. |  |
-| 503 | Scald (רתיחה) | water | special | 80 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | 2 (0/2) | The user shoots boiling hot water at its target. It may also leave the target with a burn. |  |
-| 535 | Heat Crash (התרסקות חום) | fire | physical | — | 100 | — | ✅ wired | `weight-ratio` | — | ▫️ lunge | 2 (0/2) | The user slams its target with its flame- covered body. The more the user outweighs the target, the greater the damage. |  |
-| 577 | Draining Kiss (נשיקה מנקזת) | fairy | special | 50 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 2 (1/2) | The user steals the target's energy with a kiss. The user's HP is restored by over half of the damage taken by the target. |  |
-| 583 | Play Rough (משחק גס) | fairy | physical | 90 | 90 | 10 | ✅ wired | target attack -1 | — | ▫️ lunge | 2 (0/2) | The user plays rough with the target and attacks it. This may also lower the target's Attack stat. |  |
-| 595 | Mystical Fire (אש מיסטית) | fire | special | 75 | 100 | 100 | ✅ wired | target specialAttack -1 | — | ▫️ projectile | 2 (0/2) | The user attacks by breathing a special, hot fire. This also lowers the target's Sp. Atk stat. |  |
-| 791 | Life Dew (טל חיים) | water | status | — | — | — | ✅ wired | heal 25% | — | ▫️ pulse | 2 (2/0) | The user scatters mysterious water around and restores the HP of itself and its ally Pokémon in the battle. |  |
-| 807 | Burning Jealousy (קנאה בוערת) | fire | special | 70 | 100 | 100 | ✅ wired | `burning-jealousy` | — | ▫️ projectile | 2 (0/2) | The user attacks with energy from jealousy. This leaves all opposing Pokémon that have had their stats boosted during the turn with a burn. |  |
-| 914 | Alluring Voice (קול מפתה) | fairy | special | 80 | 100 | — | ✅ wired | confusion 100% | — | ▫️ projectile | 2 (0/2) | The user attacks the target using its angelic voice. This also confuses the target if its stats have been boosted during the turn. |  |
-| 41 | Twineedle (מחט כפולה) | bug | physical | 25 | 100 | 20 | ✅ wired | poison 20%, hits 2 | — | ▫️ projectile | 1 (1/0) | Jabs the foe twice using stingers. |  |
-| 142 | Lovely Kiss (נשיקה מקסימה) | normal | status | — | 75 | — | ✅ wired | sleep 100% | — | ▫️ pulse | 1 (1/0) | May cause the foe to fall asleep. |  |
-| 146 | Dizzy Punch (אגרוף מסחרר) | normal | physical | 70 | 100 | 20 | ✅ wired | confusion 20% | — | 🎬 punch:normal | 1 (1/0) | An attack that may cause confusion. |  |
-| 159 | Sharpen (חידוד) | normal | status | — | — | — | ✅ wired | user attack +1 | — | ▫️ pulse | 1 (1/0) | A move that raises the user's ATTACK. |  |
-| 167 | Triple Kick (בעיטה משולשת) | fighting | physical | 10 | 90 | — | ✅ wired | hits 3 | — | ▫️ lunge | 1 (1/0) | Hits three times with rising power. |  |
-| 177 | Aeroblast (פיצוץ אוויר) | flying | special | 100 | 95 | — | ✅ wired | crit +1 | — | ▫️ projectile | 1 (1/0) | Has a high critical hit ratio. |  |
-| 183 | Mach Punch (אגרוף מאך) | fighting | physical | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 punch:fighting | 1 (1/0) | A fast punch that lands first. |  |
-| 190 | Octazooka (תותחן תמנון) | water | special | 65 | 85 | 50 | ✅ wired | target accuracy -1 | — | ▫️ projectile | 1 (1/0) | An attack that may reduce accuracy. |  |
-| 208 | Milk Drink (שתיית חלב) | normal | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | 1 (1/0) | Restores HP by 1/2 the max HP. |  |
-| 221 | Sacred Fire (אש קדושה) | fire | physical | 100 | 95 | 50 | ✅ wired | burn 50% | — | 🎬 fire-blast | 1 (1/0) | An attack that may inflict a burn. |  |
-| 234 | Morning Sun (שמש בוקר) | normal | status | — | — | — | ✅ wired | heal 75%, `morning-sun` | — | 🎬 celestial:morning sun | 1 (1/0) | Restores HP (varies by time). |  |
-| 313 | Fake Tears (דמעות מזויפות) | dark | status | — | 100 | — | ✅ wired | target specialDefense -2 | — | ▫️ pulse | 1 (0/1) | Feigns crying to sharply lower the foe's SP. DEF. |  |
-| 315 | Overheat (התחממות יתר) | fire | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | ▫️ projectile | 1 (0/1) | Allows a full-power attack, but sharply lowers SP. ATK. |  |
-| 333 | Icicle Spear (חנית קרח) | ice | physical | 25 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 1 (0/1) | Attacks the foe by firing 2 to 5 icicles in a row. |  |
-| 344 | Volt Tackle (וולט התנגשות) | electric | physical | 120 | 100 | 10 | ✅ wired | paralyze 10%, recoil 25% | — | 🎬 elemental-dash | 1 (1/0) | A life-risking tackle that slightly hurts the user. |  |
-| 350 | Rock Blast (פיצוץ סלע) | rock | physical | 25 | 90 | — | ✅ wired | hits 2-5 | — | 🎬 rock-throw | 1 (1/1) | Hurls boulders at the foe 2 to 5 times in a row. |  |
-| 383 | Copycat (חיקוי חתול) | normal | status | — | — | — | ✅ wired | `copycat` | — | 🎬 pulse | 1 (1/0) | The user mimics the move used immediately before it. The move fails if no other move has been used yet. |  |
-| 394 | Flare Blitz (להט פרץ) | fire | physical | 120 | 100 | 10 | ✅ wired | burn 10%, recoil 33% | — | 🎬 elemental-dash | 1 (0/1) | The user cloaks itself in fire and charges at the foe. The user sustains serious damage, too. |  |
-| 410 | Vacuum Wave (גל ואקום) | fighting | special | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 punch:fighting | 1 (0/1) | The user whirls its fists to send a wave of pure vacuum at the foe. This move always goes first. |  |
-| 420 | Ice Shard (רסיס קרח) | ice | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | 1 (1/0) | The user flash freezes chunks of ice and hurls them. This move always goes first. |  |
-| 425 | Shadow Sneak (התגנבות צל) | ghost | physical | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 night-shade:shadow sneak | 1 (1/0) | The user extends its shadow and attacks the foe from behind. This move always goes first. |  |
-| 435 | Discharge (פריקה) | electric | special | 80 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 lightning | 1 (1/0) | A flare of electricity is loosed to strike all Pokémon in battle. It may also cause paralysis. |  |
-| 436 | Lava Plume (פרץ לבה) | fire | special | 80 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | 1 (1/0) | An inferno of scarlet flames washes over all Pokémon in battle. It may also inflict burns. |  |
-| 466 | Ominous Wind (רוח מבשרת רעות) | ghost | special | 60 | 100 | 10 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 10% | — | 🎬 night-shade:ominous wind | 1 (1/0) | The user creates a gust of repulsive wind. It may also raise all the user's stats at once. |  |
-| 488 | Flame Charge (מטען להבה) | fire | physical | 50 | 100 | 100 | ✅ wired | user speed +1 | — | ▫️ lunge | 1 (0/1) | The user cloaks itself with flame and attacks. Building up more power, it raises the user's Speed stat. |  |
-| 489 | Coil (סליל) | poison | status | — | — | — | ✅ wired | user attack +1, user defense +1, user accuracy +1 | — | 🎬 self-boost-cooler | 1 (1/0) | The user coils up and concentrates. This raises its Attack and Defense stats as well as its accuracy. |  |
-| 491 | Acid Spray (ריסוס חומצה) | poison | special | 40 | 100 | 100 | ✅ wired | target specialDefense -2 | — | ▫️ projectile | 1 (0/1) | The user spits fluid that works to melt the target. This harshly reduces the target's Sp. Def stat. |  |
-| 527 | Electroweb (רשת חשמל) | electric | special | 55 | 95 | 100 | ✅ wired | target speed -1 | — | 🎬 electroweb | 1 (0/1) | The user captures and attacks opposing Pokémon by using an electric net. It reduces the targets' Speed stat. |  |
-| 528 | Wild Charge (מטען פראי) | electric | physical | 90 | 100 | — | ✅ wired | paralyze 10%, recoil 25% | — | 🎬 elemental-dash | 1 (1/1) | The user shrouds itself in electricity and smashes into its target. It also damages the user a little. |  |
-| 529 | Drill Run (ריצת מקדח) | ground | physical | 80 | 95 | — | ✅ wired | crit +1 | — | ▫️ burst | 1 (1/1) | The user crashes into its target while rotating its body like a drill. Critical hits land more easily. |  |
-| 542 | Hurricane (הוריקן) | flying | special | 110 | 70 | 30 | ✅ wired | confusion 30% | — | ▫️ projectile | 1 (0/1) | The user attacks by wrapping its opponent in a fierce wind that flies up into the sky. It may also confuse the target. |  |
-| 585 | Moonblast (פצצת ירח) | fairy | special | 95 | 100 | 30 | ✅ wired | target specialAttack -1 | — | 🎬 celestial:moonblast | 1 (1/0) | Borrowing the power of the moon, the user attacks the target. This may also lower the target's Sp. Atk stat. |  |
-| 598 | Eerie Impulse (דחף מוזר) | electric | status | — | 100 | — | ✅ wired | target specialAttack -2 | — | ▫️ pulse | 1 (0/1) | The user's body generates an eerie impulse. Exposing the target to it harshly lowers the target's Sp. Atk stat. |  |
-| 608 | Baby Doll Eyes (עיני בובה) | fairy | status | — | 100 | — | ✅ wired | priority +1, target attack -1 | — | ▫️ pulse | 1 (1/0) | The user stares at the target with its baby-doll eyes, which lowers its Attack stat. This move always goes first. |  |
-| 611 | Infestation (נגיעות) | bug | special | 20 | 100 | 100 | ✅ wired | trap 100% | — | ▫️ projectile | 1 (0/1) | The target is infested and attacked for four to five turns. The target can't flee during this time. |  |
-| 667 | High Horsepower (כוח סוס גבוה) | ground | physical | 95 | 95 | — | ✅ wired | target speed -1 | — | ▫️ burst | 1 (1/1) | The user fiercely attacks the target using its entire body. |  |
-| 710 | Liquidation (נזלה) | water | physical | 85 | 100 | 20 | ✅ wired | target defense -1 | — | ▫️ lunge | 1 (0/1) | The user slams into the target using a full-force blast of water. This may also lower the target's Defense stat. |  |
-| 806 | Skitter Smack (מכת זינוק) | bug | physical | 70 | 90 | 100 | ✅ wired | target specialAttack -1 | — | ▫️ lunge | 1 (0/1) | The user skitters behind the target to attack. This also lowers the target's Sp. Atk stat. |  |
-| 260 | Flatter (חנופה) | dark | status | — | 100 | — | ✅ wired | target specialAttack +1, confusion 100% | — | ▫️ pulse | 0 (0/0) | Confuses the foe, but raises its SP. ATK. |  |
-| 274 | Assist (סיוע) | normal | status | — | — | — | ✅ wired | `assist` | — | 🎬 pulse | 0 (0/0) | Attacks randomly with one of the partner's moves. |  |
-| 277 | Magic Coat (מעיל קסם) | psychic | status | — | — | — | ✅ wired | priority +4, `magic-coat` | — | ▫️ pulse | 0 (0/0) | Reflects special attack move back to the attacker. |  |
-| 292 | Arm Thrust (דחיפת זרוע) | fighting | physical | 15 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 0 (0/0) | Straight-arm punches that strike the foe 2 to 5 times. |  |
-| 297 | Feather Dance (ריקוד נוצה) | flying | status | — | 100 | — | ✅ wired | target attack -2 | — | ▫️ pulse | 0 (0/0) | Envelops the foe with down to sharply reduce ATTACK. |  |
-| 298 | Teeter Dance (ריקוד מתנדנד) | normal | status | — | 100 | — | ✅ wired | confusion 100% | — | ▫️ pulse | 0 (0/0) | Confuses all POKéMON on the scene. |  |
-| 299 | Blaze Kick (בעיטת להבה) | fire | physical | 85 | 90 | 10 | ✅ wired | crit +1 | — | ▫️ lunge | 0 (0/0) | A kick with a high critical- hit ratio. May cause a burn. |  |
-| 301 | Ice Ball (כדור קרח) | ice | physical | 30 | 90 | — | ✅ wired | `lock-in-rollout` | — | ▫️ projectile | 0 (0/0) | A 5-turn attack that gains power on successive hits. |  |
-| 303 | Slack Off (מנוחת עצלן) | normal | status | — | — | — | ✅ wired | heal 50% | — | ▫️ pulse | 0 (0/0) | Slacks off and restores half the maximum HP. |  |
-| 305 | Poison Fang (ניב רעל) | poison | physical | 50 | 100 | 50 | ✅ wired | poison (toxic) 50% | — | 🎬 bite:poison | 0 (0/0) | A sharp-fanged attack. May badly poison the foe. |  |
-| 306 | Crush Claw (טופר מוחץ) | normal | physical | 75 | 95 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | 0 (0/0) | Tears at the foe with sharp claws. May lower DEFENSE. |  |
-| 307 | Blast Burn (שריפת פיצוץ) | fire | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | 🎬 flamethrower | 0 (0/0) | Powerful, but leaves the user immobile the next turn. |  |
-| 308 | Hydro Cannon (תותח מים) | water | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | 🎬 surf-wave:hydro-pump | 0 (0/0) | Powerful, but leaves the user immobile the next turn. |  |
-| 320 | Grass Whistle (שריקת עשב) | grass | status | — | 55 | — | ✅ wired | sleep 100% | — | 🎬 sound-based:blast | 0 (0/0) | Lulls the foe into sleep with a pleasant melody. |  |
-| 321 | Tickle (דגדוג) | normal | status | — | 100 | — | ✅ wired | target attack -1, target defense -1 | — | ▫️ pulse | 0 (0/0) | Makes the foe laugh to lower ATTACK and DEFENSE. |  |
-| 324 | Signal Beam (קרן אות) | bug | special | 75 | 100 | 10 | ✅ wired | confusion 10% | — | ▫️ beam | 0 (0/0) | A strange beam attack that may confuse the foe. |  |
-| 329 | Sheer Cold (קור קיצוני) | ice | special | — | 30 | — | ✅ wired | `ohko` | — | ▫️ beam | 0 (0/0) | A chilling attack that causes fainting if it hits. |  |
-| 331 | Bullet Seed (זרע רובה) | grass | physical | 25 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ projectile | 0 (0/0) | Shoots 2 to 5 seeds in a row to strike the foe. |  |
-| 336 | Howl (יללה) | normal | status | — | — | — | ✅ wired | user attack +1 | — | ▫️ pulse | 0 (0/0) | Howls to raise the spirit and boosts ATTACK. |  |
-| 338 | Frenzy Plant (צמח טירוף) | grass | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ projectile | 0 (0/0) | Powerful, but leaves the user immobile the next turn. |  |
-| 342 | Poison Tail (זנב רעל) | poison | physical | 50 | 100 | 10 | ✅ wired | poison 10%, crit +1 | — | ▫️ lunge | 0 (0/0) | Has a high critical-hit ratio. May also poison. |  |
-| 348 | Leaf Blade (להב עלה) | grass | physical | 90 | 100 | — | ✅ wired | crit +1 | — | 🎬 leaf-spray | 0 (0/0) | Slashes with a sharp leaf. High critical-hit ratio. |  |
-| 354 | Psycho Boost (דחיפת פסיכו) | psychic | special | 140 | 90 | 100 | ✅ wired | user specialAttack -2 | — | ▫️ projectile | 0 (0/0) | Allows a full-power attack, but sharply lowers SP. ATK. |  |
-| 390 | Toxic Spikes (קוצי רעל) | poison | status | — | — | — | ✅ wired | `toxic-spikes` | — | ▫️ pulse | 0 (0/0) | The user lays a trap of poison spikes at the foe's feet. They poison foes that switch into battle. |  |
-| 412 | Energy Ball (כדור אנרגיה) | grass | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 0 (0/0) | The user draws power from nature and fires it at the foe. It may also lower the target's Sp. Def. |  |
-| 413 | Brave Bird (ציפור אמיצה) | flying | physical | 120 | 100 | — | ✅ wired | recoil 33% | — | ▫️ lunge | 0 (0/0) | The user tucks in its wings and charges from a low altitude. The user also takes serious damage. |  |
-| 426 | Mud Bomb (פצצת בוץ) | ground | special | 65 | 85 | 30 | ✅ wired | target accuracy -1 | — | ▫️ projectile | 0 (0/0) | The user launches a hard-packed mud ball to attack. It may also lower the target's accuracy. |  |
-| 429 | Mirror Shot (יריית מראה) | steel | special | 65 | 85 | 30 | ✅ wired | target accuracy -1 | — | ▫️ projectile | 0 (0/0) | The user looses a flash of energy from its polished body. It may also lower the target's accuracy. |  |
-| 437 | Leaf Storm (סופת עלים) | grass | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | 🎬 leaf-spray | 0 (0/0) | A storm of sharp leaves is whipped up. The attack's recoil sharply reduces the user's Sp. Atk stat. |  |
-| 440 | Cross Poison (רעל צולב) | poison | physical | 70 | 100 | 10 | ✅ wired | poison 10%, crit +1 | — | ▫️ lunge | 0 (0/0) | A slashing attack that may also leave the target poisoned. It has a high critical-hit ratio. |  |
-| 441 | Gunk Shot (יריית פסולת) | poison | physical | 120 | 80 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | 0 (0/0) | The user shoots filthy garbage at the foe to attack. It may also poison the target. |  |
-| 452 | Wood Hammer (פטיש עץ) | grass | physical | 120 | 100 | — | ✅ wired | recoil 25% | — | ▫️ lunge | 0 (0/0) | The user slams its rugged body into the foe to attack. The user also sustains serious damage. |  |
-| 453 | Aqua Jet (סילון מים) | water | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | 0 (0/0) | The user lunges at the foe at a speed that makes it almost invisible. It is sure to strike first. |  |
-| 457 | Head Smash (נגיחת ראש) | rock | physical | 150 | 80 | — | ✅ wired | recoil 50% | — | 🎬 elemental-dash | 0 (0/0) | The user delivers a life-endangering head butt at full power. The user also takes terrible damage. |  |
-| 475 | Autotomize (אוטומציה) | steel | status | — | — | — | ✅ wired | user speed +2 | — | ▫️ pulse | 0 (0/0) | The user sheds part of its body to make itself lighter and sharply raise its Speed stat. |  |
-| 482 | Sludge Wave (גל בוץ) | poison | special | 95 | 100 | 10 | ✅ wired | poison 10% | — | ▫️ projectile | 0 (0/0) | It swamps the area around the user with a giant sludge wave. It may also poison those hit. |  |
-| 483 | Quiver Dance (ריקוד רעידה) | bug | status | — | — | — | ✅ wired | user specialAttack +1, user specialDefense +1, user speed +1 | — | 🎬 self-boost-cooler | 0 (0/0) | The user lightly performs a beautiful, mystic dance. It boosts the user's Sp. Atk, Sp. Def, and Speed stats. |  |
-| 504 | Shell Smash (ניפוץ שריון) | normal | status | — | — | — | ✅ wired | user attack +2, user specialAttack +2, user speed +2, user defense -1, user specialDefense -1 | — | 🎬 self-boost-cooler | 0 (0/0) | The user breaks its shell, lowering its Defense and Sp. Def stats but sharply raising Attack, Sp. Atk, and Speed stats. |  |
-| 517 | Inferno (גיהנום) | fire | special | 100 | 50 | 100 | ✅ wired | burn 100% | — | 🎬 flamethrower | 0 (0/0) | The user attacks by engulfing the target in an intense fire. It leaves the target with a burn. |  |
-| 531 | Heart Stamp (חותמת לב) | psychic | physical | 60 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 0 (0/0) | The user unleashes a vicious blow after its cute act makes the target less wary. It may also make the target flinch. |  |
-| 534 | Razor Shell (שריון תער) | water | physical | 75 | 95 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | 0 (0/0) | The user cuts its target with sharp shells. This attack may also lower the target's Defense stat. |  |
-| 536 | Leaf Tornado (טורנדו עלים) | grass | special | 65 | 90 | 50 | ✅ wired | target accuracy -1 | — | 🎬 leaf-spray | 0 (0/0) | The user attacks its target by encircling it in sharp leaves. This attack may also lower the target's accuracy. |  |
-| 537 | Steamroller (מכבש קיטור) | bug | physical | 65 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 0 (0/0) | The user crushes its targets by rolling over them with its rolled-up body. This attack may make the target flinch. |  |
-| 538 | Cotton Guard (שמירת כותנה) | grass | status | — | — | — | ✅ wired | user defense +3 | — | ▫️ pulse | 0 (0/0) | The user protects itself by wrapping its body in soft cotton, drastically raising the user's Defense stat. |  |
-| 541 | Tail Slap (סטירת זנב) | normal | physical | 25 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 0 (0/0) | The user attacks by striking the target with its hard tail. It hits the target two to five times in a row. |  |
-| 556 | Icicle Crash (התרסקות קרח) | ice | physical | 85 | 90 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 0 (0/0) | The user attacks by harshly dropping an icicle onto the target. It may also make the target flinch. |  |
-| 589 | Play Nice (שחק יפה) | normal | status | — | — | 100 | ✅ wired | target attack -1 | — | ▫️ pulse | 0 (0/0) | The user and the target become friends, and the target loses its will to fight. This lowers the target's Attack stat. |  |
-| 609 | Nuzzle (חיבוק חשמלי) | electric | physical | 20 | 100 | 100 | ✅ wired | paralyze 100% | — | ▫️ lunge | 0 (0/0) | The user attacks by nuzzling its electrified cheeks against the target. This also leaves the target with paralysis. |  |
-| 669 | Solar Blade (להב שמש) | grass | physical | 125 | 100 | — | ✅ wired | `requires-charge-turn` | — | ▫️ lunge | 0 (0/0) | In this two-turn attack, the user gathers light and fills a blade with the light's energy, attacking the target on the next turn. |  |
-| 672 | Toxic Thread (חוט רעיל) | poison | status | — | 100 | 100 | ✅ wired | poison 100%, target speed -1 | — | ▫️ pulse | 0 (0/0) | The user shoots poisonous threads to poison the target and lower the target's Speed stat. |  |
-| 679 | Lunge (זינוק) | bug | physical | 80 | 100 | 100 | ✅ wired | target attack -1 | — | ▫️ lunge | 0 (0/0) | The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat. |  |
-| 715 | Tearful Look (מבט דומע) | normal | status | — | — | 100 | ✅ wired | target attack -1, target specialAttack -1 | — | ▫️ pulse | 0 (0/0) | The user gets teary eyed to make the target lose its combative spirit. This lowers the target's Attack and Sp. Atk stats. |  |
-| 828 | Psyshield Bash (נגיחת מגן פסיכו) | psychic | physical | 70 | 90 | — | ✅ wired | user defense +1, user specialDefense +1 | — | ▫️ lunge | 0 (0/0) | Cloaking itself in psychic energy, the user slams into the target. This may also raise the user's defensive stats. |  |
-| 834 | Wave Crash (התרסקות גל) | water | physical | 120 | 100 | — | ✅ wired | recoil 33% | — | ▫️ lunge | 0 (0/0) | The user shrouds itself in water and slams into the target with its whole body to inflict damage. This also damages the user and raises the user's action speed. |  |
-| 884 | Pounce (זינוק) | bug | physical | 50 | 100 | — | ✅ wired | target speed -1 | — | ▫️ lunge | 0 (0/0) | The user attacks by pouncing on the target. This also lowers the target's Speed stat. |  |
-| 888 | Twin Beam (קרן כפולה) | psychic | special | 40 | 100 | — | ✅ wired | hits 2 | — | ▫️ beam | 0 (0/0) | The user shoots mystical beams from its eyes to inflict damage. The target is hit twice in a row. |  |
+| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |
+|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|
+| 851 | Tera Blast (פיצוץ טרה) | normal | special | 80 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 25 (0/25) | If the user has Terastallized, it unleashes energy of its Tera Type. This move inflicts damage using the Attack or Sp. Atk stat—whichever is higher for the user. |  |
+| 675 | Throat Chop (מכת גרון) | dark | physical | 80 | 100 | 100 | 💤 missing, not reachable | — | effectChance 100% | ▫️ lunge | ✖ TM list only | 5 (0/5) | The user attacks the target's throat, and the resultant suffering prevents the target from using moves that emit sound for two turns. |  |
+| 271 | Trick (תעלול) | psychic | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 4 (0/4) | Tricks the foe into trading held items. |  |
+| 366 | Tailwind (רוח גב) | flying | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 4 (0/4) | The user whips up a turbulent whirlwind that ups the Speed of all party Pokémon for three turns. |  |
+| 473 | Psyshock (הלם פסיכו) | psychic | special | 80 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 4 (0/4) | The user materializes an odd psychic wave to attack the target. This attack does physical damage. |  |
+| 477 | Telekinesis (טלקינזיס) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 4 (0/4) | The user makes the target float with its psychic power. The target is easier to hit for three turns. |  |
+| 502 | Ally Switch (החלפת בן ברית) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 4 (0/4) | The user teleports using a strange power and switches its place with one of its allies. |  |
+| 514 | Retaliate (תגמול) | normal | physical | 70 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 4 (0/4) | The user gets revenge for a fainted ally. If an ally fainted in the previous turn, this attack's damage increases. |  |
+| 808 | Lash Out (התפרצות) | dark | physical | 75 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 4 (0/4) | The user lashes out to vent its frustration toward the target. If the user's stats were lowered during this turn, the power of this move is doubled. |  |
+| 286 | Imprison (כליאה) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 3 (0/3) | Prevents foes from using moves known by the user. |  |
+| 311 | Weather Ball (כדור מזג אוויר) | normal | special | 50 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 3 (0/3) | The move's type and power change with the weather. |  |
+| 369 | U Turn (סיבוב-חזרה) | bug | physical | 70 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 3 (0/3) | After making its attack, the user rushes back to switch places with a party Pokémon in waiting. |  |
+| 419 | Avalanche (מפולת שלג) | ice | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 3 (0/3) | An attack move that inflicts double the damage if the user has been hurt by the foe in the same turn. |  |
+| 450 | Bug Bite (נשיכת חרק) | bug | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 bite:bite | ✖ TM list only | 3 (0/3) | The user bites the foe. If the foe is holding a Berry, the user eats it and gains its effect. |  |
+| 497 | Echoed Voice (קול מהדהד) | normal | special | 40 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 sound-based:blast | ✖ TM list only | 3 (0/3) | The user attacks the target with an echoing voice. If this move is used every turn, it does greater damage. |  |
+| 796 | Steel Beam (קרן פלדה) | steel | special | 140 | 95 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ beam | ✖ TM list only | 3 (0/3) | The user fires a beam of steel that it collected from its entire body. This also damages the user. |  |
+| 917 | Psychic Noise (רעש פסיכי) | psychic | special | 75 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 psychic-wave | ✖ TM list only | 3 (0/3) | The user attacks the target with unpleasant sound waves. For two turns, the target is prevented from recovering HP through moves, Abilities, or held items. |  |
+| 291 | Dive (צלילה) | water | physical | 80 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 2 (0/2) | Dives underwater the first turn and strikes next turn. |  |
+| 356 | Gravity (כבידה) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 2 (0/2) | Gravity is intensified for five turns, making moves involving flying unusable and negating Levitation. |  |
+| 360 | Gyro Ball (כדור גירו) | steel | physical | — | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user tackles the foe with a high-speed spin. The slower the user, the greater the damage. |  |
+| 362 | Brine (מי מלח) | water | special | 65 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 2 (0/2) | If the foe's HP is down to about half, this attack will hit with double the power. |  |
+| 500 | Stored Power (כוח מאוחסן) | psychic | special | 20 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user attacks the target with stored power. The more the user's stats are raised, the greater the damage. |  |
+| 706 | Psychic Fangs (ניבי פסיכו) | psychic | physical | 85 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 psychic-wave | ✖ TM list only | 2 (0/2) | The user bites the target with its psychic capabilities. This can also destroy Light Screen and Reflect. |  |
+| 776 | Body Press (לחיצת גוף) | fighting | physical | 80 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 2 (0/2) | The user attacks by slamming its body into the target. The higher the user's Defense, the more damage it can inflict on the target. |  |
+| 797 | Expanding Force (כוח מתפשט) | psychic | special | 80 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user attacks the target with its psychic power. This move's power goes up and damages all opposing Pokémon on Psychic Terrain. |  |
+| 813 | Triple Axel (גרזן משולש) | ice | physical | 20 | 90 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 2 (0/2) | A consecutive three-kick attack that becomes more powerful with each successful hit. |  |
+| 912 | Hard Press (לחיצה קשה) | steel | physical | 0 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 2 (0/2) | The target is crushed with an arm, a claw, or the like to inflict damage. The more HP the target has left, the greater the move's power. |  |
+| 916 | Supercell Slam (טריקת סופר-תא) | electric | physical | 100 | 95 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 lightning | ✖ TM list only | 2 (0/2) | The user electrifies its body and drops onto the target to inflict damage. If this move misses, the user takes damage instead. |  |
+| 285 | Skill Swap (החלפת כישורים) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user swaps special abilities with the target. |  |
+| 340 | Bounce (קפיצה) | flying | physical | 85 | 85 | 30 | 💤 missing, not reachable | — | effectChance 30% | ▫️ lunge | ✖ TM list only | 1 (0/1) | Bounces up, then down the next turn. May paralyze. |  |
+| 365 | Pluck (קטיפה) | flying | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user pecks the foe. If the foe is holding a Berry, the user plucks it and gains its effect. |  |
+| 384 | Power Swap (החלפת כוח) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user employs its psychic power to switch changes to its Attack and Sp. Atk with the foe. |  |
+| 433 | Trick Room (חדר תעלול) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user creates a bizarre area in which slower Pokémon get to move first for five turns. |  |
+| 472 | Wonder Room (חדר פלא) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user creates a bizarre area in which Pokémon's Defense and Sp. Def stats are swapped for five turns. |  |
+| 511 | Quash (השתקה) | dark | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user suppresses the target and makes its move go last. |  |
+| 512 | Acrobatics (אקרובטיקה) | flying | physical | 55 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user nimbly strikes the target. If the user is not holding an item, this attack inflicts massive damage. |  |
+| 521 | Volt Switch (מתג וולט) | electric | special | 70 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ beam | ✖ TM list only | 1 (0/1) | After making its attack, the user rushes back to switch places with a party Pokémon in waiting. |  |
+| 566 | Phantom Force (כוח רפאים) | ghost | physical | 90 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user vanishes somewhere, then strikes the target on the next turn. This move hits even if the target protects itself. |  |
+| 663 | Darkest Lariat (לריאט אפל) | dark | physical | 85 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user swings both arms and hits the target. The target's stat changes don't affect this attack's damage. |  |
+| 809 | Poltergeist (פולטרגייסט) | ghost | physical | 110 | 90 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user attacks the target by controlling the target's item. The move fails if the target doesn't have an item. |  |
+| 812 | Flip Turn (סיבוב חזרה) | water | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | After making its attack, the user rushes back to switch places with a party Pokémon in waiting. |  |
+| 861 | Ice Spinner (סחרור קרח) | ice | physical | 80 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user covers its feet in thin ice and twirls around, slamming into the target. This move's spinning motion also destroys the terrain. |  |
+| 883 | Snowscape (נוף שלג) | ice | status | 0 | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user summons a snowstorm lasting five turns. This boosts the Defense stats of Ice types. |  |
+| 918 | Upper Hand (יד עליונה) | fighting | physical | 65 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user reacts to the target's movement and strikes with the heel of its palm, making the target flinch. This move fails if the target is not readying a priority move. |  |
+| 252 | Fake Out (הפתעה) | normal | physical | 40 | 100 | 100 | 💤 missing, not reachable | — | effectChance 100% | ▫️ lunge | ✖ TM list only | 0 (0/0) | A 1st-turn, 1st-strike move that causes flinching. |  |
+| 254 | Stockpile (אגירה) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | 🎬 self-boost | ✖ TM list only | 0 (0/0) | Charges up power for up to 3 turns. |  |
+| 255 | Spit Up (פליטה) | normal | special | — | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | Releases stockpiled power (the more the better). |  |
+| 256 | Swallow (בליעה) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Absorbs stockpiled power and restores HP. |  |
+| 265 | Smelling Salts (מלחי הרחה) | normal | physical | 70 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | Powerful against paralyzed foes, but also heals them. |  |
+| 267 | Nature Power (כוח טבע) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The type of attack varies depending on the location. |  |
+| 272 | Role Play (משחק תפקידים) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Mimics the target and copies its special ability. |  |
+| 275 | Ingrain (השרשה) | grass | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Lays roots that restore HP. The user can't switch out. |  |
+| 278 | Recycle (מיחזור) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Recycles a used item for one more use. |  |
+| 284 | Eruption (התפרצות) | fire | special | 150 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The higher the user's HP, the more damage caused. |  |
+| 288 | Grudge (טינה) | ghost | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | If the user faints, deletes the PP of the final move. |  |
+| 293 | Camouflage (הסוואה) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Alters the POKéMON's type depending on the location. |  |
+| 300 | Mud Sport (ספורט בוץ) | ground | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Covers the user in mud to raise electrical resistance. |  |
+| 312 | Aromatherapy (ארומתרפיה) | grass | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Heals all status problems with a soothing scent. |  |
+| 316 | Odor Sleuth (עוקב ריח) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Negates the foe's efforts to heighten evasiveness. |  |
+| 323 | Water Spout (פרץ מים) | water | special | 150 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | Inflicts more damage if the user's HP is high. |  |
+| 335 | Block (חסימה) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Blocks the foe's way to prevent escape. |  |
+| 343 | Covet (חמדנות) | normal | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | Cutely begs to obtain an item held by the foe. |  |
+| 358 | Wake Up Slap (סטירת השכמה) | fighting | physical | 70 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | This attack inflicts high damage on a sleeping foe. It also wakes the foe up, however. |  |
+| 361 | Healing Wish (משאלת ריפוי) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user faints. In return, the Pokémon taking its place will have its HP restored and status cured. |  |
+| 367 | Acupressure (דיקור) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user applies pressure to stress points, sharply boosting one of its stats. |  |
+| 368 | Metal Burst (פרץ מתכת) | steel | physical | — | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user retaliates against the foe that last inflicted damage on it with much greater power. |  |
+| 375 | Psycho Shift (שינוי פסיכו) | psychic | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Using its psychic power of suggestion, the user transfers its status problems to the target. |  |
+| 376 | Trump Card (קלף מנצח) | normal | special | — | — | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The fewer PP this move has, the more power it has for attack. |  |
+| 377 | Heal Block (חסימת ריפוי) | psychic | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user prevents the foe from using any HP-recovery moves for five turns. |  |
+| 378 | Wring Out (סחיטה) | normal | special | — | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user powerfully wrings the foe. The more HP the foe has, the greater this attack's power. |  |
+| 379 | Power Trick (תעלול כוח) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user employs its psychic power to switch its Attack stat with its Defense stat. |  |
+| 380 | Gastro Acid (חומצת קיבה) | poison | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user hurls up its stomach acids on the foe. The fluid eliminates the effect of the foe's ability. |  |
+| 381 | Lucky Chant (שיר מזל) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user chants an incantation toward the sky, preventing the foe from landing critical hits. |  |
+| 385 | Guard Swap (החלפת הגנה) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user employs its psychic power to switch changes to its Defense and Sp. Def with the foe. |  |
+| 388 | Worry Seed (זרע דאגה) | grass | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | A seed that causes worry is planted on the foe. It prevents sleep by making its ability Insomnia. |  |
+| 415 | Switcheroo (החלפה) | dark | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user trades held items with the foe faster than the eye can follow. |  |
+| 469 | Wide Guard (הגנה רחבה) | rock | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user and its allies are protected from wide-ranging attacks for one turn. If used in succession, its chance of failing rises. |  |
+| 470 | Guard Split (פיצול הגנה) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user employs its psychic power to average its Defense and Sp. Def stats with those of its target's. |  |
+| 471 | Power Split (פיצול כוח) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user employs its psychic power to average its Attack and Sp. Atk stats with those of the target's. |  |
+| 474 | Venoshock (הלם רעל) | poison | special | 65 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user drenches the target in a special poisonous liquid. Its power is doubled if the target is poisoned. |  |
+| 476 | Rage Powder (אבקת זעם) | bug | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | 🎬 powder | ✖ TM list only | 0 (0/0) | The user scatters a cloud of irritating powder to draw attention to itself. Opponents aim only at the user. |  |
+| 478 | Magic Room (חדר קסם) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user creates a bizarre area in which Pokémon's held items lose their effects for five turns. |  |
+| 480 | Storm Throw (זריקת סערה) | fighting | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user strikes the target with a fierce blow. This attack always results in a critical hit. |  |
+| 485 | Synchronoise (סינכרו-רעש) | psychic | special | 120 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | Using an odd shock wave, the user inflicts damage on any Pokémon of the same type in the area around it. |  |
+| 487 | Soak (ספיגה) | water | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user shoots a torrent of water at the target and changes the target's type to Water. |  |
+| 493 | Simple Beam (קרן פשוטה) | normal | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user's mysterious psychic wave changes the target's Ability to Simple. |  |
+| 494 | Entrainment (הסחפות) | normal | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user dances with an odd rhythm that compels the target to mimic it, making the target's Ability the same as the user's. |  |
+| 501 | Quick Guard (שמירה מהירה) | fighting | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user protects itself and its allies from priority moves. If used in succession, its chance of failing rises. |  |
+| 505 | Heal Pulse (פולס ריפוי) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user emits a healing pulse which restores the target's HP by up to half of its max HP. |  |
+| 507 | Sky Drop (הפלה מהשמיים) | flying | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user takes the target into the sky, then drops it during the next turn. The target cannot attack while in the sky. |  |
+| 509 | Circle Throw (זריקת מעגל) | fighting | physical | 60 | 90 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user throws the target and drags out another Pokémon in its party. In the wild, the battle ends. |  |
+| 513 | Reflect Type (השתקפות סוג) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user reflects the target's type, making it the same type as the target. |  |
+| 515 | Final Gambit (הימור אחרון) | fighting | special | — | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user risks everything to attack its target. The user faints but does damage equal to the user's HP. |  |
+| 516 | Bestow (הענקה) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user passes its held item to the target when the target isn't holding an item. |  |
+| 524 | Frost Breath (נשימת כפור) | ice | special | 60 | 90 | 100 | 💤 missing, not reachable | — | effectChance 100% | ▫️ beam | ✖ TM list only | 0 (0/0) | The user blows a cold breath on the target. This attack always results in a critical hit. |  |
+| 540 | Psystrike (מכת פסיכו) | psychic | special | 100 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user materializes an odd psychic wave to attack the target. This attack does physical damage. |  |
+| 562 | Belch (גיהוק) | poison | special | 120 | 90 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user lets out a damaging belch at the target. The user must eat a held Berry to use this move. |  |
+| 563 | Rototiller (חריש) | ground | status | — | — | 100 | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Tilling the soil, the user makes it easier for plants to grow. This raises the Attack and Sp. Atk stats of Grass-type Pokémon. |  |
+| 564 | Sticky Web (רשת דביקה) | bug | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user weaves a sticky net around the opposing team, which lowers their Speed stat upon switching into battle. |  |
+| 565 | Fell Stinger (עוקץ הפלה) | bug | physical | 50 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | When the user knocks out a target with this move, the user's Attack stat rises sharply. |  |
+| 573 | Freeze Dry (הקפאה יבשה) | ice | special | 70 | 100 | 10 | 💤 missing, not reachable | — | effectChance 10% | ▫️ beam | ✖ TM list only | 0 (0/0) | The user rapidly cools the target. This may also leave the target frozen. This move is super effective on Water types. |  |
+| 579 | Flower Shield (מגן פרחים) | fairy | status | — | — | 100 | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user raises the Defense stat of all Grass-type Pokémon in battle with a mysterious power. |  |
+| 580 | Grassy Terrain (שטח עשב) | grass | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user turns the ground under everyone's feet to grass for five turns. This restores the HP of Pokémon on the ground a little every turn. |  |
+| 581 | Misty Terrain (שטח ערפל) | fairy | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | 🎬 mist-veil:mist | ✖ TM list only | 0 (0/0) | The user covers the ground under everyone's feet with mist for five turns. This protects Pokémon on the ground from status conditions. |  |
+| 599 | Venom Drench (ניקוז ארס) | poison | status | — | 100 | 100 | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | Opposing Pokémon are drenched in an odd poisonous liquid. This lowers the Attack, Sp. Atk, and Speed stats of a poisoned target. |  |
+| 602 | Magnetic Flux (שטף מגנטי) | electric | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user manipulates magnetic fields, which raises the Defense and Sp. Def stats of ally Pokémon with the Plus or Minus Ability. |  |
+| 660 | First Impression (רושם ראשון) | bug | physical | 90 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | Although this move has great power, it only works the first turn the user is in battle. |  |
+| 664 | Sparkling Aria (אריה נוצצת) | water | special | 90 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user bursts into song, emitting many bubbles. Any Pokémon suffering from a burn will be healed by the touch of these bubbles. |  |
+| 668 | Strength Sap (ספיגת כוח) | grass | status | — | 100 | 100 | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user restores its HP by the same amount as the target's Attack stat. It also lowers the target's Attack stat. |  |
+| 671 | Spotlight (זרקור) | normal | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user shines a spotlight on the target so that only the target will be attacked during the turn. |  |
+| 676 | Pollen Puff (פולן גלולה) | bug | special | 90 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user attacks the enemy with a pollen puff that explodes. If the target is an ally, it gives the ally a pollen puff that restores its HP instead. |  |
+| 678 | Psychic Terrain (שטח פסיכי) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | 🎬 psychic-wave | ✖ TM list only | 0 (0/0) | This protects Pokémon on the ground from priority moves and powers up Psychic-type moves for five turns. |  |
+| 681 | Power Trip (מסע כוח) | dark | physical | 20 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user boasts its strength and attacks the target. The more the user's stats are raised, the greater the move's power. |  |
+| 682 | Burn Up (שריפה מוחלטת) | fire | special | 130 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type. |  |
+| 683 | Speed Swap (החלפת מהירות) | psychic | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user exchanges Speed stats with the target. |  |
+| 694 | Aurora Veil (רעלה אורורה) | ice | status | — | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | This move reduces damage from physical and special moves for five turns. This can be used only in a hailstorm. |  |
+| 798 | Steel Roller (גלגל פלדה) | steel | physical | 130 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user attacks while destroying the terrain. This move fails when the ground hasn't turned into a terrain. |  |
+| 802 | Misty Explosion (פיצוץ ערפל) | fairy | special | 100 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 mist-veil:mist | ✖ TM list only | 0 (0/0) | The user attacks everything around it and faints upon using this move. This move's power is increased on Misty Terrain. |  |
+| 803 | Grassy Glide (החלקת עשב) | grass | physical | 55 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | Gliding on the ground, the user attacks the target. This move always goes first on Grassy Terrain. |  |
+| 804 | Rising Voltage (מתח עולה) | electric | special | 70 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | 🎬 sound-based:blast | ✖ TM list only | 0 (0/0) | The user attacks with electric voltage rising from the ground. This move's power doubles when the target is on Electric Terrain. |  |
+| 805 | Terrain Pulse (פולס שטח) | normal | special | 50 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user utilizes the power of the terrain to attack. This move's type and power changes depending on the terrain when it's used. |  |
+| 810 | Corrosive Gas (גז מאכל) | poison | status | — | 100 | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user surrounds everything around it with highly acidic gas and melts away items they hold. |  |
+| 811 | Coaching (אימון) | fighting | status | — | — | 100 | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user properly coaches its ally Pokémon, boosting their Attack and Defense stats. |  |
+| 833 | Raging Fury (זעם משתולל) | fire | physical | 120 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user rampages and spews vicious flames to inflict damage on the target, then becomes fixated on using this move. |  |
+| 839 | Barb Barrage (מטח קוצים) | poison | physical | 60 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user launches countless toxic barbs to inflict damage. This may also poison the target. This move's power is doubled if the target has a status condition. |  |
+| 853 | Axe Kick (בעיטת גרזן) | fighting | physical | 120 | 90 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user attacks by kicking up into the air and slamming its heel down upon the target. This may also confuse the target. If it misses, the user takes damage instead. |  |
+| 873 | Raging Bull (שור זועם) | normal | physical | 90 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user performs a tackle like a raging bull. This move's type depends on the user's form. It can also break barriers, such as Light Screen and Reflect. |  |
+| 881 | Chilly Reception (קבלת פנים קרירה) | ice | status | 0 | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user tells a chillingly bad joke before switching places with a party Pokémon in waiting. This summons a snowstorm lasting five turns. |  |
+| 882 | Tidy Up (סידור) | normal | status | 0 | — | — | 💤 missing, not reachable | — | status move with no effect | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user tidies up and removes the effects of Spikes, Stealth Rock, Sticky Web, Toxic Spikes, and Substitute. This also boosts the user's Attack and Speed stats. |  |
+| 887 | Hyper Drill (מקדח היפר) | normal | physical | 100 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user spins the pointed part of its body at high speed to pierce the target. This attack can hit a target using a move such as Protect or Detect. |  |
+| 889 | Rage Fist (אגרוף זעם) | ghost | physical | 50 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user converts its rage into energy to attack. The more times the user has been hit by attacks, the greater the move's power. |  |
+| 894 | Comeuppance (גמול) | dark | physical | 1 | 100 | — | 💤 missing, not reachable | — | description mentions an effect | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user retaliates with much greater force against the opponent that last inflicted damage on it. |  |
+
+## ✅ wired (400)
+
+| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |
+|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|
+| 237 | Hidden Power (כוח נסתר) | normal | special | 60 | 100 | — | ✅ wired | `hidden-power` | — | ▫️ projectile | ✔ lvl×1 · TM | 271 (1/270) | The power varies with the POKéMON. |  |
+| 92 | Toxic (רעלן) | poison | status | — | 90 | — | ✅ wired | poison (toxic) 100% | — | ▫️ pulse | ✔ TM | 270 (0/270) | A poison move with increasing damage. |  |
+| 104 | Double Team (צוות כפול) | normal | status | — | — | — | ✅ wired | user evasion +1 | — | 🎬 double-team | ✔ lvl×5 · TM · trainer | 270 (5/270) | Heightens evasiveness. |  |
+| 156 | Rest (מנוחה) | psychic | status | — | — | — | ✅ wired | `rest` | — | 🎬 heal-pulse | ✔ lvl×10 · TM · trainer | 270 (10/270) | Sleep for 2 turns to fully recover. |  |
+| 182 | Protect (הגנה) | normal | status | — | — | — | ✅ wired | priority +4, `protect` | — | 🎬 protect-shield:protect | ✔ lvl×13 · TM | 270 (13/270) | Foils attack that turn. It may fail. |  |
+| 203 | Endure (עמידות) | normal | status | — | — | — | ✅ wired | priority +4, `endure` | — | 🎬 protect-shield:endure | ✔ lvl×10 · TM | 270 (10/270) | Always leaves at least 1HP. |  |
+| 207 | Swagger (יהירות) | normal | status | — | 85 | — | ✅ wired | target attack +2, confusion 100% | — | ▫️ pulse | ✔ lvl×3 · TM | 270 (3/270) | Causes confusion and raises ATTACK. |  |
+| 214 | Sleep Talk (נדודי שינה) | normal | status | — | — | — | ✅ wired | `sleep-talk` | — | 🎬 heal-pulse | ✔ TM | 270 (0/270) | Randomly attacks while asleep. |  |
+| 216 | Return (חזרה) | normal | physical | — | 100 | — | ✅ wired | handled by id in code (`RETURN_MOVE_ID`) | — | ▫️ lunge | ✔ TM | 270 (0/270) | An attack that is based on loyalty. |  |
+| 218 | Frustration (תסכול) | normal | physical | — | 100 | — | ✅ wired | handled by id in code (`FRUSTRATION_MOVE_ID`) | — | ▫️ lunge | ✔ TM | 270 (0/270) | An attack based on lack of loyalty. |  |
+| 173 | Snore (נחירות) | normal | special | 50 | 100 | 30 | ✅ wired | flinch 30% | — | 🎬 heal-pulse | ✔ lvl×3 · TM | 268 (3/268) | An attack useable only while asleep. |  |
+| 213 | Attract (משיכה) | normal | status | — | 100 | — | ✅ wired | infatuation 100% | — | ▫️ pulse | ✔ lvl×1 · TM | 252 (1/252) | Makes the opposite gender infatuated. |  |
+| 174 | Curse (קללה) | ghost | status | — | — | — | ✅ wired | user attack +1, user defense +1, user speed -1, curse 100%, `curse` | — | ▫️ pulse | ✔ lvl×7 · TM | 245 (7/245) | Works differently for ghost-types. |  |
+| 241 | Sunny Day (יום שמש) | fire | status | — | — | — | ✅ wired | `sun` | — | 🎬 celestial:sunny day | ✔ lvl×6 · TM | 202 (6/202) | Boosts fire-type moves for 5 turns. |  |
+| 29 | Headbutt (נגיחה) | normal | physical | 70 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✔ lvl×16 | 179 (16/173) | An attack that may make foe flinch. |  |
+| 36 | Take Down (הסתערות) | normal | physical | 90 | 85 | — | ✅ wired | recoil 25% | — | ▫️ lunge | ✔ lvl×34 | 178 (34/162) | A tackle that also hurts the user. |  |
+| 164 | Substitute (תחליף) | normal | status | — | — | — | ✅ wired | `substitute` | — | ▫️ pulse | ✔ lvl×1 | 173 (1/173) | Makes a decoy with 1/4 user's max HP. |  |
+| 38 | Double Edge (להב כפול) | normal | physical | 120 | 100 | — | ✅ wired | recoil 25% | — | ▫️ lunge | ✔ lvl×21 | 165 (21/154) | A tackle that also hurts the user. |  |
+| 189 | Mud Slap (סטירת בוץ) | ground | special | 20 | 100 | 100 | ✅ wired | target accuracy -1 | — | ▫️ projectile | ✔ lvl×3 · TM | 157 (3/157) | Reduces the foe's accuracy. |  |
+| 99 | Rage (זעם) | normal | physical | 20 | 100 | — | ✅ wired | `lock-in-rage` | — | ▫️ lunge | ✔ lvl×23 | 155 (23/145) | Raises ATTACK if the user is hit. |  |
+| 117 | Bide (המתנה) | normal | physical | — | — | — | ✅ wired | `bide` | — | ▫️ lunge | ✔ lvl×7 | 152 (7/145) | Waits 2-3 turns & hits back double. |  |
+| 240 | Rain Dance (ריקוד גשם) | water | status | — | — | — | ✅ wired | `rain` | — | ▫️ pulse | ✔ lvl×14 · TM | 148 (14/148) | Boosts water-type moves for 5 turns. |  |
+| 102 | Mimic (חיקוי) | normal | status | — | — | — | ✅ wired | `mimic` | — | ▫️ pulse | ✔ lvl×1 | 146 (1/145) | Copies a move used by the foe. |  |
+| 63 | Hyper Beam (קרן היפר) | normal | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ beam | ✔ lvl×18 · TM | 141 (18/139) | 1st turn: Attack 2nd turn: Rest |  |
+| 249 | Rock Smash (ריסוק סלע) | fighting | physical | 40 | 100 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | ✔ lvl×1 | 140 (1/140) | An attack that may lower DEFENSE. |  |
+| 34 | Body Slam (מכת גוף) | normal | physical | 85 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 body-slam | ✔ lvl×17 | 132 (17/126) | An attack that may cause paralysis. |  |
+| 168 | Thief (גנב) | dark | physical | 60 | 100 | — | ✅ wired | `thief` | — | ▫️ lunge | ✔ TM | 120 (0/120) | An attack that may steal a held item. |  |
+| 231 | Iron Tail (זנב ברזל) | steel | physical | 100 | 75 | 30 | ✅ wired | target defense -1 | — | ▫️ lunge | ✔ TM | 115 (0/115) | An attack that may reduce DEFENSE. |  |
+| 197 | Detect (זיהוי) | fighting | status | — | — | — | ✅ wired | priority +4, `protect` | — | 🎬 protect-shield:protect | ✔ lvl×6 | 106 (6/104) | Evades attack that turn. It may fail. |  |
+| 115 | Reflect (השתקפות) | psychic | status | — | — | — | ✅ wired | reflect 5t | — | ▫️ pulse | ✔ lvl×13 | 103 (13/95) | Raises DEFENSE with a barrier. |  |
+| 130 | Skull Bash (נגיחת גולגולת) | normal | physical | 130 | 100 | 100 | ✅ wired | charge: defense +1, `requires-charge-turn` | — | ▫️ burst | ✔ lvl×3 | 99 (3/99) | 1st turn: Prepare 2nd turn: Attack |  |
+| 148 | Flash (הבזק) | normal | status | — | 100 | — | ✅ wired | target accuracy -1 | — | ▫️ pulse | ✔ TM | 94 (0/94) | Blinds the foe to reduce accuracy. |  |
+| 111 | Defense Curl (כריכת הגנה) | normal | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | ✔ lvl×22 | 87 (22/87) | Heightens the user's DEFENSE. |  |
+| 59 | Blizzard (סופת שלג) | ice | special | 110 | 70 | 10 | ✅ wired | freeze 10% | — | ▫️ beam | ✔ lvl×6 · TM | 85 (6/85) | An attack that may freeze the foe. |  |
+| 196 | Icy Wind (רוח קפואה) | ice | special | 55 | 95 | 100 | ✅ wired | target speed -1 | — | 🎬 icy-wind | ✔ lvl×1 | 85 (1/85) | An icy attack that lowers SPEED. |  |
+| 91 | Dig (חפירה) | ground | physical | 80 | 100 | — | ✅ wired | `requires-charge-turn`, `two-turn-dig` | — | ▫️ burst | ✔ lvl×8 · TM | 83 (8/83) | 1st turn: Burrow 2nd turn: Attack |  |
+| 223 | Dynamic Punch (אגרוף דינמי) | fighting | physical | 100 | 50 | 100 | ✅ wired | confusion 100% | — | 🎬 punch:fighting | ✖ TM list only | 81 (0/81) | An attack that always confuses. |  |
+| 43 | Leer (מבט מאיים) | normal | status | — | 100 | 100 | ✅ wired | target defense -1 | — | ▫️ pulse | ✔ lvl×77 | 77 (77/0) | Reduces the foe's DEFENSE. |  |
+| 126 | Fire Blast (פיצוץ אש) | fire | special | 110 | 85 | 10 | ✅ wired | burn 10% | — | 🎬 fire-blast | ✔ lvl×7 · TM | 75 (7/75) | An attack that may cause a burn. |  |
+| 192 | Zap Cannon (תותח זאפ) | electric | special | 120 | 50 | 100 | ✅ wired | paralyze 100% | — | 🎬 lightning | ✔ lvl×4 | 75 (4/75) | An attack that always paralyzes. |  |
+| 87 | Thunder (סערת רעמים) | electric | special | 110 | 70 | 30 | ✅ wired | paralyze 30% | — | 🎬 lightning | ✔ lvl×10 · TM | 72 (10/72) | An attack that may cause paralysis. |  |
+| 244 | Psych Up (התעלות) | normal | status | — | — | — | ✅ wired | `psych-up` | — | ▫️ pulse | ✔ lvl×6 · TM | 69 (6/69) | Copies the foe's stat changes. |  |
+| 8 | Ice Punch (אגרוף קרח) | ice | physical | 75 | 100 | 10 | ✅ wired | freeze 10% | — | 🎬 punch:ice | ✔ lvl×2 | 65 (2/65) | An icy punch. May cause freezing. |  |
+| 94 | Psychic (על חושי) | psychic | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | 🎬 psychic-wave | ✔ lvl×19 · TM | 65 (19/65) | An attack that may lower SPCL.DEF. |  |
+| 61 | Bubble Beam (קרן בועות) | water | special | 65 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ beam | ✔ lvl×11 | 64 (11/57) | An attack that may lower SPEED. |  |
+| 205 | Rollout (גלגול) | rock | physical | 30 | 90 | — | ✅ wired | `lock-in-rollout` | — | ▫️ lunge | ✔ lvl×12 | 64 (12/64) | Attacks 5 turns with rising power. |  |
+| 46 | Roar (שאגה) | normal | status | — | — | — | ✅ wired | target attack -2, target specialAttack -2, target speed -1 | — | 🎬 sound-based:blast | ✔ lvl×14 | 63 (14/62) | Scares wild foes to end battle. |  |
+| 58 | Ice Beam (קרן קרח) | ice | special | 90 | 100 | 10 | ✅ wired | freeze 10% | — | ▫️ beam | ✔ lvl×7 · trainer | 63 (7/61) | An attack that may freeze the foe. |  |
+| 247 | Shadow Ball (כדור צל) | ghost | special | 80 | 100 | 20 | ✅ wired | target specialDefense -1 | — | 🎬 shadow-ball | ✔ lvl×1 · TM | 63 (1/63) | An attack that may lower SPCL.DEF. |  |
+| 76 | Solar Beam (קרן סולארית) | grass | special | 120 | 100 | — | ✅ wired | `requires-charge-turn` | — | 🎬 solar-beam | ✔ lvl×11 · TM | 61 (11/61) | 1st turn: Prepare 2nd turn: Attack |  |
+| 201 | Sandstorm (סופת חול) | rock | status | — | — | — | ✅ wired | `sandstorm` | — | ▫️ pulse | ✔ lvl×13 · TM | 61 (13/61) | Inflicts damage every turn. |  |
+| 7 | Fire Punch (אגרוף אש) | fire | physical | 75 | 100 | 10 | ✅ wired | burn 10% | — | 🎬 punch:fire | ✔ lvl×5 | 57 (5/57) | A fiery punch. May cause a burn. |  |
+| 138 | Dream Eater (אוכל חלומות) | psychic | special | 100 | 100 | — | ✅ wired | drain 50%, `dream-eater` | — | ▫️ projectile | ✔ lvl×6 · TM | 57 (6/57) | Steals HP from a sleeping victim. |  |
+| 202 | Giga Drain (ניקוז גיגה) | grass | special | 75 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | ✔ lvl×3 · TM | 57 (3/57) | Steals 1/2 of the damage inflicted. |  |
+| 9 | Thunder Punch (אגרוף רעם) | electric | physical | 75 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 punch:electric | ✔ lvl×6 | 56 (6/56) | An electric punch. It may paralyze. |  |
+| 85 | Thunderbolt (רעם) | electric | special | 90 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 lightning | ✔ lvl×5 | 55 (5/54) | An attack that may cause paralysis. |  |
+| 66 | Submission (כניעה) | fighting | physical | 80 | 80 | — | ✅ wired | recoil 25% | — | ▫️ lunge | ✔ lvl×5 | 53 (5/53) | An attack that also hurts the user. |  |
+| 69 | Seismic Toss (זריקה סייסמית) | fighting | physical | — | 100 | — | ✅ wired | `night-shade` | — | ▫️ lunge | ✔ lvl×6 | 53 (6/53) | The user's level equals damage HP. |  |
+| 250 | Whirlpool (מערבולת) | water | special | 35 | 85 | 100 | ✅ wired | trap 100% | — | 🎬 water-flow | ✖ TM list only | 52 (0/52) | Traps the foe for 2-5 turns. |  |
+| 68 | Counter (נגדית) | fighting | physical | — | 100 | — | ✅ wired | priority -5, `counter` | — | ▫️ lunge | ✔ lvl×6 | 51 (6/46) | Returns a physical blow double. |  |
+| 171 | Nightmare (סיוט) | ghost | status | — | 100 | — | ✅ wired | nightmare 100% | — | ▫️ pulse | ✖ TM list only | 51 (0/51) | A sleeper loses 1/4 HP every turn. |  |
+| 44 | Bite (נשיכה) | dark | physical | 60 | 100 | 30 | ✅ wired | flinch 30% | — | 🎬 bite:bite | ✔ lvl×50 | 50 (50/0) | An attack that may cause flinching. |  |
+| 45 | Growl (נהמה) | normal | status | — | 100 | — | ✅ wired | target attack -1 | — | 🎬 sound-based:screech | ✔ lvl×48 | 48 (48/0) | Reduces the foe's ATTACK. |  |
+| 157 | Rock Slide (מפולת סלעים) | rock | physical | 75 | 90 | 30 | ✅ wired | flinch 30% | — | 🎬 rock-slide | ✔ lvl×10 | 47 (10/41) | An attack that may cause flinching. |  |
+| 103 | Screech (צרחה) | normal | status | — | 85 | — | ✅ wired | target defense -2 | — | 🎬 sound-based:screech | ✔ lvl×42 | 46 (42/8) | Sharply reduces the foe's DEFENSE. |  |
+| 97 | Agility (זריזות) | psychic | status | — | — | — | ✅ wired | user speed +2 | — | 🎬 self-boost-cooler | ✔ lvl×44 · trainer | 45 (44/4) | Sharply increases the user's SPEED. |  |
+| 39 | Tail Whip (הנפת זנב) | normal | status | — | 100 | — | ✅ wired | target defense -1 | — | ▫️ pulse | ✔ lvl×44 | 44 (44/0) | Lowers the foe's DEFENSE. |  |
+| 86 | Thunder Wave (גל רעם) | electric | status | — | 90 | — | ✅ wired | paralyze 100% | — | 🎬 lightning | ✔ lvl×16 · trainer | 42 (16/36) | A move that may cause paralysis. |  |
+| 210 | Fury Cutter (חותך זעם) | bug | physical | 40 | 95 | — | ✅ wired | `fury-cutter` | — | ▫️ lunge | ✖ TM list only | 42 (0/42) | Successive hits raise power. |  |
+| 188 | Sludge Bomb (פצצת בוץ) | poison | special | 90 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | ✔ lvl×2 · TM | 41 (2/41) | An attack that may poison the foe. |  |
+| 14 | Swords Dance (ריקוד חרבות) | normal | status | — | — | — | ✅ wired | user attack +2 | — | 🎬 self-boost-cooler | ✔ lvl×10 | 40 (10/39) | A dance that increases ATTACK. |  |
+| 184 | Scary Face (פנים מפחידות) | normal | status | — | 100 | — | ✅ wired | target speed -2 | — | ▫️ pulse | ✔ lvl×34 | 39 (34/18) | Sharply reduces the foe's SPEED. |  |
+| 72 | Mega Drain (ניקוז מגה) | grass | special | 40 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | ✔ lvl×7 | 35 (7/29) | Steals 1/2 of the damage inflicted. |  |
+| 149 | Psywave (גל על חושי) | psychic | special | — | 100 | — | ✅ wired | `psywave` | — | 🎬 psychic-wave | ✔ lvl×1 | 35 (1/34) | An attack with variable power. |  |
+| 98 | Quick Attack (מתקפה מהירה) | normal | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | ✔ lvl×34 | 34 (34/0) | Lets the user get in the first hit. |  |
+| 100 | Teleport (שיגור) | psychic | status | — | — | — | ✅ wired | user evasion +1, user speed +1 | — | ▫️ pulse | ✔ lvl×5 | 34 (5/32) | A move for fleeing from battle. |  |
+| 116 | Focus Energy (ריכוז אנרגיה) | normal | status | — | — | — | ✅ wired | `focus-energy` | — | ▫️ pulse | ✔ lvl×30 | 34 (30/14) | Raises the critical hit ratio. |  |
+| 118 | Metronome (מטרונום) | normal | status | — | — | — | ✅ wired | `metronome` | — | 🎬 pulse | ✔ lvl×6 | 34 (6/32) | Randomly uses any POKéMON move. |  |
+| 127 | Waterfall (מפל מים) | water | physical | 80 | 100 | 20 | ✅ wired | flinch 20% | — | 🎬 water-flow | ✔ lvl×2 | 34 (2/34) | An aquatic charge attack. |  |
+| 230 | Sweet Scent (ריח מתוק) | normal | status | — | 100 | — | ✅ wired | target evasion -2 | — | ▫️ pulse | ✔ lvl×10 | 34 (10/34) | Reduces the foe's evasiveness. |  |
+| 90 | Fissure (בקע) | ground | physical | — | 30 | — | ✅ wired | `ohko` | — | 🎬 earthquake | ✔ lvl×5 | 33 (5/30) | A ground-type, one-hit KO attack. |  |
+| 163 | Slash (חיתוך) | normal | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✔ lvl×32 | 32 (32/0) | Has a high critical hit ratio. |  |
+| 211 | Steel Wing (כנף פלדה) | steel | physical | 70 | 90 | 10 | ✅ wired | user defense +1 | — | ▫️ lunge | ✔ lvl×1 · TM | 32 (1/32) | Stiff wings strike the foe. |  |
+| 19 | Fly (תעופה) | flying | physical | 90 | 95 | — | ✅ wired | `requires-charge-turn`, `two-turn-fly` | — | ▫️ lunge | ✔ lvl×1 · TM | 30 (1/30) | 1st turn: Fly 2nd turn: Attack |  |
+| 53 | Flamethrower (להביור) | fire | special | 90 | 100 | 10 | ✅ wired | burn 10% | — | 🎬 flamethrower | ✔ lvl×21 | 30 (21/13) | An attack that may inflict a burn. |  |
+| 225 | Dragon Breath (נשימת דרקון) | dragon | special | 60 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 dragon-aura | ✔ lvl×11 · TM | 30 (11/19) | A strong breath attack. |  |
+| 263 | Facade (חזית) | normal | physical | 70 | 100 | — | ✅ wired | `facade-boost` | — | ▫️ lunge | ✖ TM list only | 28 (0/28) | Boosts ATTACK when burned, paralyzed, or poisoned. |  |
+| 290 | Secret Power (כוח סודי) | normal | physical | 70 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | ✖ TM list only | 28 (0/28) | An attack with effects that vary by location. |  |
+| 28 | Sand Attack (התקפת חול) | ground | status | — | 100 | — | ✅ wired | target accuracy -1 | — | ▫️ pulse | ✔ lvl×26 | 26 (26/0) | Reduces accuracy by throwing sand. |  |
+| 161 | Tri Attack (מתקפה משולשת) | normal | special | 80 | 100 | 20 | ✅ wired | `tri-attack` | — | ▫️ beam | ✔ lvl×8 | 26 (8/23) | Fires three kinds of beams at once. |  |
+| 219 | Safeguard (שמירה) | normal | status | — | — | — | ✅ wired | safeguard 5t | — | ▫️ pulse | ✔ lvl×26 | 26 (26/2) | Prevents all status problems. |  |
+| 590 | Confide (סודות) | normal | status | — | — | 100 | ✅ wired | target specialAttack -1 | — | 🎬 sound-based:screech | ✖ TM list only | 26 (0/26) | The user tells the target a secret, and the target loses its ability to concentrate. This lowers the target's Sp. Atk stat. |  |
+| 52 | Ember (גחלת) | fire | special | 40 | 100 | 10 | ✅ wired | burn 10% | — | ▫️ projectile | ✔ lvl×25 | 25 (25/0) | An attack that may inflict a burn. |  |
+| 113 | Light Screen (מסך אור) | psychic | status | — | — | — | ✅ wired | light-screen 5t | — | ▫️ pulse | ✔ lvl×20 | 25 (20/6) | Ups SPCL.DEF with a wall of light. |  |
+| 48 | Supersonic (על-קולי) | normal | status | — | 55 | — | ✅ wired | confusion 100% | — | 🎬 sound-based:screech | ✔ lvl×24 | 24 (24/0) | Sound waves that cause confusion. |  |
+| 93 | Confusion (בלבול) | psychic | special | 50 | 100 | 10 | ✅ wired | confusion 10% | — | 🎬 psychic-wave | ✔ lvl×24 | 24 (24/0) | An attack that may cause confusion. |  |
+| 109 | Confuse Ray (קרינת בלבול) | ghost | status | — | 100 | — | ✅ wired | confusion 100% | — | ▫️ pulse | ✔ lvl×22 | 24 (22/4) | A move that causes confusion (bypasses type immunity). |  |
+| 120 | Self Destruct (השמדה עצמית) | normal | physical | 200 | 100 | — | ✅ wired | `leave-user-at-1-hp` | — | ▫️ lunge | ✔ lvl×9 | 24 (9/22) | Powerful but makes the user faint. |  |
+| 242 | Crunch (כתישה) | dark | physical | 80 | 100 | 20 | ✅ wired | target defense -1 | — | 🎬 bite:crunch | ✔ lvl×21 | 23 (21/15) | An attack that may lower SPCL.DEF. |  |
+| 77 | Poison Powder (אבקת רעל) | poison | status | — | 75 | — | ✅ wired | poison 100% | — | 🎬 powder | ✔ lvl×22 | 22 (22/0) | A move that may poison the foe. |  |
+| 106 | Harden (הקשחה) | normal | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | ✔ lvl×22 | 22 (22/0) | Raises the user's DEFENSE. |  |
+| 153 | Explosion (פיצוץ) | normal | physical | 250 | 100 | — | ✅ wired | `leave-user-at-1-hp` | — | ▫️ burst | ✔ lvl×9 | 22 (9/20) | Very powerful but makes user faint. |  |
+| 317 | Rock Tomb (קבר סלע) | rock | physical | 60 | 95 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | ✖ TM list only | 22 (0/22) | Stops the foe from moving with rocks and cuts SPEED. |  |
+| 363 | Natural Gift (מתנת טבע) | normal | physical | — | 100 | — | ✅ wired | `natural-gift` | — | ▫️ lunge | ✖ TM list only | 22 (0/22) | The user draws power to attack by using its held Berry. The Berry determines its type and power. |  |
+| 82 | Dragon Rage (זעם דרקון) | dragon | physical | 75 | 100 | — | ✅ wired | min dmg 40 | — | 🎬 dragon-aura | ✔ lvl×16 · TM | 21 (16/12) | Deals damage based on the user's stats, but always deals at least 40 HP. Type immunities still apply. |  |
+| 32 | Horn Drill (מקדח קרן) | normal | physical | — | 30 | — | ✅ wired | `ohko` | — | ▫️ lunge | ✔ lvl×7 | 20 (7/19) | A one-hit KO, drill attack. |  |
+| 445 | Captivate (שבייה) | normal | status | — | 100 | — | ✅ wired | target specialAttack -2, `fails-on-same-species` | — | ▫️ pulse | ✔ lvl×1 | 20 (1/20) | If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat. |  |
+| 6 | Pay Day (יום משכורת) | normal | physical | 40 | 100 | — | ✅ wired | `pay-day` | — | ▫️ lunge | ✔ lvl×2 | 19 (2/19) | Throws coins. Gets them back later. |  |
+| 18 | Whirlwind (סופת רוח) | normal | status | — | — | — | ✅ wired | target defense -2, target specialDefense -2, target speed -1 | — | ▫️ pulse | ✔ lvl×6 | 19 (6/17) | Blows away the foe & ends battle. |  |
+| 154 | Fury Swipes (מכות זעם) | normal | physical | 18 | 80 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✔ lvl×19 | 19 (19/0) | Quickly scratches 2-5 times. |  |
+| 228 | Pursuit (מרדף) | dark | physical | 40 | 100 | — | ✅ wired | `pursuit` | — | ▫️ lunge | ✔ lvl×19 | 19 (19/0) | Heavily strikes switching POKéMON. |  |
+| 416 | Giga Impact (פגיעת גיגה) | normal | physical | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ lunge | ✔ lvl×5 | 19 (5/19) | The user charges at the foe using every bit of its power. The user must rest on the next turn. |  |
+| 13 | Razor Wind (רוח תער) | normal | special | 80 | 100 | — | ✅ wired | `requires-charge-turn` | — | ▫️ projectile | ✔ lvl×1 | 18 (1/17) | 1st turn: Prepare 2nd turn: Attack |  |
+| 31 | Fury Attack (מתקפת זעם) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✔ lvl×18 | 18 (18/0) | Jabs the target 2-5 times. |  |
+| 200 | Outrage (התפרצות דרקון) | dragon | physical | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | 🎬 dragon-aura | ✔ lvl×16 | 18 (16/15) | Works 2-3 turns and confuses user. |  |
+| 40 | Poison Sting (עקיצת רעל) | poison | physical | 15 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | ✔ lvl×17 | 17 (17/0) | An attack that may poison the target. |  |
+| 50 | Disable (השבתה) | normal | status | — | 100 | — | ✅ wired | `disable` | — | ▫️ pulse | ✔ lvl×17 | 17 (17/0) | Disables the foe's most recent move. |  |
+| 78 | Stun Spore (נבג שיתוק) | grass | status | — | 75 | — | ✅ wired | paralyze 100% | — | 🎬 powder | ✔ lvl×17 | 17 (17/0) | A move that may paralyze the foe. |  |
+| 79 | Sleep Powder (אבקת שינה) | grass | status | — | 75 | — | ✅ wired | sleep 100% | — | 🎬 powder | ✔ lvl×17 | 17 (17/0) | May cause the foe to fall asleep. |  |
+| 510 | Incinerate (שריפה) | fire | special | 60 | 100 | — | ✅ wired | `incinerate` | — | ▫️ projectile | ✖ TM list only | 17 (0/17) | The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable. |  |
+| 523 | Bulldoze (דחפור) | ground | physical | 60 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ burst | ✔ lvl×7 | 17 (7/17) | The user stomps down on the ground and attacks everything in the area. Hit Pokémon's Speed stat is reduced. |  |
+| 83 | Fire Spin (סחרור אש) | fire | special | 35 | 85 | 100 | ✅ wired | trap 100% | — | 🎬 flamethrower | ✔ lvl×11 | 16 (11/6) | Traps foe in fire for 2-5 turns. |  |
+| 270 | Helping Hand (יד עוזרת) | normal | status | — | — | — | ✅ wired | `helping-hand` | — | ▫️ pulse | ✖ TM list only | 16 (0/16) | A move that boosts the power of the ally's attack in a Double Battle. |  |
+| 280 | Brick Break (שבירת לבנה) | fighting | physical | 75 | 100 | — | ✅ wired | `brick-break` | — | ▫️ lunge | ✖ TM list only | 16 (0/16) | Destroys barriers such as REFLECT and causes damage. |  |
+| 525 | Dragon Tail (זנב דרקון) | dragon | physical | 60 | 90 | — | ✅ wired | priority -6, `dragon-tail` | — | 🎬 dragon-aura | ✔ lvl×4 | 16 (4/16) | The user knocks away the target and drags out another Pokémon in its party. In the wild, the battle ends. |  |
+| 95 | Hypnosis (היפנוזה) | psychic | status | — | 60 | — | ✅ wired | sleep 100% | — | ▫️ pulse | ✔ lvl×15 · TM | 15 (15/0) | May put the foe to sleep. |  |
+| 133 | Amnesia (אמנזיה) | psychic | status | — | — | — | ✅ wired | user specialDefense +2 | — | 🎬 self-boost | ✔ lvl×14 | 15 (14/1) | Sharply raises the user's SPCL.DEF. |  |
+| 421 | Shadow Claw (טופר צל) | ghost | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✖ TM list only | 15 (0/15) | The user slashes with a sharp claw made from shadows. It has a high critical-hit ratio. |  |
+| 23 | Stomp (דריכה) | normal | physical | 65 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✔ lvl×14 | 14 (14/0) | An attack that may cause flinching. |  |
+| 60 | Psybeam (קרן על חושית) | psychic | special | 65 | 100 | 10 | ✅ wired | confusion 10% | — | ▫️ beam | ✔ lvl×13 | 14 (13/1) | An attack that may confuse the foe. |  |
+| 108 | Smokescreen (מסך עשן) | normal | status | — | 100 | — | ✅ wired | target accuracy -1 | — | 🎬 smoke-screen:smoke | ✔ lvl×14 | 14 (14/0) | Lowers the foe's accuracy. |  |
+| 145 | Bubble (בועה) | water | special | 40 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ projectile | ✔ lvl×14 | 14 (14/0) | An attack that may reduce SPEED. |  |
+| 248 | Future Sight (ראיית עתיד) | psychic | special | 120 | 100 | — | ✅ wired | `future-sight` | — | 🎬 psychic-wave | ✔ lvl×11 | 14 (11/4) | An attack that hits on 3rd turn. |  |
+| 434 | Draco Meteor (מטאור דרקו) | dragon | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | 🎬 dragon-aura | ✖ TM list only | 14 (0/14) | Comets are summoned down from the sky. The attack's recoil sharply reduces the user's Sp. Atk stat. |  |
+| 442 | Iron Head (ראש ברזל) | steel | physical | 80 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✖ TM list only | 14 (0/14) | The foe slams the target with its steel-hard head. It may also make the target flinch. |  |
+| 468 | Hone Claws (חידוד טפרים) | dark | status | — | — | — | ✅ wired | user attack +1, user accuracy +1 | — | ▫️ pulse | ✔ lvl×2 | 14 (2/14) | The user sharpens its claws to boost its Attack stat and accuracy. |  |
+| 913 | Dragon Cheer (עידוד דרקון) | dragon | status | 0 | 0 | — | ✅ wired | `focus-energy` | — | ▫️ pulse | ✖ TM list only | 14 (0/14) | The user raises its allies' morale with a draconic cry so that their future attacks have a heightened chance of landing critical hits. This rouses Dragon types more. |  |
+| 35 | Wrap (עטיפה) | normal | physical | 15 | 90 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | ✔ lvl×13 | 13 (13/0) | Squeezes the foe for 2-5 turns. |  |
+| 37 | Thrash (התפרעות) | normal | physical | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | ▫️ lunge | ✔ lvl×13 | 13 (13/0) | Works 2-3 turns and confuses user. |  |
+| 84 | Thunder Shock (הלם רעם) | electric | special | 40 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 lightning | ✔ lvl×13 | 13 (13/0) | An attack that may cause paralysis. |  |
+| 114 | Haze (אובך) | ice | status | — | — | — | ✅ wired | `haze` | — | 🎬 haze-clear:haze | ✔ lvl×11 | 13 (11/2) | Eliminates all stat changes. |  |
+| 143 | Sky Attack (מתקפת שמיים) | flying | physical | 140 | 90 | 30 | ✅ wired | `requires-charge-turn` | — | ▫️ lunge | ✔ lvl×2 | 13 (2/12) | 1st turn: Prepare 2nd turn: Attack |  |
+| 206 | False Swipe (חיתוך שווא) | normal | physical | 40 | 100 | — | ✅ wired | `false-swipe` | — | ▫️ lunge | ✔ lvl×8 | 13 (8/8) | Leaves the foe with at least 1HP. |  |
+| 3 | Double Slap (סטירה כפולה) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✔ lvl×12 | 12 (12/0) | Repeatedly slaps 2-5 times. |  |
+| 105 | Recover (התאוששות) | normal | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | ✔ lvl×12 | 12 (12/0) | Restores HP by 1/2 the max HP. |  |
+| 444 | Stone Edge (להב אבן) | rock | physical | 100 | 80 | — | ✅ wired | crit +1 | — | 🎬 rock-throw | ✔ lvl×1 | 12 (1/12) | The user stabs the foe with a sharpened stone. It has a high critical-hit ratio. |  |
+| 67 | Low Kick (בעיטה נמוכה) | fighting | physical | — | 100 | — | ✅ wired | `weight-target` | — | ▫️ lunge | ✔ lvl×8 | 11 (8/5) | Power depends on the foe's weight. As long as the foe is heavy the power is stronger. |  |
+| 193 | Foresight (ראיית עתיד) | normal | status | — | — | — | ✅ wired | user accuracy +2 | — | ▫️ pulse | ✔ lvl×11 | 11 (11/0) | Negates accuracy reduction moves. |  |
+| 212 | Mean Look (מבט מאיים) | normal | status | — | — | — | ✅ wired | mean-look 100% | — | ▫️ pulse | ✔ lvl×11 | 11 (11/0) | Prevents fleeing or switching. |  |
+| 239 | Twister (סחרור) | dragon | special | 40 | 100 | 20 | ✅ wired | flinch 20% | — | 🎬 twister-spin | ✔ lvl×11 | 11 (11/0) | Whips up a tornado to attack. |  |
+| 246 | Ancient Power (כוח עתיק) | rock | special | 60 | 100 | 20 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 20% | — | 🎬 rock-slide | ✔ lvl×11 | 11 (11/0) | An attack that may raise all stats. |  |
+| 269 | Taunt (ליגלוג) | dark | status | — | 100 | — | ✅ wired | taunt 100% | — | ▫️ pulse | ✔ lvl×5 | 11 (5/11) | Taunts the foe into only using attack moves. |  |
+| 276 | Superpower (כוח על) | fighting | physical | 120 | 100 | 100 | ✅ wired | user attack -1, user defense -1 | — | 🎬 punch:fighting | ✔ lvl×3 | 11 (3/11) | Boosts strength sharply, but lowers abilities. |  |
+| 374 | Fling (זריקה) | dark | physical | — | 100 | — | ✅ wired | `fling` | — | ▫️ lunge | ✔ lvl×1 | 11 (1/11) | The user flings its held item at the foe to attack. Its power and effects depend on the item. |  |
+| 428 | Zen Headbutt (נגיחת זן) | psychic | physical | 80 | 90 | 20 | ✅ wired | flinch 20% | — | ▫️ lunge | ✔ lvl×5 | 11 (5/11) | The user focuses its willpower to its head and rams the foe. It may also make the target flinch. |  |
+| 47 | Sing (שירה) | normal | status | — | 55 | — | ✅ wired | sleep 100% | — | 🎬 sound-based:sing | ✔ lvl×10 | 10 (10/0) | May cause the foe to fall asleep. |  |
+| 51 | Acid (חומצה) | poison | special | 40 | 100 | 10 | ✅ wired | target defense -1 | — | ▫️ projectile | ✔ lvl×10 | 10 (10/0) | An attack that may lower DEFENSE. |  |
+| 74 | Growth (צמיחה) | normal | status | — | — | — | ✅ wired | user specialAttack +1 | — | 🎬 self-boost | ✔ lvl×10 | 10 (10/0) | Raises the SPCL. ATK rating. |  |
+| 75 | Razor Leaf (עלה תער) | grass | physical | 55 | 95 | — | ✅ wired | crit +1 | — | 🎬 leaf-spray | ✔ lvl×10 | 10 (10/0) | Has a high critical hit ratio. |  |
+| 122 | Lick (ליקוק) | ghost | physical | 30 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | ✔ lvl×10 | 10 (10/0) | An attack that may cause paralysis. |  |
+| 123 | Smog (ערפיח) | poison | special | 30 | 70 | 40 | ✅ wired | poison 40% | — | ▫️ projectile | ✔ lvl×10 | 10 (10/0) | An attack that may poison the foe. |  |
+| 175 | Flail (התפרצות) | normal | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | ✔ lvl×10 | 10 (10/0) | Stronger if the user's HP is low. |  |
+| 180 | Spite (טינה) | ghost | status | — | 100 | — | ✅ wired | `cut-pp` | — | 🎬 night-shade:spite | ✔ lvl×6 | 10 (6/5) | Cuts the PP of the foe's last move. |  |
+| 226 | Baton Pass (מסירת שרביט) | normal | status | — | — | — | ✅ wired | `baton-pass` | — | ▫️ pulse | ✔ lvl×8 | 10 (8/3) | Switch pokemon while keeping effects, also keeps substitutes. |  |
+| 232 | Metal Claw (טופר מתכת) | steel | physical | 50 | 95 | 10 | ✅ wired | user attack +1 | — | ▫️ lunge | ✔ lvl×6 | 10 (6/7) | An attack that may up user's ATTACK. |  |
+| 235 | Synthesis (סינתזה) | grass | status | — | — | — | ✅ wired | heal 75%, `synthesis` | — | 🎬 celestial:synthesis | ✔ lvl×10 | 10 (10/0) | Restores HP (varies by time). |  |
+| 253 | Uproar (מהומה) | normal | special | 90 | 100 | — | ✅ wired | `lock-in-uproar` | — | 🎬 sound-based:blast | ✔ lvl×2 | 10 (2/10) | Causes an uproar for 2 to 5 turns and prevents sleep. |  |
+| 349 | Dragon Dance (ריקוד דרקון) | dragon | status | — | — | — | ✅ wired | user attack +1, user speed +1 | — | 🎬 self-boost-cooler | ✔ lvl×5 · TM | 10 (5/9) | A mystical dance that ups ATTACK and SPEED. |  |
+| 371 | Payback (תשלום) | dark | physical | 50 | 100 | — | ✅ wired | `payback` | — | ▫️ lunge | ✔ lvl×1 | 10 (1/10) | If the user can use this attack after the foe attacks, its power is doubled. |  |
+| 414 | Earth Power (כוח אדמה) | ground | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | ✔ lvl×6 | 10 (6/10) | The user makes the ground under the foe erupt with power. It may also lower the target's Sp. Def. |  |
+| 422 | Thunder Fang (ניב רעם) | electric | physical | 65 | 95 | 10 | ✅ wired | paralyze 10%, flinch 10% | — | 🎬 lightning | ✔ lvl×1 | 10 (1/10) | The user bites with electrified fangs. It may also make the foe flinch or become paralyzed. |  |
+| 424 | Fire Fang (ניב אש) | fire | physical | 65 | 95 | 10 | ✅ wired | burn 10%, flinch 10% | — | 🎬 bite:fire | ✔ lvl×2 | 10 (2/10) | The user bites with flame-cloaked fangs. It may also make the foe flinch or sustain a burn. |  |
+| 446 | Stealth Rock (סלע התגנבות) | rock | status | — | — | — | ✅ wired | `stealth-rock` | — | ▫️ pulse | ✔ lvl×1 | 10 (1/10) | The user lays a trap of levitating stones around the foe. The trap hurts foes that switch into battle. |  |
+| 707 | Stomping Tantrum (זעם דורס) | ground | physical | 75 | 100 | — | ✅ wired | `stomping-tantrum` | — | ▫️ burst | ✖ TM list only | 10 (0/10) | Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles. |  |
+| 784 | Breaking Swipe (חיתוך פורץ) | dragon | physical | 60 | 100 | 100 | ✅ wired | target attack -1 | — | ▫️ lunge | ✔ lvl×3 | 10 (3/10) | The user swings its tough tail wildly and attacks opposing Pokémon. This also lowers their Attack stats. |  |
+| 799 | Scale Shot (יריית קשקשים) | dragon | physical | 25 | 90 | — | ✅ wired | user speed +1, user defense -1, hits 2-5 | — | ▫️ projectile | ✖ TM list only | 10 (0/10) | The user attacks by shooting scales two to five times in a row. This move boosts the user's Speed stat but lowers its Defense stat. |  |
+| 54 | Mist (ערפל) | ice | status | — | — | — | ✅ wired | mist 5t | — | 🎬 mist-veil:mist | ✔ lvl×9 | 9 (9/0) | Prevents stat reduction. |  |
+| 71 | Absorb (ספיגה) | grass | special | 20 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | ✔ lvl×9 | 9 (9/0) | Steals 1/2 of the damage inflicted. |  |
+| 101 | Night Shade (צל לילה) | ghost | special | — | 100 | — | ✅ wired | `night-shade` | — | 🎬 night-shade:night shade | ✔ lvl×9 | 9 (9/1) | The user's level equals damage HP. |  |
+| 110 | Withdraw (נסיגה) | water | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | ✔ lvl×9 | 9 (9/0) | Heightens the user's DEFENSE. |  |
+| 132 | Constrict (לחיצה) | normal | physical | 10 | 100 | 10 | ✅ wired | target speed -1 | — | ▫️ lunge | ✔ lvl×9 | 9 (9/0) | An attack that may lower SPEED. |  |
+| 141 | Leech Life (עלוקת חיים) | bug | physical | 80 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | ✔ lvl×9 | 9 (9/0) | Steals 1/2 of the damage inflicted. |  |
+| 229 | Rapid Spin (סיבוב מהיר) | normal | physical | 50 | 100 | 100 | ✅ wired | user speed +1, `rapid-spin-clear` | — | 🎬 rapid-spin | ✔ lvl×9 | 9 (9/0) | A high-speed spinning attack. |  |
+| 264 | Focus Punch (אגרוף ממוקד) | fighting | physical | 150 | 100 | — | ✅ wired | `focus-punch` | — | 🎬 punch:fighting | ✖ TM list only | 9 (0/9) | A powerful loyalty attack. The user flinches if hit. |  |
+| 341 | Mud Shot (יריית בוץ) | ground | special | 55 | 95 | 100 | ✅ wired | target speed -1 | — | ▫️ projectile | ✖ TM list only | 9 (0/9) | Hurls mud at the foe and reduces SPEED. |  |
+| 398 | Poison Jab (דקירת רעל) | poison | physical | 80 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ lunge | ✔ lvl×2 | 9 (2/9) | The foe is stabbed with a tentacle or arm steeped in poison. It may also poison the foe. |  |
+| 555 | Snarl (נהמה) | dark | special | 55 | 95 | 100 | ✅ wired | target specialAttack -1 | — | 🎬 sound-based:screech | ✖ TM list only | 9 (0/9) | The user yells as if it is ranting about something, making the target's Sp. Atk stat decrease. |  |
+| 24 | Double Kick (בעיטה כפולה) | fighting | physical | 30 | 100 | — | ✅ wired | hits 2 | — | ▫️ lunge | ✔ lvl×8 | 8 (8/0) | A double kicking attack. |  |
+| 62 | Aurora Beam (קרן זוהר) | ice | special | 65 | 100 | 10 | ✅ wired | target attack -1 | — | ▫️ beam | ✔ lvl×8 | 8 (8/0) | An attack that may lower ATTACK. |  |
+| 73 | Leech Seed (שאיבת זרע) | grass | status | — | 90 | — | ✅ wired | leech-seed 100% | — | ▫️ pulse | ✔ lvl×8 | 8 (8/0) | Steals HP from the foe on every turn. |  |
+| 107 | Minimize (מזעור) | normal | status | — | — | — | ✅ wired | user evasion +1 | — | 🎬 self-boost | ✔ lvl×8 | 8 (8/0) | Heightens evasiveness. |  |
+| 179 | Reversal (היפוך) | fighting | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | ✔ lvl×4 | 8 (4/4) | Stronger if the user's HP is low. |  |
+| 204 | Charm (קסם) | fairy | status | — | 100 | — | ✅ wired | target attack -2 | — | ▫️ pulse | ✔ lvl×8 | 8 (8/1) | Sharply lowers the foe's ATTACK. |  |
+| 259 | Torment (עינוי) | dark | status | — | 100 | — | ✅ wired | torment 100% | — | ▫️ pulse | ✖ TM list only | 8 (0/8) | Torments the foe and stops successive use of a move. |  |
+| 372 | Assurance (ביטחון) | dark | physical | 60 | 100 | — | ✅ wired | `assurance` | — | ▫️ lunge | ✔ lvl×7 | 8 (7/8) | If the foe has already taken some damage in the same turn, this attack's power is doubled. |  |
+| 407 | Dragon Rush (דריסת דרקון) | dragon | physical | 100 | 75 | 20 | ✅ wired | flinch 20% | — | 🎬 dragon-aura | ✔ lvl×8 | 8 (8/0) | The user tackles the foe while exhibiting overwhelming menace. It may also make the target flinch. |  |
+| 411 | Focus Blast (פיצוץ מיקוד) | fighting | special | 120 | 70 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | ✖ TM list only | 8 (0/8) | The user heightens its mental focus and unleashes its power. It may also lower the target's Sp. Def. |  |
+| 815 | Scorching Sands (חולות לוהטים) | ground | special | 70 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | ✖ TM list only | 8 (0/8) | The user throws scorching sand at the target to attack. This may also leave the target with a burn. |  |
+| 12 | Guillotine (גיליוטינה) | normal | physical | — | 30 | — | ✅ wired | `ohko` | — | ▫️ lunge | ✔ lvl×7 | 7 (7/0) | A one-hit KO, pincer attack. |  |
+| 49 | Sonic Boom (הדף קולי) | normal | special | — | 90 | — | ✅ wired | fixed dmg 20 | — | 🎬 sound-based:screech | ✔ lvl×7 | 7 (7/0) | Always inflicts 20HP damage. |  |
+| 139 | Poison Gas (גז רעל) | poison | status | — | 90 | — | ✅ wired | poison (toxic) 100% | — | ▫️ pulse | ✔ lvl×7 | 7 (7/0) | A move that may poison the foe. |  |
+| 186 | Sweet Kiss (נשיקה מתוקה) | fairy | status | — | 75 | — | ✅ wired | confusion 100% | — | ▫️ pulse | ✔ lvl×7 | 7 (7/0) | A move that causes confusion. |  |
+| 195 | Perish Song (שיר אבדון) | normal | status | — | — | — | ✅ wired | `perish-song` | — | 🎬 sound-based:blast | ✔ lvl×7 | 7 (7/0) | Both user and foe faint in 3 turns. |  |
+| 227 | Encore (הדרן) | normal | status | — | 100 | — | ✅ wired | encore 100% | — | ▫️ pulse | ✔ lvl×6 | 7 (6/1) | Makes the foe repeat 2-6 times. |  |
+| 334 | Iron Defense (הגנת ברזל) | steel | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | ✔ lvl×2 | 7 (2/7) | Hardens the body's surface to sharply raise DEFENSE. |  |
+| 352 | Water Pulse (פולס מים) | water | special | 60 | 100 | 20 | ✅ wired | confusion 20% | — | ▫️ projectile | ✔ lvl×1 | 7 (1/7) | Attacks with ultrasonic waves. May confuse the foe |  |
+| 399 | Dark Pulse (פולס אופל) | dark | special | 80 | 100 | 20 | ✅ wired | flinch 20% | — | ▫️ projectile | ✔ lvl×3 | 7 (3/7) | The user releases a horrible aura imbued with dark thoughts. It may also make the target flinch. |  |
+| 431 | Rock Climb (טיפוס סלע) | normal | physical | 90 | 85 | 20 | ✅ wired | confusion 20% | — | ▫️ lunge | ✖ TM list only | 7 (0/7) | A charging attack that may also leave the foe confused. It can also be used to scale rocky walls. |  |
+| 612 | Power Up Punch (אגרוף התעצמות) | fighting | physical | 40 | 100 | 100 | ✅ wired | user attack +1 | — | 🎬 punch:fighting | ✖ TM list only | 7 (0/7) | Striking opponents over and over makes the user's fists harder. Hitting a target raises the Attack stat. |  |
+| 885 | Trailblaze (פריצת דרך) | grass | physical | 50 | 100 | — | ✅ wired | user speed +1 | — | ▫️ lunge | ✖ TM list only | 7 (0/7) | The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat. |  |
+| 150 | Splash (התזה) | normal | status | — | — | — | ✅ wired | `splash` | — | ▫️ pulse | ✔ lvl×6 | 6 (6/0) | Has no effect whatsoever. |  |
+| 172 | Flame Wheel (גלגל אש) | fire | physical | 60 | 100 | 10 | ✅ wired | burn 10% | — | ▫️ lunge | ✔ lvl×6 | 6 (6/0) | An attack that may cause a burn. |  |
+| 178 | Cotton Spore (נבג כותנה) | grass | status | — | 100 | — | ✅ wired | target speed -2 | — | 🎬 powder | ✔ lvl×6 | 6 (6/0) | Sharply reduces the foe's SPEED. |  |
+| 194 | Destiny Bond (קשר גורל) | ghost | status | — | — | — | ✅ wired | `destiny-bond` | — | ▫️ pulse | ✔ lvl×6 | 6 (6/0) | The foe faints if the user does. |  |
+| 257 | Heat Wave (גל חום) | fire | special | 95 | 90 | 10 | ✅ wired | burn 10% | — | 🎬 flamethrower | ✖ TM list only | 6 (0/6) | Exhales a hot breath on the foe. May inflict a burn. |  |
+| 328 | Sand Tomb (קבר חול) | ground | physical | 35 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | ✔ lvl×6 | 6 (6/6) | Traps and hurts the foe in quicksand for 2 to 5 turns. |  |
+| 417 | Nasty Plot (מזימה מרושעת) | dark | status | — | — | — | ✅ wired | user specialAttack +2 | — | 🎬 self-boost-cooler | ✔ lvl×5 | 6 (5/6) | The user stimulates its brain by thinking bad thoughts. It sharply raises the user's Sp. Atk. |  |
+| 673 | Laser Focus (מיקוד לייזר) | normal | status | — | — | — | ✅ wired | `laser-focus` | — | ▫️ pulse | ✔ lvl×6 | 6 (6/0) | The user concentrates intensely. The attack on the next turn always results in a critical hit. |  |
+| 2 | Karate Chop (מכת קראטה) | fighting | physical | 50 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✔ lvl×5 | 5 (5/0) | Has a high critical hit ratio. |  |
+| 80 | Petal Dance (ריקוד עלי כותרת) | grass | special | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | 🎬 leaf-spray | ✔ lvl×5 | 5 (5/0) | Works 2-3 turns and confuses user. |  |
+| 119 | Mirror Move (מראה-מהלך) | flying | status | — | — | — | ✅ wired | `mirror-move` | — | 🎬 pulse | ✔ lvl×5 | 5 (5/0) | Counters with the same move. |  |
+| 181 | Powder Snow (אבקת שלג) | ice | special | 40 | 100 | 10 | ✅ wired | freeze 10% | — | 🎬 icy-wind | ✔ lvl×5 | 5 (5/0) | An attack that may cause freezing. |  |
+| 191 | Spikes (קוצים) | ground | status | — | — | — | ✅ wired | `spikes` | — | ▫️ pulse | ✔ lvl×4 | 5 (4/1) | Hurts foes when they switch out. |  |
+| 199 | Lock On (נעילה) | normal | status | — | — | — | ✅ wired | `lock-on` | — | ▫️ pulse | ✔ lvl×5 | 5 (5/0) | Ensures the next attack will hit. |  |
+| 222 | Magnitude (עוצמה) | ground | physical | — | 100 | — | ✅ wired | `magnitude` | — | 🎬 earthquake | ✔ lvl×5 | 5 (5/0) | A ground attack with random power. |  |
+| 236 | Moonlight (אור ירח) | fairy | status | — | — | — | ✅ wired | heal 75%, `moonlight` | — | 🎬 celestial:moonlight | ✔ lvl×5 | 5 (5/0) | Restores HP (varies by time). |  |
+| 238 | Cross Chop (מכה צולבת) | fighting | physical | 100 | 80 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✔ lvl×5 | 5 (5/0) | Has a high critical hit ratio. |  |
+| 243 | Mirror Coat (מעיל מראה) | psychic | special | — | 100 | — | ✅ wired | priority -5, `mirror-coat` | — | ▫️ projectile | ✔ lvl×5 | 5 (5/0) | Counters a SPCL. ATK. move double. |  |
+| 282 | Knock Off (הפלה) | dark | physical | 65 | 100 | — | ✅ wired | `thief` | — | ▫️ lunge | ✔ lvl×1 | 5 (1/4) | Knocks down the foe's held item to prevent its use. |  |
+| 347 | Calm Mind (מנוחת נפש) | psychic | status | — | — | — | ✅ wired | user specialAttack +1, user specialDefense +1 | — | 🎬 self-boost-cooler | ✔ lvl×1 | 5 (1/4) | Raises SP. ATK and SP. DEF by focusing the mind. |  |
+| 355 | Roost (נחיתה ומנוחה) | flying | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | ✔ lvl×1 · trainer | 5 (1/5) | The user lands and rests its body. It restores the user's HP by up to half of its max HP. |  |
+| 364 | Feint (העמדת פנים) | normal | physical | 30 | 100 | — | ✅ wired | priority +2, `feint` | — | ▫️ lunge | ✔ lvl×5 | 5 (5/0) | An attack that hits a foe using Protect or Detect. It also lifts the effects of those moves. |  |
+| 403 | Air Slash (חיתוך אוויר) | flying | special | 75 | 95 | 30 | ✅ wired | flinch 30% | — | ▫️ projectile | ✔ lvl×1 | 5 (1/5) | The user attacks with a blade of air that slices even the sky. It may also make the target flinch. |  |
+| 427 | Psycho Cut (חיתוך פסיכו) | psychic | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✔ lvl×1 | 5 (1/5) | The user tears at the foe with blades formed by psychic power. It has a high critical-hit ratio. |  |
+| 430 | Flash Cannon (תותח הבזק) | steel | special | 80 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | ✔ lvl×2 | 5 (2/5) | The user gathers all its light energy and releases it at once. It may also lower the foe's Sp. Def stat. |  |
+| 530 | Dual Chop (חיתוך כפול) | dragon | physical | 40 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | ✔ lvl×5 | 5 (5/0) | The user attacks its target by hitting it with brutal strikes. The target is hit twice in a row. |  |
+| 4 | Comet Punch (אגרוף שביט) | normal | physical | 18 | 85 | — | ✅ wired | hits 2-5 | — | 🎬 punch:normal | ✔ lvl×4 | 4 (4/0) | Repeatedly punches 2-5 times. |  |
+| 20 | Bind (כבילה) | normal | physical | 15 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | ✔ lvl×4 | 4 (4/0) | Binds the target for 2-5 turns. |  |
+| 81 | String Shot (יריית חוט) | bug | status | — | 95 | — | ✅ wired | target speed -1 | — | ▫️ pulse | ✔ lvl×4 | 4 (4/0) | A move that lowers the foe's SPEED. |  |
+| 96 | Meditate (מדיטציה) | psychic | status | — | — | — | ✅ wired | user attack +1 | — | ▫️ pulse | ✔ lvl×4 | 4 (4/0) | Raises the user's ATTACK. |  |
+| 112 | Barrier (מחסום) | psychic | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | ✔ lvl×4 | 4 (4/0) | Sharply increases user's DEFENSE. |  |
+| 124 | Sludge (בוץ) | poison | special | 65 | 100 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | ✔ lvl×4 | 4 (4/0) | An attack that may poison the foe. |  |
+| 131 | Spike Cannon (תותח קוצים) | normal | physical | 20 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✔ lvl×4 | 4 (4/0) | Fires spikes to hit 2-5 times. |  |
+| 209 | Spark (ניצוץ) | electric | physical | 65 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | ✔ lvl×4 | 4 (4/0) | An attack that may cause paralysis. |  |
+| 251 | Beat Up (מכות רבות) | dark | physical | — | 100 | — | ✅ wired | `beat-up` | — | ▫️ lunge | ✔ lvl×2 | 4 (2/3) | Party POKéMON join in the attack. |  |
+| 258 | Hail (ברד) | ice | status | — | — | — | ✅ wired | `hail` | — | ▫️ pulse | ✖ TM list only | 4 (0/4) | Summons a hailstorm that strikes every turn. |  |
+| 283 | Endeavor (מאמץ) | normal | physical | — | 100 | — | ✅ wired | `endeavor` | — | ▫️ lunge | ✖ TM list only | 4 (0/4) | Gains power if the user's HP is lower than the foe's HP. |  |
+| 318 | Silver Wind (רוח כסף) | bug | special | 60 | 100 | 10 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 10% | — | ▫️ projectile | ✖ TM list only | 4 (0/4) | A powdery attack that may raise abilities. |  |
+| 423 | Ice Fang (ניב קרח) | ice | physical | 65 | 95 | 10 | ✅ wired | freeze 10%, flinch 10% | — | 🎬 bite:ice | ✖ TM list only | 4 (0/4) | The user bites with cold-infused fangs. It may also make the foe flinch or freeze. |  |
+| 432 | Defog (פיזור ערפל) | flying | status | — | — | — | ✅ wired | target evasion -1, `defog` | — | ▫️ pulse | ✖ TM list only | 4 (0/4) | Obstacles are moved, reducing the foe's evasion stat. It can also be used to clear deep fog, etc. |  |
+| 447 | Grass Knot (קשר עשב) | grass | special | — | 100 | — | ✅ wired | `weight-target` | — | ▫️ projectile | ✖ TM list only | 4 (0/4) | The user snares the foe with grass and trips it. The heavier the foe, the greater the damage. |  |
+| 490 | Low Sweep (סחיפה נמוכה) | fighting | physical | 65 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | ✖ TM list only | 4 (0/4) | The user attacks the target's legs swiftly, reducing the target's Speed stat. |  |
+| 526 | Work Up (עבודה) | normal | status | — | — | — | ✅ wired | user attack +1, user specialAttack +1 | — | ▫️ pulse | ✔ lvl×3 | 4 (3/4) | The user is roused, and its Attack and Sp. Atk stats increase. |  |
+| 814 | Dual Wingbeat (כנף כפולה) | flying | physical | 40 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | ✔ lvl×1 | 4 (1/4) | The user slams the target with its wings. The target is hit twice in a row. |  |
+| 915 | Temper Flare (להבת עצבים) | fire | physical | 75 | 100 | — | ✅ wired | `stomping-tantrum` | — | ▫️ lunge | ✖ TM list only | 4 (0/4) | Spurred by desperation, the user attacks the target. This move's power is doubled if the user's previous move failed. |  |
+| 42 | Pin Missile (טיל סיכה) | bug | physical | 25 | 95 | — | ✅ wired | hits 2-5 | — | ▫️ projectile | ✔ lvl×3 | 3 (3/0) | Fires pins that strike 2-5 times. |  |
+| 135 | Soft Boiled (ביצה רכה) | normal | status | — | — | — | ✅ wired | heal 50% | — | ▫️ pulse | ✔ lvl×2 | 3 (2/2) | Restores HP by 1/2 the user's max HP. |  |
+| 137 | Glare (מבט מאיים) | normal | status | — | 100 | — | ✅ wired | paralyze 100% | — | ▫️ pulse | ✔ lvl×3 | 3 (3/0) | A move that may cause paralysis. |  |
+| 147 | Spore (נבג) | grass | status | — | 100 | — | ✅ wired | sleep 100% | — | 🎬 powder | ✔ lvl×2 · TM | 3 (2/1) | A move that induces sleep. |  |
+| 151 | Acid Armor (שריון חומצה) | poison | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | ✔ lvl×3 | 3 (3/0) | Sharply raises the user's DEFENSE. |  |
+| 170 | Mind Reader (קורא מחשבות) | normal | status | — | — | — | ✅ wired | `lock-on` | — | ▫️ pulse | ✔ lvl×3 | 3 (3/0) | Ensures the next attack will hit. |  |
+| 187 | Belly Drum (תוף בטן) | normal | status | — | — | — | ✅ wired | user attack +6, `belly-drum` | — | ▫️ pulse | ✔ lvl×3 | 3 (3/0) | Reduces own HP to maximize ATTACK. |  |
+| 198 | Bone Rush (מטח עצמות) | ground | physical | 25 | 90 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✔ lvl×3 | 3 (3/0) | An attack that hits 2-5 times. |  |
+| 245 | Extreme Speed (מהירות קיצונית) | normal | physical | 80 | 100 | — | ✅ wired | priority +2 | — | ▫️ lunge | ✔ lvl×3 | 3 (3/0) | A powerful first- strike move. |  |
+| 261 | Will O Wisp (אש רפאים) | fire | status | — | 85 | — | ✅ wired | burn 100% | — | ▫️ pulse | ✖ TM list only | 3 (0/3) | Inflicts a burn on the foe with intense fire. |  |
+| 310 | Astonish (הפתעה) | ghost | physical | 30 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✔ lvl×3 | 3 (3/0) | An attack that may shock the foe into flinching. |  |
+| 314 | Air Cutter (חותך אוויר) | flying | special | 60 | 95 | — | ✅ wired | crit +1 | — | ▫️ projectile | ✔ lvl×1 | 3 (1/2) | Hacks with razorlike wind. High critical-hit ratio. |  |
+| 339 | Bulk Up (בניית גוף) | fighting | status | — | — | — | ✅ wired | user attack +1, user defense +1 | — | 🎬 self-boost-cooler | ✖ TM list only | 3 (0/3) | Bulks up the body to boost both ATTACK and DEFENSE. |  |
+| 370 | Close Combat (קרב מגע) | fighting | physical | 120 | 100 | 100 | ✅ wired | user defense -1, user specialDefense -1 | — | ▫️ lunge | ✔ lvl×1 | 3 (1/2) | The user fights the foe in close without guarding itself. It also cuts the user's Defense and Sp. Def. |  |
+| 397 | Rock Polish (ליטוש סלע) | rock | status | — | — | — | ✅ wired | user speed +2 | — | 🎬 self-boost-cooler | ✖ TM list only | 3 (0/3) | The user polishes its body to reduce drag. It can sharply raise the Speed stat. |  |
+| 409 | Drain Punch (אגרוף מנקז) | fighting | physical | 75 | 100 | — | ✅ wired | drain 50% | — | 🎬 punch:fighting | ✖ TM list only | 3 (0/3) | An energy-draining punch. The user's HP is restored by half the damage taken by the target. |  |
+| 451 | Charge Beam (קרן טעינה) | electric | special | 50 | 90 | 70 | ✅ wired | user specialAttack +1 | — | 🎬 lightning | ✖ TM list only | 3 (0/3) | The user fires a concentrated bundle of electricity. It may also raise the user's Sp. Atk stat. |  |
+| 484 | Heavy Slam (טריקה כבדה) | steel | physical | — | 100 | — | ✅ wired | `weight-ratio` | — | ▫️ lunge | ✖ TM list only | 3 (0/3) | The user slams into the target with its heavy body. The more the user outweighs the target, the greater its damage. |  |
+| 492 | Foul Play (משחק מלוכלך) | dark | physical | 95 | 100 | — | ✅ wired | `foul-play` | — | ▫️ lunge | ✖ TM list only | 3 (0/3) | The user turns the target's power against it. The higher the target's Attack stat, the greater the damage. |  |
+| 522 | Struggle Bug (חרק נאבק) | bug | special | 50 | 100 | 100 | ✅ wired | target specialAttack -1 | — | ▫️ projectile | ✖ TM list only | 3 (0/3) | While resisting, the user attacks the opposing Pokémon. The targets' Sp. Atk stat is reduced. |  |
+| 800 | Meteor Beam (קרן מטאור) | rock | special | 120 | 90 | 100 | ✅ wired | charge: specialAttack +1, `requires-charge-turn` | — | ▫️ beam | ✖ TM list only | 3 (0/3) | In this two-turn attack, the user gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn. |  |
+| 886 | Chilling Water (מים מצננים) | water | special | 50 | 100 | — | ✅ wired | target attack -1 | — | ▫️ projectile | ✖ TM list only | 3 (0/3) | The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat. |  |
+| 27 | Rolling Kick (בעיטה מתגלגלת) | fighting | physical | 60 | 85 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | A fast, spinning kick. |  |
+| 125 | Bone Club (מועדון עצם) | ground | physical | 65 | 85 | 10 | ✅ wired | flinch 10% | — | ▫️ burst | ✔ lvl×2 | 2 (2/0) | An attack that may cause flinching. |  |
+| 128 | Clamp (מלחציים) | water | physical | 35 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | Traps the foe for 2-5 turns. |  |
+| 134 | Kinesis (טלקינזיס) | psychic | status | — | 80 | — | ✅ wired | target accuracy -1 | — | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | Reduces the foe's accuracy. |  |
+| 140 | Barrage (מטח) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | Throws orbs to hit 2-5 times. |  |
+| 152 | Crabhammer (פטיש סרטן) | water | physical | 100 | 90 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | Has a high critical hit ratio. |  |
+| 155 | Bonemerang (בומרנג עצם) | ground | physical | 50 | 90 | — | ✅ wired | hits 2 | — | ▫️ burst | ✔ lvl×2 | 2 (2/0) | An attack that strikes twice. |  |
+| 158 | Hyper Fang (ניב היפר) | normal | physical | 80 | 90 | 10 | ✅ wired | flinch 10%, `super-fang` | — | 🎬 bite:bite | ✔ lvl×2 | 2 (2/0) | An attack that may cause flinching. |  |
+| 162 | Super Fang (ניב על) | normal | physical | — | 90 | — | ✅ wired | `super-fang` | — | 🎬 bite:bite | ✔ lvl×2 | 2 (2/0) | Cuts the foe's HP by 1/2. |  |
+| 309 | Meteor Mash (פגיעת מטאור) | steel | physical | 90 | 90 | 20 | ✅ wired | user attack +1 | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | Fires a meteor-like punch. May raise ATTACK. |  |
+| 319 | Metal Sound (צליל מתכת) | steel | status | — | 85 | — | ✅ wired | target specialDefense -2 | — | 🎬 sound-based:blast | ✔ lvl×1 | 2 (1/1) | Emits a horrible screech that sharply lowers SP. DEF. |  |
+| 322 | Cosmic Power (כוח קוסמי) | psychic | status | — | — | — | ✅ wired | user defense +1, user specialDefense +1 | — | ▫️ pulse | ✖ TM list only | 2 (0/2) | Raises DEFENSE and SP. DEF with a mystic power. |  |
+| 326 | Extrasensory (חוש שישי) | psychic | special | 80 | 100 | 10 | ✅ wired | flinch 10% | — | 🎬 psychic-wave | ✔ lvl×2 | 2 (2/0) | Attacks with a peculiar power. May cause flinching. |  |
+| 330 | Muddy Water (מים עכורים) | water | special | 90 | 85 | 30 | ✅ wired | target accuracy -1 | — | ▫️ projectile | ✖ TM list only | 2 (0/2) | Attacks with muddy water. May lower accuracy. |  |
+| 359 | Hammer Arm (זרוע פטיש) | fighting | physical | 100 | 90 | 100 | ✅ wired | user speed -1 | — | 🎬 punch:fighting | ✔ lvl×2 | 2 (2/0) | The user swings and hits with its strong and heavy fist. It lowers the user's Speed, however. |  |
+| 389 | Sucker Punch (אגרוף ערמומי) | dark | physical | 70 | 100 | — | ✅ wired | priority +1, `fails-if-target-not-attacking` | — | 🎬 punch:dark | ✔ lvl×2 | 2 (2/0) | This move enables the user to attack first. It fails if the foe is not readying an attack, however. |  |
+| 395 | Force Palm (כף כוח) | fighting | physical | 60 | 100 | 30 | ✅ wired | paralyze 30%, flinch 10% | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | The user strikes the target with its palm. This may also leave the target with paralysis. |  |
+| 400 | Night Slash (חיתוך לילה) | dark | physical | 70 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | The user slashes the foe the instant an opportunity arises. It has a high critical-hit ratio. |  |
+| 405 | Bug Buzz (זמזום חרק) | bug | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | 🎬 sound-based:blast | ✔ lvl×2 | 2 (2/2) | The user vibrates its wings to generate a damaging sound wave. It may also lower the foe's Sp. Def stat. |  |
+| 418 | Bullet Punch (אגרוף רובה) | steel | physical | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 punch:steel | ✔ lvl×2 | 2 (2/0) | The user strikes with a tough punch as fast as a bullet. This move always goes first. |  |
+| 458 | Double Hit (מכה כפולה) | normal | physical | 35 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | ✔ lvl×2 | 2 (2/0) | The user slams the foe with a tail, etc. The target is hit twice in a row. |  |
+| 503 | Scald (רתיחה) | water | special | 80 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user shoots boiling hot water at its target. It may also leave the target with a burn. |  |
+| 535 | Heat Crash (התרסקות חום) | fire | physical | — | 100 | — | ✅ wired | `weight-ratio` | — | ▫️ lunge | ✖ TM list only | 2 (0/2) | The user slams its target with its flame- covered body. The more the user outweighs the target, the greater the damage. |  |
+| 577 | Draining Kiss (נשיקה מנקזת) | fairy | special | 50 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | ✔ lvl×1 | 2 (1/2) | The user steals the target's energy with a kiss. The user's HP is restored by over half of the damage taken by the target. |  |
+| 583 | Play Rough (משחק גס) | fairy | physical | 90 | 90 | 10 | ✅ wired | target attack -1 | — | ▫️ lunge | ✖ TM list only | 2 (0/2) | The user plays rough with the target and attacks it. This may also lower the target's Attack stat. |  |
+| 595 | Mystical Fire (אש מיסטית) | fire | special | 75 | 100 | 100 | ✅ wired | target specialAttack -1 | — | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user attacks by breathing a special, hot fire. This also lowers the target's Sp. Atk stat. |  |
+| 791 | Life Dew (טל חיים) | water | status | — | — | — | ✅ wired | heal 25% | — | ▫️ pulse | ✔ lvl×2 | 2 (2/0) | The user scatters mysterious water around and restores the HP of itself and its ally Pokémon in the battle. |  |
+| 807 | Burning Jealousy (קנאה בוערת) | fire | special | 70 | 100 | 100 | ✅ wired | `burning-jealousy` | — | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user attacks with energy from jealousy. This leaves all opposing Pokémon that have had their stats boosted during the turn with a burn. |  |
+| 914 | Alluring Voice (קול מפתה) | fairy | special | 80 | 100 | — | ✅ wired | confusion 100% | — | ▫️ projectile | ✖ TM list only | 2 (0/2) | The user attacks the target using its angelic voice. This also confuses the target if its stats have been boosted during the turn. |  |
+| 41 | Twineedle (מחט כפולה) | bug | physical | 25 | 100 | 20 | ✅ wired | poison 20%, hits 2 | — | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | Jabs the foe twice using stingers. |  |
+| 142 | Lovely Kiss (נשיקה מקסימה) | normal | status | — | 75 | — | ✅ wired | sleep 100% | — | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | May cause the foe to fall asleep. |  |
+| 146 | Dizzy Punch (אגרוף מסחרר) | normal | physical | 70 | 100 | 20 | ✅ wired | confusion 20% | — | 🎬 punch:normal | ✔ lvl×1 | 1 (1/0) | An attack that may cause confusion. |  |
+| 159 | Sharpen (חידוד) | normal | status | — | — | — | ✅ wired | user attack +1 | — | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | A move that raises the user's ATTACK. |  |
+| 167 | Triple Kick (בעיטה משולשת) | fighting | physical | 10 | 90 | — | ✅ wired | hits 3 | — | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | Hits three times with rising power. |  |
+| 177 | Aeroblast (פיצוץ אוויר) | flying | special | 100 | 95 | — | ✅ wired | crit +1 | — | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | Has a high critical hit ratio. |  |
+| 183 | Mach Punch (אגרוף מאך) | fighting | physical | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 punch:fighting | ✔ lvl×1 | 1 (1/0) | A fast punch that lands first. |  |
+| 190 | Octazooka (תותחן תמנון) | water | special | 65 | 85 | 50 | ✅ wired | target accuracy -1 | — | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | An attack that may reduce accuracy. |  |
+| 208 | Milk Drink (שתיית חלב) | normal | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | ✔ lvl×1 | 1 (1/0) | Restores HP by 1/2 the max HP. |  |
+| 221 | Sacred Fire (אש קדושה) | fire | physical | 100 | 95 | 50 | ✅ wired | burn 50% | — | 🎬 fire-blast | ✔ lvl×1 | 1 (1/0) | An attack that may inflict a burn. |  |
+| 234 | Morning Sun (שמש בוקר) | normal | status | — | — | — | ✅ wired | heal 75%, `morning-sun` | — | 🎬 celestial:morning sun | ✔ lvl×1 | 1 (1/0) | Restores HP (varies by time). |  |
+| 313 | Fake Tears (דמעות מזויפות) | dark | status | — | 100 | — | ✅ wired | target specialDefense -2 | — | ▫️ pulse | ✖ TM list only | 1 (0/1) | Feigns crying to sharply lower the foe's SP. DEF. |  |
+| 315 | Overheat (התחממות יתר) | fire | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | ▫️ projectile | ✖ TM list only | 1 (0/1) | Allows a full-power attack, but sharply lowers SP. ATK. |  |
+| 333 | Icicle Spear (חנית קרח) | ice | physical | 25 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✖ TM list only | 1 (0/1) | Attacks the foe by firing 2 to 5 icicles in a row. |  |
+| 344 | Volt Tackle (וולט התנגשות) | electric | physical | 120 | 100 | 10 | ✅ wired | paralyze 10%, recoil 25% | — | 🎬 elemental-dash | ✔ lvl×1 | 1 (1/0) | A life-risking tackle that slightly hurts the user. |  |
+| 350 | Rock Blast (פיצוץ סלע) | rock | physical | 25 | 90 | — | ✅ wired | hits 2-5 | — | 🎬 rock-throw | ✔ lvl×1 | 1 (1/1) | Hurls boulders at the foe 2 to 5 times in a row. |  |
+| 383 | Copycat (חיקוי חתול) | normal | status | — | — | — | ✅ wired | `copycat` | — | 🎬 pulse | ✔ lvl×1 | 1 (1/0) | The user mimics the move used immediately before it. The move fails if no other move has been used yet. |  |
+| 394 | Flare Blitz (להט פרץ) | fire | physical | 120 | 100 | 10 | ✅ wired | burn 10%, recoil 33% | — | 🎬 elemental-dash | ✖ TM list only | 1 (0/1) | The user cloaks itself in fire and charges at the foe. The user sustains serious damage, too. |  |
+| 410 | Vacuum Wave (גל ואקום) | fighting | special | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 punch:fighting | ✖ TM list only | 1 (0/1) | The user whirls its fists to send a wave of pure vacuum at the foe. This move always goes first. |  |
+| 420 | Ice Shard (רסיס קרח) | ice | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | ✔ lvl×1 | 1 (1/0) | The user flash freezes chunks of ice and hurls them. This move always goes first. |  |
+| 425 | Shadow Sneak (התגנבות צל) | ghost | physical | 40 | 100 | — | ✅ wired | priority +1 | — | 🎬 night-shade:shadow sneak | ✔ lvl×1 | 1 (1/0) | The user extends its shadow and attacks the foe from behind. This move always goes first. |  |
+| 435 | Discharge (פריקה) | electric | special | 80 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 lightning | ✔ lvl×1 | 1 (1/0) | A flare of electricity is loosed to strike all Pokémon in battle. It may also cause paralysis. |  |
+| 436 | Lava Plume (פרץ לבה) | fire | special | 80 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | An inferno of scarlet flames washes over all Pokémon in battle. It may also inflict burns. |  |
+| 466 | Ominous Wind (רוח מבשרת רעות) | ghost | special | 60 | 100 | 10 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 10% | — | 🎬 night-shade:ominous wind | ✔ lvl×1 | 1 (1/0) | The user creates a gust of repulsive wind. It may also raise all the user's stats at once. |  |
+| 488 | Flame Charge (מטען להבה) | fire | physical | 50 | 100 | 100 | ✅ wired | user speed +1 | — | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user cloaks itself with flame and attacks. Building up more power, it raises the user's Speed stat. |  |
+| 489 | Coil (סליל) | poison | status | — | — | — | ✅ wired | user attack +1, user defense +1, user accuracy +1 | — | 🎬 self-boost-cooler | ✔ lvl×1 | 1 (1/0) | The user coils up and concentrates. This raises its Attack and Defense stats as well as its accuracy. |  |
+| 491 | Acid Spray (ריסוס חומצה) | poison | special | 40 | 100 | 100 | ✅ wired | target specialDefense -2 | — | ▫️ projectile | ✖ TM list only | 1 (0/1) | The user spits fluid that works to melt the target. This harshly reduces the target's Sp. Def stat. |  |
+| 527 | Electroweb (רשת חשמל) | electric | special | 55 | 95 | 100 | ✅ wired | target speed -1 | — | 🎬 electroweb | ✖ TM list only | 1 (0/1) | The user captures and attacks opposing Pokémon by using an electric net. It reduces the targets' Speed stat. |  |
+| 528 | Wild Charge (מטען פראי) | electric | physical | 90 | 100 | — | ✅ wired | paralyze 10%, recoil 25% | — | 🎬 elemental-dash | ✔ lvl×1 | 1 (1/1) | The user shrouds itself in electricity and smashes into its target. It also damages the user a little. |  |
+| 529 | Drill Run (ריצת מקדח) | ground | physical | 80 | 95 | — | ✅ wired | crit +1 | — | ▫️ burst | ✔ lvl×1 | 1 (1/1) | The user crashes into its target while rotating its body like a drill. Critical hits land more easily. |  |
+| 542 | Hurricane (הוריקן) | flying | special | 110 | 70 | 30 | ✅ wired | confusion 30% | — | ▫️ projectile | ✖ TM list only | 1 (0/1) | The user attacks by wrapping its opponent in a fierce wind that flies up into the sky. It may also confuse the target. |  |
+| 585 | Moonblast (פצצת ירח) | fairy | special | 95 | 100 | 30 | ✅ wired | target specialAttack -1 | — | 🎬 celestial:moonblast | ✔ lvl×1 | 1 (1/0) | Borrowing the power of the moon, the user attacks the target. This may also lower the target's Sp. Atk stat. |  |
+| 598 | Eerie Impulse (דחף מוזר) | electric | status | — | 100 | — | ✅ wired | target specialAttack -2 | — | ▫️ pulse | ✖ TM list only | 1 (0/1) | The user's body generates an eerie impulse. Exposing the target to it harshly lowers the target's Sp. Atk stat. |  |
+| 608 | Baby Doll Eyes (עיני בובה) | fairy | status | — | 100 | — | ✅ wired | priority +1, target attack -1 | — | ▫️ pulse | ✔ lvl×1 | 1 (1/0) | The user stares at the target with its baby-doll eyes, which lowers its Attack stat. This move always goes first. |  |
+| 611 | Infestation (נגיעות) | bug | special | 20 | 100 | 100 | ✅ wired | trap 100% | — | ▫️ projectile | ✖ TM list only | 1 (0/1) | The target is infested and attacked for four to five turns. The target can't flee during this time. |  |
+| 667 | High Horsepower (כוח סוס גבוה) | ground | physical | 95 | 95 | — | ✅ wired | target speed -1 | — | ▫️ burst | ✔ lvl×1 | 1 (1/1) | The user fiercely attacks the target using its entire body. |  |
+| 710 | Liquidation (נזלה) | water | physical | 85 | 100 | 20 | ✅ wired | target defense -1 | — | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user slams into the target using a full-force blast of water. This may also lower the target's Defense stat. |  |
+| 806 | Skitter Smack (מכת זינוק) | bug | physical | 70 | 90 | 100 | ✅ wired | target specialAttack -1 | — | ▫️ lunge | ✖ TM list only | 1 (0/1) | The user skitters behind the target to attack. This also lowers the target's Sp. Atk stat. |  |
+| 260 | Flatter (חנופה) | dark | status | — | 100 | — | ✅ wired | target specialAttack +1, confusion 100% | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Confuses the foe, but raises its SP. ATK. |  |
+| 274 | Assist (סיוע) | normal | status | — | — | — | ✅ wired | `assist` | — | 🎬 pulse | ✖ TM list only | 0 (0/0) | Attacks randomly with one of the partner's moves. |  |
+| 277 | Magic Coat (מעיל קסם) | psychic | status | — | — | — | ✅ wired | priority +4, `magic-coat` | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Reflects special attack move back to the attacker. |  |
+| 292 | Arm Thrust (דחיפת זרוע) | fighting | physical | 15 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | Straight-arm punches that strike the foe 2 to 5 times. |  |
+| 297 | Feather Dance (ריקוד נוצה) | flying | status | — | 100 | — | ✅ wired | target attack -2 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Envelops the foe with down to sharply reduce ATTACK. |  |
+| 298 | Teeter Dance (ריקוד מתנדנד) | normal | status | — | 100 | — | ✅ wired | confusion 100% | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Confuses all POKéMON on the scene. |  |
+| 299 | Blaze Kick (בעיטת להבה) | fire | physical | 85 | 90 | 10 | ✅ wired | crit +1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | A kick with a high critical- hit ratio. May cause a burn. |  |
+| 301 | Ice Ball (כדור קרח) | ice | physical | 30 | 90 | — | ✅ wired | `lock-in-rollout` | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | A 5-turn attack that gains power on successive hits. |  |
+| 303 | Slack Off (מנוחת עצלן) | normal | status | — | — | — | ✅ wired | heal 50% | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Slacks off and restores half the maximum HP. |  |
+| 305 | Poison Fang (ניב רעל) | poison | physical | 50 | 100 | 50 | ✅ wired | poison (toxic) 50% | — | 🎬 bite:poison | ✖ TM list only | 0 (0/0) | A sharp-fanged attack. May badly poison the foe. |  |
+| 306 | Crush Claw (טופר מוחץ) | normal | physical | 75 | 95 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | Tears at the foe with sharp claws. May lower DEFENSE. |  |
+| 307 | Blast Burn (שריפת פיצוץ) | fire | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | 🎬 flamethrower | ✖ TM list only | 0 (0/0) | Powerful, but leaves the user immobile the next turn. |  |
+| 308 | Hydro Cannon (תותח מים) | water | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | 🎬 surf-wave:hydro-pump | ✖ TM list only | 0 (0/0) | Powerful, but leaves the user immobile the next turn. |  |
+| 320 | Grass Whistle (שריקת עשב) | grass | status | — | 55 | — | ✅ wired | sleep 100% | — | 🎬 sound-based:blast | ✖ TM list only | 0 (0/0) | Lulls the foe into sleep with a pleasant melody. |  |
+| 321 | Tickle (דגדוג) | normal | status | — | 100 | — | ✅ wired | target attack -1, target defense -1 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Makes the foe laugh to lower ATTACK and DEFENSE. |  |
+| 324 | Signal Beam (קרן אות) | bug | special | 75 | 100 | 10 | ✅ wired | confusion 10% | — | ▫️ beam | ✖ TM list only | 0 (0/0) | A strange beam attack that may confuse the foe. |  |
+| 329 | Sheer Cold (קור קיצוני) | ice | special | — | 30 | — | ✅ wired | `ohko` | — | ▫️ beam | ✖ TM list only | 0 (0/0) | A chilling attack that causes fainting if it hits. |  |
+| 331 | Bullet Seed (זרע רובה) | grass | physical | 25 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | Shoots 2 to 5 seeds in a row to strike the foe. |  |
+| 336 | Howl (יללה) | normal | status | — | — | — | ✅ wired | user attack +1 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | Howls to raise the spirit and boosts ATTACK. |  |
+| 338 | Frenzy Plant (צמח טירוף) | grass | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | Powerful, but leaves the user immobile the next turn. |  |
+| 342 | Poison Tail (זנב רעל) | poison | physical | 50 | 100 | 10 | ✅ wired | poison 10%, crit +1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | Has a high critical-hit ratio. May also poison. |  |
+| 348 | Leaf Blade (להב עלה) | grass | physical | 90 | 100 | — | ✅ wired | crit +1 | — | 🎬 leaf-spray | ✖ TM list only | 0 (0/0) | Slashes with a sharp leaf. High critical-hit ratio. |  |
+| 354 | Psycho Boost (דחיפת פסיכו) | psychic | special | 140 | 90 | 100 | ✅ wired | user specialAttack -2 | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | Allows a full-power attack, but sharply lowers SP. ATK. |  |
+| 390 | Toxic Spikes (קוצי רעל) | poison | status | — | — | — | ✅ wired | `toxic-spikes` | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user lays a trap of poison spikes at the foe's feet. They poison foes that switch into battle. |  |
+| 412 | Energy Ball (כדור אנרגיה) | grass | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user draws power from nature and fires it at the foe. It may also lower the target's Sp. Def. |  |
+| 413 | Brave Bird (ציפור אמיצה) | flying | physical | 120 | 100 | — | ✅ wired | recoil 33% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user tucks in its wings and charges from a low altitude. The user also takes serious damage. |  |
+| 426 | Mud Bomb (פצצת בוץ) | ground | special | 65 | 85 | 30 | ✅ wired | target accuracy -1 | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user launches a hard-packed mud ball to attack. It may also lower the target's accuracy. |  |
+| 429 | Mirror Shot (יריית מראה) | steel | special | 65 | 85 | 30 | ✅ wired | target accuracy -1 | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user looses a flash of energy from its polished body. It may also lower the target's accuracy. |  |
+| 437 | Leaf Storm (סופת עלים) | grass | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | 🎬 leaf-spray | ✖ TM list only | 0 (0/0) | A storm of sharp leaves is whipped up. The attack's recoil sharply reduces the user's Sp. Atk stat. |  |
+| 440 | Cross Poison (רעל צולב) | poison | physical | 70 | 100 | 10 | ✅ wired | poison 10%, crit +1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | A slashing attack that may also leave the target poisoned. It has a high critical-hit ratio. |  |
+| 441 | Gunk Shot (יריית פסולת) | poison | physical | 120 | 80 | 30 | ✅ wired | poison 30% | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user shoots filthy garbage at the foe to attack. It may also poison the target. |  |
+| 452 | Wood Hammer (פטיש עץ) | grass | physical | 120 | 100 | — | ✅ wired | recoil 25% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user slams its rugged body into the foe to attack. The user also sustains serious damage. |  |
+| 453 | Aqua Jet (סילון מים) | water | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user lunges at the foe at a speed that makes it almost invisible. It is sure to strike first. |  |
+| 457 | Head Smash (נגיחת ראש) | rock | physical | 150 | 80 | — | ✅ wired | recoil 50% | — | 🎬 elemental-dash | ✖ TM list only | 0 (0/0) | The user delivers a life-endangering head butt at full power. The user also takes terrible damage. |  |
+| 475 | Autotomize (אוטומציה) | steel | status | — | — | — | ✅ wired | user speed +2 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user sheds part of its body to make itself lighter and sharply raise its Speed stat. |  |
+| 482 | Sludge Wave (גל בוץ) | poison | special | 95 | 100 | 10 | ✅ wired | poison 10% | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | It swamps the area around the user with a giant sludge wave. It may also poison those hit. |  |
+| 483 | Quiver Dance (ריקוד רעידה) | bug | status | — | — | — | ✅ wired | user specialAttack +1, user specialDefense +1, user speed +1 | — | 🎬 self-boost-cooler | ✖ TM list only | 0 (0/0) | The user lightly performs a beautiful, mystic dance. It boosts the user's Sp. Atk, Sp. Def, and Speed stats. |  |
+| 504 | Shell Smash (ניפוץ שריון) | normal | status | — | — | — | ✅ wired | user attack +2, user specialAttack +2, user speed +2, user defense -1, user specialDefense -1 | — | 🎬 self-boost-cooler | ✖ TM list only | 0 (0/0) | The user breaks its shell, lowering its Defense and Sp. Def stats but sharply raising Attack, Sp. Atk, and Speed stats. |  |
+| 517 | Inferno (גיהנום) | fire | special | 100 | 50 | 100 | ✅ wired | burn 100% | — | 🎬 flamethrower | ✖ TM list only | 0 (0/0) | The user attacks by engulfing the target in an intense fire. It leaves the target with a burn. |  |
+| 531 | Heart Stamp (חותמת לב) | psychic | physical | 60 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user unleashes a vicious blow after its cute act makes the target less wary. It may also make the target flinch. |  |
+| 534 | Razor Shell (שריון תער) | water | physical | 75 | 95 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user cuts its target with sharp shells. This attack may also lower the target's Defense stat. |  |
+| 536 | Leaf Tornado (טורנדו עלים) | grass | special | 65 | 90 | 50 | ✅ wired | target accuracy -1 | — | 🎬 leaf-spray | ✖ TM list only | 0 (0/0) | The user attacks its target by encircling it in sharp leaves. This attack may also lower the target's accuracy. |  |
+| 537 | Steamroller (מכבש קיטור) | bug | physical | 65 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user crushes its targets by rolling over them with its rolled-up body. This attack may make the target flinch. |  |
+| 538 | Cotton Guard (שמירת כותנה) | grass | status | — | — | — | ✅ wired | user defense +3 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user protects itself by wrapping its body in soft cotton, drastically raising the user's Defense stat. |  |
+| 541 | Tail Slap (סטירת זנב) | normal | physical | 25 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user attacks by striking the target with its hard tail. It hits the target two to five times in a row. |  |
+| 556 | Icicle Crash (התרסקות קרח) | ice | physical | 85 | 90 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user attacks by harshly dropping an icicle onto the target. It may also make the target flinch. |  |
+| 589 | Play Nice (שחק יפה) | normal | status | — | — | 100 | ✅ wired | target attack -1 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user and the target become friends, and the target loses its will to fight. This lowers the target's Attack stat. |  |
+| 609 | Nuzzle (חיבוק חשמלי) | electric | physical | 20 | 100 | 100 | ✅ wired | paralyze 100% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user attacks by nuzzling its electrified cheeks against the target. This also leaves the target with paralysis. |  |
+| 669 | Solar Blade (להב שמש) | grass | physical | 125 | 100 | — | ✅ wired | `requires-charge-turn` | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | In this two-turn attack, the user gathers light and fills a blade with the light's energy, attacking the target on the next turn. |  |
+| 672 | Toxic Thread (חוט רעיל) | poison | status | — | 100 | 100 | ✅ wired | poison 100%, target speed -1 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user shoots poisonous threads to poison the target and lower the target's Speed stat. |  |
+| 679 | Lunge (זינוק) | bug | physical | 80 | 100 | 100 | ✅ wired | target attack -1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat. |  |
+| 715 | Tearful Look (מבט דומע) | normal | status | — | — | 100 | ✅ wired | target attack -1, target specialAttack -1 | — | ▫️ pulse | ✖ TM list only | 0 (0/0) | The user gets teary eyed to make the target lose its combative spirit. This lowers the target's Attack and Sp. Atk stats. |  |
+| 828 | Psyshield Bash (נגיחת מגן פסיכו) | psychic | physical | 70 | 90 | — | ✅ wired | user defense +1, user specialDefense +1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | Cloaking itself in psychic energy, the user slams into the target. This may also raise the user's defensive stats. |  |
+| 834 | Wave Crash (התרסקות גל) | water | physical | 120 | 100 | — | ✅ wired | recoil 33% | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user shrouds itself in water and slams into the target with its whole body to inflict damage. This also damages the user and raises the user's action speed. |  |
+| 884 | Pounce (זינוק) | bug | physical | 50 | 100 | — | ✅ wired | target speed -1 | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user attacks by pouncing on the target. This also lowers the target's Speed stat. |  |
+| 888 | Twin Beam (קרן כפולה) | psychic | special | 40 | 100 | — | ✅ wired | hits 2 | — | ▫️ beam | ✖ TM list only | 0 (0/0) | The user shoots mystical beams from its eyes to inflict damage. The target is hit twice in a row. |  |
 
 ## ✅ data (11)
 
-| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
-|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
-| 129 | Swift (ירי כוכבים) | normal | special | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | 137 (24/137) | An attack that never misses. |  |
-| 185 | Feint Attack (מתקפת הטעיה) | dark | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | 17 (17/0) | An attack that never misses. |  |
-| 332 | Aerial Ace (אס אווירי) | flying | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | 16 (0/16) | An extremely speedy and unavoidable attack. |  |
-| 351 | Shock Wave (גל הלם) | electric | special | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ beam | 5 (1/5) | A fast and unavoidable electric attack. |  |
-| 233 | Vital Throw (זריקה חיונית) | fighting | physical | 70 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | 3 (3/0) | A 2nd-strike move that never misses. |  |
-| 396 | Aura Sphere (כדור הילה) | fighting | special | 80 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | 2 (2/1) | The user looses a blast of aura power from deep within its body. This move is certain to hit. |  |
-| 684 | Smart Strike (מכה חכמה) | steel | physical | 70 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | 2 (0/2) | The user stabs the target with a sharp horn. This attack never misses. |  |
-| 345 | Magical Leaf (עלה קסום) | grass | special | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | 1 (0/1) | Attacks with a strange leaf that cannot be evaded. |  |
-| 574 | Disarming Voice (קול מפרק נשק) | fairy | special | 40 | — | — | ✅ data | accuracy = null → always hits | — | 🎬 sound-based:blast | 1 (1/1) | Letting out a charming cry, the user does emotional damage to opposing Pokémon. This attack never misses. |  |
-| 325 | Shadow Punch (אגרוף צל) | ghost | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | 🎬 punch:ghost | 0 (0/0) | An unavoidable punch that is thrown from shadows. |  |
-| 443 | Magnet Bomb (פצצת מגנט) | steel | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | 0 (0/0) | The user launches a steel bomb that sticks to the target. This attack will not miss. |  |
+| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |
+|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|
+| 129 | Swift (ירי כוכבים) | normal | special | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | ✔ lvl×24 · TM | 137 (24/137) | An attack that never misses. |  |
+| 185 | Feint Attack (מתקפת הטעיה) | dark | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | ✔ lvl×17 | 17 (17/0) | An attack that never misses. |  |
+| 332 | Aerial Ace (אס אווירי) | flying | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | ✖ TM list only | 16 (0/16) | An extremely speedy and unavoidable attack. |  |
+| 351 | Shock Wave (גל הלם) | electric | special | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ beam | ✔ lvl×1 | 5 (1/5) | A fast and unavoidable electric attack. |  |
+| 233 | Vital Throw (זריקה חיונית) | fighting | physical | 70 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | ✔ lvl×3 | 3 (3/0) | A 2nd-strike move that never misses. |  |
+| 396 | Aura Sphere (כדור הילה) | fighting | special | 80 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | ✔ lvl×2 | 2 (2/1) | The user looses a blast of aura power from deep within its body. This move is certain to hit. |  |
+| 684 | Smart Strike (מכה חכמה) | steel | physical | 70 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ lunge | ✖ TM list only | 2 (0/2) | The user stabs the target with a sharp horn. This attack never misses. |  |
+| 345 | Magical Leaf (עלה קסום) | grass | special | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | ✖ TM list only | 1 (0/1) | Attacks with a strange leaf that cannot be evaded. |  |
+| 574 | Disarming Voice (קול מפרק נשק) | fairy | special | 40 | — | — | ✅ data | accuracy = null → always hits | — | 🎬 sound-based:blast | ✔ lvl×1 | 1 (1/1) | Letting out a charming cry, the user does emotional damage to opposing Pokémon. This attack never misses. |  |
+| 325 | Shadow Punch (אגרוף צל) | ghost | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | 🎬 punch:ghost | ✖ TM list only | 0 (0/0) | An unavoidable punch that is thrown from shadows. |  |
+| 443 | Magnet Bomb (פצצת מגנט) | steel | physical | 60 | — | — | ✅ data | accuracy = null → always hits | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user launches a steel bomb that sticks to the target. This attack will not miss. |  |
 
 ## ➖ none (41)
 
-| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
-|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
-| 70 | Strength (כוח) | normal | physical | 80 | 100 | — | ➖ none | — | — | ▫️ lunge | 131 (0/131) | A powerful physical attack. |  |
-| 33 | Tackle (התנגשות) | normal | physical | 40 | 100 | — | ➖ none | — | — | ▫️ lunge | 98 (98/0) | A full-body charge attack. |  |
-| 57 | Surf (גלישה) | water | special | 90 | 100 | — | ➖ none | — | — | 🎬 surf-wave:surf | 75 (1/75) | A strong water- type attack. Allow large pokemon above level 45 , 0.85m and 25kg to carry his trainer on water. |  |
-| 15 | Cut (חיתוך) | normal | physical | 50 | 95 | — | ➖ none | — | — | ▫️ lunge | 74 (0/74) | Cuts using claws, scythes, etc. |  |
-| 55 | Water Gun (אקדח מים) | water | special | 40 | 100 | — | ➖ none | — | — | 🎬 water-flow | 74 (35/57) | Squirts water to attack. |  |
-| 89 | Earthquake (רעידת אדמה) | ground | physical | 100 | 100 | — | ➖ none | — | — | 🎬 earthquake | 74 (17/74) | Tough but useless vs. flying foes. |  |
-| 5 | Mega Punch (אגרוף מגה) | normal | physical | 80 | 85 | — | ➖ none | — | — | 🎬 punch:normal | 54 (3/54) | A powerful punch thrown very hard. |  |
-| 25 | Mega Kick (בעיטת מגה) | normal | physical | 120 | 75 | — | ➖ none | — | — | ▫️ lunge | 53 (1/53) | A powerful kicking attack. |  |
-| 56 | Hydro Pump (משאבת מים) | water | special | 110 | 80 | — | ➖ none | — | — | 🎬 surf-wave:hydro-pump | 34 (29/6) | A powerful water- type attack. |  |
-| 10 | Scratch (שריטה) | normal | physical | 40 | 100 | — | ➖ none | — | — | ▫️ lunge | 33 (33/0) | Scratches with sharp claws. |  |
-| 496 | Round (סיבוב) | normal | special | 60 | 100 | — | ➖ none | — | — | 🎬 sound-based:blast | 26 (0/26) | The user attacks the target with a song. Others can join in the Round and make the attack do greater damage. |  |
-| 21 | Slam (מכת טריקה) | normal | physical | 80 | 75 | — | ➖ none | — | — | ▫️ lunge | 18 (18/0) | Slams the foe with a tail, vine, etc. |  |
-| 406 | Dragon Pulse (פולס דרקון) | dragon | special | 85 | 100 | — | ➖ none | — | — | 🎬 dragon-aura | 18 (7/18) | The foe is attacked with a shock wave generated by the user's gaping mouth. |  |
-| 64 | Peck (ניקור) | flying | physical | 35 | 100 | — | ➖ none | — | — | ▫️ lunge | 16 (16/0) | Jabs the foe with a beak, etc. |  |
-| 1 | Pound (חבטה) | normal | physical | 40 | 100 | — | ➖ none | — | — | ▫️ lunge | 15 (15/0) | Pounds with forelegs or tail. |  |
-| 30 | Horn Attack (מתקפת קרן) | normal | physical | 65 | 100 | — | ➖ none | — | — | ▫️ lunge | 14 (14/0) | An attack using a horn to jab. |  |
-| 17 | Wing Attack (מתקפת כנף) | flying | physical | 60 | 100 | — | ➖ none | — | — | ▫️ lunge | 13 (13/0) | Strikes the target with wings. |  |
-| 337 | Dragon Claw (טופר דרקון) | dragon | physical | 80 | 100 | — | ➖ none | — | — | 🎬 dragon-aura | 11 (10/11) | Slashes the foe with sharp claws. |  |
-| 16 | Gust (משב רוח) | flying | special | 40 | 100 | — | ➖ none | — | — | ▫️ projectile | 9 (9/0) | Whips up a strong gust of wind. |  |
-| 693 | Brutal Swing (נדנוד אכזרי) | dark | physical | 60 | 100 | — | ➖ none | — | — | ▫️ lunge | 9 (0/9) | The user swings its body around violently to inflict damage on everything in its vicinity. |  |
-| 88 | Rock Throw (זריקת סלע) | rock | physical | 50 | 90 | — | ➖ none | — | — | 🎬 rock-throw | 8 (8/0) | Drops rocks on the enemy. |  |
-| 304 | Hyper Voice (קול היפר) | normal | special | 90 | 100 | — | ➖ none | — | — | 🎬 sound-based:blast | 8 (3/8) | A loud attack that uses sound waves to injure. |  |
-| 22 | Vine Whip (מכת גפן) | grass | physical | 45 | 100 | — | ➖ none | — | — | 🎬 vine-whip | 7 (7/0) | Whips the foe with slender vines. |  |
-| 65 | Drill Peck (ניקור מקדח) | flying | physical | 80 | 100 | — | ➖ none | — | — | ▫️ lunge | 5 (5/0) | A strong, spinning-peck attack. |  |
-| 121 | Egg Bomb (פצצת ביצה) | normal | physical | 100 | 75 | — | ➖ none | — | — | ▫️ projectile | 5 (3/4) | Eggs are hurled at the foe. |  |
-| 404 | X Scissor (מספריים-X) | bug | physical | 80 | 100 | — | ➖ none | — | — | ▫️ lunge | 5 (0/5) | The user slashes at the foe by crossing its scythes or claws as if they were a pair of scissors. |  |
-| 11 | Vice Grip (אחיזת מלחציים) | normal | physical | 55 | 100 | — | ➖ none | — | — | ▫️ lunge | 3 (3/0) | Grips with powerful pincers. |  |
-| 224 | Megahorn (קרן מגה) | bug | physical | 120 | 85 | — | ➖ none | — | — | ▫️ lunge | 3 (2/2) | A powerful charge attack. |  |
-| 408 | Power Gem (אבן חן כוח) | rock | special | 80 | 100 | — | ➖ none | — | — | 🎬 rock-slide | 2 (0/2) | The user attacks with a ray of light that sparkles as if it were made of gemstones. |  |
-| 586 | Boomburst (בום-ברסט) | normal | special | 140 | 100 | — | ➖ none | — | — | 🎬 sound-based:blast | 2 (2/0) | The user attacks everything around it by emitting a powerful, ultrasonic wave. Bypasses substitutes. |  |
-| 401 | Aqua Tail (זנב מים) | water | physical | 90 | 90 | — | ➖ none | — | — | 🎬 water-flow | 1 (1/0) | The user attacks by swinging its tail as if it were a vicious wave in a raging storm. |  |
-| 481 | Flame Burst (פרץ להבה) | fire | special | 70 | 100 | — | ➖ none | — | — | ▫️ projectile | 1 (1/0) | The user attacks the target with a bursting flame. The bursting flame damages Pokémon next to the target as well. |  |
-| 584 | Fairy Wind (רוח פיות) | fairy | special | 40 | 100 | — | ➖ none | — | — | ▫️ projectile | 1 (1/0) | The user stirs up a fairy wind and strikes the target with it. |  |
-| 605 | Dazzling Gleam (ברק מסנוור) | fairy | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | 1 (0/1) | The user damages opposing Pokémon by emitting a powerful flash. |  |
-| 327 | Sky Uppercut (אפרקט שמיים) | fighting | physical | 85 | 90 | — | ➖ none | — | — | 🎬 punch:fighting | 0 (0/0) | An uppercut thrown as if leaping into the sky. |  |
-| 402 | Seed Bomb (פצצת זרע) | grass | physical | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | 0 (0/0) | The user slams a barrage of hard- shelled seeds down on the foe from above. |  |
-| 438 | Power Whip (שוט כוח) | grass | physical | 120 | 85 | — | ➖ none | — | — | ▫️ lunge | 0 (0/0) | The user violently whirls its vines or tentacles to harshly lash the foe. |  |
-| 518 | Water Pledge (שבועת מים) | water | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | 0 (0/0) | A column of water strikes the target. When combined with its fire equivalent, the damage increases and a rainbow appears. |  |
-| 519 | Fire Pledge (שבועת אש) | fire | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | 0 (0/0) | A column of fire hits opposing Pokémon. When used with its Grass equivalent, its damage increases into a vast sea of fire. |  |
-| 520 | Grass Pledge (שבועת עשב) | grass | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | 0 (0/0) | A column of grass hits opposing Pokémon. When used with its water equivalent, its damage increases into a vast swamp. |  |
-| 572 | Petal Blizzard (סופת עלי כותרת) | grass | physical | 90 | 100 | — | ➖ none | — | — | 🎬 leaf-spray | 0 (0/0) | The user stirs up a violent petal blizzard and attacks everything around it. |  |
+| # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Reachable | Learners (lvl/TM) | Description | Notes |
+|---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-----------|-------------------|-------------|-------|
+| 70 | Strength (כוח) | normal | physical | 80 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ TM | 131 (0/131) | A powerful physical attack. |  |
+| 33 | Tackle (התנגשות) | normal | physical | 40 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×98 · trainer | 98 (98/0) | A full-body charge attack. |  |
+| 57 | Surf (גלישה) | water | special | 90 | 100 | — | ➖ none | — | — | 🎬 surf-wave:surf | ✔ lvl×1 · TM | 75 (1/75) | A strong water- type attack. Allow large pokemon above level 45 , 0.85m and 25kg to carry his trainer on water. |  |
+| 15 | Cut (חיתוך) | normal | physical | 50 | 95 | — | ➖ none | — | — | ▫️ lunge | ✔ TM | 74 (0/74) | Cuts using claws, scythes, etc. |  |
+| 55 | Water Gun (אקדח מים) | water | special | 40 | 100 | — | ➖ none | — | — | 🎬 water-flow | ✔ lvl×35 | 74 (35/57) | Squirts water to attack. |  |
+| 89 | Earthquake (רעידת אדמה) | ground | physical | 100 | 100 | — | ➖ none | — | — | 🎬 earthquake | ✔ lvl×17 · TM | 74 (17/74) | Tough but useless vs. flying foes. |  |
+| 5 | Mega Punch (אגרוף מגה) | normal | physical | 80 | 85 | — | ➖ none | — | — | 🎬 punch:normal | ✔ lvl×3 | 54 (3/54) | A powerful punch thrown very hard. |  |
+| 25 | Mega Kick (בעיטת מגה) | normal | physical | 120 | 75 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×1 | 53 (1/53) | A powerful kicking attack. |  |
+| 56 | Hydro Pump (משאבת מים) | water | special | 110 | 80 | — | ➖ none | — | — | 🎬 surf-wave:hydro-pump | ✔ lvl×29 | 34 (29/6) | A powerful water- type attack. |  |
+| 10 | Scratch (שריטה) | normal | physical | 40 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×33 | 33 (33/0) | Scratches with sharp claws. |  |
+| 496 | Round (סיבוב) | normal | special | 60 | 100 | — | ➖ none | — | — | 🎬 sound-based:blast | ✖ TM list only | 26 (0/26) | The user attacks the target with a song. Others can join in the Round and make the attack do greater damage. |  |
+| 21 | Slam (מכת טריקה) | normal | physical | 80 | 75 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×18 | 18 (18/0) | Slams the foe with a tail, vine, etc. |  |
+| 406 | Dragon Pulse (פולס דרקון) | dragon | special | 85 | 100 | — | ➖ none | — | — | 🎬 dragon-aura | ✔ lvl×7 | 18 (7/18) | The foe is attacked with a shock wave generated by the user's gaping mouth. |  |
+| 64 | Peck (ניקור) | flying | physical | 35 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×16 | 16 (16/0) | Jabs the foe with a beak, etc. |  |
+| 1 | Pound (חבטה) | normal | physical | 40 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×15 | 15 (15/0) | Pounds with forelegs or tail. |  |
+| 30 | Horn Attack (מתקפת קרן) | normal | physical | 65 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×14 | 14 (14/0) | An attack using a horn to jab. |  |
+| 17 | Wing Attack (מתקפת כנף) | flying | physical | 60 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×13 | 13 (13/0) | Strikes the target with wings. |  |
+| 337 | Dragon Claw (טופר דרקון) | dragon | physical | 80 | 100 | — | ➖ none | — | — | 🎬 dragon-aura | ✔ lvl×10 | 11 (10/11) | Slashes the foe with sharp claws. |  |
+| 16 | Gust (משב רוח) | flying | special | 40 | 100 | — | ➖ none | — | — | ▫️ projectile | ✔ lvl×9 | 9 (9/0) | Whips up a strong gust of wind. |  |
+| 693 | Brutal Swing (נדנוד אכזרי) | dark | physical | 60 | 100 | — | ➖ none | — | — | ▫️ lunge | ✖ TM list only | 9 (0/9) | The user swings its body around violently to inflict damage on everything in its vicinity. |  |
+| 88 | Rock Throw (זריקת סלע) | rock | physical | 50 | 90 | — | ➖ none | — | — | 🎬 rock-throw | ✔ lvl×8 | 8 (8/0) | Drops rocks on the enemy. |  |
+| 304 | Hyper Voice (קול היפר) | normal | special | 90 | 100 | — | ➖ none | — | — | 🎬 sound-based:blast | ✔ lvl×3 | 8 (3/8) | A loud attack that uses sound waves to injure. |  |
+| 22 | Vine Whip (מכת גפן) | grass | physical | 45 | 100 | — | ➖ none | — | — | 🎬 vine-whip | ✔ lvl×7 | 7 (7/0) | Whips the foe with slender vines. |  |
+| 65 | Drill Peck (ניקור מקדח) | flying | physical | 80 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×5 · trainer | 5 (5/0) | A strong, spinning-peck attack. |  |
+| 121 | Egg Bomb (פצצת ביצה) | normal | physical | 100 | 75 | — | ➖ none | — | — | ▫️ projectile | ✔ lvl×3 | 5 (3/4) | Eggs are hurled at the foe. |  |
+| 404 | X Scissor (מספריים-X) | bug | physical | 80 | 100 | — | ➖ none | — | — | ▫️ lunge | ✖ TM list only | 5 (0/5) | The user slashes at the foe by crossing its scythes or claws as if they were a pair of scissors. |  |
+| 11 | Vice Grip (אחיזת מלחציים) | normal | physical | 55 | 100 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×3 | 3 (3/0) | Grips with powerful pincers. |  |
+| 224 | Megahorn (קרן מגה) | bug | physical | 120 | 85 | — | ➖ none | — | — | ▫️ lunge | ✔ lvl×2 | 3 (2/2) | A powerful charge attack. |  |
+| 408 | Power Gem (אבן חן כוח) | rock | special | 80 | 100 | — | ➖ none | — | — | 🎬 rock-slide | ✖ TM list only | 2 (0/2) | The user attacks with a ray of light that sparkles as if it were made of gemstones. |  |
+| 586 | Boomburst (בום-ברסט) | normal | special | 140 | 100 | — | ➖ none | — | — | 🎬 sound-based:blast | ✔ lvl×2 | 2 (2/0) | The user attacks everything around it by emitting a powerful, ultrasonic wave. Bypasses substitutes. |  |
+| 401 | Aqua Tail (זנב מים) | water | physical | 90 | 90 | — | ➖ none | — | — | 🎬 water-flow | ✔ lvl×1 | 1 (1/0) | The user attacks by swinging its tail as if it were a vicious wave in a raging storm. |  |
+| 481 | Flame Burst (פרץ להבה) | fire | special | 70 | 100 | — | ➖ none | — | — | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | The user attacks the target with a bursting flame. The bursting flame damages Pokémon next to the target as well. |  |
+| 584 | Fairy Wind (רוח פיות) | fairy | special | 40 | 100 | — | ➖ none | — | — | ▫️ projectile | ✔ lvl×1 | 1 (1/0) | The user stirs up a fairy wind and strikes the target with it. |  |
+| 605 | Dazzling Gleam (ברק מסנוור) | fairy | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | ✖ TM list only | 1 (0/1) | The user damages opposing Pokémon by emitting a powerful flash. |  |
+| 327 | Sky Uppercut (אפרקט שמיים) | fighting | physical | 85 | 90 | — | ➖ none | — | — | 🎬 punch:fighting | ✖ TM list only | 0 (0/0) | An uppercut thrown as if leaping into the sky. |  |
+| 402 | Seed Bomb (פצצת זרע) | grass | physical | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | The user slams a barrage of hard- shelled seeds down on the foe from above. |  |
+| 438 | Power Whip (שוט כוח) | grass | physical | 120 | 85 | — | ➖ none | — | — | ▫️ lunge | ✖ TM list only | 0 (0/0) | The user violently whirls its vines or tentacles to harshly lash the foe. |  |
+| 518 | Water Pledge (שבועת מים) | water | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | A column of water strikes the target. When combined with its fire equivalent, the damage increases and a rainbow appears. |  |
+| 519 | Fire Pledge (שבועת אש) | fire | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | A column of fire hits opposing Pokémon. When used with its Grass equivalent, its damage increases into a vast sea of fire. |  |
+| 520 | Grass Pledge (שבועת עשב) | grass | special | 80 | 100 | — | ➖ none | — | — | ▫️ projectile | ✖ TM list only | 0 (0/0) | A column of grass hits opposing Pokémon. When used with its water equivalent, its damage increases into a vast swamp. |  |
+| 572 | Petal Blizzard (סופת עלי כותרת) | grass | physical | 90 | 100 | — | ➖ none | — | — | 🎬 leaf-spray | ✖ TM list only | 0 (0/0) | The user stirs up a violent petal blizzard and attacks everything around it. |  |

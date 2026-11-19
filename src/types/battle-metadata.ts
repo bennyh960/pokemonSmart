@@ -99,7 +99,9 @@ export type MoveBattleBehaviorTag =
   | 'splash'
   | 'laser-focus'
   | 'lock-on'
-  | 'endeavor';
+  | 'endeavor'
+  | 'feint'
+  | 'beat-up';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
 export type MoveBattleEffectId =

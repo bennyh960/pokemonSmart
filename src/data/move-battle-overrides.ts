@@ -623,6 +623,10 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Knock Off': { behaviorTags: ['thief'] },
   'Temper Flare': { behaviorTags: ['stomping-tantrum'] },
   Endeavor: { behaviorTags: ['endeavor'] },
+  // Feint (priority +2): hits through Protect / Detect and lifts it
+  Feint: { behaviorTags: ['feint'], priority: 2 },
+  // Beat Up: 10-power hit per healthy party member (no status)
+  'Beat Up': { behaviorTags: ['beat-up'] },
   Payback: { behaviorTags: ['payback'] },
   'Stomping Tantrum': { behaviorTags: ['stomping-tantrum'] },
   'Scale Shot': {

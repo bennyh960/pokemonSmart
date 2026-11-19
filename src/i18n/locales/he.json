@@ -500,6 +500,7 @@
   "battle.statFellHarshly": "ה{stat} של {name} ירדה מאוד!",
   "battle.confused": "{name} התבלבל!",
   "battle.isConfused": "{name} מבולבל!",
+  "battle.feintBrokeProtect": "{name} נפל בתרגיל ההטעיה!",
   "battle.perishSong": "כל פוקימון ששמע את השיר יתעלף בעוד שלושה תורות!",
   "battle.perishCount": "ספירת האבדון של {name} ירדה ל־{count}.",
   "battle.perishFainted": "ספירת האבדון של {name} הגיעה ל־0!",

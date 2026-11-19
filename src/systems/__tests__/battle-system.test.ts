@@ -30,6 +30,7 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  getBeatUpHits,
   advanceTimedVolatiles,
   applyEncore,
   getEndeavorDamage,
@@ -573,6 +574,18 @@ describe('battle system helpers', () => {
   it('Endeavor brings the target down to the user HP', () => {
     expect(getEndeavorDamage(20, 100)).toBe(80);
     expect(getEndeavorDamage(100, 20)).toBe(0);
+  });
+
+  it('Beat Up hits once per healthy party member; Feint has +2 priority', () => {
+    const party = [
+      createTestPokemon(),
+      createTestPokemon({ hp: 0 }),
+      createTestPokemon({ status: 'poison' }),
+      createTestPokemon(),
+    ];
+    expect(getBeatUpHits(party)).toBe(2);
+    expect(getBeatUpHits([createTestPokemon({ status: 'burn' })])).toBe(1);
+    expect(getMoveByName('feint')?.battle).toMatchObject({ priority: 2, behaviorTags: ['feint'] });
   });
 
   it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {

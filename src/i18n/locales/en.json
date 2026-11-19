@@ -502,6 +502,7 @@
   "battle.statFellHarshly": "{name}'s {stat} fell harshly!",
   "battle.confused": "{name} became confused!",
   "battle.isConfused": "{name} is confused!",
+  "battle.feintBrokeProtect": "{name} fell for the feint!",
   "battle.perishSong": "All Pokémon that heard the song will faint in three turns!",
   "battle.perishCount": "{name}'s perish count fell to {count}.",
   "battle.perishFainted": "{name}'s perish count reached 0!",

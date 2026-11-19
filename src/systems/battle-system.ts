@@ -325,6 +325,12 @@ export function isBattlePokemonTrapped(
   return runtimeState.blockedBy !== null && (!opponent || opponent.uuid === runtimeState.blockedBy);
 }
 
+/** Beat Up: one hit per party member that can fight and has no status (at least the user). */
+export const BEAT_UP_HIT_POWER = 10;
+export function getBeatUpHits(party: Pokemon[]): number {
+  return Math.max(1, party.filter((p) => p.hp > 0 && !p.status).length);
+}
+
 export const TAUNT_TURNS = 3;
 export const ENCORE_TURNS = 3;
 export const PERISH_SONG_TURNS = 3;
