@@ -9,6 +9,7 @@ import {
   canStillEvolve,
   computeSharedXpAwards,
   getParticipationShare,
+  getWatchers,
   getWatcherXp,
   getXpToReachLevel,
 } from '../shared-xp.js';
@@ -104,5 +105,28 @@ describe('computeSharedXpAwards', () => {
       enemyLevel: 24, // cap = 14 → no room
     });
     expect(awards).toEqual([]);
+  });
+});
+
+describe('getWatchers (battle badge)', () => {
+  const fight = (party: Pokemon[], enemyLevel: number) => ({
+    party,
+    activePartyIndex: 0,
+    turnsVsEnemy: new Map([[0, 1]]),
+    enemyLevel,
+  });
+
+  it('lists benched Exp Share holders that can still evolve, not the active one', () => {
+    const active = mon(CHARMANDER, 30, EXP_SHARE_ITEM_ID);
+    const karp = mon(MAGIKARP, 5, EXP_SHARE_ITEM_ID);
+    const gyarados = mon(GYARADOS, 5, EXP_SHARE_ITEM_ID);
+    const plain = mon(PIDGEY, 5);
+    expect(getWatchers(fight([active, karp, gyarados, plain], 30))).toEqual([{ partyIndex: 1, capped: false }]);
+  });
+
+  it('marks a watcher as capped when the fight is too weak for it', () => {
+    const karp = mon(MAGIKARP, 15, EXP_SHARE_ITEM_ID);
+    expect(getWatchers(fight([mon(CHARMANDER, 30), karp], 25))).toEqual([{ partyIndex: 1, capped: true }]);
+    expect(getWatchers(fight([mon(CHARMANDER, 30), karp], 26))).toEqual([{ partyIndex: 1, capped: false }]);
   });
 });

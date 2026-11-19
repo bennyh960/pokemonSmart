@@ -83,6 +83,7 @@
   "battle.gainedXP": "{name} gained {xp} XP!",
   "battle.gainedParticipantXP": "{name} gained {xp} XP for helping!",
   "battle.gainedWatcherXP": "{name} watched and learned! +{xp} XP",
+  "battle.watcherCapped": "{name} already knows this! It needs a stronger battle to learn more.",
   "battle.levelUp": "{name} grew to level {level}!",
   "evolution.title": "EVOLUTION",
   "evolution.congrats": "Congratulations! {from} evolved into {to}!",

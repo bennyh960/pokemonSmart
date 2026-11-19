@@ -177,6 +177,8 @@ export const BTL = {
 
   // ===== OPPONENT INFO BAR (tall enough for party balls) =====
   OPP_BAR: { x: 136, y: 2, w: 100, h: 24 },
+  /** Exp Share watcher badge, top-left of the field (sprite size, item icon size, hop + "+XP" float timings). */
+  WATCHER: { x: 3, y: 3, size: 18, item: 8, hopPx: 4, hopMs: 450, floatMs: 1200 },
   OPP_NAME: { dx: 52, dy: 1, w: 46, fs: 6 }, // right-aligned from bar right edge
   OPP_LEVEL: { dx: 4, dy: 2, fs: 5 }, // left-aligned from bar left edge
   OPP_HP_LABEL: { dx: 92, dy: 9, fs: 5 }, // right-aligned
