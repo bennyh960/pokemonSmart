@@ -583,7 +583,6 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   // Teleport: no escape from battle (by design) — the user gets much harder to hit and faster instead
   Teleport: userStages(['evasion', 1], ['speed', 1]),
   Nightmare: volatileEffect('nightmare', 100),
-  'Fury Cutter': { behaviorTags: ['fury-cutter'] },
   Psywave: { behaviorTags: ['psywave'] },
   'Tri Attack': { behaviorTags: ['tri-attack'] },
   // Secret Power: varies by location in the original — here always the plain-ground effect (30% paralysis)
@@ -592,23 +591,16 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Pursuit: { behaviorTags: ['pursuit'] },
   // Dragon Tail: vs a trainer with another able Pokémon, drags it in (it doesn't act this turn). Wild: plain hit
   'Dragon Tail': { behaviorTags: ['dragon-tail'], priority: -6 },
-  // Helping Hand (no double battles): heals benched roster allies that still have HP by 25%
-  'Helping Hand': { behaviorTags: ['helping-hand'], target: 'user' },
-  // Natural Gift (no berries in battle): 60 power of the user's own type
-  'Natural Gift': { behaviorTags: ['natural-gift'] },
   // Captivate (no genders): Sp. Atk −2, fails on the same species
   Captivate: { ...targetStages(['specialAttack', -2]), behaviorTags: ['fails-on-same-species'] },
   // Pay Day: level × 5 coins per hit, paid if the player wins
   'Pay Day': { behaviorTags: ['pay-day'] },
-  // Incinerate: burns up the target's held item for this battle (like Thief, without the power boost)
-  Incinerate: { behaviorTags: ['incinerate'] },
   // Dragon Cheer (no double battles): raises the user's crit chance like Focus Energy
   'Dragon Cheer': { behaviorTags: ['focus-energy'], target: 'user' },
   'False Swipe': { behaviorTags: ['false-swipe'] },
   // Mean Look: the target can't switch or run while the user is in battle (trainer AI won't switch either)
   'Mean Look': volatileEffect('mean-look', 100, { bayPassImuunity: true }),
   Taunt: volatileEffect('taunt', 100),
-  Torment: volatileEffect('torment', 100),
   // Fling: power = the held item's fling power; the item is then out of use for this battle (not lost)
   Fling: { behaviorTags: ['fling'] },
   Flail: { behaviorTags: ['reversal'] },
@@ -621,14 +613,11 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Lock On': { behaviorTags: ['lock-on'], target: 'user' },
   'Mind Reader': { behaviorTags: ['lock-on'], target: 'user' },
   'Knock Off': { behaviorTags: ['thief'] },
-  'Temper Flare': { behaviorTags: ['stomping-tantrum'] },
-  Endeavor: { behaviorTags: ['endeavor'] },
   // Feint (priority +2): hits through Protect / Detect and lifts it
   Feint: { behaviorTags: ['feint'], priority: 2 },
   // Beat Up: 10-power hit per healthy party member (no status)
   'Beat Up': { behaviorTags: ['beat-up'] },
   Payback: { behaviorTags: ['payback'] },
-  'Stomping Tantrum': { behaviorTags: ['stomping-tantrum'] },
   'Scale Shot': {
     ...multiHit2to5(),
     statChanges: [stageChange('speed', 1, 'user'), stageChange('defense', -1, 'user')],

@@ -145,13 +145,6 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(240,80,64,0.3)',
     textColor: '#f07060',
   },
-  torment: {
-    label: 'מעונה',
-    shortLabel: 'מעונה',
-    bgColor: 'rgba(120,64,64,0.2)',
-    borderColor: 'rgba(190,110,110,0.3)',
-    textColor: '#d09090',
-  },
   encore: {
     label: 'הדרן',
     shortLabel: 'הדרן',

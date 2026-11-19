@@ -80,26 +80,20 @@ export type MoveBattleBehaviorTag =
   | 'thief'
   | 'bide'
   | 'mimic'
-  | 'fury-cutter'
   | 'psywave'
   | 'tri-attack'
   | 'pursuit'
   | 'dragon-tail'
-  | 'helping-hand'
-  | 'natural-gift'
   | 'fails-on-same-species'
   | 'pay-day'
-  | 'incinerate'
   | 'false-swipe'
   | 'payback'
-  | 'stomping-tantrum'
   | 'fling'
   | 'assurance'
   | 'perish-song'
   | 'splash'
   | 'laser-focus'
   | 'lock-on'
-  | 'endeavor'
   | 'feint'
   | 'beat-up';
 
@@ -114,7 +108,6 @@ export type MoveBattleEffectId =
   | 'nightmare'
   | 'mean-look'
   | 'taunt'
-  | 'torment'
   | 'encore';
 
 export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';

@@ -287,9 +287,6 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.tauntTurnsRemaining > 0) {
     effects.push('taunt');
   }
-  if (runtimeState.tormented) {
-    effects.push('torment');
-  }
   if (runtimeState.encoreTurnsRemaining > 0) {
     effects.push('encore');
   }
@@ -336,11 +333,6 @@ export const ENCORE_TURNS = 3;
 export const PERISH_SONG_TURNS = 3;
 /** Laser Focus / Lock-On last until the end of the next turn. */
 export const NEXT_TURN_EFFECT_TURNS = 2;
-
-/** Endeavor: cuts the target's HP down to the user's (0 if the user isn't lower). */
-export function getEndeavorDamage(userHp: number, targetHp: number): number {
-  return Math.max(0, targetHp - userHp);
-}
 
 /** Perish Song: starts the count on every Pokémon that isn't counting yet. Returns those it started on. */
 export function startPerishSong(states: BattlePokemonRuntimeState[]): BattlePokemonRuntimeState[] {
@@ -394,17 +386,10 @@ export function isAttackingMove(moveId: number): boolean {
   return cls !== undefined && cls !== 'status';
 }
 
-/** Moves this Pokémon can't pick right now: status moves while taunted, its last move while tormented. */
-export function getBlockedMoveIds(
-  pokemon: Pick<Pokemon, 'moves'>,
-  runtimeState: BattlePokemonRuntimeState,
-  previousMoveId: number | null,
-): number[] {
-  const blocked: number[] = [];
-  if (runtimeState.tauntTurnsRemaining > 0)
-    blocked.push(...pokemon.moves.filter((m) => !isAttackingMove(m.id)).map((m) => m.id));
-  if (runtimeState.tormented && previousMoveId !== null && previousMoveId > 0) blocked.push(previousMoveId);
-  return blocked;
+/** Moves this Pokémon can't pick right now: status moves while taunted. */
+export function getBlockedMoveIds(pokemon: Pick<Pokemon, 'moves'>, runtimeState: BattlePokemonRuntimeState): number[] {
+  if (runtimeState.tauntTurnsRemaining <= 0) return [];
+  return pokemon.moves.filter((m) => !isAttackingMove(m.id)).map((m) => m.id);
 }
 
 /** Flail / Reversal: the lower the user's HP, the higher the power (20–200). */
@@ -790,15 +775,6 @@ export function applyVolatileMoveEffects(
         applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
         break;
       }
-      case 'torment': {
-        if (runtimeState.tormented) {
-          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
-          break;
-        }
-        runtimeState.tormented = true;
-        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
-        break;
-      }
       case 'nightmare': {
         if (runtimeState.nightmare) {
           applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
@@ -836,7 +812,7 @@ export function applyVolatileMoveEffects(
 }
 
 /**
- * Thief / Incinerate / Fling: the held item stops working for the rest of this battle — it is NOT lost.
+ * Thief / Knock Off / Fling: the held item stops working for the rest of this battle — it is NOT lost.
  * Undoes the item's start-of-battle stat stages and any choice lock. Returns the item id, or null if none.
  */
 export function neutralizeHeldItem(
@@ -863,13 +839,6 @@ export function hasUsableHeldItem(
   return !!pokemon.heldItemId && !runtimeState.heldItemDisabled;
 }
 
-export const FURY_CUTTER_MAX_POWER = 160;
-
-/** Fury Cutter: base power doubled per consecutive hit, capped at FURY_CUTTER_MAX_POWER. */
-export function getFuryCutterPower(basePower: number, streak: number): number {
-  return Math.min(FURY_CUTTER_MAX_POWER, basePower * 2 ** streak);
-}
-
 /** Psywave: random damage between 0.5× and 1.5× the user's level. */
 export function getPsywaveDamage(level: number, random: () => number = Math.random): number {
   return Math.max(1, Math.floor(level * (0.5 + random())));
@@ -888,20 +857,6 @@ export function pickTriAttackAilment(random: () => number = Math.random): MoveSt
 /** Sucker Punch works only if the target hasn't acted yet this turn and chose an attacking move. */
 export function doesSuckerPunchSucceed(targetMoveId: number | null, targetAlreadyActed: boolean): boolean {
   return !targetAlreadyActed && targetMoveId !== null && isAttackingMove(targetMoveId);
-}
-
-/** Helping Hand (no double battles here): heals roster allies on the bench by this % of max HP. */
-export const HELPING_HAND_HEAL_PERCENT = 25;
-
-/** Heals every ally that still has HP and isn't full. Returns the allies healed. */
-export function applyHelpingHand(allies: Pokemon[], percent = HELPING_HAND_HEAL_PERCENT): Pokemon[] {
-  const healed: Pokemon[] = [];
-  for (const ally of allies) {
-    if (ally.hp <= 0 || ally.hp >= ally.maxHp) continue;
-    ally.hp = Math.min(ally.maxHp, ally.hp + Math.max(1, Math.floor((ally.maxHp * percent) / 100)));
-    healed.push(ally);
-  }
-  return healed;
 }
 
 /** Dragon Tail: a random benched trainer Pokémon that can still fight (party slots after the active one). */
@@ -940,9 +895,6 @@ export function advanceBide(runtimeState: BattlePokemonRuntimeState, moveId: num
 
 /** Thief hits harder when the target holds an item. */
 export const THIEF_ITEM_POWER_MULTIPLIER = 1.5;
-
-/** Natural Gift (no berries in battle): fixed power, type = the user's (like Hidden Power). */
-export const NATURAL_GIFT_POWER = 60;
 
 /** Pay Day: coins scattered per use, picked up if the player wins. */
 export function getPayDayCoins(level: number): number {

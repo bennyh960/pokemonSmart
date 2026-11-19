@@ -179,7 +179,6 @@ import {
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   getHiddenPowerType,
-  NATURAL_GIFT_POWER,
   getPayDayCoins,
   capFalseSwipeDamage,
   neutralizeHeldItem,
@@ -188,18 +187,15 @@ import {
   getBeatUpHits,
   advanceTimedVolatiles,
   applyEncore,
-  getEndeavorDamage,
   NEXT_TURN_EFFECT_TURNS,
   startPerishSong,
   tickPerishCount,
   getBlockedMoveIds,
   getFlailPower,
   hasUsableHeldItem,
-  applyHelpingHand,
   pickDragonTailTarget,
   applyNightmareEffect,
   doesSuckerPunchSucceed,
-  getFuryCutterPower,
   getPsywaveDamage,
   pickTriAttackAilment,
   THIEF_ITEM_POWER_MULTIPLIER,
@@ -680,8 +676,6 @@ function getMoveEffectAppliedLine(name: string, effectId: MoveBattleEffectId): s
       return t('battle.cantEscapeNow', { name });
     case 'taunt':
       return t('battle.tauntApplied', { name });
-    case 'torment':
-      return t('battle.tormentApplied', { name });
     default:
       return '';
   }
@@ -1997,7 +1991,7 @@ export function createBattleScene(
       return -Infinity;
     }
     if (move.id === enemyBattleState.disabledMoveId) return -Infinity;
-    if (getBlockedMoveIds(enemy, enemyBattleState, enemyBattleState.lastMoveUsedId).includes(move.id)) return -Infinity;
+    if (getBlockedMoveIds(enemy, enemyBattleState).includes(move.id)) return -Infinity;
 
     const battleData = getMoveBattleData(move.id);
     const movePower = battleData?.behaviorTags?.includes('reversal')
@@ -2380,10 +2374,10 @@ export function createBattleScene(
     menu.disabledMoveIds = [
       ...(playerBattleState.softLockedInMovesId ?? []),
       ...(playerBattleState.disabledMoveId !== null ? [playerBattleState.disabledMoveId] : []),
-      ...getBlockedMoveIds(player, playerBattleState, playerBattleState.lastMoveUsedId),
+      ...getBlockedMoveIds(player, playerBattleState),
     ];
 
-    // Struggle when nothing is usable (no PP, or every move disabled / taunted / tormented)
+    // Struggle when nothing is usable (no PP, or every move disabled / taunted)
     if (player.moves.every((m) => m.currentPp <= 0 || menu.disabledMoveIds.includes(m.id))) {
       menu.isStruggleMode = true;
       playerBattleState.isStruggleMode = true;
@@ -3933,10 +3927,8 @@ export function createBattleScene(
     }
 
     // Track last move used (for Copycat / Mirror Move also for choice item)
-    const previousMoveId = attackerBattleState.lastMoveUsedId;
     attackerBattleState.lastMoveUsedId = m.id;
     lastMoveUsedInBattle = m.id;
-    if (!getMoveBattleData(m.id)?.behaviorTags.includes('fury-cutter')) attackerBattleState.furyCutterStreak = 0;
 
     const pendingChargeMoveId = getChargingMoveId(attackerBattleState);
     const forcedChargeRelease =
@@ -3987,7 +3979,7 @@ export function createBattleScene(
     if (
       m.id === attackerBattleState.disabledMoveId ||
       attackerBattleState.softLockedInMovesId?.includes(m.id) ||
-      getBlockedMoveIds(attacker, attackerBattleState, previousMoveId).includes(m.id)
+      getBlockedMoveIds(attacker, attackerBattleState).includes(m.id)
     ) {
       const msgs = [...turnEffectLines];
       msgs.push(
@@ -4129,15 +4121,12 @@ export function createBattleScene(
     if (moveBattleData?.behaviorTags.includes('tri-attack')) {
       moveBattleData = { ...moveBattleData, ailment: pickTriAttackAilment() };
     }
-    const isFuryCutter = moveBattleData?.behaviorTags?.includes('fury-cutter') ?? false;
     const isPsywave = moveBattleData?.behaviorTags?.includes('psywave') ?? false;
     const isPursuit = moveBattleData?.behaviorTags?.includes('pursuit') ?? false;
     const isSuckerPunch = moveBattleData?.behaviorTags?.includes('fails-if-target-not-attacking') ?? false;
     const isPayback = moveBattleData?.behaviorTags?.includes('payback') ?? false;
-    const isStompingTantrum = moveBattleData?.behaviorTags?.includes('stomping-tantrum') ?? false;
     const isFling = moveBattleData?.behaviorTags?.includes('fling') ?? false;
     const isAssurance = moveBattleData?.behaviorTags?.includes('assurance') ?? false;
-    const isEndeavor = moveBattleData?.behaviorTags?.includes('endeavor') ?? false;
     const isFeint = moveBattleData?.behaviorTags?.includes('feint') ?? false;
     const isBeatUp = moveBattleData?.behaviorTags?.includes('beat-up') ?? false;
     // The target already moved this turn (Sucker Punch fails, Payback doubles)
@@ -4145,9 +4134,6 @@ export function createBattleScene(
     // Hidden Power: its type is the user's (see getHiddenPowerType)
     if (moveBattleData?.behaviorTags?.includes('hidden-power')) {
       m = { ...m, type: getHiddenPowerType(attacker) };
-    }
-    if (moveBattleData?.behaviorTags?.includes('natural-gift')) {
-      m = { ...m, type: getHiddenPowerType(attacker), power: NATURAL_GIFT_POWER };
     }
     const isCurse = moveBattleData?.behaviorTags?.includes('curse') ?? false;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
@@ -4178,8 +4164,6 @@ export function createBattleScene(
     const isThief = moveBattleData?.behaviorTags?.includes('thief') ?? false;
     const isBide = moveBattleData?.behaviorTags?.includes('bide') ?? false;
     const isDragonTail = moveBattleData?.behaviorTags?.includes('dragon-tail') ?? false;
-    const isHelpingHand = moveBattleData?.behaviorTags?.includes('helping-hand') ?? false;
-    const isIncinerate = moveBattleData?.behaviorTags?.includes('incinerate') ?? false;
     const isFalseSwipe = moveBattleData?.behaviorTags?.includes('false-swipe') ?? false;
     const isPayDay = moveBattleData?.behaviorTags?.includes('pay-day') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
@@ -4436,7 +4420,6 @@ export function createBattleScene(
     const flingPower =
       isFling && hasUsableHeldItem(attacker, attackerBattleState) ? getItemFlingPower(attacker.heldItemId!) : null;
     if (isFling && !flingPower) {
-      attackerBattleState.lastMoveFailed = true;
       textBox = createTextBox(
         [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.moveFailed')],
         rtl,
@@ -4456,7 +4439,6 @@ export function createBattleScene(
             ? (player.moves.find((pm) => pm.id === playerPlannedMoveId) ?? null)
             : null;
       if (!doesSuckerPunchSucceed(targetMove?.id ?? null, targetAlreadyActed)) {
-        attackerBattleState.lastMoveFailed = true;
         textBox = createTextBox(
           [
             ...turnEffectLines,
@@ -4818,30 +4800,6 @@ export function createBattleScene(
       return;
     }
 
-    if (isHelpingHand) {
-      // Allies = roster Pokémon already in this battle, not on the field (player: battleRoster; trainer: seen ones)
-      const allies =
-        actor === 'player'
-          ? hasActiveGame()
-            ? [...battleRoster].filter((i) => i !== activePartyIndex).map((i) => getPlayerData().party[i])
-            : []
-          : (trainerData?.party ?? []).filter((p) => p !== enemy && trainerAIState?.seenPokemonIds.has(p.uuid));
-      const healed = applyHelpingHand(allies.filter(Boolean));
-      textBox = createTextBox(
-        [
-          ...turnEffectLines,
-          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
-          ...(healed.length
-            ? healed.map((p) => t('battle.helpingHandHealed', { name: getPokemonDisplayName(p.id) }))
-            : [t('battle.moveFailed')]),
-        ],
-        rtl,
-      );
-      phase = attackerPhase;
-      phaseTimer = 0;
-      return;
-    }
-
     if (isBide) {
       const moveName = getMoveDisplayName(m.id);
       const step = advanceBide(attackerBattleState, m.id);
@@ -4994,21 +4952,15 @@ export function createBattleScene(
         actor === 'player' ? calcHappiness(attacker, getPlayerData().party) : calcHappiness(attacker, [attacker]);
       m = { ...m, power: m.id === RETURN_MOVE_ID ? getReturnPower(h) : getFrustrationPower(h) };
     }
-    if (isFuryCutter) {
-      m = { ...m, power: getFuryCutterPower(m.power, attackerBattleState.furyCutterStreak) };
-      attackerBattleState.furyCutterStreak = hitResult.hit ? attackerBattleState.furyCutterStreak + 1 : 0;
-    }
     if (isPursuit && defenderBattleState.turnFlags.switchedInThisTurn) {
       m = { ...m, power: m.power * 2 };
     }
     if (isPayback && targetAlreadyActed) m = { ...m, power: m.power * 2 };
     if (isAssurance && defenderBattleState.turnFlags.tookDamageThisTurn) m = { ...m, power: m.power * 2 };
-    if (isStompingTantrum && attackerBattleState.lastMoveFailed) m = { ...m, power: m.power * 2 };
     if (flingPower) {
       m = { ...m, power: flingPower };
       neutralizeHeldItem(attacker, attackerBattleState);
     }
-    attackerBattleState.lastMoveFailed = !hitResult.hit || targetTypeImmune;
     if (isThief && hasUsableHeldItem(defender, defenderBattleState)) {
       m = { ...m, power: Math.round(m.power * THIEF_ITEM_POWER_MULTIPLIER) };
     }
@@ -5064,7 +5016,6 @@ export function createBattleScene(
       if (isNightShade) return attacker.level;
       if (fixedDamage !== null) return fixedDamage;
       if (isPsywave) return getPsywaveDamage(attacker.level);
-      if (isEndeavor) return getEndeavorDamage(attacker.hp, defender.hp);
       if (isSuperFang) return Math.max(1, Math.floor(defender.hp / 2));
       if (effectivePower <= 0) return 0;
       const base = calcDamage(
@@ -5163,7 +5114,7 @@ export function createBattleScene(
           msgs.push(t('battle.payDayCoins'));
         }
         const knockedItemId =
-          (isThief || isIncinerate) && !targetTypeImmune ? neutralizeHeldItem(defender, defenderBattleState) : null;
+          isThief && !targetTypeImmune ? neutralizeHeldItem(defender, defenderBattleState) : null;
         const knockedItem = knockedItemId ? getItem(knockedItemId) : undefined;
         if (knockedItem) {
           msgs.push(t('battle.thiefKnockedItem', { name: defenderName, item: getLocalizedName(knockedItem.name) }));
@@ -5201,12 +5152,11 @@ export function createBattleScene(
     } else if (isOhko && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
     } else if (
-      (isSuperFang || isNightShade || isPsywave || isEndeavor || fixedDamage !== null) &&
+      (isSuperFang || isNightShade || isPsywave || fixedDamage !== null) &&
       hitResult.hit &&
       !targetTypeImmune
     ) {
       if (isSuperFang) msgs.push(t('battle.superFangHit'));
-      if (isEndeavor && plannedDamage <= 0) msgs.push(t('battle.moveFailed'));
     } else if (!hitResult.hit) {
       const messages = [
         { msg: 'battle.moveMissed', name: attackerName },

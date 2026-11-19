@@ -33,7 +33,6 @@ import {
   getBeatUpHits,
   advanceTimedVolatiles,
   applyEncore,
-  getEndeavorDamage,
   startPerishSong,
   tickPerishCount,
   getBlockedMoveIds,
@@ -41,11 +40,9 @@ import {
   hasUsableHeldItem,
   capFalseSwipeDamage,
   getPayDayCoins,
-  applyHelpingHand,
   pickDragonTailTarget,
   applyNightmareEffect,
   doesSuckerPunchSucceed,
-  getFuryCutterPower,
   getPsywaveDamage,
   pickTriAttackAilment,
   getSideDamageTakenMultiplier,
@@ -426,8 +423,7 @@ describe('battle system helpers', () => {
     expect(applyVolatileMoveEffects(awake, awakeRuntime, [nightmare], 'target', () => 0)[0].reason).toBe('immune');
   });
 
-  it('Fury Cutter doubles per hit up to 160; Psywave is 0.5-1.5x level; Tri Attack picks one status', () => {
-    expect([0, 1, 2, 3, 4].map((n) => getFuryCutterPower(40, n))).toEqual([40, 80, 160, 160, 160]);
+  it('Psywave is 0.5-1.5x level; Tri Attack picks one status', () => {
     expect(getPsywaveDamage(50, () => 0)).toBe(25);
     expect(getPsywaveDamage(50, () => 0.999)).toBe(74);
     expect(getPsywaveDamage(1, () => 0)).toBe(1);
@@ -452,16 +448,6 @@ describe('battle system helpers', () => {
     ]);
   });
 
-  it('Helping Hand heals benched allies that still have HP, by 25%', () => {
-    const hurt = createTestPokemon({ hp: 10, maxHp: 100 });
-    const fainted = createTestPokemon({ hp: 0, maxHp: 100 });
-    const full = createTestPokemon({ hp: 100, maxHp: 100 });
-    expect(applyHelpingHand([hurt, fainted, full])).toEqual([hurt]);
-    expect(hurt.hp).toBe(35);
-    expect(fainted.hp).toBe(0);
-    expect(applyHelpingHand([])).toEqual([]);
-  });
-
   it('Dragon Tail picks a benched trainer Pokemon that can still fight', () => {
     const party = [createTestPokemon({ hp: 0 }), createTestPokemon(), createTestPokemon({ hp: 0 }), createTestPokemon()];
     // active = index 1; only index 3 is benched and able
@@ -477,14 +463,12 @@ describe('battle system helpers', () => {
     expect(getPayDayCoins(20)).toBe(100);
   });
 
-  it('batch 5 metadata: Natural Gift, Captivate, Incinerate, Dragon Cheer', () => {
-    expect(getMoveByName('natural gift')?.battle.behaviorTags).toContain('natural-gift');
+  it('batch 5 metadata: Captivate, Dragon Cheer', () => {
     expect(getMoveByName('captivate')?.battle).toMatchObject({
       target: 'selected-pokemon',
       behaviorTags: ['fails-on-same-species'],
       statChanges: [{ stat: 'specialAttack', stages: -2, target: 'target', chance: 100 }],
     });
-    expect(getMoveByName('incinerate')?.battle.behaviorTags).toContain('incinerate');
     expect(getMoveByName('dragon cheer')?.battle.behaviorTags).toContain('focus-energy');
   });
 
@@ -497,23 +481,20 @@ describe('battle system helpers', () => {
     expect(isBattlePokemonTrapped(runtime, createTestPokemon())).toBe(false);
   });
 
-  it('Taunt blocks status moves (not 0-power attacks) for 3 turns; Torment blocks the previous move', () => {
+  it('Taunt blocks status moves (not 0-power attacks) for 3 turns', () => {
     const mon = createTestPokemon({
       moves: ['tackle', 'growl', 'seismic toss'].map((n) => {
         const mv = getMoveByName(n)!;
         return { id: mv.id, name: mv.name.en, type: mv.type, power: mv.power ?? 0, accuracy: mv.accuracy ?? 0, pp: mv.pp, currentPp: mv.pp } as Pokemon['moves'][number];
       }),
     });
-    const [tackle, growl] = mon.moves.map((m) => m.id);
+    const growl = mon.moves[1].id;
     const runtime = createBattleRuntimeStateForPokemon(mon);
     applyVolatileMoveEffects(mon, runtime, [{ id: 'taunt', target: 'target', chance: 100 }], 'target', () => 0);
     expect(runtime.tauntTurnsRemaining).toBe(3);
-    expect(getBlockedMoveIds(mon, runtime, null)).toEqual([growl]);
-
+    expect(getBlockedMoveIds(mon, runtime)).toEqual([growl]);
     runtime.tauntTurnsRemaining = 0;
-    applyVolatileMoveEffects(mon, runtime, [{ id: 'torment', target: 'target', chance: 100 }], 'target', () => 0);
-    expect(getBlockedMoveIds(mon, runtime, tackle)).toEqual([tackle]);
-    expect(getBlockedMoveIds(mon, runtime, null)).toEqual([]);
+    expect(getBlockedMoveIds(mon, runtime)).toEqual([]);
   });
 
   it('Flail / Reversal power rises as HP falls; Fling uses the item fling power once', () => {
@@ -569,11 +550,6 @@ describe('battle system helpers', () => {
     expect(state.lockOnTurns).toBe(0);
     advanceTimedVolatiles(state);
     expect(state.laserFocusTurns).toBe(0);
-  });
-
-  it('Endeavor brings the target down to the user HP', () => {
-    expect(getEndeavorDamage(20, 100)).toBe(80);
-    expect(getEndeavorDamage(100, 20)).toBe(0);
   });
 
   it('Beat Up hits once per healthy party member; Feint has +2 priority', () => {

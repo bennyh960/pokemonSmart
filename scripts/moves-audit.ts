@@ -113,7 +113,9 @@ function reachability(moveId: number): { reachable: boolean; via: string } {
     tmItemMoves.has(moveId) ? 'TM' : '',
     trainerMoves.has(moveId) ? 'trainer' : '',
   ].filter(Boolean);
-  return { reachable: via.length > 0, via: via.length ? via.join(' · ') : 'TM list only' };
+  const tmOnly = tmLearners.get(moveId)?.size ?? 0;
+  if (via.length) return { reachable: true, via: via.join(' · ') };
+  return { reachable: false, via: tmOnly ? `needs a TM item (×${tmOnly} can learn)` : 'no Pokémon can learn it' };
 }
 
 // ── Effect detection (no PokeAPI meta in moves.json → description heuristics) ─────────────────

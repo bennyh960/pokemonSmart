@@ -246,6 +246,7 @@ export const ITEM_SLUG_TO_ID: Record<string, number> = {
   'skip-card': 9020,
 
   // held items
+  'exp-share': 193,
   leftovers: 211,
   'choice-band': 197,
   'choice-specs': 274,

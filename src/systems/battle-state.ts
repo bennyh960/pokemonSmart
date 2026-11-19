@@ -57,19 +57,13 @@ export interface BattlePokemonRuntimeState {
   /** Bide: storing turns left (0 = not biding) and damage taken from moves while storing. */
   bideTurnsRemaining: number;
   bideDamage: number;
-  /** Fury Cutter: consecutive hits so far (power doubles each, capped). */
-  furyCutterStreak: number;
   /** Nightmare: loses 1/4 max HP each turn while asleep. */
   nightmare: boolean;
   /** Mean Look: uuid of the Pokémon that blocks this one from switching / running (ends when it leaves). */
   blockedBy: string | null;
   /** Taunt: turns left in which status moves can't be used. */
   tauntTurnsRemaining: number;
-  /** Torment: can't use the same move twice in a row. */
-  tormented: boolean;
-  /** The last move this Pokémon used missed / had no effect (Stomping Tantrum). */
-  lastMoveFailed: boolean;
-  /** Held item knocked out of use (Thief, Incinerate) or thrown (Fling) — for the rest of this battle. */
+  /** Held item knocked out of use (Thief, Knock Off) or thrown (Fling) — for the rest of this battle. */
   heldItemDisabled: boolean;
   /** Perish Song: turns until this Pokémon faints (0 = not affected). Switching out clears it. */
   perishCount: number;
@@ -167,12 +161,9 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     rageActive: false,
     bideTurnsRemaining: 0,
     bideDamage: 0,
-    furyCutterStreak: 0,
     nightmare: false,
     blockedBy: null,
     tauntTurnsRemaining: 0,
-    tormented: false,
-    lastMoveFailed: false,
     heldItemDisabled: false,
     perishCount: 0,
     encoreMoveId: null,
