@@ -430,6 +430,8 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   Assist: { behaviorTags: ['assist'], target: 'user' },
   Copycat: { behaviorTags: ['copycat'], target: 'user' },
 
+  // Mimic: copies the foe's last move for the rest of the battle (until switch-out); the saved moveset is untouched
+  Mimic: { behaviorTags: ['mimic'], target: 'user' },
   'Mirror Move': { behaviorTags: ['mirror-move'], target: 'selected-pokemon' },
 
   // --- Disable: disables target's last used move for 3-6 turns ---
@@ -578,6 +580,8 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Teeter Dance': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   // Thief: does not steal — knocks the target's held item out of use for this battle, ×1.5 power if it has one
   Thief: { behaviorTags: ['thief'] },
+  // Bide: store 2 turns, then hit back 2× the damage taken (target 'user' so Protect doesn't block storing)
+  Bide: { behaviorTags: ['bide'], target: 'user' },
   // Roar / Whirlwind: no forced switch (would let legendaries flee / break battle flow) — big debuffs instead
   Roar: debuffWithSpeedChance(['attack', -2], ['specialAttack', -2]),
   Whirlwind: debuffWithSpeedChance(['defense', -2], ['specialDefense', -2]),

@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 362 |
+| ✅ wired (override + battle code reads it) | 364 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 1 |
-| ❌ missing (effect described, no logic at all) | 203 |
+| ❌ missing (effect described, no logic at all) | 201 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,12 +25,10 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (203)
+## ❌ missing (201)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
-| 117 | Bide (המתנה) | normal | physical | — | — | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 152 (7/145) | Waits 2-3 turns & hits back double. |  |
-| 102 | Mimic (חיקוי) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 146 (1/145) | Copies a move used by the foe. |  |
 | 171 | Nightmare (סיוט) | ghost | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 51 (0/51) | A sleeper loses 1/4 HP every turn. |  |
 | 210 | Fury Cutter (חותך זעם) | bug | physical | 40 | 95 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 42 (0/42) | Successive hits raise power. |  |
 | 149 | Psywave (גל על חושי) | psychic | special | — | 100 | — | ❌ missing | — | description mentions an effect | 🎬 psychic-wave | 35 (1/34) | An attack with variable power. |  |
@@ -239,7 +237,7 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 389 | Sucker Punch (אגרוף ערמומי) | dark | physical | 70 | 100 | — | ⚠️ partial | priority +1, `fails-if-target-not-attacking` | tag not read by battle code: fails-if-target-not-attacking | 🎬 punch:dark | 2 (2/0) | This move enables the user to attack first. It fails if the foe is not readying an attack, however. |  |
 
-## ✅ wired (362)
+## ✅ wired (364)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -263,7 +261,9 @@ Unwired tags in `src/types/battle-metadata.ts`: `fails-if-target-not-attacking`
 | 38 | Double Edge (להב כפול) | normal | physical | 120 | 100 | — | ✅ wired | recoil 25% | — | ▫️ lunge | 165 (21/154) | A tackle that also hurts the user. |  |
 | 189 | Mud Slap (סטירת בוץ) | ground | special | 20 | 100 | 100 | ✅ wired | target accuracy -1 | — | ▫️ projectile | 157 (3/157) | Reduces the foe's accuracy. |  |
 | 99 | Rage (זעם) | normal | physical | 20 | 100 | — | ✅ wired | `lock-in-rage` | — | ▫️ lunge | 155 (23/145) | Raises ATTACK if the user is hit. |  |
+| 117 | Bide (המתנה) | normal | physical | — | — | — | ✅ wired | `bide` | — | ▫️ lunge | 152 (7/145) | Waits 2-3 turns & hits back double. |  |
 | 240 | Rain Dance (ריקוד גשם) | water | status | — | — | — | ✅ wired | `rain` | — | ▫️ pulse | 148 (14/148) | Boosts water-type moves for 5 turns. |  |
+| 102 | Mimic (חיקוי) | normal | status | — | — | — | ✅ wired | `mimic` | — | ▫️ pulse | 146 (1/145) | Copies a move used by the foe. |  |
 | 63 | Hyper Beam (קרן היפר) | normal | special | 150 | 90 | — | ✅ wired | `must-recharge` | — | ▫️ beam | 141 (18/139) | 1st turn: Attack 2nd turn: Rest |  |
 | 249 | Rock Smash (ריסוק סלע) | fighting | physical | 40 | 100 | 50 | ✅ wired | target defense -1 | — | ▫️ lunge | 140 (1/140) | An attack that may lower DEFENSE. |  |
 | 34 | Body Slam (מכת גוף) | normal | physical | 85 | 100 | 30 | ✅ wired | paralyze 30% | — | 🎬 body-slam | 132 (17/126) | An attack that may cause paralysis. |  |

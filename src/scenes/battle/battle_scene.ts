@@ -173,6 +173,7 @@ import {
   createBattleRuntimeStateForPokemon,
   getHiddenPowerType,
   neutralizeHeldItem,
+  advanceBide,
   THIEF_ITEM_POWER_MULTIPLIER,
   clearChargingMove,
   determineTurnOrder,
@@ -1608,23 +1609,17 @@ export function createBattleScene(
     return ['full-heal', 'antidote', 'full-restore', 'awakening', 'ice-heal', 'burn-heal', 'parlyz-heal'].includes(id);
   }
 
-  function isStatBoostItem(id: string): boolean {
-    return ['x-attack', 'x-defense', 'x-speed', 'x-special', 'x-sp-def'].includes(id);
+  function getStatBoostStat(id: string): BattleStatId | null {
+    const effect = getItem(id)?.effect;
+    return effect?.type === 'stat-boost' ? (effect.stat as BattleStatId) : null;
   }
 
-  function getStatBoostStat(id: string): BattleStatId | null {
-    const map: Record<string, BattleStatId> = {
-      'x-attack': 'attack',
-      'x-defense': 'defense',
-      'x-speed': 'speed',
-      'x-special': 'specialAttack',
-      'x-sp-def': 'specialDefense',
-    };
-    return (map[id] as BattleStatId) ?? null;
+  function isStatBoostItem(id: string): boolean {
+    return getStatBoostStat(id) !== null;
   }
 
   function getBestBoostItemId(bagItems: string[]): string | null {
-    const preferred = enemy.attack >= enemy.specialAttack ? 'x-attack' : 'x-special';
+    const preferred = enemy.attack >= enemy.specialAttack ? 'x-attack' : 'x-sp-atk';
     // Prefer the defensive boost that counters the player's dominant attack type
     const playerIsPhysical = player.attack > player.specialAttack * 1.1;
     const defPreferred = playerIsPhysical ? 'x-defense' : 'x-sp-def';
@@ -3846,7 +3841,12 @@ export function createBattleScene(
     const redirectTag =
       moveBattleData?.behaviorTags?.find(
         (tag) =>
-          tag === 'sleep-talk' || tag === 'metronome' || tag === 'assist' || tag === 'copycat' || tag === 'mirror-move',
+          tag === 'sleep-talk' ||
+          tag === 'metronome' ||
+          tag === 'assist' ||
+          tag === 'copycat' ||
+          tag === 'mirror-move' ||
+          tag === 'mimic',
       ) ?? null;
     let isRedirected = false;
     let redirectMsg: string | null = null;
@@ -3896,6 +3896,17 @@ export function createBattleScene(
         redirectId = lastMoveUsedInBattle;
       } else if (redirectTag === 'mirror-move') {
         redirectId = defenderBattleState.lastMoveUsedId;
+      } else if (redirectTag === 'mimic') {
+        if (attackerBattleState.mimickedMoveId === null) {
+          const foeMove = defenderBattleState.lastMoveUsedId;
+          const copyable =
+            foeMove !== null && foeMove > 0 && foeMove !== m.id && !METRONOME_EXCLUDED_MOVE_IDS.has(foeMove);
+          if (copyable) {
+            attackerBattleState.mimickedMoveId = foeMove;
+            redirectMsg = t('battle.mimicLearned', { name: attackerName, move: getMoveDisplayName(foeMove) });
+          }
+        }
+        redirectId = attackerBattleState.mimickedMoveId;
       }
 
       if (redirectId === null) {
@@ -3926,6 +3937,9 @@ export function createBattleScene(
         redirectMsg = t('battle.copiedMove', { name: attackerName, move: getMoveDisplayName(redirectId) });
       } else if (redirectTag === 'mirror-move') {
         redirectMsg = t('battle.mirroredMove', { name: attackerName, move: getMoveDisplayName(redirectId) });
+      } else if (redirectTag === 'mimic') {
+        // first copy already set "learned" — later uses just call the move
+        redirectMsg ??= t('battle.calledMove', { move: getMoveDisplayName(redirectId) });
       } else {
         redirectMsg = t('battle.calledMove', { move: getMoveDisplayName(redirectId) });
       }
@@ -3966,6 +3980,7 @@ export function createBattleScene(
     // TODO : isBatonPass didnt checked yet on enemy
     const isBatonPass = moveBattleData?.behaviorTags?.includes('baton-pass') ?? false;
     const isThief = moveBattleData?.behaviorTags?.includes('thief') ?? false;
+    const isBide = moveBattleData?.behaviorTags?.includes('bide') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4511,6 +4526,56 @@ export function createBattleScene(
       textBox = createTextBox(msgs, rtl);
       phase = attackerPhase;
       phaseTimer = 0;
+      return;
+    }
+
+    if (isBide) {
+      const moveName = getMoveDisplayName(m.id);
+      const step = advanceBide(attackerBattleState, m.id);
+      if (step.kind === 'store') {
+        textBox = createTextBox(
+          [
+            ...turnEffectLines,
+            t('battle.usedMove', { name: attackerName, move: moveName }),
+            t('battle.bideStoring', { name: attackerName }),
+          ],
+          rtl,
+        );
+        phase = attackerPhase;
+        phaseTimer = 0;
+        return;
+      }
+      const bideDamage = step.damage;
+      runMoveLifecycle({
+        move: m,
+        attackerActor: actor,
+        defenderActor,
+        context: battleAnimationContext,
+        hitTarget: true,
+        overrideNextPhase: attackerPhase,
+        canExecute: () => {
+          if (bideDamage <= 0 || defender.hp <= 0) {
+            audio.playSFX('menu-cancel');
+            return {
+              success: false,
+              errorMessages: [...turnEffectLines, t('battle.bideUnleashed', { name: attackerName }), t('battle.bideFailed')],
+            };
+          }
+          return null;
+        },
+        onImpact: () => {
+          applyMoveImpact(
+            defender,
+            m,
+            defenderHpBar,
+            defenderSprite.x + defenderSprite.w / 2,
+            defenderSprite.y + 10,
+            bideDamage,
+            false,
+          );
+          return { endMessages: [...turnEffectLines, t('battle.bideUnleashed', { name: attackerName })] };
+        },
+      });
       return;
     }
 
@@ -5060,6 +5125,7 @@ export function createBattleScene(
           const actualDamage = totalActualDamage;
           if (actualDamage > 0) {
             defenderBattleState.turnFlags.tookDamageThisTurn = true;
+            if (defenderBattleState.bideTurnsRemaining > 0) defenderBattleState.bideDamage += actualDamage;
             if (damageClass === 'physical') defenderBattleState.turnFlags.physicalDamageTakenThisTurn += actualDamage;
             else if (damageClass === 'special')
               defenderBattleState.turnFlags.specialDamageTakenThisTurn += actualDamage;

@@ -77,7 +77,9 @@ export type MoveBattleBehaviorTag =
   | 'super-fang'
   | 'cut-pp'
   | 'hidden-power'
-  | 'thief';
+  | 'thief'
+  | 'bide'
+  | 'mimic';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
 export type MoveBattleEffectId = 'other' | 'confusion' | 'leech-seed' | 'trap' | 'curse' | 'infatuation';

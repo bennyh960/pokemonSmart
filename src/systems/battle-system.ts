@@ -685,6 +685,29 @@ export function neutralizeHeldItem(runtimeState: BattlePokemonRuntimeState): Hel
   return item;
 }
 
+export const BIDE_STORE_TURNS = 2;
+
+export type BideStep = { kind: 'store' } | { kind: 'release'; damage: number };
+
+/**
+ * Bide: the first use starts storing (locks the user into Bide), the next turn keeps storing,
+ * the third turn releases 2× the move damage taken meanwhile. Call once per Bide turn.
+ */
+export function advanceBide(runtimeState: BattlePokemonRuntimeState, moveId: number): BideStep {
+  if (runtimeState.bideTurnsRemaining <= 0) {
+    runtimeState.lockedInMoveId = moveId;
+    runtimeState.bideTurnsRemaining = BIDE_STORE_TURNS;
+    runtimeState.bideDamage = 0;
+    return { kind: 'store' };
+  }
+  runtimeState.bideTurnsRemaining--;
+  if (runtimeState.bideTurnsRemaining > 0) return { kind: 'store' };
+  const damage = runtimeState.bideDamage * 2;
+  runtimeState.bideDamage = 0;
+  runtimeState.lockedInMoveId = null;
+  return { kind: 'release', damage };
+}
+
 /** Thief hits harder when the target holds an item. */
 export const THIEF_ITEM_POWER_MULTIPLIER = 1.5;
 

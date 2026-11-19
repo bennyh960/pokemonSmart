@@ -52,6 +52,9 @@ export interface BattlePokemonRuntimeState {
   lockInTurnsRemaining: number;
   rolloutTurnsActive: number;
   rageActive: boolean;
+  /** Bide: storing turns left (0 = not biding) and damage taken from moves while storing. */
+  bideTurnsRemaining: number;
+  bideDamage: number;
   uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
   isStruggleMode: boolean;
@@ -63,6 +66,8 @@ export interface BattlePokemonRuntimeState {
   weatherEvasionBonus: number;
   hasWeatherStatBoost: boolean;
   lastMoveUsedId: number | null;
+  /** Mimic: the foe's move this Pokémon copied — every later Mimic uses it, until it switches out. */
+  mimickedMoveId: number | null;
   disabledMoveId: number | null;
   disabledMoveTurnsRemaining: number;
   abilityActivationCount: number;
@@ -135,6 +140,8 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     lockInTurnsRemaining: 0,
     rolloutTurnsActive: 0,
     rageActive: false,
+    bideTurnsRemaining: 0,
+    bideDamage: 0,
     uproarTurnsRemaining: 0,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
@@ -145,6 +152,7 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     weatherEvasionBonus: 0,
     hasWeatherStatBoost: false,
     lastMoveUsedId: null,
+    mimickedMoveId: null,
     disabledMoveId: null,
     disabledMoveTurnsRemaining: 0,
     abilityActivationCount: 0,

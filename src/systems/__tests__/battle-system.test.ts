@@ -29,6 +29,7 @@ import {
   getEffectiveSpeed,
   getHiddenPowerType,
   neutralizeHeldItem,
+  advanceBide,
   getSideDamageTakenMultiplier,
   getModifiedStatValue,
   isBattlePokemonTrapped,
@@ -387,6 +388,25 @@ describe('battle system helpers', () => {
     );
     expect(result.reason).toBe('immune');
     expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {
+    const runtime = createBattleRuntimeStateForPokemon(createTestPokemon());
+    const bideId = getMoveByName('bide')!.id;
+    expect(getMoveByName('bide')?.battle.behaviorTags).toContain('bide');
+
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'store' });
+    expect(runtime.lockedInMoveId).toBe(bideId);
+    runtime.bideDamage += 12;
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'store' });
+    runtime.bideDamage += 8;
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'release', damage: 40 });
+    expect(runtime.lockedInMoveId).toBeNull();
+    expect(runtime.bideTurnsRemaining).toBe(0);
+
+    // A new Bide starts fresh
+    expect(advanceBide(runtime, bideId)).toEqual({ kind: 'store' });
+    expect(runtime.bideDamage).toBe(0);
   });
 
   it('Thief neutralizes the held item for the battle (undoing its stat stages) without stealing it', () => {
