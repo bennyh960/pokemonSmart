@@ -52,7 +52,7 @@ import {
   nextMoveLearningQueueStep,
   resetMoveLearningQueueState,
 } from '../systems/move-learning.js';
-import { setBagMode } from '../scenes/bag.js';
+import { setBagMode } from '../scenesReact/bag/bag-mode.js';
 import { generateWildEncounter, createPokemonFromData, getEncounterRate } from '../systems/encounter.js';
 import {
   getPokemon,
