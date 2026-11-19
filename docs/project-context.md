@@ -55,7 +55,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 ## Gates (kids-friendly pass)
 - [ ] Gate lights (`systems/gate-lights.ts`): only Sumville has lights (Route 1 guard, Pokémon Center door). Place the rest with the editor's "Light X/Y" on each gate-guard / gated door
 - [ ] On hold: city guards stay open until you leave the map (in vs out)
-- [ ] Gate guards now also stop a player who arrives already inside their line of sight (Fly landing, door, loaded save — `checkGateGuardSight` in `overworld.ts`, 2026-11-19). Percentile Fly now lands at 49,21, outside the guard's line. Check other cities' `flySpawn` / door exits don't land inside a guard's line by accident
+- [ ] Percentile Fly lands at 49,21 (was 48,21, inside the gate guard's line of sight → stepping off skipped the gate). Check other cities' `flySpawn` aren't inside a guard's line
 - [ ] Gate cards (2026-11-12, save v27, not playtested): Bypass Card (whole gate → bonus; not gym/League) + Skip Card (one question, any gate). Answer shown with a random guard line. Jenny gives the first Bypass Card in `act1-oak-arrives`; old saves past it get 1 in migration 27. Prizes: labs/care 3★ rolls (`GATE_CARD_ODDS`), Word Board by level (`BOARD_CARD_TIERS` — Bypass from level 4, Skip on every level). Check both buttons on a phone, a gym gate (only Skip shows), and that Skip-card prizes don't dilute the board's good/rare pools too much
 
 ## Libraries, labs & friendly NPCs (2026-10-29, not playtested)
