@@ -144,7 +144,7 @@ const mapManifest: MapManifest = {
       y2: 320,
       title: [0, 0],
       label: { en: 'Percentile', he: 'פרסנטייל' },
-      flySpawn: [{ x: 48, y: 21 }],
+      flySpawn: [{ x: 49, y: 21 }],
     },
     {
       id: 'algebria/algebria',

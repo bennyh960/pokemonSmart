@@ -989,7 +989,7 @@
   "gateLight.clock.left": "Your free pass lasts {minutes} more minutes.",
   "gateLight.clock.ask": "What time will the light turn red?",
   "gateLight.clock.check": "Check",
-  "gateLight.clock.badFormat": "Write the time like this: 20:25",
+  "gateLight.clock.badFormat": "Write the hour and the minutes, like this: 20 : 05",
   "gateLight.clock.right": "Correct! Your pass is full again: {minutes} minutes!",
   "gateLight.clock.wrong": "Not quite! It turns red at {time}. Your pass still works.",
   "gateLight.clock.leave": "Leave",

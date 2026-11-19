@@ -988,7 +988,7 @@
   "gateLight.clock.left": "המעבר החופשי שלך נמשך עוד {minutes} דקות.",
   "gateLight.clock.ask": "באיזו שעה האור יהפוך לאדום?",
   "gateLight.clock.check": "בדיקה",
-  "gateLight.clock.badFormat": "כתוב את השעה כך: 20:25",
+  "gateLight.clock.badFormat": "כתוב שעה ודקות, כך: 20 : 05",
   "gateLight.clock.right": "נכון! המעבר שלך מלא שוב: {minutes} דקות!",
   "gateLight.clock.wrong": "כמעט! האור יהפוך לאדום ב-{time}. המעבר שלך עדיין עובד.",
   "gateLight.clock.leave": "יציאה",

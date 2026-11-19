@@ -76,7 +76,7 @@
     {
       "fromX": 39,
       "fromY": 6,
-      "toMapId": "caves/deep-forest",
+      "toMapId": "shared/pokecenter-2",
       "light": {
         "x": 38,
         "y": 7
@@ -407,8 +407,8 @@
           "he": "ברוכים הבאים לפרסנטייל, עיר הסטטיסטיקה!"
         },
         {
-          "en": "Just 3 quick questions and you are in. Only once — promise!",
-          "he": "רק 3 שאלות קצרות ואתה בפנים. רק פעם אחת — מבטיח!"
+          "en": "Just 5 quick questions and you are in. Only once — promise!",
+          "he": "רק 5 שאלות קצרות ואתה בפנים. רק פעם אחת — מבטיח!"
         }
       ],
       "passedDialogue": [
@@ -437,8 +437,8 @@
           "he": "דרך 12 לפניך. לאחרונה ראו שם פוקימונים נגועים בגליץ'."
         },
         {
-          "en": "3 quick questions to show you are ready — only once!",
-          "he": "3 שאלות קצרות כדי להראות שאתה מוכן — רק פעם אחת!"
+          "en": "5 quick questions to show you are ready — only once!",
+          "he": "5 שאלות קצרות כדי להראות שאתה מוכן — רק פעם אחת!"
         }
       ],
       "passedDialogue": [
