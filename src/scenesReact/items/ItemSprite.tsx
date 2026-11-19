@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { ItemDef } from '../../../data/items.js';
-import { pocketOf } from '../../../data/bag-pockets.js';
+import type { ItemDef } from '../../data/items.js';
+import { pocketOf } from '../../data/bag-pockets.js';
 
 /** Item sprite from PokeAPI, pixel-crisp; a colored dot of its pocket if it fails to load. */
 export function ItemSprite({ def, size }: { def: ItemDef; size: number }) {

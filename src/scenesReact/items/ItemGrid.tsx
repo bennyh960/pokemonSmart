@@ -1,27 +1,30 @@
-import { useEffect, useRef } from 'react';
-import { useI18n } from '../../../ui-react/context/i18n-context';
-import { usePlayerData } from '../../../ui-react/hooks/usePlayerData';
-import { categoryLabelKey } from '../../../data/bag-pockets.js';
-import { entryName, isStoryKeyItem, sellPrice, type BagEntry } from '../bag-helpers';
-import type { BagMode } from '../bag-mode';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { useI18n } from '../../ui-react/context/i18n-context';
+import { categoryLabelKey } from '../../data/bag-pockets.js';
+import { entryName, type ItemEntry } from './item-list';
 import { ItemSprite } from './ItemSprite';
 
-export function ItemList({
+/** Item rows (2 columns from `sm`). The screen draws the right-hand side of each row. */
+export function ItemGrid<T extends ItemEntry>({
   entries,
   selectedId,
-  mode,
   onPick,
   onActivate,
+  trailing,
+  subtitle,
+  dimmed,
 }: {
-  entries: BagEntry[];
+  entries: T[];
   selectedId: string | null;
-  mode: BagMode;
   onPick: (id: string) => void;
   /** A click / tap on the row that is already selected (so a double click = use) */
   onActivate: (id: string) => void;
+  trailing: (e: T) => ReactNode;
+  /** Second line; defaults to the item's category */
+  subtitle?: (e: T) => ReactNode;
+  dimmed?: (e: T) => boolean;
 }) {
   const { t, locale } = useI18n();
-  const [pd] = usePlayerData();
   const listRef = useRef<HTMLDivElement>(null);
 
   // Keep the keyboard selection in view
@@ -38,7 +41,6 @@ export function ItemList({
     >
       {entries.map((e) => {
         const on = e.id === selectedId;
-        const used = isStoryKeyItem(e.def) && !!(e.def.usedFlag && pd.flags[e.def.usedFlag]);
         return (
           <button
             key={e.id}
@@ -48,7 +50,7 @@ export function ItemList({
             onClick={() => (on ? onActivate(e.id) : onPick(e.id))}
             className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border px-3 py-1.5 text-start ${
               on ? 'border-[#20d860] bg-[#1a3a2a]' : 'border-[#1f4a33] bg-[#132c20] hover:border-[#2a6a40]'
-            }`}
+            } ${dimmed?.(e) ? 'opacity-60' : ''}`}
           >
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#0b1b13]">
               <ItemSprite def={e.def} size={32} />
@@ -57,22 +59,11 @@ export function ItemList({
               <span dir="auto" className="truncate text-[15px] font-medium">
                 {entryName(e.def, locale)}
               </span>
-              <span className="truncate text-xs text-[#8fb19c]">{t(categoryLabelKey(e.def.category))}</span>
+              <span className="truncate text-xs text-[#8fb19c]">
+                {subtitle ? subtitle(e) : t(categoryLabelKey(e.def.category))}
+              </span>
             </span>
-            {mode === 'sell-item' ? (
-              <span dir="ltr" className="shrink-0 text-end font-mono text-[13px] leading-tight">
-                <span className="block text-[#f8d030]">₽{sellPrice(e.def).toLocaleString('en-US')}</span>
-                <span className="block text-[#8fb19c]">×{e.qty}</span>
-              </span>
-            ) : isStoryKeyItem(e.def) ? (
-              <span className={`shrink-0 text-lg ${used ? 'text-[#44cc88]' : 'text-[#8fb19c]'}`}>
-                {used ? '✓' : '□'}
-              </span>
-            ) : (
-              <span dir="ltr" className="shrink-0 font-mono text-sm text-[#cfe6d7]">
-                ×{e.qty}
-              </span>
-            )}
+            {trailing(e)}
           </button>
         );
       })}

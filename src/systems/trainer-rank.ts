@@ -163,6 +163,12 @@ export function isShopItemUnlocked(pd: PlayerData, itemId: string): boolean {
   return getEarnedRankIndex(pd) >= itemRankIndex(itemId);
 }
 
+/** The rank that opens this item in shops, or undefined if every rank can buy it. */
+export function getShopItemRank(itemId: string): RankConfig | undefined {
+  const i = itemRankIndex(itemId);
+  return i > 0 ? TRAINER_RANKS[i] : undefined;
+}
+
 // ─── Generated text ──────────────────────────────────────────────────────────
 
 /**

@@ -76,7 +76,7 @@ import {
 } from '../systems/map-manager.js';
 import type { MapId } from '../data/maps/map-ids.js';
 import { getTileset } from '../engine/tileset.js';
-import { createShopState, openShop, updateShop, renderShop, type ShopState } from '../ui/shop.js';
+import { openShopScene, FULL_SHOP } from '../scenesReact/shop/index.js';
 import { createTextBox, updateTextBox, renderTextBox } from '../ui/text-box.js';
 import {
   createNPCManager,
@@ -317,7 +317,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   }
 
   // Shop overlay state
-  let shop: ShopState = createShopState();
 
   // Heal text overlay
   let healTextBox: ReturnType<typeof createTextBox> | null = null;
@@ -1056,10 +1055,12 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
               giveNPCReward(npc, npc.reward);
             }
 
-            shop.categoriesToExclude = npc.categoriesToExclude ?? [];
-            shop.categoryTags = npc.shopCategoryTags ?? {};
-            openShop(shop);
             hideHUD();
+            openShopScene(
+              stateMachine,
+              { categoriesToExclude: npc.categoriesToExclude ?? [], categoryTags: npc.shopCategoryTags ?? {} },
+              showHUD,
+            );
             restoreNPCFacing(npc);
             interactingNPC = null;
           } else {
@@ -2581,22 +2582,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         return;
       }
 
-      // Shop overlay takes priority
-      // load shop images (cant be in init do to shop is dynamic)
-      if (shop.items.length > 0) {
-        const shopImgTest = getCachedImage(shop.items[0].sprite);
-        if (!shopImgTest) {
-          for (const item of shop.items) {
-            loadImage(item.sprite).catch(() => {});
-          }
-        }
-      }
-      if (shop.open) {
-        updateShop(shop, input, dt);
-        if (!shop.open) showHUD(); // shop just closed
-        return;
-      }
-
       // Heal text overlay
       if (healTextBox) {
         if (updateTextBox(healTextBox, input, dt)) {
@@ -3975,8 +3960,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       // N key → Shop (admin-only debug shortcut)
       if (input.isKeyPressed('n') || input.isKeyPressed('N')) {
         if (hasActiveGame() && getPlayerData().name === ADMIN_NAME) {
-          openShop(shop);
           hideHUD();
+          openShopScene(stateMachine, FULL_SHOP, showHUD);
           return;
         }
       }
@@ -4672,7 +4657,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         !activeTextBox &&
         !choiceState &&
         !healTextBox &&
-        !shop.open &&
         !encounterTriggered &&
         transitionState === 'none'
       ) {
@@ -4801,9 +4785,6 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
         ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
         ctx.fillRect(0, 0, SCREEN_W, SCREEN_H);
       }
-
-      // Shop overlay
-      renderShop(ctx, shop);
 
       // Heal text overlay
       if (healTextBox) renderTextBox(ctx, healTextBox);

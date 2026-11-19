@@ -2,9 +2,10 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('../../../auth/supabase-client.js', () => ({ supabase: {} }));
 import { ITEMS } from '../../../data/items';
 import { BAG_POCKETS, pocketOf } from '../../../data/bag-pockets';
-import { bagEntries, canToss, filterEntries, presentCategories, primaryAction, type BagFilter } from '../bag-helpers';
+import { bagEntries, canToss, primaryAction } from '../bag-helpers';
+import { filterEntries, presentCategories, type ItemFilter } from '../../items/item-list';
 
-const F: BagFilter = { pocket: 'all', category: null, query: '', sort: 'default' };
+const F: ItemFilter = { pocket: 'all', category: null, query: '', sort: 'default' };
 const items = { potion: 3, antidote: 1, revive: 2, 'poke-ball': 10, 'great-ball': 4, 'exp-share': 1, 'bypass-card': 2 };
 
 describe('bag pockets', () => {

@@ -1,8 +1,8 @@
-import { useI18n } from '../../../ui-react/context/i18n-context';
-import { BAG_POCKETS } from '../../../data/bag-pockets.js';
-import type { BagFilter } from '../bag-helpers';
+import { useI18n } from '../../ui-react/context/i18n-context';
+import { BAG_POCKETS } from '../../data/bag-pockets.js';
+import type { ItemFilter } from './item-list';
 
-export type PocketId = BagFilter['pocket'];
+export type PocketId = ItemFilter['pocket'];
 
 /** "All" first, then every pocket. On narrow screens this becomes a row of chips. */
 export const POCKET_ORDER: { id: PocketId; labelKey: string; color: string }[] = [
