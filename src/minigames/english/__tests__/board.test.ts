@@ -13,6 +13,7 @@ import { BOARD_CITIES } from '../board-cities.js';
 import {
   badgesFor,
   BOARD_LEAVE_LOCK_MS,
+  BOARD_EXTRA_POKEMON,
   BOARD_POKEMON,
   boardLockLeft,
   boardPool,
@@ -131,7 +132,8 @@ describe('Word Board prizes', () => {
   it('board Pokémon: first stages from later generations, never one the player owns', () => {
     expect(BOARD_POKEMON).toContain(RIOLU);
     expect(BOARD_POKEMON).not.toContain(LUCARIO);
-    expect(BOARD_POKEMON.every((id) => id > 251)).toBe(true);
+    expect(BOARD_POKEMON.every((id) => id > 251 || BOARD_EXTRA_POKEMON.includes(id))).toBe(true);
+    expect(BOARD_POKEMON).toEqual(expect.arrayContaining([132, 235])); // Ditto, Smeargle
 
     const top = ENGLISH_LADDER[ENGLISH_LADDER.length - 1];
     const ids = (owned: Set<number>) => rarePokemonPrize(top, owned)?.oneOf.map((r) => r.pokemon!.id) ?? [];

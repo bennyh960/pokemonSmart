@@ -58,10 +58,16 @@ export const BOARD_POKEMON_LEVEL = 10;
 
 export const RARE_POKEMON_LABEL: Bilingual = { en: 'Rare Pokémon', he: 'פוקימון נדיר' };
 
-/** Pokémon only the board gives: the first stage of every line from a later generation than Gold/Silver (Riolu…). */
-export const BOARD_POKEMON: readonly number[] = getAllPokemon()
-  .filter((p) => p.id > 251 && (getEvolutionChain(p.id)?.stages[0]?.id ?? p.id) === p.id)
-  .map((p) => p.id);
+/** Gen 1–2 Pokémon the board also gives — ones the world barely offers (Ditto: Transform, Smeargle: Sketch). */
+export const BOARD_EXTRA_POKEMON: readonly number[] = [132, 235];
+
+/** Pokémon only the board gives: the first stage of every line from a later generation than Gold/Silver (Riolu…), + extras. */
+export const BOARD_POKEMON: readonly number[] = [
+  ...getAllPokemon()
+    .filter((p) => p.id > 251 && (getEvolutionChain(p.id)?.stages[0]?.id ?? p.id) === p.id)
+    .map((p) => p.id),
+  ...BOARD_EXTRA_POKEMON,
+];
 
 /**
  * A ladder step as the board of `city`'s library gives it: + its gate cards (every board), its specialty
