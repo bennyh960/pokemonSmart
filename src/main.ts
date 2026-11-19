@@ -2,6 +2,7 @@ import { createGame } from './engine/game.js';
 import { loadFonts } from './engine/fonts.js';
 import { initLocale } from './i18n/i18n.js';
 import { preloadOverworldAssets } from './engine/sprite-preloader.js';
+import { getLatestSaveMapId } from './systems/save.js';
 import { initLoadingScreen, setLoadingProgress, hideLoadingScreen } from './engine/loading-screen.js';
 import { initHeavyData } from './services/pokemon-data.js';
 import { getSession, isAccountActive, initSavesFromCloud, syncSlotsToCloud } from './auth/auth-service.js';
@@ -39,6 +40,11 @@ Promise.all([
     } catch {
       /* network error — start with empty session */
     }
+    // Map tilesets (~2 MB of PNG) download in the background while the player is on the title /
+    // save screens: the last save's map first, then the other sheets. Started only after the
+    // loading screen so they don't slow it down. Not awaited.
+    const lastMapId = getLatestSaveMapId();
+    void import('./systems/map-manager.js').then((m) => m.preloadMapAssets(lastMapId)).catch(() => {});
     const game = createGame(app!, reactOverlay);
     game.start();
     window.addEventListener('beforeunload', () => {

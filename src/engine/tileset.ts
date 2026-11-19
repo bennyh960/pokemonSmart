@@ -112,10 +112,24 @@ function normalizeInteractRef(raw: unknown, legacyDestroy?: string | null): Inte
 
 /** Cache of loaded tilesets by name. */
 const tilesetCache = new Map<string, Tileset>();
+/** Loads in flight — a map load and a background preload of the same tileset share one download. */
+const tilesetLoading = new Map<string, Promise<Tileset>>();
+
+const manifestModules = import.meta.glob<{ default: unknown }>('../data/tilesets/*.json');
 
 async function importManifest(name: string): Promise<unknown> {
-  const module = await import(`../data/tilesets/${name}.json`);
-  return module.default;
+  const loader = manifestModules[`../data/tilesets/${name}.json`];
+  if (!loader) throw new Error(`Tileset "${name}" not found in data/tilesets/.`);
+  return (await loader()).default;
+}
+
+/** Download every tileset in the background, one at a time so each sheet arrives as fast as it
+ *  can (the sheets are big PNGs; a map whose sheet isn't loaded waits on a black screen).
+ *  A map load that needs another sheet meanwhile starts it right away. Never rejects. */
+export async function preloadAllTilesets(): Promise<void> {
+  for (const path of Object.keys(manifestModules)) {
+    await loadTileset(path.replace(/^.*\//, '').replace(/\.json$/, '')).catch(() => undefined);
+  }
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -128,10 +142,18 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 /** Load a tileset by name. Supports both array and Record manifest formats. */
-export async function loadTileset(name: string): Promise<Tileset> {
+export function loadTileset(name: string): Promise<Tileset> {
   const cached = tilesetCache.get(name);
-  if (cached) return cached;
+  if (cached) return Promise.resolve(cached);
+  let loading = tilesetLoading.get(name);
+  if (!loading) {
+    loading = fetchTileset(name).finally(() => tilesetLoading.delete(name));
+    tilesetLoading.set(name, loading);
+  }
+  return loading;
+}
 
+async function fetchTileset(name: string): Promise<Tileset> {
   const manifest = (await importManifest(name)) as Record<string, unknown>;
   const image = await loadImage(manifest.image as string);
 
