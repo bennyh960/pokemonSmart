@@ -5,9 +5,10 @@ import { renderPokemonTab } from './tabs/pokemon';
 import { renderMovesTab } from './tabs/moves';
 import { renderStoryTab } from './tabs/story';
 import { renderEnglishTab } from './tabs/english';
+import { renderPlayersTab } from './tabs/players';
 import { initSavesFromCloud } from '../auth/auth-service';
 
-type TabId = 'pokemon' | 'moves' | 'story' | 'english';
+type TabId = 'pokemon' | 'moves' | 'story' | 'english' | 'players';
 
 function hasAdminAccess(): boolean {
   return getSlotIndex().some((s) => s.playerName === ADMIN_NAME);
@@ -45,6 +46,7 @@ async function mount() {
       <button class="tab-btn" data-tab="moves">Moves</button>
       <button class="tab-btn" data-tab="story">Story</button>
       <button class="tab-btn" data-tab="english">English</button>
+      <button class="tab-btn" data-tab="players">Players</button>
     </nav>
     <main class="admin-main">
       <div id="tab-content"></div>
@@ -64,7 +66,8 @@ async function mount() {
     if (tabId === 'pokemon') cleanup = renderPokemonTab(tabContent);
     else if (tabId === 'moves') cleanup = renderMovesTab(tabContent);
     else if (tabId === 'story') cleanup = renderStoryTab(tabContent);
-    else cleanup = renderEnglishTab(tabContent);
+    else if (tabId === 'english') cleanup = renderEnglishTab(tabContent);
+    else renderPlayersTab(tabContent);
   }
 
   tabBtns.forEach((btn) => {

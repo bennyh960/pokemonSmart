@@ -22,6 +22,7 @@ const strings = {
     pendingContact: 'ליצירת קשר עם המנהל לאישור.',
     retryBtn: 'נסה שוב',
     errorInvalid: 'אימייל או סיסמה שגויים.',
+    forgotHint: 'שכחת את הסיסמה? בקש מההורים לפנות למנהל, והוא ייתן לך סיסמה חדשה.',
     errorExists: 'האימייל כבר רשום.',
     errorMismatch: 'הסיסמאות אינן תואמות.',
     errorFill: 'מלא את כל השדות.',
@@ -44,6 +45,7 @@ const strings = {
     pendingContact: 'Contact the admin to speed up approval.',
     retryBtn: 'Try Again',
     errorInvalid: 'Wrong email or password.',
+    forgotHint: 'Forgot your password? Ask a parent to contact the admin for a new one.',
     errorExists: 'Email already registered.',
     errorMismatch: "Passwords don't match.",
     errorFill: 'Fill in all fields.',
@@ -105,6 +107,7 @@ export function showLoginScreen(onSuccess: () => Promise<void>, initialError?: s
             ${isLogin ? s().submitLogin : s().submitRegister}
           </button>
         </form>
+        ${isLogin ? `<p class="forgot-hint">${s().forgotHint}</p>` : ''}
 
         <div class="lang-toggle-row">
           <button id="lang-toggle-btn">${s().langToggle}</button>

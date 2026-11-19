@@ -200,3 +200,12 @@
 }
 
 #retry-btn:hover { background: #223350; }
+
+/* "Forgot password?" — resets are done by the admin (admin.html → Players) */
+.forgot-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  color: #8899bb;
+}
