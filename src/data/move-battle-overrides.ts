@@ -580,6 +580,16 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Teeter Dance': volatileEffect('confusion', 100, { minTurns: 2, maxTurns: 5 }),
   // Thief: does not steal — knocks the target's held item out of use for this battle, ×1.5 power if it has one
   Thief: { behaviorTags: ['thief'] },
+  // Teleport: no escape from battle (by design) — the user gets much harder to hit and faster instead
+  Teleport: userStages(['evasion', 2], ['speed', 2]),
+  Nightmare: volatileEffect('nightmare', 100),
+  'Fury Cutter': { behaviorTags: ['fury-cutter'] },
+  Psywave: { behaviorTags: ['psywave'] },
+  'Tri Attack': { behaviorTags: ['tri-attack'] },
+  // Secret Power: varies by location in the original — here always the plain-ground effect (30% paralysis)
+  'Secret Power': statusEffect('paralyze', 30),
+  // Pursuit: ×2 against a Pokémon that switched in by choice this turn
+  Pursuit: { behaviorTags: ['pursuit'] },
   // Bide: store 2 turns, then hit back 2× the damage taken (target 'user' so Protect doesn't block storing)
   Bide: { behaviorTags: ['bide'], target: 'user' },
   // Roar / Whirlwind: no forced switch (would let legendaries flee / break battle flow) — big debuffs instead

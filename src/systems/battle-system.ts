@@ -277,6 +277,9 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.infatuatedWith) {
     effects.push('love');
   }
+  if (runtimeState.nightmare) {
+    effects.push('nightmare');
+  }
   return effects;
 }
 
@@ -330,6 +333,7 @@ export function clearEndOfTurnFlags(runtimeState: BattlePokemonRuntimeState): vo
   runtimeState.turnFlags.physicalDamageTakenThisTurn = 0;
   runtimeState.turnFlags.specialDamageTakenThisTurn = 0;
   runtimeState.turnFlags.magicCoatActive = false;
+  runtimeState.turnFlags.switchedInThisTurn = false;
 }
 
 export function tryApplyFlinch(
@@ -566,6 +570,8 @@ function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect, sourc
   switch (effect.id) {
     case 'leech-seed':
       return target.types.includes('grass');
+    case 'nightmare':
+      return target.status !== 'sleep';
     case 'infatuation':
       // No genders in this game: Attract fails only on the same species (or with no known source).
       return !source || source.id === target.id;
@@ -642,6 +648,15 @@ export function applyVolatileMoveEffects(
         applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
         break;
       }
+      case 'nightmare': {
+        if (runtimeState.nightmare) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.nightmare = true;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
       case 'infatuation': {
         if (runtimeState.infatuatedWith) {
           applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
@@ -683,6 +698,33 @@ export function neutralizeHeldItem(runtimeState: BattlePokemonRuntimeState): Hel
   runtimeState.heldItem = null;
   runtimeState.softLockedInMovesId = null;
   return item;
+}
+
+export const FURY_CUTTER_MAX_POWER = 160;
+
+/** Fury Cutter: base power doubled per consecutive hit, capped at FURY_CUTTER_MAX_POWER. */
+export function getFuryCutterPower(basePower: number, streak: number): number {
+  return Math.min(FURY_CUTTER_MAX_POWER, basePower * 2 ** streak);
+}
+
+/** Psywave: random damage between 0.5× and 1.5× the user's level. */
+export function getPsywaveDamage(level: number, random: () => number = Math.random): number {
+  return Math.max(1, Math.floor(level * (0.5 + random())));
+}
+
+/** Tri Attack: 20% chance of burn, paralysis or freeze (picked at random). */
+export function pickTriAttackAilment(random: () => number = Math.random): MoveStatusEffect {
+  const options: MoveStatusEffect[] = [
+    { status: 'burn', chance: 20, target: 'target' },
+    { status: 'paralyze', chance: 20, target: 'target' },
+    { status: 'freeze', chance: 20, target: 'target', minTurns: 2, maxTurns: 5 },
+  ];
+  return options[Math.floor(random() * options.length)];
+}
+
+/** Sucker Punch works only if the target hasn't acted yet this turn and chose a damaging move. */
+export function doesSuckerPunchSucceed(targetMovePower: number | null, targetAlreadyActed: boolean): boolean {
+  return !targetAlreadyActed && targetMovePower !== null && targetMovePower > 0;
 }
 
 export const BIDE_STORE_TURNS = 2;
@@ -990,6 +1032,18 @@ export function applyGhostCurseEffect(target: Pokemon, runtimeState: BattlePokem
   const damage = Math.max(1, Math.floor(target.maxHp / 5));
   target.hp = Math.max(0, target.hp - damage);
   return { applied: true, damage, fainted: target.hp <= 0 };
+}
+
+/** Nightmare: 1/4 max HP each turn while asleep; ends when the target wakes up. */
+export function applyNightmareEffect(target: Pokemon, runtimeState: BattlePokemonRuntimeState) {
+  if (!runtimeState.nightmare) return { applied: false, damage: 0 };
+  if (runtimeState.majorStatus !== 'sleep' || target.hp <= 0) {
+    runtimeState.nightmare = false;
+    return { applied: false, damage: 0 };
+  }
+  const damage = Math.max(1, Math.floor(target.maxHp / 4));
+  target.hp = Math.max(0, target.hp - damage);
+  return { applied: true, damage };
 }
 
 export function applyRestEffect(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): number {

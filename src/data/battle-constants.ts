@@ -124,6 +124,13 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(160,80,200,0.25)',
     textColor: '#c878f0',
   },
+  nightmare: {
+    label: 'סיוט',
+    shortLabel: 'סיוט',
+    bgColor: 'rgba(112,88,152,0.2)',
+    borderColor: 'rgba(160,120,220,0.3)',
+    textColor: '#b090e0',
+  },
   love: {
     label: 'מאוהב',
     shortLabel: 'מאוהב',

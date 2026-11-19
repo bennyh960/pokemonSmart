@@ -31,6 +31,8 @@ export interface BattleTurnFlags {
   physicalDamageTakenThisTurn: number;
   specialDamageTakenThisTurn: number;
   magicCoatActive: boolean;
+  /** Switched in by choice this turn (Pursuit hits it ×2). */
+  switchedInThisTurn: boolean;
 }
 
 export interface BattlePokemonRuntimeState {
@@ -55,6 +57,10 @@ export interface BattlePokemonRuntimeState {
   /** Bide: storing turns left (0 = not biding) and damage taken from moves while storing. */
   bideTurnsRemaining: number;
   bideDamage: number;
+  /** Fury Cutter: consecutive hits so far (power doubles each, capped). */
+  furyCutterStreak: number;
+  /** Nightmare: loses 1/4 max HP each turn while asleep. */
+  nightmare: boolean;
   uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
   isStruggleMode: boolean;
@@ -110,6 +116,7 @@ export function createBattleTurnFlags(): BattleTurnFlags {
     physicalDamageTakenThisTurn: 0,
     specialDamageTakenThisTurn: 0,
     magicCoatActive: false,
+    switchedInThisTurn: false,
   };
 }
 
@@ -142,6 +149,8 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     rageActive: false,
     bideTurnsRemaining: 0,
     bideDamage: 0,
+    furyCutterStreak: 0,
+    nightmare: false,
     uproarTurnsRemaining: 0,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),

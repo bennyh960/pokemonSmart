@@ -30,6 +30,11 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  applyNightmareEffect,
+  doesSuckerPunchSucceed,
+  getFuryCutterPower,
+  getPsywaveDamage,
+  pickTriAttackAilment,
   getSideDamageTakenMultiplier,
   getModifiedStatValue,
   isBattlePokemonTrapped,
@@ -388,6 +393,47 @@ describe('battle system helpers', () => {
     );
     expect(result.reason).toBe('immune');
     expect(runtime.infatuatedWith).toBeNull();
+  });
+
+  it('Nightmare: only on a sleeping target, 1/4 HP per turn, ends on waking', () => {
+    const target = createTestPokemon({ status: 'sleep', hp: 100, maxHp: 100 });
+    const runtime = createBattleRuntimeStateForPokemon(target);
+    const nightmare = { id: 'nightmare' as const, target: 'target' as const, chance: 100 };
+    expect(applyVolatileMoveEffects(target, runtime, [nightmare], 'target', () => 0)[0].applied).toBe(true);
+    expect(applyNightmareEffect(target, runtime)).toEqual({ applied: true, damage: 25 });
+    expect(target.hp).toBe(75);
+    runtime.majorStatus = null;
+    target.status = null;
+    expect(applyNightmareEffect(target, runtime).applied).toBe(false);
+    expect(runtime.nightmare).toBe(false);
+
+    const awake = createTestPokemon();
+    const awakeRuntime = createBattleRuntimeStateForPokemon(awake);
+    expect(applyVolatileMoveEffects(awake, awakeRuntime, [nightmare], 'target', () => 0)[0].reason).toBe('immune');
+  });
+
+  it('Fury Cutter doubles per hit up to 160; Psywave is 0.5-1.5x level; Tri Attack picks one status', () => {
+    expect([0, 1, 2, 3, 4].map((n) => getFuryCutterPower(40, n))).toEqual([40, 80, 160, 160, 160]);
+    expect(getPsywaveDamage(50, () => 0)).toBe(25);
+    expect(getPsywaveDamage(50, () => 0.999)).toBe(74);
+    expect(getPsywaveDamage(1, () => 0)).toBe(1);
+    expect(pickTriAttackAilment(() => 0).status).toBe('burn');
+    expect(pickTriAttackAilment(() => 0.5).status).toBe('paralyze');
+    expect(pickTriAttackAilment(() => 0.9)).toMatchObject({ status: 'freeze', chance: 20 });
+  });
+
+  it('Sucker Punch needs a target that has not moved yet and chose a damaging move', () => {
+    expect(doesSuckerPunchSucceed(80, false)).toBe(true);
+    expect(doesSuckerPunchSucceed(0, false)).toBe(false); // status move
+    expect(doesSuckerPunchSucceed(null, false)).toBe(false); // switch / item
+    expect(doesSuckerPunchSucceed(80, true)).toBe(false); // already attacked
+  });
+
+  it('Teleport raises evasion and speed by 2 instead of fleeing', () => {
+    expect(getMoveByName('teleport')?.battle.statChanges.map((c) => [c.stat, c.stages, c.target])).toEqual([
+      ['evasion', 2, 'user'],
+      ['speed', 2, 'user'],
+    ]);
   });
 
   it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {
