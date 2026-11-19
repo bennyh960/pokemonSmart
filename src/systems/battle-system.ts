@@ -20,6 +20,7 @@ import {
 import {
   getAbilityBattleEffects,
   getCombinedTypeEffectiveness,
+  getMove,
   getMoveBattleData,
   getPokemonDisplayName,
 } from '../services/pokemon-data.js';
@@ -280,6 +281,15 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.nightmare) {
     effects.push('nightmare');
   }
+  if (runtimeState.blockedBy) {
+    effects.push('blocked');
+  }
+  if (runtimeState.tauntTurnsRemaining > 0) {
+    effects.push('taunt');
+  }
+  if (runtimeState.tormented) {
+    effects.push('torment');
+  }
   return effects;
 }
 
@@ -300,8 +310,45 @@ export function getDisplayedSideStatuses(runtimeState: BattleSideRuntimeState): 
   return effects;
 }
 
-export function isBattlePokemonTrapped(runtimeState: BattlePokemonRuntimeState): boolean {
-  return runtimeState.trappedTurnsRemaining > 0;
+/** Can't switch or run: bound (Wrap…) or blocked by Mean Look from the Pokémon still facing it. */
+export function isBattlePokemonTrapped(
+  runtimeState: BattlePokemonRuntimeState,
+  opponent?: Pick<Pokemon, 'uuid'>,
+): boolean {
+  if (runtimeState.trappedTurnsRemaining > 0) return true;
+  return runtimeState.blockedBy !== null && (!opponent || opponent.uuid === runtimeState.blockedBy);
+}
+
+export const TAUNT_TURNS = 3;
+
+/** A move that deals damage (by damage class — Seismic Toss, Counter etc. have power 0 but still attack). */
+export function isAttackingMove(moveId: number): boolean {
+  const cls = getMove(moveId)?.damageClass;
+  return cls !== undefined && cls !== 'status';
+}
+
+/** Moves this Pokémon can't pick right now: status moves while taunted, its last move while tormented. */
+export function getBlockedMoveIds(
+  pokemon: Pick<Pokemon, 'moves'>,
+  runtimeState: BattlePokemonRuntimeState,
+  previousMoveId: number | null,
+): number[] {
+  const blocked: number[] = [];
+  if (runtimeState.tauntTurnsRemaining > 0)
+    blocked.push(...pokemon.moves.filter((m) => !isAttackingMove(m.id)).map((m) => m.id));
+  if (runtimeState.tormented && previousMoveId !== null && previousMoveId > 0) blocked.push(previousMoveId);
+  return blocked;
+}
+
+/** Flail / Reversal: the lower the user's HP, the higher the power (20–200). */
+export function getFlailPower(hp: number, maxHp: number): number {
+  const ratio = Math.floor((48 * hp) / maxHp);
+  if (ratio < 2) return 200;
+  if (ratio < 5) return 150;
+  if (ratio < 10) return 100;
+  if (ratio < 17) return 80;
+  if (ratio < 33) return 40;
+  return 20;
 }
 
 export function getChargingMoveId(runtimeState: BattlePokemonRuntimeState): number | null {
@@ -572,6 +619,8 @@ function isVolatileEffectImmune(target: Pokemon, effect: MoveBattleEffect, sourc
       return target.types.includes('grass');
     case 'nightmare':
       return target.status !== 'sleep';
+    case 'mean-look':
+      return !source;
     case 'infatuation':
       // No genders in this game: Attract fails only on the same species (or with no known source).
       return !source || source.id === target.id;
@@ -648,6 +697,33 @@ export function applyVolatileMoveEffects(
         applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
         break;
       }
+      case 'mean-look': {
+        if (runtimeState.blockedBy) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.blockedBy = source!.uuid;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+      case 'taunt': {
+        if (runtimeState.tauntTurnsRemaining > 0) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.tauntTurnsRemaining = TAUNT_TURNS;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
+      case 'torment': {
+        if (runtimeState.tormented) {
+          applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
+          break;
+        }
+        runtimeState.tormented = true;
+        applied.push({ id: effect.id, target: effect.target, applied: true, reason: 'applied' });
+        break;
+      }
       case 'nightmare': {
         if (runtimeState.nightmare) {
           applied.push({ id: effect.id, target: effect.target, applied: false, reason: 'already-active' });
@@ -685,19 +761,31 @@ export function applyVolatileMoveEffects(
 }
 
 /**
- * Thief: the target's held item stops working for the rest of this battle — it is NOT stolen.
- * Undoes the item's start-of-battle stat stages and any choice lock. Returns the item, or null if none.
+ * Thief / Incinerate / Fling: the held item stops working for the rest of this battle — it is NOT lost.
+ * Undoes the item's start-of-battle stat stages and any choice lock. Returns the item id, or null if none.
  */
-export function neutralizeHeldItem(runtimeState: BattlePokemonRuntimeState): HeldItemDef | null {
+export function neutralizeHeldItem(
+  pokemon: Pick<Pokemon, 'heldItemId'>,
+  runtimeState: BattlePokemonRuntimeState,
+): string | null {
+  if (!hasUsableHeldItem(pokemon, runtimeState)) return null;
   const item = runtimeState.heldItem;
-  if (!item) return null;
-  for (const [stat, stages] of Object.entries(item.effect.config.stats ?? {})) {
+  for (const [stat, stages] of Object.entries(item?.effect.config.stats ?? {})) {
     const statId = stat as BattleStatId;
     runtimeState.statModifiers[statId] = applyBattleStatDelta(runtimeState.statModifiers[statId], -(stages ?? 0));
   }
   runtimeState.heldItem = null;
   runtimeState.softLockedInMovesId = null;
-  return item;
+  runtimeState.heldItemDisabled = true;
+  return pokemon.heldItemId;
+}
+
+/** Holds an item that hasn't been knocked out of use / thrown this battle. */
+export function hasUsableHeldItem(
+  pokemon: Pick<Pokemon, 'heldItemId'>,
+  runtimeState: BattlePokemonRuntimeState,
+): boolean {
+  return !!pokemon.heldItemId && !runtimeState.heldItemDisabled;
 }
 
 export const FURY_CUTTER_MAX_POWER = 160;
@@ -722,9 +810,9 @@ export function pickTriAttackAilment(random: () => number = Math.random): MoveSt
   return options[Math.floor(random() * options.length)];
 }
 
-/** Sucker Punch works only if the target hasn't acted yet this turn and chose a damaging move. */
-export function doesSuckerPunchSucceed(targetMovePower: number | null, targetAlreadyActed: boolean): boolean {
-  return !targetAlreadyActed && targetMovePower !== null && targetMovePower > 0;
+/** Sucker Punch works only if the target hasn't acted yet this turn and chose an attacking move. */
+export function doesSuckerPunchSucceed(targetMoveId: number | null, targetAlreadyActed: boolean): boolean {
+  return !targetAlreadyActed && targetMoveId !== null && isAttackingMove(targetMoveId);
 }
 
 /** Helping Hand (no double battles here): heals roster allies on the bench by this % of max HP. */

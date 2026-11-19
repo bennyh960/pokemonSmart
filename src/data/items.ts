@@ -97,6 +97,12 @@ export function getItem(id: string): ItemDef | undefined {
   return undefined;
 }
 
+/** Fling power of a held item (items.json, from PokeAPI), or null if it can't be flung. */
+export function getItemFlingPower(id: string): number | null {
+  const item = getItem(id);
+  return item ? (rawItems[String(item.numericId)]?.flingPower ?? null) : null;
+}
+
 export function getAllItems(): ItemDef[] {
   return Object.values(ITEMS);
 }

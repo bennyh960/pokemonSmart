@@ -90,10 +90,23 @@ export type MoveBattleBehaviorTag =
   | 'fails-on-same-species'
   | 'pay-day'
   | 'incinerate'
-  | 'false-swipe';
+  | 'false-swipe'
+  | 'payback'
+  | 'stomping-tantrum'
+  | 'fling';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
-export type MoveBattleEffectId = 'other' | 'confusion' | 'leech-seed' | 'trap' | 'curse' | 'infatuation' | 'nightmare';
+export type MoveBattleEffectId =
+  | 'other'
+  | 'confusion'
+  | 'leech-seed'
+  | 'trap'
+  | 'curse'
+  | 'infatuation'
+  | 'nightmare'
+  | 'mean-look'
+  | 'taunt'
+  | 'torment';
 
 export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';
 

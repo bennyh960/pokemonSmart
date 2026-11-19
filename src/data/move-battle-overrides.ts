@@ -605,6 +605,19 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   // Dragon Cheer (no double battles): raises the user's crit chance like Focus Energy
   'Dragon Cheer': { behaviorTags: ['focus-energy'], target: 'user' },
   'False Swipe': { behaviorTags: ['false-swipe'] },
+  // Mean Look: the target can't switch or run while the user is in battle (trainer AI won't switch either)
+  'Mean Look': volatileEffect('mean-look', 100, { bayPassImuunity: true }),
+  Taunt: volatileEffect('taunt', 100),
+  Torment: volatileEffect('torment', 100),
+  // Fling: power = the held item's fling power; the item is then out of use for this battle (not lost)
+  Fling: { behaviorTags: ['fling'] },
+  Flail: { behaviorTags: ['reversal'] },
+  Payback: { behaviorTags: ['payback'] },
+  'Stomping Tantrum': { behaviorTags: ['stomping-tantrum'] },
+  'Scale Shot': {
+    ...multiHit2to5(),
+    statChanges: [stageChange('speed', 1, 'user'), stageChange('defense', -1, 'user')],
+  },
   // Bide: store 2 turns, then hit back 2× the damage taken (target 'user' so Protect doesn't block storing)
   Bide: { behaviorTags: ['bide'], target: 'user' },
   // Roar / Whirlwind: no forced switch (would let legendaries flee / break battle flow) — big debuffs instead

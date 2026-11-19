@@ -131,6 +131,27 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(160,120,220,0.3)',
     textColor: '#b090e0',
   },
+  blocked: {
+    label: 'חסום',
+    shortLabel: 'חסום',
+    bgColor: 'rgba(90,90,90,0.25)',
+    borderColor: 'rgba(170,170,170,0.35)',
+    textColor: '#c8c8c8',
+  },
+  taunt: {
+    label: 'מתגרה',
+    shortLabel: 'מתגרה',
+    bgColor: 'rgba(240,80,64,0.15)',
+    borderColor: 'rgba(240,80,64,0.3)',
+    textColor: '#f07060',
+  },
+  torment: {
+    label: 'מעונה',
+    shortLabel: 'מעונה',
+    bgColor: 'rgba(120,64,64,0.2)',
+    borderColor: 'rgba(190,110,110,0.3)',
+    textColor: '#d09090',
+  },
   love: {
     label: 'מאוהב',
     shortLabel: 'מאוהב',

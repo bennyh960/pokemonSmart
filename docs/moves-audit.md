@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 380 |
+| ✅ wired (override + battle code reads it) | 388 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 0 |
-| ❌ missing (effect described, no logic at all) | 186 |
+| ❌ missing (effect described, no logic at all) | 178 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,19 +25,11 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (186)
+## ❌ missing (178)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 851 | Tera Blast (פיצוץ טרה) | normal | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 25 (0/25) | If the user has Terastallized, it unleashes energy of its Tera Type. This move inflicts damage using the Attack or Sp. Atk stat—whichever is higher for the user. |  |
-| 212 | Mean Look (מבט מאיים) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 11 (11/0) | Prevents fleeing or switching. |  |
-| 269 | Taunt (ליגלוג) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 11 (5/11) | Taunts the foe into only using attack moves. |  |
-| 374 | Fling (זריקה) | dark | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 11 (1/11) | The user flings its held item at the foe to attack. Its power and effects depend on the item. |  |
-| 175 | Flail (התפרצות) | normal | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 10 (10/0) | Stronger if the user's HP is low. |  |
-| 371 | Payback (תשלום) | dark | physical | 50 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 10 (1/10) | If the user can use this attack after the foe attacks, its power is doubled. |  |
-| 707 | Stomping Tantrum (זעם דורס) | ground | physical | 75 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ burst | 10 (0/10) | Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles. |  |
-| 799 | Scale Shot (יריית קשקשים) | dragon | physical | 25 | 90 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 10 (0/10) | The user attacks by shooting scales two to five times in a row. This move boosts the user's Speed stat but lowers its Defense stat. |  |
-| 259 | Torment (עינוי) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 8 (0/8) | Torments the foe and stops successive use of a move. |  |
 | 372 | Assurance (ביטחון) | dark | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 8 (7/8) | If the foe has already taken some damage in the same turn, this attack's power is doubled. |  |
 | 195 | Perish Song (שיר אבדון) | normal | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 sound-based:blast | 7 (7/0) | Both user and foe faint in 3 turns. |  |
 | 227 | Encore (הדרן) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 7 (6/1) | Makes the foe repeat 2-6 times. |  |
@@ -222,7 +214,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 
 
-## ✅ wired (380)
+## ✅ wired (388)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -374,9 +366,12 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 444 | Stone Edge (להב אבן) | rock | physical | 100 | 80 | — | ✅ wired | crit +1 | — | 🎬 rock-throw | 12 (1/12) | The user stabs the foe with a sharpened stone. It has a high critical-hit ratio. |  |
 | 67 | Low Kick (בעיטה נמוכה) | fighting | physical | — | 100 | — | ✅ wired | `weight-target` | — | ▫️ lunge | 11 (8/5) | Power depends on the foe's weight. As long as the foe is heavy the power is stronger. |  |
 | 193 | Foresight (ראיית עתיד) | normal | status | — | — | — | ✅ wired | user accuracy +2 | — | ▫️ pulse | 11 (11/0) | Negates accuracy reduction moves. |  |
+| 212 | Mean Look (מבט מאיים) | normal | status | — | — | — | ✅ wired | mean-look 100% | — | ▫️ pulse | 11 (11/0) | Prevents fleeing or switching. |  |
 | 239 | Twister (סחרור) | dragon | special | 40 | 100 | 20 | ✅ wired | flinch 20% | — | 🎬 twister-spin | 11 (11/0) | Whips up a tornado to attack. |  |
 | 246 | Ancient Power (כוח עתיק) | rock | special | 60 | 100 | 20 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 20% | — | 🎬 rock-slide | 11 (11/0) | An attack that may raise all stats. |  |
+| 269 | Taunt (ליגלוג) | dark | status | — | 100 | — | ✅ wired | taunt 100% | — | ▫️ pulse | 11 (5/11) | Taunts the foe into only using attack moves. |  |
 | 276 | Superpower (כוח על) | fighting | physical | 120 | 100 | 100 | ✅ wired | user attack -1, user defense -1 | — | 🎬 punch:fighting | 11 (3/11) | Boosts strength sharply, but lowers abilities. |  |
+| 374 | Fling (זריקה) | dark | physical | — | 100 | — | ✅ wired | `fling` | — | ▫️ lunge | 11 (1/11) | The user flings its held item at the foe to attack. Its power and effects depend on the item. |  |
 | 428 | Zen Headbutt (נגיחת זן) | psychic | physical | 80 | 90 | 20 | ✅ wired | flinch 20% | — | ▫️ lunge | 11 (5/11) | The user focuses its willpower to its head and rams the foe. It may also make the target flinch. |  |
 | 47 | Sing (שירה) | normal | status | — | 55 | — | ✅ wired | sleep 100% | — | 🎬 sound-based:sing | 10 (10/0) | May cause the foe to fall asleep. |  |
 | 51 | Acid (חומצה) | poison | special | 40 | 100 | 10 | ✅ wired | target defense -1 | — | ▫️ projectile | 10 (10/0) | An attack that may lower DEFENSE. |  |
@@ -384,17 +379,21 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 75 | Razor Leaf (עלה תער) | grass | physical | 55 | 95 | — | ✅ wired | crit +1 | — | 🎬 leaf-spray | 10 (10/0) | Has a high critical hit ratio. |  |
 | 122 | Lick (ליקוק) | ghost | physical | 30 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | 10 (10/0) | An attack that may cause paralysis. |  |
 | 123 | Smog (ערפיח) | poison | special | 30 | 70 | 40 | ✅ wired | poison 40% | — | ▫️ projectile | 10 (10/0) | An attack that may poison the foe. |  |
+| 175 | Flail (התפרצות) | normal | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | 10 (10/0) | Stronger if the user's HP is low. |  |
 | 180 | Spite (טינה) | ghost | status | — | 100 | — | ✅ wired | `cut-pp` | — | 🎬 night-shade:spite | 10 (6/5) | Cuts the PP of the foe's last move. |  |
 | 226 | Baton Pass (מסירת שרביט) | normal | status | — | — | — | ✅ wired | `baton-pass` | — | ▫️ pulse | 10 (8/3) | Switch pokemon while keeping effects, also keeps substitutes. |  |
 | 232 | Metal Claw (טופר מתכת) | steel | physical | 50 | 95 | 10 | ✅ wired | user attack +1 | — | ▫️ lunge | 10 (6/7) | An attack that may up user's ATTACK. |  |
 | 235 | Synthesis (סינתזה) | grass | status | — | — | — | ✅ wired | heal 75%, `synthesis` | — | 🎬 celestial:synthesis | 10 (10/0) | Restores HP (varies by time). |  |
 | 253 | Uproar (מהומה) | normal | special | 90 | 100 | — | ✅ wired | `lock-in-uproar` | — | 🎬 sound-based:blast | 10 (2/10) | Causes an uproar for 2 to 5 turns and prevents sleep. |  |
 | 349 | Dragon Dance (ריקוד דרקון) | dragon | status | — | — | — | ✅ wired | user attack +1, user speed +1 | — | 🎬 self-boost-cooler | 10 (5/9) | A mystical dance that ups ATTACK and SPEED. |  |
+| 371 | Payback (תשלום) | dark | physical | 50 | 100 | — | ✅ wired | `payback` | — | ▫️ lunge | 10 (1/10) | If the user can use this attack after the foe attacks, its power is doubled. |  |
 | 414 | Earth Power (כוח אדמה) | ground | special | 90 | 100 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 10 (6/10) | The user makes the ground under the foe erupt with power. It may also lower the target's Sp. Def. |  |
 | 422 | Thunder Fang (ניב רעם) | electric | physical | 65 | 95 | 10 | ✅ wired | paralyze 10%, flinch 10% | — | 🎬 lightning | 10 (1/10) | The user bites with electrified fangs. It may also make the foe flinch or become paralyzed. |  |
 | 424 | Fire Fang (ניב אש) | fire | physical | 65 | 95 | 10 | ✅ wired | burn 10%, flinch 10% | — | 🎬 bite:fire | 10 (2/10) | The user bites with flame-cloaked fangs. It may also make the foe flinch or sustain a burn. |  |
 | 446 | Stealth Rock (סלע התגנבות) | rock | status | — | — | — | ✅ wired | `stealth-rock` | — | ▫️ pulse | 10 (1/10) | The user lays a trap of levitating stones around the foe. The trap hurts foes that switch into battle. |  |
+| 707 | Stomping Tantrum (זעם דורס) | ground | physical | 75 | 100 | — | ✅ wired | `stomping-tantrum` | — | ▫️ burst | 10 (0/10) | Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles. |  |
 | 784 | Breaking Swipe (חיתוך פורץ) | dragon | physical | 60 | 100 | 100 | ✅ wired | target attack -1 | — | ▫️ lunge | 10 (3/10) | The user swings its tough tail wildly and attacks opposing Pokémon. This also lowers their Attack stats. |  |
+| 799 | Scale Shot (יריית קשקשים) | dragon | physical | 25 | 90 | — | ✅ wired | user speed +1, user defense -1, hits 2-5 | — | ▫️ projectile | 10 (0/10) | The user attacks by shooting scales two to five times in a row. This move boosts the user's Speed stat but lowers its Defense stat. |  |
 | 54 | Mist (ערפל) | ice | status | — | — | — | ✅ wired | mist 5t | — | 🎬 mist-veil:mist | 9 (9/0) | Prevents stat reduction. |  |
 | 71 | Absorb (ספיגה) | grass | special | 20 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 9 (9/0) | Steals 1/2 of the damage inflicted. |  |
 | 101 | Night Shade (צל לילה) | ghost | special | — | 100 | — | ✅ wired | `night-shade` | — | 🎬 night-shade:night shade | 9 (9/1) | The user's level equals damage HP. |  |
@@ -412,6 +411,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 107 | Minimize (מזעור) | normal | status | — | — | — | ✅ wired | user evasion +1 | — | 🎬 self-boost | 8 (8/0) | Heightens evasiveness. |  |
 | 179 | Reversal (היפוך) | fighting | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | 8 (4/4) | Stronger if the user's HP is low. |  |
 | 204 | Charm (קסם) | fairy | status | — | 100 | — | ✅ wired | target attack -2 | — | ▫️ pulse | 8 (8/1) | Sharply lowers the foe's ATTACK. |  |
+| 259 | Torment (עינוי) | dark | status | — | 100 | — | ✅ wired | torment 100% | — | ▫️ pulse | 8 (0/8) | Torments the foe and stops successive use of a move. |  |
 | 407 | Dragon Rush (דריסת דרקון) | dragon | physical | 100 | 75 | 20 | ✅ wired | flinch 20% | — | 🎬 dragon-aura | 8 (8/0) | The user tackles the foe while exhibiting overwhelming menace. It may also make the target flinch. |  |
 | 411 | Focus Blast (פיצוץ מיקוד) | fighting | special | 120 | 70 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 8 (0/8) | The user heightens its mental focus and unleashes its power. It may also lower the target's Sp. Def. |  |
 | 815 | Scorching Sands (חולות לוהטים) | ground | special | 70 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | 8 (0/8) | The user throws scorching sand at the target to attack. This may also leave the target with a burn. |  |

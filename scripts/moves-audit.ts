@@ -62,8 +62,11 @@ const logicSrc = listTs(path.join(ROOT, 'src'))
   .join('\n');
 const isRead = (id: string) => logicSrc.includes(`'${id}'`);
 const unwiredTags = new Set(
-  [...unionMembers('MoveBattleBehaviorTag'), ...unionMembers('MoveBattleEffectId'), ...unionMembers('MoveBattleSideEffectId')]
-    .filter((id) => id !== 'other' && !isRead(id)),
+  [
+    ...unionMembers('MoveBattleBehaviorTag'),
+    ...unionMembers('MoveBattleEffectId'),
+    ...unionMembers('MoveBattleSideEffectId'),
+  ].filter((id) => id !== 'other' && !isRead(id)),
 );
 
 // Moves the battle code handles by id (e.g. `export const RETURN_MOVE_ID = 216;`) instead of metadata.
@@ -110,7 +113,11 @@ function summarizeOverride(o: Partial<MoveBattleMetadata>): string {
 function classify(m: MoveJson): { status: Status; logic: string; why: string } {
   const o = MOVE_BATTLE_OVERRIDES[m.name.en];
   if (o) {
-    const ids = [...(o.behaviorTags ?? []), ...(o.effects ?? []).map((e) => e.id), ...(o.sideEffects ?? []).map((e) => e.id)];
+    const ids = [
+      ...(o.behaviorTags ?? []),
+      ...(o.effects ?? []).map((e) => e.id),
+      ...(o.sideEffects ?? []).map((e) => e.id),
+    ];
     const unwired = ids.filter((id) => unwiredTags.has(id));
     return {
       status: unwired.length ? 'partial' : 'wired',
@@ -121,7 +128,11 @@ function classify(m: MoveJson): { status: Status; logic: string; why: string } {
   const byId = idHandled.get(m.id);
   if (byId) return { status: 'wired', logic: `handled by id in code (\`${byId}\`)`, why: '' };
   const desc = m.description.en.replace(/­\s*/g, '');
-  if (m.damageClass !== 'status' && m.accuracy === null && /never misses|sure-hit|always hits|never miss|unavoidable|not miss|cannot be evaded|certain to hit/i.test(desc))
+  if (
+    m.damageClass !== 'status' &&
+    m.accuracy === null &&
+    /never misses|sure-hit|always hits|never miss|unavoidable|not miss|cannot be evaded|certain to hit/i.test(desc)
+  )
     return { status: 'implicit', logic: 'accuracy = null → always hits', why: '' };
   if (m.damageClass === 'status') return { status: 'missing', logic: '', why: 'status move with no effect' };
   if (m.effectChance !== null) return { status: 'missing', logic: '', why: `effectChance ${m.effectChance}%` };
@@ -132,8 +143,16 @@ function classify(m: MoveJson): { status: Status; logic: string; why: string } {
 // Generic fallback branches at the bottom of getAttackAnimationProfile (family + duration).
 const GENERIC_ANIMS = new Set(['pulse@0.64', 'burst@0.34', 'beam@0.68', 'projectile@0.34', 'lunge@0.26']);
 function animation(m: MoveJson): { family: string; dedicated: boolean } {
-  const p = getAttackAnimationProfile({ name: m.name, type: m.type as never, power: m.power ?? 0, damageClass: m.damageClass as never });
-  return { family: p.family + (p.variant ? `:${p.variant}` : ''), dedicated: !GENERIC_ANIMS.has(`${p.family}@${p.duration}`) };
+  const p = getAttackAnimationProfile({
+    name: m.name,
+    type: m.type as never,
+    power: m.power ?? 0,
+    damageClass: m.damageClass as never,
+  });
+  return {
+    family: p.family + (p.variant ? `:${p.variant}` : ''),
+    dedicated: !GENERIC_ANIMS.has(`${p.family}@${p.duration}`),
+  };
 }
 
 // ── Preserve hand-written notes ────────────────────────────────────────────────────────────────
@@ -163,7 +182,14 @@ const rows = moves
     const c = classify(m);
     const lvl = levelLearners.get(m.id)?.size ?? 0;
     const tm = tmLearners.get(m.id)?.size ?? 0;
-    return { m, ...c, anim: animation(m), lvl, tm, learners: new Set([...(levelLearners.get(m.id) ?? []), ...(tmLearners.get(m.id) ?? [])]).size };
+    return {
+      m,
+      ...c,
+      anim: animation(m),
+      lvl,
+      tm,
+      learners: new Set([...(levelLearners.get(m.id) ?? []), ...(tmLearners.get(m.id) ?? [])]).size,
+    };
   })
   .sort((a, b) => ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || b.learners - a.learners || a.m.id - b.m.id);
 
@@ -212,4 +238,6 @@ Unwired tags in \`${TYPES_FILE}\`: ${unwiredTags.size ? [...unwiredTags].map((t)
 ${sections.join('\n')}`;
 
 fs.writeFileSync(OUT, md);
-console.log(`Wrote ${path.relative(ROOT, OUT)} — ${rows.length} moves: missing ${count('missing')}, partial ${count('partial')}, wired ${count('wired')}, implicit ${count('implicit')}, none ${count('none')}`);
+console.log(
+  `Wrote ${path.relative(ROOT, OUT)} — ${rows.length} moves: missing ${count('missing')}, partial ${count('partial')}, wired ${count('wired')}, implicit ${count('implicit')}, none ${count('none')}`,
+);
