@@ -429,10 +429,10 @@ describe('battle system helpers', () => {
     expect(doesSuckerPunchSucceed(80, true)).toBe(false); // already attacked
   });
 
-  it('Teleport raises evasion and speed by 2 instead of fleeing', () => {
+  it('Teleport raises evasion and speed by 1 instead of fleeing', () => {
     expect(getMoveByName('teleport')?.battle.statChanges.map((c) => [c.stat, c.stages, c.target])).toEqual([
-      ['evasion', 2, 'user'],
-      ['speed', 2, 'user'],
+      ['evasion', 1, 'user'],
+      ['speed', 1, 'user'],
     ]);
   });
 

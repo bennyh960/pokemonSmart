@@ -309,7 +309,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 72 | Mega Drain (ניקוז מגה) | grass | special | 40 | 100 | — | ✅ wired | drain 50% | — | 🎬 giga-drain | 35 (7/29) | Steals 1/2 of the damage inflicted. |  |
 | 149 | Psywave (גל על חושי) | psychic | special | — | 100 | — | ✅ wired | `psywave` | — | 🎬 psychic-wave | 35 (1/34) | An attack with variable power. |  |
 | 98 | Quick Attack (מתקפה מהירה) | normal | physical | 40 | 100 | — | ✅ wired | priority +1 | — | ▫️ lunge | 34 (34/0) | Lets the user get in the first hit. |  |
-| 100 | Teleport (שיגור) | psychic | status | — | — | — | ✅ wired | user evasion +2, user speed +2 | — | ▫️ pulse | 34 (5/32) | A move for fleeing from battle. |  |
+| 100 | Teleport (שיגור) | psychic | status | — | — | — | ✅ wired | user evasion +1, user speed +1 | — | ▫️ pulse | 34 (5/32) | A move for fleeing from battle. |  |
 | 116 | Focus Energy (ריכוז אנרגיה) | normal | status | — | — | — | ✅ wired | `focus-energy` | — | ▫️ pulse | 34 (30/14) | Raises the critical hit ratio. |  |
 | 118 | Metronome (מטרונום) | normal | status | — | — | — | ✅ wired | `metronome` | — | 🎬 pulse | 34 (6/32) | Randomly uses any POKéMON move. |  |
 | 127 | Waterfall (מפל מים) | water | physical | 80 | 100 | 20 | ✅ wired | flinch 20% | — | 🎬 water-flow | 34 (2/34) | An aquatic charge attack. |  |

@@ -581,7 +581,7 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   // Thief: does not steal — knocks the target's held item out of use for this battle, ×1.5 power if it has one
   Thief: { behaviorTags: ['thief'] },
   // Teleport: no escape from battle (by design) — the user gets much harder to hit and faster instead
-  Teleport: userStages(['evasion', 2], ['speed', 2]),
+  Teleport: userStages(['evasion', 1], ['speed', 1]),
   Nightmare: volatileEffect('nightmare', 100),
   'Fury Cutter': { behaviorTags: ['fury-cutter'] },
   Psywave: { behaviorTags: ['psywave'] },
