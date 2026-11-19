@@ -15,6 +15,8 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 ## Accounts
 - [ ] Password reset (2026-11-19, not deployed): admin.html → Players tab lists every account + "Reset password" (sets a new one you pass on). Runs in Edge Function `supabase/functions/admin-users` (service-role key stays server side). To turn on: `supabase functions deploy admin-users` + `supabase secrets set ADMIN_EMAILS=<your login email>`. Login screen tells kids to ask a parent to contact the admin
 
+- [ ] Rename on the Trainer Card (2026-11-19, not looked at in the app): ✏️ next to the name → dialog, same rules as the first name entry (12 letters, trimmed), admin name reserved (`checkPlayerRename` in `systems/player-onboarding.ts`). Saves + cloud sync right away; save slot list and NPC lines (`<p>`) use the new name. Check it on a phone (keyboard over the dialog)
+
 ## TODO — main story
 - [ ] Percentile gym + ending (2026-11-04, not playtested): 5 rooms × 5 helpers (2 wrong arrows per room throw you out to the Route 12 hill, back door 40,65/41,65), gym auto-gate 10 questions + door light 40,2, badge → Max + player `walk-to` the back arrow → hill: Gary's call + Max's Fly lesson → `fly-to` Charizard → Minusburg landing scene. Check the walks don't get stuck and the landing spot 44,3 is clear
 - [ ] Burning Chance arc: playtest end to end (Rocket Base `rocket-base/b1..b4` included; Route 12 exits are blocked by police until Suicune is freed). Check NPC spots in the editor (Route 12 guards/admin/Max/Entei/Moltres, Reminder 39,2 + gym helper 41,2, Lance 16,28, coin kid, ball thief, Oak) and that the new cutscene `fx` step (fire/smoke/burst) looks right

@@ -23,3 +23,19 @@ export function finalizePlayerName(draft: string, fallback: string): string {
   if (normalized.length === 0) return fallback;
   return normalized.slice(0, PLAYER_NAME_MAX_LENGTH);
 }
+
+export type PlayerRenameResult = { ok: true; name: string } | { ok: false; reason: 'empty' | 'same' | 'reserved' };
+
+/**
+ * Check a new name typed on the Trainer Card. Same rules as the first name entry;
+ * the admin name is reserved (it unlocks debug keys) unless the player already has it.
+ */
+export function checkPlayerRename(draft: string, currentName: string, reservedName: string): PlayerRenameResult {
+  const name = finalizePlayerName(draft, '');
+  if (!name) return { ok: false, reason: 'empty' };
+  if (name === currentName) return { ok: false, reason: 'same' };
+  if (name.toLowerCase() === reservedName.toLowerCase() && currentName !== reservedName) {
+    return { ok: false, reason: 'reserved' };
+  }
+  return { ok: true, name };
+}

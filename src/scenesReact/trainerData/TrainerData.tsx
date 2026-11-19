@@ -12,6 +12,7 @@ import {
   formatTrainerPoints,
   getTrainerRank,
 } from '../../systems/trainer-rank';
+import RenameDialog from './components/RenameDialog';
 
 interface ITrainerDataProps {
   onClose: () => void;
@@ -21,6 +22,7 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
   const { t, locale, isRTL } = useI18n();
   const [pd] = usePlayerData();
   const [roadmapOpen, setRoadmapOpen] = useState(false);
+  const [renameOpen, setRenameOpen] = useState(false);
 
   useInputLayer({
     id: 'trainerData',
@@ -28,8 +30,9 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
     keyBindings: [{ action: 'close', code: 'Escape' }],
     onAction: (action) => {
       if (action !== 'close') return;
-      // Escape closes the rank roadmap first, then the card
-      if (roadmapOpen) setRoadmapOpen(false);
+      // Escape closes an open dialog first, then the card
+      if (renameOpen) setRenameOpen(false);
+      else if (roadmapOpen) setRoadmapOpen(false);
       else onClose();
     },
   });
@@ -127,6 +130,8 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
         </button>
       </div>
 
+      {renameOpen && <RenameDialog onClose={() => setRenameOpen(false)} />}
+
       {/* Rank Roadmap modal (opened from the ℹ️ button on the rank box) */}
       {roadmapOpen && (
         <div
@@ -201,7 +206,18 @@ const TrainerData = ({ onClose }: ITrainerDataProps) => {
               </div>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-bold tracking-wide text-cyan-400">{trainer.name}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-wide text-cyan-400">{trainer.name}</h2>
+              <button
+                type="button"
+                onClick={() => setRenameOpen(true)}
+                aria-label={t('trainerData.rename.button')}
+                title={t('trainerData.rename.button')}
+                className="text-sm bg-slate-800/80 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center border border-slate-700 transition-colors"
+              >
+                ✏️
+              </button>
+            </div>
             <p className="text-xs text-slate-400 uppercase tracking-widest mt-1">ID: #24019</p>
           </div>
 
