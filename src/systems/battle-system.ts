@@ -778,6 +778,19 @@ export function advanceBide(runtimeState: BattlePokemonRuntimeState, moveId: num
 /** Thief hits harder when the target holds an item. */
 export const THIEF_ITEM_POWER_MULTIPLIER = 1.5;
 
+/** Natural Gift (no berries in battle): fixed power, type = the user's (like Hidden Power). */
+export const NATURAL_GIFT_POWER = 60;
+
+/** Pay Day: coins scattered per use, picked up if the player wins. */
+export function getPayDayCoins(level: number): number {
+  return level * 5;
+}
+
+/** False Swipe: never knocks out — leaves the target with at least 1 HP. */
+export function capFalseSwipeDamage(damage: number, targetHp: number): number {
+  return Math.min(damage, Math.max(0, targetHp - 1));
+}
+
 /** Hidden Power: no IVs in this game, so it takes the user's first type. */
 export function getHiddenPowerType(pokemon: Pick<Pokemon, 'types'>): PokemonType {
   return pokemon.types[0] ?? 'normal';

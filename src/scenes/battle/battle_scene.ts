@@ -172,6 +172,9 @@ import {
   chooseEnemyMoveIndex,
   createBattleRuntimeStateForPokemon,
   getHiddenPowerType,
+  NATURAL_GIFT_POWER,
+  getPayDayCoins,
+  capFalseSwipeDamage,
   neutralizeHeldItem,
   advanceBide,
   applyHelpingHand,
@@ -865,6 +868,8 @@ export function createBattleScene(
   let pendingDragonTail = false;
   /** The current trainer switch came from Dragon Tail: the dragged-in Pokémon doesn't act, the turn ends. */
   let dragonTailEndsTurn = false;
+  /** Pay Day coins the player scattered this battle — paid out on a win. */
+  let payDayCoins = 0;
   let pendingForcedPlayerMoveIndex: number | null = null;
   let turnNumber = 0;
   let lossDialogueShown = false;
@@ -3991,6 +3996,9 @@ export function createBattleScene(
     if (moveBattleData?.behaviorTags?.includes('hidden-power')) {
       m = { ...m, type: getHiddenPowerType(attacker) };
     }
+    if (moveBattleData?.behaviorTags?.includes('natural-gift')) {
+      m = { ...m, type: getHiddenPowerType(attacker), power: NATURAL_GIFT_POWER };
+    }
     const isCurse = moveBattleData?.behaviorTags?.includes('curse') ?? false;
     const requiresChargeTurn = moveBattleData?.behaviorTags?.includes('requires-charge-turn') ?? false;
     const isChargeStart = requiresChargeTurn && !isChargeRelease && !isRedirected;
@@ -4021,6 +4029,9 @@ export function createBattleScene(
     const isBide = moveBattleData?.behaviorTags?.includes('bide') ?? false;
     const isDragonTail = moveBattleData?.behaviorTags?.includes('dragon-tail') ?? false;
     const isHelpingHand = moveBattleData?.behaviorTags?.includes('helping-hand') ?? false;
+    const isIncinerate = moveBattleData?.behaviorTags?.includes('incinerate') ?? false;
+    const isFalseSwipe = moveBattleData?.behaviorTags?.includes('false-swipe') ?? false;
+    const isPayDay = moveBattleData?.behaviorTags?.includes('pay-day') ?? false;
     const isCounter = moveBattleData?.behaviorTags?.includes('counter') ?? false;
     const isMirrorCoat = moveBattleData?.behaviorTags?.includes('mirror-coat') ?? false;
     const isMagicCoat = moveBattleData?.behaviorTags?.includes('magic-coat') ?? false;
@@ -4594,6 +4605,16 @@ export function createBattleScene(
       return;
     }
 
+    if (moveBattleData?.behaviorTags?.includes('fails-on-same-species') && attacker.id === defender.id) {
+      textBox = createTextBox(
+        [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.moveFailed')],
+        rtl,
+      );
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
     if (isHelpingHand) {
       // Allies = roster Pokémon already in this battle, not on the field (player: battleRoster; trainer: seen ones)
       const allies =
@@ -4848,7 +4869,8 @@ export function createBattleScene(
         foulPlayAttackStat,
       );
       const min = moveBattleData?.minimumDamage ?? null;
-      return min !== null ? Math.max(min, base) : base;
+      const dealt = min !== null ? Math.max(min, base) : base;
+      return isFalseSwipe ? capFalseSwipeDamage(dealt, defender.hp) : dealt;
     })();
     const allowTargetEffects =
       hitResult.hit &&
@@ -4924,7 +4946,12 @@ export function createBattleScene(
         if (isDragonTail && actor === 'player' && isTrainerBattle && !targetTypeImmune && plannedDamage > 0) {
           pendingDragonTail = true;
         }
-        const knockedItem = isThief && !targetTypeImmune ? neutralizeHeldItem(defenderBattleState) : null;
+        if (isPayDay && actor === 'player') {
+          payDayCoins += getPayDayCoins(attacker.level);
+          msgs.push(t('battle.payDayCoins'));
+        }
+        const knockedItem =
+          (isThief || isIncinerate) && !targetTypeImmune ? neutralizeHeldItem(defenderBattleState) : null;
         if (knockedItem) {
           msgs.push(t('battle.thiefKnockedItem', { name: defenderName, item: getLocalizedName(knockedItem.name) }));
         }
@@ -5886,10 +5913,13 @@ export function createBattleScene(
           if (!textBox && !animationDirector.isBusy()) {
             xpGained = getDefeatXpReward();
             player.xp += xpGained;
-            textBox = createTextBox(
-              [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })],
-              isRTL(),
-            );
+            const winLines = [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained })];
+            if (payDayCoins > 0 && hasActiveGame()) {
+              getPlayerData().money += payDayCoins;
+              winLines.push(t('battle.payDayPickedUp', { money: payDayCoins }));
+              payDayCoins = 0;
+            }
+            textBox = createTextBox(winLines, isRTL());
             phase = 'TRAINER_NEXT_XP';
           }
           break;

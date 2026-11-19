@@ -500,6 +500,8 @@
   "battle.statFellHarshly": "ה{stat} של {name} ירדה מאוד!",
   "battle.confused": "{name} התבלבל!",
   "battle.isConfused": "{name} מבולבל!",
+  "battle.payDayCoins": "מטבעות התפזרו לכל עבר!",
+  "battle.payDayPickedUp": "אספת ${money}!",
   "battle.draggedOut": "{name} נגרר לקרב!",
   "battle.helpingHandHealed": "{name} החלים קצת!",
   "battle.nightmareApplied": "{name} התחיל לחלום סיוט!",

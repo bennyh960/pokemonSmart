@@ -594,6 +594,17 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Dragon Tail': { behaviorTags: ['dragon-tail'], priority: -6 },
   // Helping Hand (no double battles): heals benched roster allies that still have HP by 25%
   'Helping Hand': { behaviorTags: ['helping-hand'], target: 'user' },
+  // Natural Gift (no berries in battle): 60 power of the user's own type
+  'Natural Gift': { behaviorTags: ['natural-gift'] },
+  // Captivate (no genders): Sp. Atk −2, fails on the same species
+  Captivate: { ...targetStages(['specialAttack', -2]), behaviorTags: ['fails-on-same-species'] },
+  // Pay Day: level × 5 coins per hit, paid if the player wins
+  'Pay Day': { behaviorTags: ['pay-day'] },
+  // Incinerate: burns up the target's held item for this battle (like Thief, without the power boost)
+  Incinerate: { behaviorTags: ['incinerate'] },
+  // Dragon Cheer (no double battles): raises the user's crit chance like Focus Energy
+  'Dragon Cheer': { behaviorTags: ['focus-energy'], target: 'user' },
+  'False Swipe': { behaviorTags: ['false-swipe'] },
   // Bide: store 2 turns, then hit back 2× the damage taken (target 'user' so Protect doesn't block storing)
   Bide: { behaviorTags: ['bide'], target: 'user' },
   // Roar / Whirlwind: no forced switch (would let legendaries flee / break battle flow) — big debuffs instead

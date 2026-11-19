@@ -30,6 +30,8 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  capFalseSwipeDamage,
+  getPayDayCoins,
   applyHelpingHand,
   pickDragonTailTarget,
   applyNightmareEffect,
@@ -454,6 +456,24 @@ describe('battle system helpers', () => {
     expect(pickDragonTailTarget(party, 1, () => 0)).toBe(3);
     expect(pickDragonTailTarget(party, 3, () => 0)).toBeNull();
     expect(getMoveByName('dragon tail')?.battle).toMatchObject({ priority: -6, behaviorTags: ['dragon-tail'] });
+  });
+
+  it('False Swipe leaves at least 1 HP; Pay Day pays level x 5', () => {
+    expect(capFalseSwipeDamage(80, 30)).toBe(29);
+    expect(capFalseSwipeDamage(10, 30)).toBe(10);
+    expect(capFalseSwipeDamage(10, 1)).toBe(0);
+    expect(getPayDayCoins(20)).toBe(100);
+  });
+
+  it('batch 5 metadata: Natural Gift, Captivate, Incinerate, Dragon Cheer', () => {
+    expect(getMoveByName('natural gift')?.battle.behaviorTags).toContain('natural-gift');
+    expect(getMoveByName('captivate')?.battle).toMatchObject({
+      target: 'selected-pokemon',
+      behaviorTags: ['fails-on-same-species'],
+      statChanges: [{ stat: 'specialAttack', stages: -2, target: 'target', chance: 100 }],
+    });
+    expect(getMoveByName('incinerate')?.battle.behaviorTags).toContain('incinerate');
+    expect(getMoveByName('dragon cheer')?.battle.behaviorTags).toContain('focus-energy');
   });
 
   it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {

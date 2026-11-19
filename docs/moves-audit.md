@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 374 |
+| ✅ wired (override + battle code reads it) | 380 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 0 |
-| ❌ missing (effect described, no logic at all) | 192 |
+| ❌ missing (effect described, no logic at all) | 186 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,17 +25,11 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (192)
+## ❌ missing (186)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 851 | Tera Blast (פיצוץ טרה) | normal | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 25 (0/25) | If the user has Terastallized, it unleashes energy of its Tera Type. This move inflicts damage using the Attack or Sp. Atk stat—whichever is higher for the user. |  |
-| 363 | Natural Gift (מתנת טבע) | normal | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 22 (0/22) | The user draws power to attack by using its held Berry. The Berry determines its type and power. |  |
-| 445 | Captivate (שבייה) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 20 (1/20) | If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat. |  |
-| 6 | Pay Day (יום משכורת) | normal | physical | 40 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 19 (2/19) | Throws coins. Gets them back later. |  |
-| 510 | Incinerate (שריפה) | fire | special | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 17 (0/17) | The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable. |  |
-| 913 | Dragon Cheer (עידוד דרקון) | dragon | status | 0 | 0 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 14 (0/14) | The user raises its allies' morale with a draconic cry so that their future attacks have a heightened chance of landing critical hits. This rouses Dragon types more. |  |
-| 206 | False Swipe (חיתוך שווא) | normal | physical | 40 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 13 (8/8) | Leaves the foe with at least 1HP. |  |
 | 212 | Mean Look (מבט מאיים) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 11 (11/0) | Prevents fleeing or switching. |  |
 | 269 | Taunt (ליגלוג) | dark | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 11 (5/11) | Taunts the foe into only using attack moves. |  |
 | 374 | Fling (זריקה) | dark | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 11 (1/11) | The user flings its held item at the foe to attack. Its power and effects depend on the item. |  |
@@ -228,7 +222,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 
 
-## ✅ wired (374)
+## ✅ wired (380)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -335,8 +329,11 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 106 | Harden (הקשחה) | normal | status | — | — | — | ✅ wired | user defense +1 | — | 🎬 self-boost | 22 (22/0) | Raises the user's DEFENSE. |  |
 | 153 | Explosion (פיצוץ) | normal | physical | 250 | 100 | — | ✅ wired | `leave-user-at-1-hp` | — | ▫️ burst | 22 (9/20) | Very powerful but makes user faint. |  |
 | 317 | Rock Tomb (קבר סלע) | rock | physical | 60 | 95 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | 22 (0/22) | Stops the foe from moving with rocks and cuts SPEED. |  |
+| 363 | Natural Gift (מתנת טבע) | normal | physical | — | 100 | — | ✅ wired | `natural-gift` | — | ▫️ lunge | 22 (0/22) | The user draws power to attack by using its held Berry. The Berry determines its type and power. |  |
 | 82 | Dragon Rage (זעם דרקון) | dragon | physical | 75 | 100 | — | ✅ wired | min dmg 40 | — | 🎬 dragon-aura | 21 (16/12) | Deals damage based on the user's stats, but always deals at least 40 HP. Type immunities still apply. |  |
 | 32 | Horn Drill (מקדח קרן) | normal | physical | — | 30 | — | ✅ wired | `ohko` | — | ▫️ lunge | 20 (7/19) | A one-hit KO, drill attack. |  |
+| 445 | Captivate (שבייה) | normal | status | — | 100 | — | ✅ wired | target specialAttack -2, `fails-on-same-species` | — | ▫️ pulse | 20 (1/20) | If it is the opposite gender of the user, the foe is charmed into sharply lowering its Sp. Atk stat. |  |
+| 6 | Pay Day (יום משכורת) | normal | physical | 40 | 100 | — | ✅ wired | `pay-day` | — | ▫️ lunge | 19 (2/19) | Throws coins. Gets them back later. |  |
 | 18 | Whirlwind (סופת רוח) | normal | status | — | — | — | ✅ wired | target defense -2, target specialDefense -2, target speed -1 | — | ▫️ pulse | 19 (6/17) | Blows away the foe & ends battle. |  |
 | 154 | Fury Swipes (מכות זעם) | normal | physical | 18 | 80 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 19 (19/0) | Quickly scratches 2-5 times. |  |
 | 228 | Pursuit (מרדף) | dark | physical | 40 | 100 | — | ✅ wired | `pursuit` | — | ▫️ lunge | 19 (19/0) | Heavily strikes switching POKéMON. |  |
@@ -348,6 +345,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 50 | Disable (השבתה) | normal | status | — | 100 | — | ✅ wired | `disable` | — | ▫️ pulse | 17 (17/0) | Disables the foe's most recent move. |  |
 | 78 | Stun Spore (נבג שיתוק) | grass | status | — | 75 | — | ✅ wired | paralyze 100% | — | 🎬 powder | 17 (17/0) | A move that may paralyze the foe. |  |
 | 79 | Sleep Powder (אבקת שינה) | grass | status | — | 75 | — | ✅ wired | sleep 100% | — | 🎬 powder | 17 (17/0) | May cause the foe to fall asleep. |  |
+| 510 | Incinerate (שריפה) | fire | special | 60 | 100 | — | ✅ wired | `incinerate` | — | ▫️ projectile | 17 (0/17) | The user attacks the target with fire. If the target is holding a Berry, the Berry becomes burnt up and unusable. |  |
 | 523 | Bulldoze (דחפור) | ground | physical | 60 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ burst | 17 (7/17) | The user stomps down on the ground and attacks everything in the area. Hit Pokémon's Speed stat is reduced. |  |
 | 83 | Fire Spin (סחרור אש) | fire | special | 35 | 85 | 100 | ✅ wired | trap 100% | — | 🎬 flamethrower | 16 (11/6) | Traps foe in fire for 2-5 turns. |  |
 | 270 | Helping Hand (יד עוזרת) | normal | status | — | — | — | ✅ wired | `helping-hand` | — | ▫️ pulse | 16 (0/16) | A move that boosts the power of the ally's attack in a Double Battle. |  |
@@ -364,11 +362,13 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 434 | Draco Meteor (מטאור דרקו) | dragon | special | 130 | 90 | 100 | ✅ wired | user specialAttack -2 | — | 🎬 dragon-aura | 14 (0/14) | Comets are summoned down from the sky. The attack's recoil sharply reduces the user's Sp. Atk stat. |  |
 | 442 | Iron Head (ראש ברזל) | steel | physical | 80 | 100 | 30 | ✅ wired | flinch 30% | — | ▫️ lunge | 14 (0/14) | The foe slams the target with its steel-hard head. It may also make the target flinch. |  |
 | 468 | Hone Claws (חידוד טפרים) | dark | status | — | — | — | ✅ wired | user attack +1, user accuracy +1 | — | ▫️ pulse | 14 (2/14) | The user sharpens its claws to boost its Attack stat and accuracy. |  |
+| 913 | Dragon Cheer (עידוד דרקון) | dragon | status | 0 | 0 | — | ✅ wired | `focus-energy` | — | ▫️ pulse | 14 (0/14) | The user raises its allies' morale with a draconic cry so that their future attacks have a heightened chance of landing critical hits. This rouses Dragon types more. |  |
 | 35 | Wrap (עטיפה) | normal | physical | 15 | 90 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | 13 (13/0) | Squeezes the foe for 2-5 turns. |  |
 | 37 | Thrash (התפרעות) | normal | physical | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | ▫️ lunge | 13 (13/0) | Works 2-3 turns and confuses user. |  |
 | 84 | Thunder Shock (הלם רעם) | electric | special | 40 | 100 | 10 | ✅ wired | paralyze 10% | — | 🎬 lightning | 13 (13/0) | An attack that may cause paralysis. |  |
 | 114 | Haze (אובך) | ice | status | — | — | — | ✅ wired | `haze` | — | 🎬 haze-clear:haze | 13 (11/2) | Eliminates all stat changes. |  |
 | 143 | Sky Attack (מתקפת שמיים) | flying | physical | 140 | 90 | 30 | ✅ wired | `requires-charge-turn` | — | ▫️ lunge | 13 (2/12) | 1st turn: Prepare 2nd turn: Attack |  |
+| 206 | False Swipe (חיתוך שווא) | normal | physical | 40 | 100 | — | ✅ wired | `false-swipe` | — | ▫️ lunge | 13 (8/8) | Leaves the foe with at least 1HP. |  |
 | 3 | Double Slap (סטירה כפולה) | normal | physical | 15 | 85 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 12 (12/0) | Repeatedly slaps 2-5 times. |  |
 | 105 | Recover (התאוששות) | normal | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | 12 (12/0) | Restores HP by 1/2 the max HP. |  |
 | 444 | Stone Edge (להב אבן) | rock | physical | 100 | 80 | — | ✅ wired | crit +1 | — | 🎬 rock-throw | 12 (1/12) | The user stabs the foe with a sharpened stone. It has a high critical-hit ratio. |  |

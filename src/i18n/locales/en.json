@@ -502,6 +502,8 @@
   "battle.statFellHarshly": "{name}'s {stat} fell harshly!",
   "battle.confused": "{name} became confused!",
   "battle.isConfused": "{name} is confused!",
+  "battle.payDayCoins": "Coins scattered everywhere!",
+  "battle.payDayPickedUp": "You picked up ${money}!",
   "battle.draggedOut": "{name} was dragged out!",
   "battle.helpingHandHealed": "{name} recovered some HP!",
   "battle.nightmareApplied": "{name} began having a nightmare!",
