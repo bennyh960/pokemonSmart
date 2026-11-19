@@ -152,6 +152,20 @@ export const STATUS_PILL_COLORS: Record<string, StatusPillStyle> = {
     borderColor: 'rgba(190,110,110,0.3)',
     textColor: '#d09090',
   },
+  encore: {
+    label: 'הדרן',
+    shortLabel: 'הדרן',
+    bgColor: 'rgba(248,208,48,0.15)',
+    borderColor: 'rgba(248,208,48,0.3)',
+    textColor: '#e8c040',
+  },
+  perish: {
+    label: 'שיר אבדון',
+    shortLabel: 'אבדון',
+    bgColor: 'rgba(60,40,80,0.3)',
+    borderColor: 'rgba(150,110,190,0.35)',
+    textColor: '#b898e0',
+  },
   love: {
     label: 'מאוהב',
     shortLabel: 'מאוהב',

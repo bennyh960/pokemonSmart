@@ -9,10 +9,10 @@
 |---|---|
 | Moves total | 618 |
 | Have an effect beyond damage | 577 |
-| ✅ wired (override + battle code reads it) | 388 |
+| ✅ wired (override + battle code reads it) | 398 |
 | ✅ data (handled by raw data, e.g. accuracy null = never misses) | 11 |
 | ⚠️ partial (override uses a tag the battle code never reads) | 0 |
-| ❌ missing (effect described, no logic at all) | 178 |
+| ❌ missing (effect described, no logic at all) | 168 |
 | ➖ plain damage | 41 |
 | 🎬 dedicated animation / ▫️ generic fallback | 172 / 446 |
 
@@ -25,31 +25,21 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 - **Animation** — 🎬 dedicated profile in `move-animation.ts` · ▫️ generic fallback (pulse / burst / beam / projectile / lunge by class & type).
 - **Learners** — distinct Pokémon that learn it (level-up / TM). Within each section rows are sorted by learners, so the top rows are the ones players meet most.
 
-## ❌ missing (178)
+## ❌ missing (168)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 | 851 | Tera Blast (פיצוץ טרה) | normal | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 25 (0/25) | If the user has Terastallized, it unleashes energy of its Tera Type. This move inflicts damage using the Attack or Sp. Atk stat—whichever is higher for the user. |  |
-| 372 | Assurance (ביטחון) | dark | physical | 60 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 8 (7/8) | If the foe has already taken some damage in the same turn, this attack's power is doubled. |  |
-| 195 | Perish Song (שיר אבדון) | normal | status | — | — | — | ❌ missing | — | status move with no effect | 🎬 sound-based:blast | 7 (7/0) | Both user and foe faint in 3 turns. |  |
-| 227 | Encore (הדרן) | normal | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 7 (6/1) | Makes the foe repeat 2-6 times. |  |
-| 150 | Splash (התזה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 6 (6/0) | Has no effect whatsoever. |  |
-| 673 | Laser Focus (מיקוד לייזר) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 6 (6/0) | The user concentrates intensely. The attack on the next turn always results in a critical hit. |  |
-| 199 | Lock On (נעילה) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 5 (5/0) | Ensures the next attack will hit. |  |
-| 282 | Knock Off (הפלה) | dark | physical | 65 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 5 (1/4) | Knocks down the foe's held item to prevent its use. |  |
 | 364 | Feint (העמדת פנים) | normal | physical | 30 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 5 (5/0) | An attack that hits a foe using Protect or Detect. It also lifts the effects of those moves. |  |
 | 675 | Throat Chop (מכת גרון) | dark | physical | 80 | 100 | 100 | ❌ missing | — | effectChance 100% | ▫️ lunge | 5 (0/5) | The user attacks the target's throat, and the resultant suffering prevents the target from using moves that emit sound for two turns. |  |
 | 251 | Beat Up (מכות רבות) | dark | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (2/3) | Party POKéMON join in the attack. |  |
 | 271 | Trick (תעלול) | psychic | status | — | 100 | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | Tricks the foe into trading held items. |  |
-| 283 | Endeavor (מאמץ) | normal | physical | — | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (0/4) | Gains power if the user's HP is lower than the foe's HP. |  |
 | 366 | Tailwind (רוח גב) | flying | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | The user whips up a turbulent whirlwind that ups the Speed of all party Pokémon for three turns. |  |
 | 473 | Psyshock (הלם פסיכו) | psychic | special | 80 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 4 (0/4) | The user materializes an odd psychic wave to attack the target. This attack does physical damage. |  |
 | 477 | Telekinesis (טלקינזיס) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | The user makes the target float with its psychic power. The target is easier to hit for three turns. |  |
 | 502 | Ally Switch (החלפת בן ברית) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 4 (0/4) | The user teleports using a strange power and switches its place with one of its allies. |  |
 | 514 | Retaliate (תגמול) | normal | physical | 70 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (0/4) | The user gets revenge for a fainted ally. If an ally fainted in the previous turn, this attack's damage increases. |  |
 | 808 | Lash Out (התפרצות) | dark | physical | 75 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (0/4) | The user lashes out to vent its frustration toward the target. If the user's stats were lowered during this turn, the power of this move is doubled. |  |
-| 915 | Temper Flare (להבת עצבים) | fire | physical | 75 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ lunge | 4 (0/4) | Spurred by desperation, the user attacks the target. This move's power is doubled if the user's previous move failed. |  |
-| 170 | Mind Reader (קורא מחשבות) | normal | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 3 (3/0) | Ensures the next attack will hit. |  |
 | 286 | Imprison (כליאה) | psychic | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 3 (0/3) | Prevents foes from using moves known by the user. |  |
 | 289 | Snatch (חטיפה) | dark | status | — | — | — | ❌ missing | — | status move with no effect | ▫️ pulse | 3 (1/3) | Steals the effects of the move the foe uses next. |  |
 | 311 | Weather Ball (כדור מזג אוויר) | normal | special | 50 | 100 | — | ❌ missing | — | description mentions an effect | ▫️ projectile | 3 (0/3) | The move's type and power change with the weather. |  |
@@ -214,7 +204,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
 
 
-## ✅ wired (388)
+## ✅ wired (398)
 
 | # | Move | Type | Class | Pow | Acc | Eff% | Effect | Logic (override) | Why / gap | Animation | Learners (lvl/TM) | Description | Notes |
 |---|------|------|-------|-----|-----|------|--------|------------------|-----------|-----------|-------------------|-------------|-------|
@@ -412,6 +402,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 179 | Reversal (היפוך) | fighting | physical | — | 100 | — | ✅ wired | `reversal` | — | ▫️ lunge | 8 (4/4) | Stronger if the user's HP is low. |  |
 | 204 | Charm (קסם) | fairy | status | — | 100 | — | ✅ wired | target attack -2 | — | ▫️ pulse | 8 (8/1) | Sharply lowers the foe's ATTACK. |  |
 | 259 | Torment (עינוי) | dark | status | — | 100 | — | ✅ wired | torment 100% | — | ▫️ pulse | 8 (0/8) | Torments the foe and stops successive use of a move. |  |
+| 372 | Assurance (ביטחון) | dark | physical | 60 | 100 | — | ✅ wired | `assurance` | — | ▫️ lunge | 8 (7/8) | If the foe has already taken some damage in the same turn, this attack's power is doubled. |  |
 | 407 | Dragon Rush (דריסת דרקון) | dragon | physical | 100 | 75 | 20 | ✅ wired | flinch 20% | — | 🎬 dragon-aura | 8 (8/0) | The user tackles the foe while exhibiting overwhelming menace. It may also make the target flinch. |  |
 | 411 | Focus Blast (פיצוץ מיקוד) | fighting | special | 120 | 70 | 10 | ✅ wired | target specialDefense -1 | — | ▫️ projectile | 8 (0/8) | The user heightens its mental focus and unleashes its power. It may also lower the target's Sp. Def. |  |
 | 815 | Scorching Sands (חולות לוהטים) | ground | special | 70 | 100 | 30 | ✅ wired | burn 30% | — | ▫️ projectile | 8 (0/8) | The user throws scorching sand at the target to attack. This may also leave the target with a burn. |  |
@@ -419,27 +410,33 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 49 | Sonic Boom (הדף קולי) | normal | special | — | 90 | — | ✅ wired | fixed dmg 20 | — | 🎬 sound-based:screech | 7 (7/0) | Always inflicts 20HP damage. |  |
 | 139 | Poison Gas (גז רעל) | poison | status | — | 90 | — | ✅ wired | poison (toxic) 100% | — | ▫️ pulse | 7 (7/0) | A move that may poison the foe. |  |
 | 186 | Sweet Kiss (נשיקה מתוקה) | fairy | status | — | 75 | — | ✅ wired | confusion 100% | — | ▫️ pulse | 7 (7/0) | A move that causes confusion. |  |
+| 195 | Perish Song (שיר אבדון) | normal | status | — | — | — | ✅ wired | `perish-song` | — | 🎬 sound-based:blast | 7 (7/0) | Both user and foe faint in 3 turns. |  |
+| 227 | Encore (הדרן) | normal | status | — | 100 | — | ✅ wired | encore 100% | — | ▫️ pulse | 7 (6/1) | Makes the foe repeat 2-6 times. |  |
 | 334 | Iron Defense (הגנת ברזל) | steel | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | 7 (2/7) | Hardens the body's surface to sharply raise DEFENSE. |  |
 | 352 | Water Pulse (פולס מים) | water | special | 60 | 100 | 20 | ✅ wired | confusion 20% | — | ▫️ projectile | 7 (1/7) | Attacks with ultrasonic waves. May confuse the foe |  |
 | 399 | Dark Pulse (פולס אופל) | dark | special | 80 | 100 | 20 | ✅ wired | flinch 20% | — | ▫️ projectile | 7 (3/7) | The user releases a horrible aura imbued with dark thoughts. It may also make the target flinch. |  |
 | 431 | Rock Climb (טיפוס סלע) | normal | physical | 90 | 85 | 20 | ✅ wired | confusion 20% | — | ▫️ lunge | 7 (0/7) | A charging attack that may also leave the foe confused. It can also be used to scale rocky walls. |  |
 | 612 | Power Up Punch (אגרוף התעצמות) | fighting | physical | 40 | 100 | 100 | ✅ wired | user attack +1 | — | 🎬 punch:fighting | 7 (0/7) | Striking opponents over and over makes the user's fists harder. Hitting a target raises the Attack stat. |  |
 | 885 | Trailblaze (פריצת דרך) | grass | physical | 50 | 100 | — | ✅ wired | user speed +1 | — | ▫️ lunge | 7 (0/7) | The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat. |  |
+| 150 | Splash (התזה) | normal | status | — | — | — | ✅ wired | `splash` | — | ▫️ pulse | 6 (6/0) | Has no effect whatsoever. |  |
 | 172 | Flame Wheel (גלגל אש) | fire | physical | 60 | 100 | 10 | ✅ wired | burn 10% | — | ▫️ lunge | 6 (6/0) | An attack that may cause a burn. |  |
 | 178 | Cotton Spore (נבג כותנה) | grass | status | — | 100 | — | ✅ wired | target speed -2 | — | 🎬 powder | 6 (6/0) | Sharply reduces the foe's SPEED. |  |
 | 194 | Destiny Bond (קשר גורל) | ghost | status | — | — | — | ✅ wired | `destiny-bond` | — | ▫️ pulse | 6 (6/0) | The foe faints if the user does. |  |
 | 257 | Heat Wave (גל חום) | fire | special | 95 | 90 | 10 | ✅ wired | burn 10% | — | 🎬 flamethrower | 6 (0/6) | Exhales a hot breath on the foe. May inflict a burn. |  |
 | 328 | Sand Tomb (קבר חול) | ground | physical | 35 | 85 | 100 | ✅ wired | trap 100% | — | ▫️ lunge | 6 (6/6) | Traps and hurts the foe in quicksand for 2 to 5 turns. |  |
 | 417 | Nasty Plot (מזימה מרושעת) | dark | status | — | — | — | ✅ wired | user specialAttack +2 | — | 🎬 self-boost-cooler | 6 (5/6) | The user stimulates its brain by thinking bad thoughts. It sharply raises the user's Sp. Atk. |  |
+| 673 | Laser Focus (מיקוד לייזר) | normal | status | — | — | — | ✅ wired | `laser-focus` | — | ▫️ pulse | 6 (6/0) | The user concentrates intensely. The attack on the next turn always results in a critical hit. |  |
 | 2 | Karate Chop (מכת קראטה) | fighting | physical | 50 | 100 | — | ✅ wired | crit +1 | — | ▫️ lunge | 5 (5/0) | Has a high critical hit ratio. |  |
 | 80 | Petal Dance (ריקוד עלי כותרת) | grass | special | 120 | 100 | — | ✅ wired | `lock-in-outrage` | — | 🎬 leaf-spray | 5 (5/0) | Works 2-3 turns and confuses user. |  |
 | 119 | Mirror Move (מראה-מהלך) | flying | status | — | — | — | ✅ wired | `mirror-move` | — | 🎬 pulse | 5 (5/0) | Counters with the same move. |  |
 | 181 | Powder Snow (אבקת שלג) | ice | special | 40 | 100 | 10 | ✅ wired | freeze 10% | — | 🎬 icy-wind | 5 (5/0) | An attack that may cause freezing. |  |
 | 191 | Spikes (קוצים) | ground | status | — | — | — | ✅ wired | `spikes` | — | ▫️ pulse | 5 (4/1) | Hurts foes when they switch out. |  |
+| 199 | Lock On (נעילה) | normal | status | — | — | — | ✅ wired | `lock-on` | — | ▫️ pulse | 5 (5/0) | Ensures the next attack will hit. |  |
 | 222 | Magnitude (עוצמה) | ground | physical | — | 100 | — | ✅ wired | `magnitude` | — | 🎬 earthquake | 5 (5/0) | A ground attack with random power. |  |
 | 236 | Moonlight (אור ירח) | fairy | status | — | — | — | ✅ wired | heal 75%, `moonlight` | — | 🎬 celestial:moonlight | 5 (5/0) | Restores HP (varies by time). |  |
 | 238 | Cross Chop (מכה צולבת) | fighting | physical | 100 | 80 | — | ✅ wired | crit +1 | — | ▫️ lunge | 5 (5/0) | Has a high critical hit ratio. |  |
 | 243 | Mirror Coat (מעיל מראה) | psychic | special | — | 100 | — | ✅ wired | priority -5, `mirror-coat` | — | ▫️ projectile | 5 (5/0) | Counters a SPCL. ATK. move double. |  |
+| 282 | Knock Off (הפלה) | dark | physical | 65 | 100 | — | ✅ wired | `thief` | — | ▫️ lunge | 5 (1/4) | Knocks down the foe's held item to prevent its use. |  |
 | 347 | Calm Mind (מנוחת נפש) | psychic | status | — | — | — | ✅ wired | user specialAttack +1, user specialDefense +1 | — | 🎬 self-boost-cooler | 5 (1/4) | Raises SP. ATK and SP. DEF by focusing the mind. |  |
 | 355 | Roost (נחיתה ומנוחה) | flying | status | — | — | — | ✅ wired | heal 50% | — | 🎬 heal-pulse | 5 (1/5) | The user lands and rests its body. It restores the user's HP by up to half of its max HP. |  |
 | 403 | Air Slash (חיתוך אוויר) | flying | special | 75 | 95 | 30 | ✅ wired | flinch 30% | — | ▫️ projectile | 5 (1/5) | The user attacks with a blade of air that slices even the sky. It may also make the target flinch. |  |
@@ -455,6 +452,7 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 131 | Spike Cannon (תותח קוצים) | normal | physical | 20 | 100 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 4 (4/0) | Fires spikes to hit 2-5 times. |  |
 | 209 | Spark (ניצוץ) | electric | physical | 65 | 100 | 30 | ✅ wired | paralyze 30% | — | ▫️ lunge | 4 (4/0) | An attack that may cause paralysis. |  |
 | 258 | Hail (ברד) | ice | status | — | — | — | ✅ wired | `hail` | — | ▫️ pulse | 4 (0/4) | Summons a hailstorm that strikes every turn. |  |
+| 283 | Endeavor (מאמץ) | normal | physical | — | 100 | — | ✅ wired | `endeavor` | — | ▫️ lunge | 4 (0/4) | Gains power if the user's HP is lower than the foe's HP. |  |
 | 318 | Silver Wind (רוח כסף) | bug | special | 60 | 100 | 10 | ✅ wired | user attack +1, user defense +1, user specialAttack +1, user specialDefense +1, user speed +1, stats roll 10% | — | ▫️ projectile | 4 (0/4) | A powdery attack that may raise abilities. |  |
 | 423 | Ice Fang (ניב קרח) | ice | physical | 65 | 95 | 10 | ✅ wired | freeze 10%, flinch 10% | — | 🎬 bite:ice | 4 (0/4) | The user bites with cold-infused fangs. It may also make the foe flinch or freeze. |  |
 | 432 | Defog (פיזור ערפל) | flying | status | — | — | — | ✅ wired | target evasion -1, `defog` | — | ▫️ pulse | 4 (0/4) | Obstacles are moved, reducing the foe's evasion stat. It can also be used to clear deep fog, etc. |  |
@@ -462,11 +460,13 @@ Unwired tags in `src/types/battle-metadata.ts`: none
 | 490 | Low Sweep (סחיפה נמוכה) | fighting | physical | 65 | 100 | 100 | ✅ wired | target speed -1 | — | ▫️ lunge | 4 (0/4) | The user attacks the target's legs swiftly, reducing the target's Speed stat. |  |
 | 526 | Work Up (עבודה) | normal | status | — | — | — | ✅ wired | user attack +1, user specialAttack +1 | — | ▫️ pulse | 4 (3/4) | The user is roused, and its Attack and Sp. Atk stats increase. |  |
 | 814 | Dual Wingbeat (כנף כפולה) | flying | physical | 40 | 90 | — | ✅ wired | hits 2 | — | ▫️ lunge | 4 (1/4) | The user slams the target with its wings. The target is hit twice in a row. |  |
+| 915 | Temper Flare (להבת עצבים) | fire | physical | 75 | 100 | — | ✅ wired | `stomping-tantrum` | — | ▫️ lunge | 4 (0/4) | Spurred by desperation, the user attacks the target. This move's power is doubled if the user's previous move failed. |  |
 | 42 | Pin Missile (טיל סיכה) | bug | physical | 25 | 95 | — | ✅ wired | hits 2-5 | — | ▫️ projectile | 3 (3/0) | Fires pins that strike 2-5 times. |  |
 | 135 | Soft Boiled (ביצה רכה) | normal | status | — | — | — | ✅ wired | heal 50% | — | ▫️ pulse | 3 (2/2) | Restores HP by 1/2 the user's max HP. |  |
 | 137 | Glare (מבט מאיים) | normal | status | — | 100 | — | ✅ wired | paralyze 100% | — | ▫️ pulse | 3 (3/0) | A move that may cause paralysis. |  |
 | 147 | Spore (נבג) | grass | status | — | 100 | — | ✅ wired | sleep 100% | — | 🎬 powder | 3 (2/1) | A move that induces sleep. |  |
 | 151 | Acid Armor (שריון חומצה) | poison | status | — | — | — | ✅ wired | user defense +2 | — | 🎬 self-boost | 3 (3/0) | Sharply raises the user's DEFENSE. |  |
+| 170 | Mind Reader (קורא מחשבות) | normal | status | — | — | — | ✅ wired | `lock-on` | — | ▫️ pulse | 3 (3/0) | Ensures the next attack will hit. |  |
 | 187 | Belly Drum (תוף בטן) | normal | status | — | — | — | ✅ wired | user attack +6, `belly-drum` | — | ▫️ pulse | 3 (3/0) | Reduces own HP to maximize ATTACK. |  |
 | 198 | Bone Rush (מטח עצמות) | ground | physical | 25 | 90 | — | ✅ wired | hits 2-5 | — | ▫️ lunge | 3 (3/0) | An attack that hits 2-5 times. |  |
 | 245 | Extreme Speed (מהירות קיצונית) | normal | physical | 80 | 100 | — | ✅ wired | priority +2 | — | ▫️ lunge | 3 (3/0) | A powerful first- strike move. |  |

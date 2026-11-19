@@ -290,6 +290,12 @@ export function getDisplayedVolatileStatuses(runtimeState: BattlePokemonRuntimeS
   if (runtimeState.tormented) {
     effects.push('torment');
   }
+  if (runtimeState.encoreTurnsRemaining > 0) {
+    effects.push('encore');
+  }
+  if (runtimeState.perishCount > 0) {
+    effects.push('perish');
+  }
   return effects;
 }
 
@@ -320,6 +326,61 @@ export function isBattlePokemonTrapped(
 }
 
 export const TAUNT_TURNS = 3;
+export const ENCORE_TURNS = 3;
+export const PERISH_SONG_TURNS = 3;
+/** Laser Focus / Lock-On last until the end of the next turn. */
+export const NEXT_TURN_EFFECT_TURNS = 2;
+
+/** Endeavor: cuts the target's HP down to the user's (0 if the user isn't lower). */
+export function getEndeavorDamage(userHp: number, targetHp: number): number {
+  return Math.max(0, targetHp - userHp);
+}
+
+/** Perish Song: starts the count on every Pokémon that isn't counting yet. Returns those it started on. */
+export function startPerishSong(states: BattlePokemonRuntimeState[]): BattlePokemonRuntimeState[] {
+  const started = states.filter((s) => s.perishCount === 0);
+  for (const s of started) s.perishCount = PERISH_SONG_TURNS + 1; // ticks at this turn's end → 3
+  return started;
+}
+
+/** End of turn: lowers the perish count; true when it hits 0 (the Pokémon faints). */
+export function tickPerishCount(pokemon: Pokemon, runtimeState: BattlePokemonRuntimeState): boolean {
+  if (runtimeState.perishCount <= 0 || pokemon.hp <= 0) return false;
+  runtimeState.perishCount--;
+  if (runtimeState.perishCount > 0) return false;
+  pokemon.hp = 0;
+  return true;
+}
+
+/** End of turn: counts down short-lived effects (Taunt, Encore, Laser Focus, Lock-On). Returns the ones that ended. */
+export function advanceTimedVolatiles(runtimeState: BattlePokemonRuntimeState): Array<'taunt' | 'encore'> {
+  const ended: Array<'taunt' | 'encore'> = [];
+  if (runtimeState.tauntTurnsRemaining > 0 && --runtimeState.tauntTurnsRemaining === 0) ended.push('taunt');
+  if (runtimeState.encoreTurnsRemaining > 0 && --runtimeState.encoreTurnsRemaining === 0) {
+    runtimeState.encoreMoveId = null;
+    ended.push('encore');
+  }
+  if (runtimeState.laserFocusTurns > 0) runtimeState.laserFocusTurns--;
+  if (runtimeState.lockOnTurns > 0) runtimeState.lockOnTurns--;
+  return ended;
+}
+
+/** Moves Encore can't lock in (calling / copying moves, Encore itself, Struggle). */
+const ENCORE_FAILS_ON_TAGS = ['metronome', 'mirror-move', 'copycat', 'assist', 'sleep-talk', 'mimic'] as const;
+
+/** Encore: locks the target into its last move. False if there is nothing to repeat. */
+export function applyEncore(target: Pick<Pokemon, 'moves'>, runtimeState: BattlePokemonRuntimeState): boolean {
+  const moveId = runtimeState.lastMoveUsedId;
+  if (runtimeState.encoreTurnsRemaining > 0 || moveId === null || moveId <= 0) return false;
+  const known = target.moves.find((m) => m.id === moveId);
+  if (!known || known.currentPp <= 0) return false;
+  const tags = getMoveBattleData(moveId)?.behaviorTags ?? [];
+  if (tags.some((tag) => (ENCORE_FAILS_ON_TAGS as readonly string[]).includes(tag))) return false;
+  if (getMoveBattleData(moveId)?.effects.some((e) => e.id === 'encore')) return false;
+  runtimeState.encoreMoveId = moveId;
+  runtimeState.encoreTurnsRemaining = ENCORE_TURNS;
+  return true;
+}
 
 /** A move that deals damage (by damage class — Seismic Toss, Counter etc. have power 0 but still attack). */
 export function isAttackingMove(moveId: number): boolean {
@@ -559,6 +620,10 @@ export function doesMoveHit(
   if (!moveAccuracy || moveAccuracy <= 0) {
     return { hit: true, chance: 100 };
   }
+  if (attackerState.lockOnTurns > 0) {
+    attackerState.lockOnTurns = 0; // Lock-On / Mind Reader: used up by this attack
+    return { hit: true, chance: 100 };
+  }
 
   const accuracyMultiplier = getBattleStatMultiplier(attackerState.statModifiers.accuracy);
   const evasionMultiplier = getBattleStatMultiplier(defenderState.statModifiers.evasion);
@@ -591,6 +656,10 @@ export function rollCriticalHit(
       (effect) => effect.kind === 'preventCriticalHits',
     );
     if (preventsCrit) return false;
+  }
+  if (attackerState && attackerState.laserFocusTurns > 0) {
+    attackerState.laserFocusTurns = 0; // Laser Focus: used up by this attack
+    return true;
   }
 
   let itemBoost = 0;

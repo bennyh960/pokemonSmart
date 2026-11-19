@@ -30,6 +30,11 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  advanceTimedVolatiles,
+  applyEncore,
+  getEndeavorDamage,
+  startPerishSong,
+  tickPerishCount,
   getBlockedMoveIds,
   getFlailPower,
   hasUsableHeldItem,
@@ -523,6 +528,51 @@ describe('battle system helpers', () => {
     neutralizeHeldItem(holder, runtime);
     expect(hasUsableHeldItem(holder, runtime)).toBe(false);
     expect(holder.heldItemId).toBe('leftovers');
+  });
+
+  it('Perish Song: both faint after 3 end-of-turn ticks; a second song does nothing', () => {
+    const a = createTestPokemon();
+    const b = createTestPokemon();
+    const sa = createBattleRuntimeStateForPokemon(a);
+    const sb = createBattleRuntimeStateForPokemon(b);
+    expect(startPerishSong([sa, sb])).toHaveLength(2);
+    expect(startPerishSong([sa, sb])).toHaveLength(0);
+    for (let turn = 1; turn <= 3; turn++) {
+      expect(tickPerishCount(a, sa)).toBe(false);
+      tickPerishCount(b, sb);
+    }
+    expect(sa.perishCount).toBe(1);
+    expect(tickPerishCount(a, sa)).toBe(true);
+    expect(a.hp).toBe(0);
+  });
+
+  it('Encore locks the last move for 3 turns; Laser Focus / Lock-On wear off after the next turn', () => {
+    const tackle = getMoveByName('tackle')!;
+    const mon = createTestPokemon({
+      moves: [{ id: tackle.id, name: 'Tackle', type: 'normal', power: 40, accuracy: 100, pp: 35, currentPp: 35 } as Pokemon['moves'][number]],
+    });
+    const state = createBattleRuntimeStateForPokemon(mon);
+    expect(applyEncore(mon, state)).toBe(false); // nothing used yet
+    state.lastMoveUsedId = tackle.id;
+    expect(applyEncore(mon, state)).toBe(true);
+    expect(state.encoreMoveId).toBe(tackle.id);
+    expect(advanceTimedVolatiles(state)).toEqual([]);
+    expect(advanceTimedVolatiles(state)).toEqual([]);
+    expect(advanceTimedVolatiles(state)).toEqual(['encore']);
+    expect(state.encoreMoveId).toBeNull();
+
+    state.lockOnTurns = 2;
+    state.laserFocusTurns = 2;
+    advanceTimedVolatiles(state);
+    expect(doesMoveHit(1, state, createBattleRuntimeStateForPokemon(mon), () => 0.99).hit).toBe(true);
+    expect(state.lockOnTurns).toBe(0);
+    advanceTimedVolatiles(state);
+    expect(state.laserFocusTurns).toBe(0);
+  });
+
+  it('Endeavor brings the target down to the user HP', () => {
+    expect(getEndeavorDamage(20, 100)).toBe(80);
+    expect(getEndeavorDamage(100, 20)).toBe(0);
   });
 
   it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {

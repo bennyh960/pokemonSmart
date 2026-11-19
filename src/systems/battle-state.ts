@@ -71,6 +71,14 @@ export interface BattlePokemonRuntimeState {
   lastMoveFailed: boolean;
   /** Held item knocked out of use (Thief, Incinerate) or thrown (Fling) — for the rest of this battle. */
   heldItemDisabled: boolean;
+  /** Perish Song: turns until this Pokémon faints (0 = not affected). Switching out clears it. */
+  perishCount: number;
+  /** Encore: move it must repeat, and turns left. */
+  encoreMoveId: number | null;
+  encoreTurnsRemaining: number;
+  /** Laser Focus / Lock-On: the next attack (until the end of next turn) is a sure crit / sure hit. */
+  laserFocusTurns: number;
+  lockOnTurns: number;
   uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
   isStruggleMode: boolean;
@@ -166,6 +174,11 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     tormented: false,
     lastMoveFailed: false,
     heldItemDisabled: false,
+    perishCount: 0,
+    encoreMoveId: null,
+    encoreTurnsRemaining: 0,
+    laserFocusTurns: 0,
+    lockOnTurns: 0,
     uproarTurnsRemaining: 0,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),

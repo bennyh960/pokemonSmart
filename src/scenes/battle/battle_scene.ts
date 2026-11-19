@@ -177,6 +177,12 @@ import {
   capFalseSwipeDamage,
   neutralizeHeldItem,
   advanceBide,
+  advanceTimedVolatiles,
+  applyEncore,
+  getEndeavorDamage,
+  NEXT_TURN_EFFECT_TURNS,
+  startPerishSong,
+  tickPerishCount,
   getBlockedMoveIds,
   getFlailPower,
   hasUsableHeldItem,
@@ -1625,6 +1631,9 @@ export function createBattleScene(
     if (playerBattleState.lockedInMoveId !== null) {
       return findMoveIndexById(player, playerBattleState.lockedInMoveId);
     }
+    if (playerBattleState.encoreMoveId !== null) {
+      return findMoveIndexById(player, playerBattleState.encoreMoveId);
+    }
     return null;
   }
 
@@ -2271,6 +2280,10 @@ export function createBattleScene(
     if (enemyBattleState.lockedInMoveId !== null) {
       const lockedIndex = findMoveIndexById(enemy, enemyBattleState.lockedInMoveId);
       if (lockedIndex !== null) return lockedIndex;
+    }
+    if (enemyBattleState.encoreMoveId !== null) {
+      const encoreIndex = findMoveIndexById(enemy, enemyBattleState.encoreMoveId);
+      if (encoreIndex !== null) return encoreIndex;
     }
 
     // Randomness: AI level determines how often a random move is chosen instead of optimal
@@ -3238,13 +3251,14 @@ export function createBattleScene(
       }
     }
 
-    // Taunt countdown
+    // Taunt / Encore / Laser Focus / Lock-On countdown
     for (const [mon, state] of [
       [player, playerBattleState],
       [enemy, enemyBattleState],
     ] as const) {
-      if (state.tauntTurnsRemaining > 0 && --state.tauntTurnsRemaining === 0) {
-        lines.push(t('battle.tauntEnded', { name: getPokemonDisplayName(mon.id) }));
+      const name = getPokemonDisplayName(mon.id);
+      for (const ended of advanceTimedVolatiles(state)) {
+        lines.push(t(ended === 'taunt' ? 'battle.tauntEnded' : 'battle.encoreEnded', { name }));
       }
     }
 
@@ -3313,6 +3327,20 @@ export function createBattleScene(
           battleWeather = null;
         }
         if (menu) menu.activeWeather = mapWeatherBase ?? null;
+      }
+    }
+
+    // Perish Song count — last, so nothing at end of turn (e.g. Leftovers) heals a Pokémon it knocked out
+    for (const [mon, state] of [
+      [player, playerBattleState],
+      [enemy, enemyBattleState],
+    ] as const) {
+      const wasCounting = state.perishCount > 0 && mon.hp > 0;
+      if (tickPerishCount(mon, state)) {
+        lines.push(t('battle.perishFainted', { name: getPokemonDisplayName(mon.id) }));
+        setHP(mon === player ? playerHpBar : enemyHpBar, 0);
+      } else if (wasCounting) {
+        lines.push(t('battle.perishCount', { name: getPokemonDisplayName(mon.id), count: state.perishCount }));
       }
     }
 
@@ -4019,6 +4047,8 @@ export function createBattleScene(
     const isPayback = moveBattleData?.behaviorTags?.includes('payback') ?? false;
     const isStompingTantrum = moveBattleData?.behaviorTags?.includes('stomping-tantrum') ?? false;
     const isFling = moveBattleData?.behaviorTags?.includes('fling') ?? false;
+    const isAssurance = moveBattleData?.behaviorTags?.includes('assurance') ?? false;
+    const isEndeavor = moveBattleData?.behaviorTags?.includes('endeavor') ?? false;
     // The target already moved this turn (Sucker Punch fails, Payback doubles)
     const targetAlreadyActed = actor === 'player' ? enemySelectedMoveIndex < 0 : !enemyGoesFirst;
     // Hidden Power: its type is the user's (see getHiddenPowerType)
@@ -4657,6 +4687,41 @@ export function createBattleScene(
       return;
     }
 
+    const simpleStatusLine = (() => {
+      const tags = moveBattleData?.behaviorTags ?? [];
+      if (tags.includes('splash')) return t('battle.nothingHappened');
+      if (tags.includes('laser-focus')) {
+        attackerBattleState.laserFocusTurns = NEXT_TURN_EFFECT_TURNS;
+        return t('battle.laserFocus', { name: attackerName });
+      }
+      if (tags.includes('lock-on')) {
+        attackerBattleState.lockOnTurns = NEXT_TURN_EFFECT_TURNS;
+        return t('battle.lockOn', { name: attackerName, target: defenderName });
+      }
+      if (tags.includes('perish-song')) {
+        return startPerishSong([attackerBattleState, defenderBattleState]).length
+          ? t('battle.perishSong')
+          : t('battle.moveFailed');
+      }
+      if (moveBattleData?.effects.some((e) => e.id === 'encore')) {
+        return applyEncore(defender, defenderBattleState)
+          ? t('battle.encoreApplied', { name: defenderName })
+          : t('battle.moveFailed');
+      }
+      return null;
+    })();
+    if (simpleStatusLine !== null) {
+      textBox = createTextBox(
+        [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), simpleStatusLine],
+        rtl,
+      );
+      syncAttackerBar();
+      syncDefenderBar();
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
     if (isHelpingHand) {
       // Allies = roster Pokémon already in this battle, not on the field (player: battleRoster; trainer: seen ones)
       const allies =
@@ -4841,6 +4906,7 @@ export function createBattleScene(
       m = { ...m, power: m.power * 2 };
     }
     if (isPayback && targetAlreadyActed) m = { ...m, power: m.power * 2 };
+    if (isAssurance && defenderBattleState.turnFlags.tookDamageThisTurn) m = { ...m, power: m.power * 2 };
     if (isStompingTantrum && attackerBattleState.lastMoveFailed) m = { ...m, power: m.power * 2 };
     if (flingPower) {
       m = { ...m, power: flingPower };
@@ -4902,6 +4968,7 @@ export function createBattleScene(
       if (isNightShade) return attacker.level;
       if (fixedDamage !== null) return fixedDamage;
       if (isPsywave) return getPsywaveDamage(attacker.level);
+      if (isEndeavor) return getEndeavorDamage(attacker.hp, defender.hp);
       if (isSuperFang) return Math.max(1, Math.floor(defender.hp / 2));
       if (effectivePower <= 0) return 0;
       const base = calcDamage(
@@ -5036,8 +5103,13 @@ export function createBattleScene(
       }
     } else if (isOhko && hitResult.hit && !targetTypeImmune) {
       msgs.push(t('battle.ohkoHit'));
-    } else if ((isSuperFang || isNightShade || isPsywave || fixedDamage !== null) && hitResult.hit && !targetTypeImmune) {
+    } else if (
+      (isSuperFang || isNightShade || isPsywave || isEndeavor || fixedDamage !== null) &&
+      hitResult.hit &&
+      !targetTypeImmune
+    ) {
       if (isSuperFang) msgs.push(t('battle.superFangHit'));
+      if (isEndeavor && plannedDamage <= 0) msgs.push(t('battle.moveFailed'));
     } else if (!hitResult.hit) {
       const messages = [
         { msg: 'battle.moveMissed', name: attackerName },

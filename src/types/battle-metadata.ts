@@ -93,7 +93,13 @@ export type MoveBattleBehaviorTag =
   | 'false-swipe'
   | 'payback'
   | 'stomping-tantrum'
-  | 'fling';
+  | 'fling'
+  | 'assurance'
+  | 'perish-song'
+  | 'splash'
+  | 'laser-focus'
+  | 'lock-on'
+  | 'endeavor';
 
 // dont know for what we using id so i added other for cases i need use the MoveBattleEffect without special id
 export type MoveBattleEffectId =
@@ -106,7 +112,8 @@ export type MoveBattleEffectId =
   | 'nightmare'
   | 'mean-look'
   | 'taunt'
-  | 'torment';
+  | 'torment'
+  | 'encore';
 
 export type MoveBattleSideEffectId = 'reflect' | 'light-screen' | 'mist' | 'safeguard';
 

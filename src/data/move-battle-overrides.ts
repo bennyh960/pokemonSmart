@@ -612,6 +612,17 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   // Fling: power = the held item's fling power; the item is then out of use for this battle (not lost)
   Fling: { behaviorTags: ['fling'] },
   Flail: { behaviorTags: ['reversal'] },
+  Assurance: { behaviorTags: ['assurance'] },
+  // Perish Song: every Pokémon on the field faints after 3 turns unless it switches out
+  'Perish Song': { behaviorTags: ['perish-song'], target: 'entire-field' },
+  Encore: volatileEffect('encore', 100),
+  Splash: { behaviorTags: ['splash'], target: 'user' },
+  'Laser Focus': { behaviorTags: ['laser-focus'], target: 'user' },
+  'Lock On': { behaviorTags: ['lock-on'], target: 'user' },
+  'Mind Reader': { behaviorTags: ['lock-on'], target: 'user' },
+  'Knock Off': { behaviorTags: ['thief'] },
+  'Temper Flare': { behaviorTags: ['stomping-tantrum'] },
+  Endeavor: { behaviorTags: ['endeavor'] },
   Payback: { behaviorTags: ['payback'] },
   'Stomping Tantrum': { behaviorTags: ['stomping-tantrum'] },
   'Scale Shot': {
