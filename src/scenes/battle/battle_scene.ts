@@ -14,6 +14,7 @@ import type { InputManager } from '../../engine/input';
 import type { StateMachine } from '../../engine/state-machine.js';
 import type { AudioManager } from '../../audio/audio-manager.js';
 import { clearScreen, fillRect, drawText } from '../../engine/renderer.js';
+import { FLAGS } from '../../data/story/flags.js';
 import {
   drawGlitchDecay,
   drawGlitchedSprite,
@@ -113,7 +114,7 @@ import {
   getDefenderAbsorbMsg,
 } from '../../systems/ability-processor.js';
 import { sendCaughtToBox } from '../../systems/pc-storage.js';
-import { computeSharedXpAwards, type SharedXpAward } from '../../systems/shared-xp.js';
+import { computeSharedXpAwards, EXP_SHARE_ITEM_ID, getWatchers, type SharedXpAward } from '../../systems/shared-xp.js';
 import { recordTrainerDefeat } from '../../systems/reencounter.js';
 import { getPlayerData, hasActiveGame, autoSave, setFlag } from '../../systems/game-state.js';
 import { noteGlitchBattleEnd } from '../../systems/unown-ambush.js';
@@ -863,6 +864,8 @@ export function createBattleScene(
   let turnsVsEnemy = new Map<number, number>(); // Active turns per party slot against the current enemy
   let sharedXpQueue: SharedXpAward[] = []; // Benched party members still to be paid for the last defeat
   let xpSubjectIndex: number | null = null; // Party slot the XP/level-up phases act on (null = active Pokémon)
+  let watcherHop: { partyIndex: number; xp: number; startMs: number } | null = null; // Exp Share badge "+XP" bounce
+  const requestedImages = new Set<string>(); // sprites asked for once per battle (a failed load isn't retried every frame)
   let pendingTurnCredit = false; // Whether to credit a turn to active Pokemon after phase resolves
   let maxRosterSize = 0; // Max Pokemon player can use (= trainer's party size, or 6 for wild)
   let isTrainerBattle = false;
@@ -1541,6 +1544,7 @@ export function createBattleScene(
     turnsVsEnemy = new Map<number, number>([[activePartyIndex, 0]]);
     sharedXpQueue = [];
     xpSubjectIndex = null;
+    watcherHop = null;
     // Wild NPC: player uses full 6-slot roster (behaves like wild encounter)
     maxRosterSize = isTrainerBattle && !isWildNpcBattle && trainerData ? trainerData.party.length : 6;
     activeBallId = null;
@@ -2423,27 +2427,32 @@ export function createBattleScene(
     return calculateXpGain(enemy, { trainerBattle: isTrainerBattle });
   }
 
-  /** Queue the bench's share of the XP the active Pokémon just earned (defeat or capture). */
-  function queueSharedXp(winnerXp: number): void {
+  /**
+   * Queue the bench's share of the XP the active Pokémon just earned (defeat or capture).
+   * Returns extra lines to show with the winner's XP: the first time ever a watcher is too strong for the
+   * fight, explain why it got nothing.
+   */
+  function queueSharedXp(winnerXp: number): string[] {
     xpSubjectIndex = null;
-    sharedXpQueue = hasActiveGame()
-      ? computeSharedXpAwards({
-          party: getPlayerData().party,
-          activePartyIndex,
-          winnerXp,
-          turnsVsEnemy,
-          enemyLevel: enemy.level,
-        })
-      : [];
+    sharedXpQueue = [];
+    if (!hasActiveGame()) return [];
+    const pd = getPlayerData();
+    const fight = { party: pd.party, activePartyIndex, turnsVsEnemy, enemyLevel: enemy.level };
+    sharedXpQueue = computeSharedXpAwards({ ...fight, winnerXp });
+
+    const capped = getWatchers(fight).find((w) => w.capped);
+    if (!capped || pd.flags[FLAGS.EXP_SHARE_CAP_EXPLAINED]) return [];
+    setFlag(pd, FLAGS.EXP_SHARE_CAP_EXPLAINED);
+    return [t('battle.watcherCapped', { name: getPokemonDisplayName(pd.party[capped.partyIndex].id) })];
   }
 
   /** Pay the active Pokémon for the defeated enemy and queue the shared XP for the bench. */
   function awardDefeatXp(extraLines: string[] = []): void {
     xpGained = getDefeatXpReward();
     player.xp += xpGained;
-    queueSharedXp(xpGained);
+    const capLines = queueSharedXp(xpGained);
     textBox = createTextBox(
-      [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }), ...extraLines],
+      [t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }), ...capLines, ...extraLines],
       isRTL(),
     );
   }
@@ -2476,6 +2485,7 @@ export function createBattleScene(
     xpSubjectIndex = award.partyIndex;
     const subject = getXpSubject();
     subject.xp += award.xp;
+    if (award.reason === 'watcher') watcherHop = { partyIndex: award.partyIndex, xp: award.xp, startMs: Date.now() };
     const key = award.reason === 'watcher' ? 'battle.gainedWatcherXP' : 'battle.gainedParticipantXP';
     textBox = createTextBox([t(key, { name: getPokemonDisplayName(subject.id), xp: award.xp })], isRTL());
     phase = xpPhase;
@@ -2662,7 +2672,7 @@ export function createBattleScene(
       pd.pokedex[enemy.id] = 'caught';
       xpGained = getCaptureXpReward();
       player.xp += xpGained;
-      queueSharedXp(xpGained); // before the catch joins the party
+      const capLines = queueSharedXp(xpGained); // before the catch joins the party
 
       const catchMessages: string[] = [t('battle.caught', { name: getPokemonDisplayName(enemy.id) })];
       if (pd.party.length < 6) {
@@ -2673,7 +2683,7 @@ export function createBattleScene(
           catchMessages.push(t('battle.partyFull', { name: getPokemonDisplayName(enemy.id), box: boxNum }));
         }
       }
-      catchMessages.push(t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }));
+      catchMessages.push(t('battle.gainedXP', { name: getPokemonDisplayName(player.id), xp: xpGained }), ...capLines);
 
       autoSave(true);
       textBox = createTextBox(catchMessages, isRTL());
@@ -3745,7 +3755,14 @@ export function createBattleScene(
         }
         for (const effect of moveBattleData.effects) {
           if (effect.target !== 'target') continue;
-          const [effectResult] = applyVolatileMoveEffects(attacker, attackerState, [effect], 'target', Math.random, defender);
+          const [effectResult] = applyVolatileMoveEffects(
+            attacker,
+            attackerState,
+            [effect],
+            'target',
+            Math.random,
+            defender,
+          );
           if (!effectResult) continue;
           if (effectResult.applied) {
             lines.push(getMoveEffectAppliedLine(attackerName, effectResult.id));
@@ -3823,7 +3840,14 @@ export function createBattleScene(
             continue;
           }
 
-          const [effectResult] = applyVolatileMoveEffects(defender, defenderState, [effect], 'target', Math.random, attacker);
+          const [effectResult] = applyVolatileMoveEffects(
+            defender,
+            defenderState,
+            [effect],
+            'target',
+            Math.random,
+            attacker,
+          );
           if (!effectResult) continue;
           if (effectResult.applied) {
             lines.push(getMoveEffectAppliedLine(defenderName, effectResult.id));
@@ -4421,7 +4445,11 @@ export function createBattleScene(
       isFling && hasUsableHeldItem(attacker, attackerBattleState) ? getItemFlingPower(attacker.heldItemId!) : null;
     if (isFling && !flingPower) {
       textBox = createTextBox(
-        [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.moveFailed')],
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.moveFailed'),
+        ],
         rtl,
       );
       phase = attackerPhase;
@@ -4757,7 +4785,11 @@ export function createBattleScene(
 
     if (moveBattleData?.behaviorTags?.includes('fails-on-same-species') && attacker.id === defender.id) {
       textBox = createTextBox(
-        [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.moveFailed')],
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          t('battle.moveFailed'),
+        ],
         rtl,
       );
       phase = attackerPhase;
@@ -4790,7 +4822,11 @@ export function createBattleScene(
     })();
     if (simpleStatusLine !== null) {
       textBox = createTextBox(
-        [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), simpleStatusLine],
+        [
+          ...turnEffectLines,
+          t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }),
+          simpleStatusLine,
+        ],
         rtl,
       );
       syncAttackerBar();
@@ -4829,7 +4865,11 @@ export function createBattleScene(
             audio.playSFX('menu-cancel');
             return {
               success: false,
-              errorMessages: [...turnEffectLines, t('battle.bideUnleashed', { name: attackerName }), t('battle.moveFailed')],
+              errorMessages: [
+                ...turnEffectLines,
+                t('battle.bideUnleashed', { name: attackerName }),
+                t('battle.moveFailed'),
+              ],
             };
           }
           return null;
@@ -5113,8 +5153,7 @@ export function createBattleScene(
           payDayCoins += getPayDayCoins(attacker.level);
           msgs.push(t('battle.payDayCoins'));
         }
-        const knockedItemId =
-          isThief && !targetTypeImmune ? neutralizeHeldItem(defender, defenderBattleState) : null;
+        const knockedItemId = isThief && !targetTypeImmune ? neutralizeHeldItem(defender, defenderBattleState) : null;
         const knockedItem = knockedItemId ? getItem(knockedItemId) : undefined;
         if (knockedItem) {
           msgs.push(t('battle.thiefKnockedItem', { name: defenderName, item: getLocalizedName(knockedItem.name) }));
@@ -6602,6 +6641,7 @@ export function createBattleScene(
       );
       renderOpponentTypes(ctx, enemy.types as PokemonType[]);
       renderHPBar(ctx, playerHpBar, playerParty ? { party: playerParty, totalSlots: 6 } : undefined);
+      if (phase !== 'INTRO' && !showingTrainer) renderWatcherBadge(ctx);
 
       // ── Effects ──
       if (levelUpFx) renderLevelUpEffect(ctx, levelUpFx);
@@ -6628,6 +6668,62 @@ export function createBattleScene(
       if (fade) renderFade(ctx, fade);
     },
   };
+
+  /** Image from the cache, asking for it once if it isn't loaded yet. */
+  function getBattleImage(url: string): HTMLImageElement | null {
+    const img = getCachedImage(url);
+    if (!img && !requestedImages.has(url)) {
+      requestedImages.add(url);
+      loadImage(url).catch(() => {});
+    }
+    return img;
+  }
+
+  /**
+   * Exp Share watcher badge (top-left of the field): the benched holder's sprite + the item, greyed when it is
+   * too strong to learn from this fight, "+N" when more than one is watching. Hops with "+XP" when it is paid.
+   */
+  function renderWatcherBadge(ctx: CanvasRenderingContext2D): void {
+    if (!hasActiveGame()) return;
+    const party = getPlayerData().party;
+    const watchers = getWatchers({ party, activePartyIndex, turnsVsEnemy, enemyLevel: enemy.level });
+    const shown = watchers.find((w) => w.partyIndex === watcherHop?.partyIndex) ?? watchers[0];
+    if (!shown) return;
+
+    const W = BTL.WATCHER;
+    const hopT = watcherHop?.partyIndex === shown.partyIndex ? (Date.now() - watcherHop.startMs) / W.hopMs : 1;
+    const hopY = hopT < 1 ? -Math.sin(hopT * Math.PI) * W.hopPx : 0;
+
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    fillRect(ctx, W.x, W.y, W.size + 2, W.size + 2, '#0a1a10');
+    ctx.globalAlpha = shown.capped ? 0.6 : 1;
+    if (shown.capped) ctx.filter = 'grayscale(1)';
+    const sprite = getBattleImage(`/sprites/pokemon/front/${party[shown.partyIndex].id}.png`);
+    if (sprite) ctx.drawImage(sprite, W.x + 1, W.y + 1 + hopY, W.size, W.size);
+    const itemSprite = getBattleImage(getItem(EXP_SHARE_ITEM_ID)?.sprite ?? '');
+    if (itemSprite) ctx.drawImage(itemSprite, W.x + W.size - W.item + 3, W.y + W.size - W.item + 3, W.item, W.item);
+    ctx.restore();
+
+    if (watchers.length > 1) {
+      drawText(ctx, `+${watchers.length - 1}`, W.x + W.size + 4, W.y + 1, {
+        size: 5,
+        color: '#ffffff',
+        font: 'monospace',
+      });
+    }
+    const floatT = watcherHop?.partyIndex === shown.partyIndex ? (Date.now() - watcherHop.startMs) / W.floatMs : 1;
+    if (floatT < 1) {
+      ctx.save();
+      ctx.globalAlpha = 1 - floatT;
+      drawText(ctx, `+${watcherHop!.xp}`, W.x + W.size + 4, W.y + W.size - 6 - floatT * 6, {
+        size: 6,
+        color: '#ffd84a',
+        font: 'monospace',
+      });
+      ctx.restore();
+    }
+  }
 
   function renderStatGainsPopup(ctx: CanvasRenderingContext2D, gains: StatGains): void {
     const rtl = isRTL();

@@ -74,24 +74,49 @@ export function getXpToReachLevel(pokemon: Pokemon, targetLevel: number): number
   return total;
 }
 
+/** Holds an Exp Share, is standing and can still evolve — it watches the fight (it may still be capped). */
+export function isWatcher(pokemon: Pokemon): boolean {
+  return pokemon.heldItemId === EXP_SHARE_ITEM_ID && pokemon.hp > 0 && canStillEvolve(pokemon);
+}
+
 /** XP a benched Exp Share holder earns, clipped so it never passes the watcher level cap. */
 export function getWatcherXp(watcher: Pokemon, winnerXp: number, weakestLevel: number): number {
-  if (watcher.heldItemId !== EXP_SHARE_ITEM_ID || watcher.hp <= 0 || !canStillEvolve(watcher)) return 0;
+  if (!isWatcher(watcher)) return 0;
   const room = getXpToReachLevel(watcher, getWatcherLevelCap(weakestLevel));
   return Math.min(room, Math.max(1, Math.floor(winnerXp * SHARED_XP_CONFIG.watcherShare)));
 }
 
-/** Shared XP for every benched party member after an enemy is defeated, in party order. */
-export function computeSharedXpAwards(input: SharedXpInput): SharedXpAward[] {
-  const { party, activePartyIndex, winnerXp, turnsVsEnemy, enemyLevel } = input;
-  if (winnerXp <= 0) return [];
+export type FightInput = Pick<SharedXpInput, 'party' | 'activePartyIndex' | 'turnsVsEnemy' | 'enemyLevel'>;
 
-  // Weakest Pokémon in this fight: the enemy or anyone on our side who fought it.
+/** Weakest Pokémon in this fight: the enemy or anyone on our side who fought it. */
+export function getWeakestLevelInFight({ party, activePartyIndex, turnsVsEnemy, enemyLevel }: FightInput): number {
   let weakestLevel = enemyLevel;
   for (const [index, turns] of turnsVsEnemy) {
     const fighter = party[index];
     if (fighter && (turns > 0 || index === activePartyIndex)) weakestLevel = Math.min(weakestLevel, fighter.level);
   }
+  return weakestLevel;
+}
+
+export interface WatcherStatus {
+  partyIndex: number;
+  /** Reached the level cap for this fight — watching earns nothing until a stronger fight. */
+  capped: boolean;
+}
+
+/** Benched Pokémon watching the current fight, in party order. */
+export function getWatchers(input: FightInput): WatcherStatus[] {
+  const cap = getWatcherLevelCap(getWeakestLevelInFight(input));
+  return input.party.flatMap((pokemon, partyIndex) =>
+    partyIndex !== input.activePartyIndex && isWatcher(pokemon) ? [{ partyIndex, capped: pokemon.level >= cap }] : [],
+  );
+}
+
+/** Shared XP for every benched party member after an enemy is defeated, in party order. */
+export function computeSharedXpAwards(input: SharedXpInput): SharedXpAward[] {
+  const { party, activePartyIndex, winnerXp, turnsVsEnemy } = input;
+  if (winnerXp <= 0) return [];
+  const weakestLevel = getWeakestLevelInFight(input);
 
   const awards: SharedXpAward[] = [];
   party.forEach((pokemon, partyIndex) => {
