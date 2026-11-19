@@ -13,7 +13,9 @@ import { BOARD_CITIES } from '../board-cities.js';
 import {
   badgesFor,
   BOARD_LEAVE_LOCK_MS,
-  BOARD_EXTRA_POKEMON,
+  FRIEND_POKEMON,
+  FRIEND_POKEMON_FROM_STEP,
+  withoutOwnedPokemon,
   BOARD_POKEMON,
   boardLockLeft,
   boardPool,
@@ -105,7 +107,7 @@ describe('Word Board prizes', () => {
       const prizes = boardPrizes(top, 3, none, ALL_BADGES, rng, 'percentile');
       expect(prizes.filter((p) => p.rarity === 'epic').length).toBeLessThanOrEqual(1);
       if (prizes.some((p) => p.reward.items?.some((i) => i.itemId === 'master-ball'))) masterBalls++;
-      if (prizes.some((p) => p.reward.pokemon)) pokemon++;
+      if (prizes.some((p) => p.rarity === 'epic' && p.reward.pokemon)) pokemon++; // the rare Pokémon (not Ditto/Smeargle)
     }
     expect(masterBalls / ROUNDS).toBeLessThan(0.023);
     expect(masterBalls / ROUNDS).toBeGreaterThan(0.017);
@@ -132,8 +134,7 @@ describe('Word Board prizes', () => {
   it('board Pokémon: first stages from later generations, never one the player owns', () => {
     expect(BOARD_POKEMON).toContain(RIOLU);
     expect(BOARD_POKEMON).not.toContain(LUCARIO);
-    expect(BOARD_POKEMON.every((id) => id > 251 || BOARD_EXTRA_POKEMON.includes(id))).toBe(true);
-    expect(BOARD_POKEMON).toEqual(expect.arrayContaining([132, 235])); // Ditto, Smeargle
+    expect(BOARD_POKEMON.every((id) => id > 251)).toBe(true);
 
     const top = ENGLISH_LADDER[ENGLISH_LADDER.length - 1];
     const ids = (owned: Set<number>) => rarePokemonPrize(top, owned)?.oneOf.map((r) => r.pokemon!.id) ?? [];
@@ -148,7 +149,7 @@ describe('Word Board premium prizes', () => {
   const premiumOf = (r: DialogueReward): keyof typeof PREMIUM_BADGES | null =>
     r.items?.some((i) => i.itemId === 'master-ball')
       ? 'masterBall'
-      : r.pokemon
+      : r.pokemon && !FRIEND_POKEMON.includes(r.pokemon.id) // Ditto / Smeargle are a regular prize
         ? 'rarePokemon'
         : r.items?.some((i) => i.itemId === 'rare-candy')
           ? 'rareCandy'
@@ -240,5 +241,23 @@ describe('Rare Candy', () => {
     for (const city of [undefined, ...Object.keys(BOARD_CITIES)])
       for (let i = 0; i < RARE_CANDY_FROM_STEP; i++)
         expect(boardPool(boardStep(i, city), new Set()).some(hasCandy), `step ${i} ${city ?? ''}`).toBe(false);
+  });
+
+  it('Ditto and Smeargle: a regular rare prize from an early step, no badges, never one already owned', () => {
+    const friendOf = (stepIndex: number) =>
+      boardStep(stepIndex, 'sumville').prizes.find(
+        (p) => 'oneOf' in p && p.oneOf.some((r) => r.pokemon && FRIEND_POKEMON.includes(r.pokemon.id)),
+      );
+    expect(friendOf(FRIEND_POKEMON_FROM_STEP - 1)).toBeUndefined();
+    const friend = friendOf(FRIEND_POKEMON_FROM_STEP)!;
+    expect(friend).toBeDefined();
+    expect(friend.rarity).toBe('rare');
+    expect(badgesFor(friend)).toBe(0);
+
+    const step = boardStep(FRIEND_POKEMON_FROM_STEP, 'sumville');
+    const friendIds = (prizes: typeof step.prizes) =>
+      prizes.flatMap((p) => ('oneOf' in p ? p.oneOf : [p.reward]).flatMap((r) => (r.pokemon ? [r.pokemon.id] : [])));
+    expect(friendIds(withoutOwnedPokemon(step, new Set([132])).prizes)).toEqual([235]); // owns Ditto → only Smeargle
+    expect(withoutOwnedPokemon(step, new Set(FRIEND_POKEMON)).prizes.length).toBe(step.prizes.length - 1);
   });
 });

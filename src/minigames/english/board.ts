@@ -21,7 +21,7 @@
 import { getItem } from '../../data/items.js';
 import { getAllPokemon, getEvolutionChain } from '../../services/pokemon-data.js';
 import type { PlayerData } from '../../types/index.js';
-import { giftPokemon } from '../define.js';
+import { giftPokemon, prizeOneOf } from '../define.js';
 import { ensureGameProgress, resolvePrize, type AwardedPrize } from '../progress.js';
 import type {
   Bilingual,
@@ -58,16 +58,37 @@ export const BOARD_POKEMON_LEVEL = 10;
 
 export const RARE_POKEMON_LABEL: Bilingual = { en: 'Rare Pokémon', he: 'פוקימון נדיר' };
 
-/** Gen 1–2 Pokémon the board also gives — ones the world barely offers (Ditto: Transform, Smeargle: Sketch). */
-export const BOARD_EXTRA_POKEMON: readonly number[] = [132, 235];
+/** Pokémon only the board gives: the first stage of every line from a later generation than Gold/Silver (Riolu…). */
+export const BOARD_POKEMON: readonly number[] = getAllPokemon()
+  .filter((p) => p.id > 251 && (getEvolutionChain(p.id)?.stages[0]?.id ?? p.id) === p.id)
+  .map((p) => p.id);
 
-/** Pokémon only the board gives: the first stage of every line from a later generation than Gold/Silver (Riolu…), + extras. */
-export const BOARD_POKEMON: readonly number[] = [
-  ...getAllPokemon()
-    .filter((p) => p.id > 251 && (getEvolutionChain(p.id)?.stages[0]?.id ?? p.id) === p.id)
-    .map((p) => p.id),
-  ...BOARD_EXTRA_POKEMON,
-];
+/**
+ * Pokémon friends: Gen 1–2 Pokémon the world barely offers (Ditto: Transform, Smeargle: Sketch). A regular 'rare'
+ * prize on every board from FRIEND_POKEMON_FROM_STEP on — not a premium rare Pokémon, no badges needed.
+ */
+export const FRIEND_POKEMON: readonly number[] = [132, 235];
+export const FRIEND_POKEMON_FROM_STEP = 3;
+
+function friendPokemonPrize(): MiniGamePrizeChoice {
+  const names = FRIEND_POKEMON.map((id) => getAllPokemon().find((p) => p.id === id)!.name);
+  return prizeOneOf(
+    'rare',
+    FRIEND_POKEMON.map((id) => giftPokemon(id, BOARD_POKEMON_LEVEL)),
+    { en: names.map((n) => n.en).join(' / '), he: names.map((n) => n.he).join(' / ') },
+  );
+}
+
+/** A step without Pokémon the player already owns: a choice keeps only new ones, and goes when none is left. */
+export function withoutOwnedPokemon(step: LadderStep, owned: ReadonlySet<number>): LadderStep {
+  const isOwned = (r: DialogueReward) => !!r.pokemon && owned.has(r.pokemon.id);
+  const prizes = step.prizes.flatMap((p): MiniGamePrizeDef[] => {
+    if (!('oneOf' in p)) return isOwned(p.reward) ? [] : [p];
+    const left = p.oneOf.filter((r) => !isOwned(r));
+    return left.length ? [{ ...p, oneOf: left }] : [];
+  });
+  return { ...step, prizes };
+}
 
 /**
  * A ladder step as the board of `city`'s library gives it: + its gate cards (every board), its specialty
@@ -76,9 +97,10 @@ export const BOARD_POKEMON: readonly number[] = [
 export function boardStep(stepIndex: number, city?: string): LadderStep {
   const base = ENGLISH_LADDER[stepIndex];
   const cards = boardCardPrizes(stepIndex + 1);
+  const friends = stepIndex >= FRIEND_POKEMON_FROM_STEP ? [friendPokemonPrize()] : [];
   const step: LadderStep = {
     ...base,
-    prizes: [...base.prizes, ...cards.prizes],
+    prizes: [...base.prizes, ...cards.prizes, ...friends],
     epic: [...(base.epic ?? []), ...cards.epic],
   };
   const flavor = city ? BOARD_CITIES[city] : undefined;
@@ -100,7 +122,7 @@ const hasItem = (r: DialogueReward, test: (itemId: string) => boolean) => !!r.it
 /** Which rewards are premium, strongest first (the first match counts). */
 const PREMIUM: readonly { badges: number; is: (r: DialogueReward) => boolean }[] = [
   { badges: PREMIUM_BADGES.masterBall, is: (r) => hasItem(r, (id) => id === 'master-ball') },
-  { badges: PREMIUM_BADGES.rarePokemon, is: (r) => !!r.pokemon },
+  { badges: PREMIUM_BADGES.rarePokemon, is: (r) => !!r.pokemon && !FRIEND_POKEMON.includes(r.pokemon.id) },
   { badges: PREMIUM_BADGES.rareCandy, is: (r) => hasItem(r, (id) => id === 'rare-candy') },
   { badges: PREMIUM_BADGES.vitamin, is: (r) => hasItem(r, (id) => getItem(id)?.effect.type === 'vitamin') },
 ];
@@ -151,7 +173,7 @@ export function epicOdds(step: LadderStep, owned: ReadonlySet<number>): EpicPriz
 
 /** All prizes of a step, epic ones included (for prize lists). */
 export function boardPool(step: LadderStep, owned: ReadonlySet<number>): MiniGamePrizeDef[] {
-  return [...step.prizes, ...epicOdds(step, owned).map((e) => e.prize)];
+  return [...withoutOwnedPokemon(step, owned).prizes, ...epicOdds(step, owned).map((e) => e.prize)];
 }
 
 /** Draws a rarity for one non-epic prize. */
@@ -188,7 +210,7 @@ export function boardPrizes(
   city?: string,
 ): AwardedPrize[] {
   if (stars < 1) return [];
-  const step = unlockedStep(boardStep(stepIndex, city), badges);
+  const step = withoutOwnedPokemon(unlockedStep(boardStep(stepIndex, city), badges), owned);
   const prizes: AwardedPrize[] = [];
   const won = stars >= EPIC_STARS ? rollEpic(epicOdds(step, owned), rng) : null;
   if (won) prizes.push({ kind: 'board', ...resolvePrize(won, rng) });
@@ -218,8 +240,9 @@ export function dustBonusPrize(
   badges: number,
   rng: () => number = Math.random,
   city?: string,
+  owned: ReadonlySet<number> = new Set(),
 ): AwardedPrize | null {
-  const step = unlockedStep(boardStep(stepIndex, city), badges);
+  const step = withoutOwnedPokemon(unlockedStep(boardStep(stepIndex, city), badges), owned);
   const rolled = rollRarity(3, rng);
   const def = drawOfRarity(step, rolled === 'common' ? 'good' : rolled, rng);
   return def ? { kind: 'dust', ...resolvePrize(def, rng) } : null;
