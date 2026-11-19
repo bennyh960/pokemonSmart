@@ -40,6 +40,8 @@ export type MiniGameCategory = (typeof MINI_GAME_CATEGORIES)[number];
 export interface MiniGameChoice {
   gameIds?: MiniGameId[];
   category?: MiniGameCategory;
+  /** More categories on top of `category` (e.g. the Zeroville lab: logic + English). */
+  extraCategories?: MiniGameCategory[];
 }
 
 export interface Bilingual {

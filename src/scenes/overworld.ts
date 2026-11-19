@@ -489,6 +489,8 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
 
   // Pending push-back after gate scene dismissal without passing
   let pendingGateBack: { pushDx: number; pushDy: number; gateId: string } | null = null;
+  /** Set on every map load: check once the player is in control whether a gate guard already sees them. */
+  let gateSightCheckPending = false;
   /** "Oops, wrong way" line — shown once the player has stepped back / walked out after leaving a gate. */
   let pendingOopsLine: string | null = null;
 
@@ -1570,6 +1572,28 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
     };
   }
 
+  /** A locked gate guard that sees the player starts its approach. Returns true when one did. */
+  function checkGateGuardSight(): boolean {
+    if (!npcManager || !hasActiveGame() || gateGuardApproach) return false;
+    const pd = getPlayerData();
+    for (const npc of npcManager.getNPCs()) {
+      if (npc.type !== 'gate-guard') continue;
+      if (!isNPCVisible(npc, pd.flags, pd.party)) continue;
+      const guard = npc as unknown as import('../systems/npc.js').GateGuardData;
+      if (isGateUnlocked(guard.gateId)) continue;
+      const vec = CUTSCENE_DIR_TO_VEC[guard.facing as CutscenePathDir];
+      if (!vec) continue;
+      const range = guard.lineOfSight ?? 3;
+      for (let d = 1; d <= range; d++) {
+        if (guard.x + vec.dx * d === player.gridX && guard.y + vec.dy * d === player.gridY) {
+          startGateGuardApproach(guard);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /** Start gate-guard approach: show "!" bubble, then dialogue, then gate scene. */
   function startGateGuardApproach(guard: import('../systems/npc.js').GateGuardData): void {
     audio.playTrainerSpot();
@@ -2105,6 +2129,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
   async function loadAndSetMap(mapId: string, spawnX?: number, spawnY?: number): Promise<void> {
     const data = await loadMap(mapId);
     currentMapData = data;
+    gateSightCheckPending = true;
     ambientFx = (data.ambientFx ?? []).map((def) => ({
       def,
       fx: createOverworldFx(def.kind, def, Infinity, def.radius),
@@ -3099,6 +3124,13 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
       else surfWaveTimer = 0;
       weatherAnimTimer += dt;
 
+      // Arrived on a map (door, Fly, loaded save) already inside a guard's line of sight: stop the player
+      // here too, or the first step out of the line would skip the gate
+      if (gateSightCheckPending && !player.moving) {
+        gateSightCheckPending = false;
+        if (checkGateGuardSight()) return;
+      }
+
       if (player.moving) {
         player.moveProgress += dt / MOVE_DURATION;
         // Walk animation
@@ -3222,31 +3254,7 @@ export function createOverworldScene(input: InputManager, stateMachine: StateMac
           }
 
           // Check gate-guard line-of-sight after each step
-          if (npcManager && hasActiveGame() && !gateGuardApproach) {
-            const guardFacingVecs: Record<string, { dx: number; dy: number }> = {
-              up: { dx: 0, dy: -1 },
-              down: { dx: 0, dy: 1 },
-              left: { dx: -1, dy: 0 },
-              right: { dx: 1, dy: 0 },
-            };
-            const flags = getPlayerData().flags;
-            const _gParty = getPlayerData().party;
-            for (const npc of npcManager.getNPCs()) {
-              if (npc.type !== 'gate-guard') continue;
-              if (!isNPCVisible(npc, flags, _gParty)) continue;
-              const guard = npc as unknown as import('../systems/npc.js').GateGuardData;
-              if (isGateUnlocked(guard.gateId)) continue;
-              const vec = guardFacingVecs[guard.facing];
-              if (!vec) continue;
-              const range = guard.lineOfSight ?? 3;
-              for (let d = 1; d <= range; d++) {
-                if (guard.x + vec.dx * d === player.gridX && guard.y + vec.dy * d === player.gridY) {
-                  startGateGuardApproach(guard);
-                  return;
-                }
-              }
-            }
-          }
+          if (checkGateGuardSight()) return;
 
           // Check blocker NPC line-of-sight (NPCs with blocker:true that block until despawn conditions are met)
           if (npcManager && hasActiveGame() && !partyGuardApproach && !gateGuardApproach) {
