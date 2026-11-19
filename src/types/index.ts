@@ -81,6 +81,14 @@ export interface Pokemon {
   /** Individual size genetics as % offset from species base. Set on creation, never changes. */
   wPercent?: number;
   hPercent?: number;
+  /**
+   * Transform (battle only): the species it looks like and its own values to put back.
+   * Undone at the end of battle, on switch-out, before XP / capture, and on save load.
+   */
+  transform?: {
+    into: number;
+    original: Pick<Pokemon, 'types' | 'attack' | 'defense' | 'specialAttack' | 'specialDefense' | 'speed' | 'moves'>;
+  };
 }
 
 /** Pokemon elemental types (real Gen 2 types + Glitch). */

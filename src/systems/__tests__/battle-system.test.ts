@@ -30,6 +30,15 @@ import {
   getHiddenPowerType,
   neutralizeHeldItem,
   advanceBide,
+  applySketch,
+  applyTransform,
+  applyPainSplit,
+  applyTurnEndMoveEffects,
+  canUseLastResort,
+  getCrashDamage,
+  getElectroBallPower,
+  getPunishmentPower,
+  rollPresent,
   getBeatUpHits,
   advanceTimedVolatiles,
   applyEncore,
@@ -59,7 +68,7 @@ import {
   startChargingMove,
   tryApplyFlinch,
 } from '../battle-system.js';
-import { createBattleSideRuntimeState } from '../battle-state.js';
+import { createBattleSideRuntimeState, revertTransform } from '../battle-state.js';
 import { getItemFlingPower } from '../../data/items.js';
 
 function createTestPokemon(overrides: Partial<Pokemon> = {}): Pokemon {
@@ -562,6 +571,90 @@ describe('battle system helpers', () => {
     expect(getBeatUpHits(party)).toBe(2);
     expect(getBeatUpHits([createTestPokemon({ status: 'burn' })])).toBe(1);
     expect(getMoveByName('feint')?.battle).toMatchObject({ priority: 2, behaviorTags: ['feint'] });
+  });
+
+  it('group A helpers: Pain Split, Present, Punishment, Electro Ball, crash', () => {
+    const a = createTestPokemon({ hp: 20, maxHp: 100 });
+    const b = createTestPokemon({ hp: 90, maxHp: 60 });
+    applyPainSplit(a, b);
+    expect([a.hp, b.hp]).toEqual([55, 55]);
+    expect(rollPresent(() => 0.1)).toEqual({ kind: 'heal' });
+    expect(rollPresent(() => 0.5)).toEqual({ kind: 'damage', power: 40 });
+    expect(rollPresent(() => 0.95)).toEqual({ kind: 'damage', power: 120 });
+    const target = createBattleRuntimeStateForPokemon(createTestPokemon());
+    expect(getPunishmentPower(target)).toBe(60);
+    target.statModifiers.attack = 100; // +2
+    target.statModifiers.speed = -50; // drops don't count
+    expect(getPunishmentPower(target)).toBe(100);
+    expect(getElectroBallPower(400, 100)).toBe(150);
+    expect(getElectroBallPower(50, 100)).toBe(40);
+    expect(getCrashDamage(101)).toBe(50);
+  });
+
+  it('Wish heals at the end of the next turn; Aqua Ring every turn; Yawn puts to sleep next turn', () => {
+    const mon = createTestPokemon({ hp: 10, maxHp: 160 });
+    const state = createBattleRuntimeStateForPokemon(mon);
+    state.wishTurns = 2;
+    state.wishHeal = 80;
+    state.aquaRing = true;
+    state.drowsyTurns = 2;
+    expect(applyTurnEndMoveEffects(mon, state, () => 0)).toEqual([{ kind: 'aqua-ring', healed: 10 }]);
+    const second = applyTurnEndMoveEffects(mon, state, () => 0);
+    expect(second.map((e) => e.kind)).toEqual(['wish', 'aqua-ring', 'fell-asleep']);
+    expect(mon.status).toBe('sleep');
+  });
+
+  it('Last Resort needs every other move used first', () => {
+    const ids = ['tackle', 'growl', 'last resort'].map((n) => getMoveByName(n)!.id);
+    const mon = createTestPokemon({
+      moves: ids.map((id) => ({ id, name: '', type: 'normal', power: 0, accuracy: 100, pp: 5, currentPp: 5 }) as Pokemon['moves'][number]),
+    });
+    const state = createBattleRuntimeStateForPokemon(mon);
+    expect(canUseLastResort(mon, state, ids[2])).toBe(false);
+    state.movesUsed = [ids[0], ids[1]];
+    expect(canUseLastResort(mon, state, ids[2])).toBe(true);
+  });
+
+  it('Transform copies look, types, stats, stages and moves (5 PP) and reverts cleanly', () => {
+    const tackle = getMoveByName('tackle')!;
+    const transformMove = getMoveByName('transform')!;
+    const asMove = (mv: typeof tackle) =>
+      ({ id: mv.id, name: mv.name.en, type: mv.type, power: mv.power ?? 0, accuracy: mv.accuracy ?? 0, pp: mv.pp, currentPp: mv.pp }) as Pokemon['moves'][number];
+    const ditto = createTestPokemon({ id: 132, name: 'Ditto', types: ['normal'], attack: 30, speed: 30, moves: [asMove(transformMove)] });
+    const foe = createTestPokemon({ id: 25, types: ['electric'], attack: 80, speed: 120, moves: [asMove(tackle)] });
+    const dittoState = createBattleRuntimeStateForPokemon(ditto);
+    const foeState = createBattleRuntimeStateForPokemon(foe);
+    foeState.statModifiers.attack = 100;
+
+    expect(applyTransform(ditto, dittoState, foe, foeState)).toBe(true);
+    expect(ditto.transform?.into).toBe(25);
+    expect(ditto.types).toEqual(['electric']);
+    expect([ditto.attack, ditto.speed]).toEqual([80, 120]);
+    expect(ditto.moves.map((m) => [m.id, m.pp, m.currentPp])).toEqual([[tackle.id, 5, 5]]);
+    expect(dittoState.statModifiers.attack).toBe(100);
+    expect(foe.moves[0].pp).toBe(tackle.pp); // the foe's own moves are untouched
+    expect(applyTransform(ditto, dittoState, foe, foeState)).toBe(false); // already transformed
+
+    expect(revertTransform(ditto)).toBe(true);
+    expect(ditto.transform).toBeUndefined();
+    expect([ditto.types, ditto.attack, ditto.speed, ditto.moves[0].id]).toEqual([['normal'], 30, 30, transformMove.id]);
+    expect(revertTransform(ditto)).toBe(false);
+  });
+
+  it('Sketch replaces its own slot with the foe last move for good', () => {
+    const sketch = getMoveByName('sketch')!;
+    const smeargle = createTestPokemon({
+      id: 235,
+      moves: [{ id: sketch.id, name: 'Sketch', type: 'normal', power: 0, accuracy: 0, pp: 1, currentPp: 1 } as Pokemon['moves'][number]],
+    });
+    const foeState = createBattleRuntimeStateForPokemon(createTestPokemon());
+    expect(applySketch(smeargle, sketch.id, foeState)).toBeNull(); // foe used nothing yet
+    const flamethrower = getMoveByName('flamethrower')!;
+    foeState.lastMoveUsedId = flamethrower.id;
+    expect(applySketch(smeargle, sketch.id, foeState)).toBe(flamethrower.id);
+    expect(smeargle.moves[0]).toMatchObject({ id: flamethrower.id, pp: flamethrower.pp, currentPp: flamethrower.pp });
+    foeState.lastMoveUsedId = getMoveByName('metronome')!.id;
+    expect(applySketch(smeargle, sketch.id, foeState)).toBeNull(); // no Sketch slot left / not copyable
   });
 
   it('Bide stores for 2 turns, then releases 2x the damage taken and unlocks', () => {
