@@ -13,6 +13,9 @@ interface IGateClockProps {
 
 type Phase = 'ask' | 'right' | 'wrong';
 
+/** One clock box (hours / minutes) — the ":" between them is printed, not typed. */
+const clockBoxClass = 'w-16 min-w-0 rounded-lg border-2 bg-black px-2 py-2 text-center font-mono text-2xl outline-none';
+
 const CHOICE_KEYS = [
   { code: 'ArrowUp', action: 'up' },
   { code: 'ArrowDown', action: 'down' },
@@ -54,9 +57,12 @@ const GateClock = ({ gateId, onClose }: IGateClockProps) => {
 
   const [phase, setPhase] = useState<Phase>('ask');
   const [selected, setSelected] = useState(0);
-  const [typed, setTyped] = useState('');
+  // The ":" is built in — kids type only the hour and the minutes
+  const [hours, setHours] = useState('');
+  const [minutes, setMinutes] = useState('');
   const [typedError, setTypedError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const minutesRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (question && !question.choices) setTimeout(() => inputRef.current?.focus(), 50);
@@ -74,7 +80,7 @@ const GateClock = ({ gateId, onClose }: IGateClockProps) => {
   }
 
   function submitTyped(): void {
-    const guess = parseClock(typed);
+    const guess = parseClock(`${hours}:${minutes}`);
     if (!guess) {
       setTypedError(true);
       return;
@@ -177,20 +183,36 @@ const GateClock = ({ gateId, onClose }: IGateClockProps) => {
             )}
 
             {phase === 'ask' && !choices && (
-              <div className="mb-3 flex gap-2" dir="ltr">
+              <div className="mb-3 flex justify-center gap-2" dir="ltr">
                 <input
                   ref={inputRef}
-                  value={typed}
+                  value={hours}
                   onChange={(e) => {
-                    setTyped(e.target.value);
+                    const v = e.target.value.replace(/\D/g, '').slice(0, 2);
+                    setHours(v);
+                    setTypedError(false);
+                    if (v.length === 2) minutesRef.current?.focus();
+                  }}
+                  placeholder="HH"
+                  maxLength={2}
+                  inputMode="numeric"
+                  className={`${clockBoxClass} ${typedError ? 'border-red-400' : 'border-slate-500 focus:border-yellow-300'}`}
+                />
+                <span className="self-center font-mono text-3xl font-bold text-white">:</span>
+                <input
+                  ref={minutesRef}
+                  value={minutes}
+                  onChange={(e) => {
+                    setMinutes(e.target.value.replace(/\D/g, '').slice(0, 2));
                     setTypedError(false);
                   }}
-                  placeholder="HH:MM"
-                  maxLength={5}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Backspace' && minutes === '') inputRef.current?.focus();
+                  }}
+                  placeholder="MM"
+                  maxLength={2}
                   inputMode="numeric"
-                  className={`min-w-0 flex-1 rounded-lg border-2 bg-black px-3 py-2 text-center font-mono text-2xl outline-none ${
-                    typedError ? 'border-red-400' : 'border-slate-500 focus:border-yellow-300'
-                  }`}
+                  className={`${clockBoxClass} ${typedError ? 'border-red-400' : 'border-slate-500 focus:border-yellow-300'}`}
                 />
                 <button
                   type="button"
@@ -273,5 +295,4 @@ const AnalogClock = ({ time }: { time: ClockTime }) => {
     </svg>
   );
 };
-
 export default GateClock;

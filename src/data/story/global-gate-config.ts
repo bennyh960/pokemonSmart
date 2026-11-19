@@ -349,7 +349,8 @@ registerGate({
 
 registerAutoGateMap(MapId.SUMVILLE_LAB, 'lab');
 registerAutoGateMap(MapId.PERCENTILE_LAB, 'lab');
-registerAutoGateMap(MapId.ZEROVILLE_ALGORITHMA_LAB, 'lab');
+// Players fly back to Algorithma's lab to heal all game long, so its door mixes in the English games too
+registerAutoGateMap(MapId.ZEROVILLE_ALGORITHMA_LAB, 'lab', { miniGame: { extraCategories: ['english'] } });
 registerAutoGateMap(MapId.MINUSBURG_LAB, 'lab');
 registerAutoGateMap(MapId.MULTIPLIA_LAB, 'lab');
 registerAutoGateMap(MapId.DIVIDIA_LAB, 'lab');

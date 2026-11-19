@@ -30,8 +30,16 @@ describe('lab gates', () => {
       expect(gate?.id, mapId).toBe(`auto-lab-${mapId}`);
       const ids = resolveMiniGames(gate!.miniGame!);
       expect(ids.length, mapId).toBeGreaterThan(0);
-      for (const id of ids) expect(getMiniGame(id).category, id).toBe('logic');
+      const allowed = mapId === MapId.ZEROVILLE_ALGORITHMA_LAB ? ['logic', 'english'] : ['logic'];
+      for (const id of ids) expect(allowed, id).toContain(getMiniGame(id).category);
+      expect(ids.some((id) => getMiniGame(id).category === 'logic'), mapId).toBe(true);
     }
+  });
+
+  it('the Zeroville lab (where players heal all game) also plays every English game', () => {
+    const ids = resolveMiniGames(getGate(`auto-lab-${MapId.ZEROVILLE_ALGORITHMA_LAB}`)!.miniGame!);
+    expect(ids).toEqual(resolveMiniGames({ category: 'logic', extraCategories: ['english'] }));
+    expect(ids.filter((id) => getMiniGame(id).category === 'english').length).toBeGreaterThan(1);
   });
 
   it('libraries have no entry gate — English is played at the Word Board by choice', () => {

@@ -47,9 +47,12 @@ export function isMiniGameId(id: string): id is MiniGameId {
   return (MINI_GAME_IDS as readonly string[]).includes(id);
 }
 
-/** The games of a choice, in picker order: the listed ids plus every game of the category. */
+/** The games of a choice, in picker order: the listed ids plus every game of its categories. */
 export function resolveMiniGames(choice: MiniGameChoice): MiniGameId[] {
-  return MINI_GAME_LIST.filter((g) => choice.gameIds?.includes(g.id) || g.category === choice.category).map(
-    (g) => g.id,
-  );
+  return MINI_GAME_LIST.filter(
+    (g) =>
+      choice.gameIds?.includes(g.id) ||
+      g.category === choice.category ||
+      !!choice.extraCategories?.includes(g.category),
+  ).map((g) => g.id);
 }
