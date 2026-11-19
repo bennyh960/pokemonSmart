@@ -6,9 +6,9 @@
  * On each major save, a fire-and-forget upsert syncs to Supabase.
  */
 
-import type { PlayerData } from '../types/index.js';
+import type { PlayerData, Pokemon } from '../types/index.js';
 import { getDefaultHeroCharacterId, hasCharacter } from '../engine/character-sprites.js';
-import { ensurePersistentBattleFields } from './battle-state.js';
+import { ensurePersistentBattleFields, revertTransform } from './battle-state.js';
 import { supabase } from '../auth/supabase-client.js';
 import { getEvolutionChain } from '../services/pokemon-data.js';
 import { isPokemonStillWithPlayer } from '../scenesReact/pokedex/utils/helpers.js';
@@ -443,6 +443,8 @@ function migrateSave(data: Record<string, any>): PlayerData {
     }
     version = nextVersion;
   }
+  // A battle Transform saved mid-battle (e.g. the bag saved, then the game closed) is undone on load
+  forEachStoredPokemon(data, (p) => revertTransform(p as Pokemon));
   return data as PlayerData;
 }
 

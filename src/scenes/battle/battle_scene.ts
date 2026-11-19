@@ -122,6 +122,7 @@ import { loadImage, getCachedImage } from '../../engine/sprite-loader.js';
 import { getBattleBackground } from '.././../engine/asset-generator.js';
 import { t, isRTL, getLocale } from '../../i18n/i18n.js';
 import { applyHeldItemEffectInBattle, getItem, getItemFlingPower } from '../../data/items.js';
+import { getTypeColor } from '../../data/type-constants.js';
 import { applyItemEffect, consumeItem } from '../../systems/item-effects.js';
 import { resolveDialogue, type TrainerReward, type BilingualText, type ReencounterConfig } from '../../systems/npc.js';
 import { setBagMode, pendingItem as bagPendingItem, clearPendingItem } from '../../scenesReact/bag/bag-mode.js';
@@ -159,6 +160,7 @@ import {
   applyBattleStatDelta,
   createBattleSideRuntimeState,
   createEmptyBattleStatModifiers,
+  revertTransform,
 } from '../../systems/battle-state.js';
 import {
   advanceSideEffectTurns,
@@ -184,6 +186,17 @@ import {
   capFalseSwipeDamage,
   neutralizeHeldItem,
   advanceBide,
+  applySketch,
+  applyTransform,
+  applyPainSplit,
+  applyTurnEndMoveEffects,
+  canUseLastResort,
+  getCrashDamage,
+  getEffectiveSpeed,
+  getElectroBallPower,
+  getPunishmentPower,
+  rollPresent,
+  WATER_SPORT_TURNS,
   BEAT_UP_HIT_POWER,
   getBeatUpHits,
   advanceTimedVolatiles,
@@ -516,6 +529,7 @@ function calcDamage(
   damageClass: string,
   criticalHit = false,
   attackStatOverride?: number,
+  ignoreTargetStages = false,
 ): number {
   if (power <= 0) return 0;
 
@@ -532,12 +546,15 @@ function calcDamage(
   const isSpecial = damageClass === 'special';
   const burnMultiplier = damageClass === 'physical' && atk.status === 'burn' ? 0.5 : 1;
   const attackStat = attackStatOverride ?? getModifiedStatValue(atk, atkState, isSpecial ? 'specialAttack' : 'attack');
-  const defenseStat = getModifiedStatValue(def, defState, isSpecial ? 'specialDefense' : 'defense');
+  // Chip Away: the target's stat stages don't count
+  const defStateForStats = ignoreTargetStages ? { ...defState, statModifiers: createEmptyBattleStatModifiers() } : defState;
+  const defenseStat = getModifiedStatValue(def, defStateForStats, isSpecial ? 'specialDefense' : 'defense');
   let defenderMultiplier = 1;
   if (def.abilityId !== null) {
     defenderMultiplier *= calcAbilityDamageTakenMultiplier(def, getAbilityBattleEffects(def.abilityId), moveType);
   }
   defenderMultiplier *= getSideDamageTakenMultiplier(defSideState, damageClass);
+  if (moveType === 'fire' && (atkState.waterSportTurns > 0 || defState.waterSportTurns > 0)) defenderMultiplier *= 0.5;
   const lf = (2 * atk.level) / 5 + 2;
   const base = (lf * power * ((attackStat * burnMultiplier) / defenseStat)) / 50 + 2;
   const eff = getCombinedTypeEffectiveness(moveType, def.types);
@@ -1639,6 +1656,24 @@ export function createBattleScene(
     turnsVsEnemy.set(partyIndex, (turnsVsEnemy.get(partyIndex) ?? 0) + 1);
   }
 
+  /** The species a battler looks like (Transform shows the copied Pokémon). */
+  function battleSpriteId(pokemon: Pokemon): number {
+    return pokemon.transform?.into ?? pokemon.id;
+  }
+
+  /** Undo Transform on the player's active Pokémon and keep the move menu in sync. */
+  function revertPlayerTransform(): void {
+    if (revertTransform(player) && menu) menu.moves = player.moves;
+  }
+
+  /** Battle over: nobody stays transformed (party, trainer party, wild foe). */
+  function revertAllTransforms(): void {
+    if (hasActiveGame()) getPlayerData().party.forEach(revertTransform);
+    (trainerData?.party ?? []).forEach(revertTransform);
+    revertTransform(enemy);
+    revertTransform(player);
+  }
+
   function findMoveIndexById(pokemon: Pokemon, moveId: number): number | null {
     const moveIndex = pokemon.moves.findIndex((move) => move.id === moveId);
     return moveIndex >= 0 ? moveIndex : null;
@@ -1913,6 +1948,7 @@ export function createBattleScene(
     party[trainerPartyIndex] = target;
     // Now party[trainerPartyIndex] = target, party[trainerPartyIndex+1] = current (withdrawn, available later)
 
+    revertTransform(current); // switching out ends Transform
     enemy = party[trainerPartyIndex];
     trainerAIState!.seenPokemonIds.add(enemy.uuid);
 
@@ -2448,6 +2484,7 @@ export function createBattleScene(
 
   /** Pay the active Pokémon for the defeated enemy and queue the shared XP for the bench. */
   function awardDefeatXp(extraLines: string[] = []): void {
+    revertPlayerTransform(); // XP / level-up work on its own stats
     xpGained = getDefeatXpReward();
     player.xp += xpGained;
     const capLines = queueSharedXp(xpGained);
@@ -2654,6 +2691,8 @@ export function createBattleScene(
     pendingCaptureOutcome = null;
 
     if (outcome.caught) {
+      revertTransform(enemy); // a transformed catch joins as itself
+      revertPlayerTransform();
       animationDirector.setActorState('enemy', {
         x: 0,
         y: 0,
@@ -3345,6 +3384,11 @@ export function createBattleScene(
       for (const ended of advanceTimedVolatiles(state)) {
         lines.push(t(ended === 'taunt' ? 'battle.tauntEnded' : 'battle.encoreEnded', { name }));
       }
+      for (const ev of applyTurnEndMoveEffects(mon, state)) {
+        if (ev.kind === 'wish') lines.push(t('battle.wishCameTrue', { name }));
+        else if (ev.kind === 'aqua-ring') lines.push(t('battle.aquaRingHeal', { name }));
+        else lines.push(t('battle.fellAsleep', { name }));
+      }
     }
 
     // End Of turn held items effect
@@ -3672,21 +3716,23 @@ export function createBattleScene(
     }
 
     //todo : consider handle it in group way -  psyh up move
+    // Psych Up / Snatch copy the foe's stages — into a local list, never into the shared move metadata
     const isPsychUp = moveBattleData.behaviorTags.includes('psych-up');
-    if (isPsychUp) {
-      Object.entries(defenderState.statModifiers).forEach(([stat, stage]) => {
-        moveBattleData.statChanges.push({
-          stat: stat as BattleStatId,
-          stages: stage / 50, // stage is -200 to +200, convert to -4 to +4 for stat change application
-          target: 'user',
-          chance: 100,
-        });
-      });
-    }
+    const ownStatChanges = isPsychUp
+      ? [
+          ...moveBattleData.statChanges,
+          ...Object.entries(defenderState.statModifiers).map(([stat, stage]) => ({
+            stat: stat as BattleStatId,
+            stages: stage / BATTLE_STAT_PERCENT_STEP,
+            target: 'user' as const,
+            chance: 100,
+          })),
+        ]
+      : moveBattleData.statChanges;
 
     const userStatChanges = applyStatChanges(
       attackerState,
-      moveBattleData.statChanges,
+      ownStatChanges,
       'user',
       Math.random,
       attackerHasContrary,
@@ -3953,6 +3999,7 @@ export function createBattleScene(
     // Track last move used (for Copycat / Mirror Move also for choice item)
     attackerBattleState.lastMoveUsedId = m.id;
     lastMoveUsedInBattle = m.id;
+    if (!attackerBattleState.movesUsed.includes(m.id)) attackerBattleState.movesUsed.push(m.id);
 
     const pendingChargeMoveId = getChargingMoveId(attackerBattleState);
     const forcedChargeRelease =
@@ -4418,6 +4465,65 @@ export function createBattleScene(
       return;
     }
 
+    const isTransform = moveBattleData?.behaviorTags?.includes('transform') ?? false;
+    const isSketch = moveBattleData?.behaviorTags?.includes('sketch') ?? false;
+    if (isTransform || isSketch) {
+      const moveName = getMoveDisplayName(m.id);
+      // Preload the copied look so the sprite swaps on impact without a blank frame
+      if (isTransform) {
+        loadImage(`/sprites/pokemon/${actor === 'player' ? 'back' : 'front'}/${defender.id}.png`).catch(() => {});
+      }
+      runMoveLifecycle({
+        move: m,
+        attackerActor: actor,
+        defenderActor,
+        context: battleAnimationContext,
+        hitTarget: false,
+        overrideNextPhase: attackerPhase,
+        onImpact: () => {
+          const sx = attackerSprite.x + attackerSprite.w / 2;
+          const sy = attackerSprite.y + attackerSprite.h / 2;
+          if (isTransform) {
+            if (!applyTransform(attacker, attackerBattleState, defender, defenderBattleState)) {
+              return { endMessages: [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: moveName }), t('battle.moveFailed')] };
+            }
+            if (actor === 'player' && menu) menu.moves = player.moves;
+            flash = createFlash('#ffffff', 0.4); // the sprite swaps under the flash
+            shake = createShake(1.5, 0.25);
+            for (let k = 0; k < 6; k++) {
+              spawnDamageNumber('✦', sx - 14 + k * 6, sy - 10 + ((k * 7) % 14), '#c8a8ff');
+            }
+            syncAttackerBar();
+            return {
+              endMessages: [
+                ...turnEffectLines,
+                t('battle.usedMove', { name: attackerName, move: moveName }),
+                t('battle.transformed', { name: attackerName, target: getPokemonDisplayName(defender.id) }),
+              ],
+            };
+          }
+          const sketched = applySketch(attacker, m.id, defenderBattleState);
+          if (sketched === null) {
+            return { endMessages: [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: moveName }), t('battle.moveFailed')] };
+          }
+          // Paint splash in the copied move's type colour
+          const paint = getTypeColor(getMove(sketched)?.type as PokemonType);
+          flash = createFlash(paint, 0.35);
+          const splash = ['#ff6060', '#ffd040', '#60d060', '#50a0ff', '#c070ff', paint];
+          splash.forEach((color, k) => spawnDamageNumber('●', sx - 15 + k * 6, sy - 12 + ((k * 5) % 12), color));
+          if (actor === 'player' && menu) menu.moves = player.moves;
+          return {
+            endMessages: [
+              ...turnEffectLines,
+              t('battle.usedMove', { name: attackerName, move: moveName }),
+              t('battle.sketched', { name: attackerName, move: getMoveDisplayName(sketched) }),
+            ],
+          };
+        },
+      });
+      return;
+    }
+
     if (isChargeRelease) {
       clearChargingMove(attackerBattleState);
       if (attackerBattleState.invulnerableState !== null) {
@@ -4441,6 +4547,16 @@ export function createBattleScene(
     }
 
     // Focus Punch: fails if the attacker took damage this turn
+    if (moveBattleData?.behaviorTags?.includes('last-resort') && !canUseLastResort(attacker, attackerBattleState, m.id)) {
+      textBox = createTextBox(
+        [...turnEffectLines, t('battle.usedMove', { name: attackerName, move: getMoveDisplayName(m.id) }), t('battle.moveFailed')],
+        rtl,
+      );
+      phase = attackerPhase;
+      phaseTimer = 0;
+      return;
+    }
+
     const flingPower =
       isFling && hasUsableHeldItem(attacker, attackerBattleState) ? getItemFlingPower(attacker.heldItemId!) : null;
     if (isFling && !flingPower) {
@@ -4797,9 +4913,62 @@ export function createBattleScene(
       return;
     }
 
+    const presentRoll = moveBattleData?.behaviorTags?.includes('present') ? rollPresent() : null;
     const simpleStatusLine = (() => {
       const tags = moveBattleData?.behaviorTags ?? [];
       if (tags.includes('splash')) return t('battle.nothingHappened');
+      if (presentRoll?.kind === 'heal') {
+        defender.hp = Math.min(defender.maxHp, defender.hp + Math.max(1, Math.floor(defender.maxHp / 4)));
+        setHP(defenderHpBar, defender.hp);
+        return t('battle.presentHeal', { name: defenderName });
+      }
+      if (tags.includes('heal-bell')) {
+        const team = actor === 'player' && hasActiveGame() ? getPlayerData().party : actor === 'enemy' ? (trainerData?.party ?? []) : [];
+        for (const p of team) if (p.hp > 0) p.status = null;
+        clearMajorStatus(attacker, attackerBattleState);
+        setStatus(attackerHpBar, '');
+        return t('battle.healBell');
+      }
+      if (tags.includes('refresh')) {
+        if (!['burn', 'poison', 'paralyze'].includes(attackerBattleState.majorStatus ?? '')) return t('battle.moveFailed');
+        clearMajorStatus(attacker, attackerBattleState);
+        setStatus(attackerHpBar, '');
+        return t('battle.refresh', { name: attackerName });
+      }
+      if (tags.includes('pain-split')) {
+        applyPainSplit(attacker, defender);
+        setHP(attackerHpBar, attacker.hp);
+        setHP(defenderHpBar, defender.hp);
+        return t('battle.painSplit');
+      }
+      if (tags.includes('wish')) {
+        if (attackerBattleState.wishTurns > 0) return t('battle.moveFailed');
+        attackerBattleState.wishTurns = NEXT_TURN_EFFECT_TURNS;
+        attackerBattleState.wishHeal = Math.max(1, Math.floor(attacker.maxHp / 2));
+        return t('battle.wishMade', { name: attackerName });
+      }
+      if (tags.includes('aqua-ring')) {
+        if (attackerBattleState.aquaRing) return t('battle.moveFailed');
+        attackerBattleState.aquaRing = true;
+        return t('battle.aquaRing', { name: attackerName });
+      }
+      if (tags.includes('yawn')) {
+        if (defenderBattleState.majorStatus || defenderBattleState.drowsyTurns > 0) return t('battle.moveFailed');
+        defenderBattleState.drowsyTurns = NEXT_TURN_EFFECT_TURNS;
+        return t('battle.yawn', { name: attackerName, target: defenderName });
+      }
+      if (tags.includes('water-sport')) {
+        attackerBattleState.waterSportTurns = WATER_SPORT_TURNS;
+        return t('battle.waterSport');
+      }
+      if (tags.includes('charge')) {
+        attackerBattleState.chargedUp = true;
+        attackerBattleState.statModifiers.specialDefense = applyBattleStatDelta(
+          attackerBattleState.statModifiers.specialDefense,
+          1,
+        );
+        return t('battle.charge', { name: attackerName });
+      }
       if (tags.includes('laser-focus')) {
         attackerBattleState.laserFocusTurns = NEXT_TURN_EFFECT_TURNS;
         return t('battle.laserFocus', { name: attackerName });
@@ -4959,6 +5128,7 @@ export function createBattleScene(
       hitResult.hit &&
       doesMoveTargetOpponent(moveBattleData) &&
       isTargetImmuneToMoveType(defender, m.type) &&
+      !(m.type === 'ground' && defenderBattleState.grounded) &&
       !hasBypassImmunity;
     let magnitudeLevel = 0;
     if (isMagnitude) {
@@ -4996,6 +5166,25 @@ export function createBattleScene(
       m = { ...m, power: m.power * 2 };
     }
     if (isPayback && targetAlreadyActed) m = { ...m, power: m.power * 2 };
+    const powerTags = moveBattleData?.behaviorTags ?? [];
+    if (presentRoll?.kind === 'damage') m = { ...m, power: presentRoll.power };
+    if (powerTags.includes('hex') && defenderBattleState.majorStatus) m = { ...m, power: m.power * 2 };
+    if (powerTags.includes('revenge') && attackerBattleState.turnFlags.tookDamageThisTurn) m = { ...m, power: m.power * 2 };
+    if (powerTags.includes('punishment')) m = { ...m, power: getPunishmentPower(defenderBattleState) };
+    if (powerTags.includes('electro-ball')) {
+      const weather = battleWeather?.type ?? null;
+      m = {
+        ...m,
+        power: getElectroBallPower(
+          getEffectiveSpeed(attacker, attackerBattleState, weather),
+          getEffectiveSpeed(defender, defenderBattleState, weather),
+        ),
+      };
+    }
+    if (attackerBattleState.chargedUp && m.type === 'electric' && m.power > 0) {
+      attackerBattleState.chargedUp = false;
+      m = { ...m, power: m.power * 2 };
+    }
     if (isAssurance && defenderBattleState.turnFlags.tookDamageThisTurn) m = { ...m, power: m.power * 2 };
     if (flingPower) {
       m = { ...m, power: flingPower };
@@ -5069,6 +5258,7 @@ export function createBattleScene(
         damageClass,
         criticalHit,
         foulPlayAttackStat,
+        moveBattleData?.behaviorTags.includes('chip-away') ?? false,
       );
       const min = moveBattleData?.minimumDamage ?? null;
       const dealt = min !== null ? Math.max(min, base) : base;
@@ -5152,6 +5342,14 @@ export function createBattleScene(
         if (isPayDay && actor === 'player') {
           payDayCoins += getPayDayCoins(attacker.level);
           msgs.push(t('battle.payDayCoins'));
+        }
+        if (moveBattleData?.behaviorTags.includes('smack-down') && !targetTypeImmune && defender.types.includes('flying')) {
+          if (!defenderBattleState.grounded) msgs.push(t('battle.smackDown', { name: defenderName }));
+          defenderBattleState.grounded = true;
+        }
+        if (moveBattleData?.behaviorTags.includes('clear-smog') && !targetTypeImmune) {
+          defenderBattleState.statModifiers = createEmptyBattleStatModifiers();
+          msgs.push(t('battle.clearSmog', { name: defenderName }));
         }
         const knockedItemId = isThief && !targetTypeImmune ? neutralizeHeldItem(defender, defenderBattleState) : null;
         const knockedItem = knockedItemId ? getItem(knockedItemId) : undefined;
@@ -5280,6 +5478,12 @@ export function createBattleScene(
     }
     if (selfCostAmount > 0) {
       msgs.push(t('battle.recoilHit', { name: attackerName, amount: selfCostAmount }));
+    }
+    // Jump Kick / High Jump Kick: missing (or hitting a Ghost) hurts the user
+    if (moveBattleData?.behaviorTags.includes('crash-on-miss') && (!hitResult.hit || targetTypeImmune)) {
+      attacker.hp = Math.max(0, attacker.hp - getCrashDamage(attacker.maxHp));
+      setHP(attackerHpBar, attacker.hp);
+      msgs.push(t('battle.crash', { name: attackerName }));
     }
     msgs.push(...resolvedEffectLines);
 
@@ -5767,6 +5971,7 @@ export function createBattleScene(
       }
     },
     exit(): void {
+      revertAllTransforms();
       clearAllPopups();
     },
     update(dt: number): void {
@@ -6363,6 +6568,7 @@ export function createBattleScene(
               if (!battleTurnCounts.has(chosenIndex)) battleTurnCounts.set(chosenIndex, 0);
               if (!turnsVsEnemy.has(chosenIndex)) turnsVsEnemy.set(chosenIndex, 0);
               activePartyIndex = chosenIndex;
+              revertTransform(player); // switching out ends Transform
               player = pd.party[activePartyIndex];
               playerBattleState = createBattleRuntimeStateForPokemon(player);
               playerHpBar = createHPBar(
@@ -6570,7 +6776,7 @@ export function createBattleScene(
 
       // ── Enemy Pokemon sprite (right side) ──
       if (!showingTrainer) {
-        const enemySprite = getCachedImage(`/sprites/pokemon/front/${enemy.id}.png`);
+        const enemySprite = getCachedImage(`/sprites/pokemon/front/${battleSpriteId(enemy)}.png`);
         if (enemySprite) {
           if (enemyBattleState?.substituteActive) ctx.globalAlpha = 0.45;
           renderActorImage(
@@ -6596,7 +6802,7 @@ export function createBattleScene(
       }
 
       // ── Player Pokemon sprite (left side) ──
-      const playerSprite = getCachedImage(`/sprites/pokemon/back/${player.id}.png`);
+      const playerSprite = getCachedImage(`/sprites/pokemon/back/${battleSpriteId(player)}.png`);
       if (playerSprite) {
         if (playerBattleState?.substituteActive) ctx.globalAlpha = 0.45;
         renderActorImage(

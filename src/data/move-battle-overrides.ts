@@ -615,6 +615,46 @@ export const MOVE_BATTLE_OVERRIDES: Record<string, MoveOverride> = {
   'Lock On': { behaviorTags: ['lock-on'], target: 'user' },
   'Mind Reader': { behaviorTags: ['lock-on'], target: 'user' },
   'Knock Off': { behaviorTags: ['thief'] },
+  'Heal Bell': { behaviorTags: ['heal-bell'], target: 'user' },
+  Refresh: { behaviorTags: ['refresh'], target: 'user' },
+  'Pain Split': { behaviorTags: ['pain-split'] },
+  Wish: { behaviorTags: ['wish'], target: 'user' },
+  'Aqua Ring': { behaviorTags: ['aqua-ring'], target: 'user' },
+  Yawn: { behaviorTags: ['yawn'] },
+  'Water Sport': { behaviorTags: ['water-sport'], target: 'user' },
+  Charge: { behaviorTags: ['charge'], target: 'user' },
+  Present: { behaviorTags: ['present'] },
+  'Jump Kick': { behaviorTags: ['crash-on-miss'] },
+  'High Jump Kick': { behaviorTags: ['crash-on-miss'] },
+  Hex: { behaviorTags: ['hex'] },
+  Revenge: { behaviorTags: ['revenge'], priority: -4 },
+  Punishment: { behaviorTags: ['punishment'] },
+  'Electro Ball': { behaviorTags: ['electro-ball'] },
+  'Smack Down': { behaviorTags: ['smack-down'] },
+  'Chip Away': { behaviorTags: ['chip-away'] },
+  'Clear Smog': { behaviorTags: ['clear-smog'] },
+  'Last Resort': { behaviorTags: ['last-resort'] },
+  // Transform: battle only — copies the foe's look, types, stats, stat stages and moves (5 PP each)
+  Transform: { behaviorTags: ['transform'], target: 'selected-pokemon' },
+  // Sketch: the Sketch slot becomes the foe's last move for good (Smeargle's only way to learn)
+  Sketch: { behaviorTags: ['sketch'], target: 'selected-pokemon' },
+  'Spider Web': volatileEffect('mean-look', 100, { bayPassImuunity: true }),
+  // Memento: in this game self-KO moves leave the user at 1 HP (like Explosion)
+  Memento: { ...targetStages(['attack', -2], ['specialAttack', -2]), behaviorTags: ['leave-user-at-1-hp'] },
+
+  // --- Moves with no real use in single battles here — simple stat effects instead (no special code) ---
+  'Magnet Rise': userStages(['evasion', 1], ['defense', 1]),
+  'Miracle Eye': userStages(['accuracy', 2]),
+  Embargo: targetStages(['defense', -1], ['specialDefense', -1]),
+  'Electric Terrain': userStages(['specialAttack', 1], ['speed', 1]),
+  'Ion Deluge': { ...targetStages(['speed', -1]), ...statusEffect('paralyze', 30) },
+  'Me First': { behaviorTags: ['mirror-move'], target: 'selected-pokemon' }, // uses the foe's last move
+  Snatch: { behaviorTags: ['psych-up'], target: 'user' }, // copies the foe's stat changes
+  'Follow Me': userStages(['defense', 1], ['evasion', 1]),
+  'After You': userStages(['speed', 2]),
+  Conversion: userStages(['specialAttack', 1], ['specialDefense', 1]),
+  'Conversion 2': userStages(['defense', 1], ['specialDefense', 1]),
+
   // Feint (priority +2): hits through Protect / Detect and lifts it
   Feint: { behaviorTags: ['feint'], priority: 2 },
   // Beat Up: 10-power hit per healthy party member (no status)

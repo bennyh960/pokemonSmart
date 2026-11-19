@@ -12,6 +12,7 @@ import type {
 } from '../types/battle-metadata.js';
 import type { BattlePokemonRuntimeState, BattleSideRuntimeState } from './battle-state.js';
 import {
+  BATTLE_STAT_PERCENT_STEP,
   applyBattleStatDelta,
   createBattlePokemonRuntimeState,
   getBattleSideEffectTurnsRemaining,
@@ -328,6 +329,152 @@ export function getBeatUpHits(party: Pokemon[]): number {
   return Math.max(1, party.filter((p) => p.hp > 0 && !p.status).length);
 }
 
+export const WATER_SPORT_TURNS = 5;
+/** Jump Kick / High Jump Kick: a miss costs half the user's max HP. */
+export function getCrashDamage(maxHp: number): number {
+  return Math.max(1, Math.floor(maxHp / 2));
+}
+
+/** Pain Split: both end up with the average of their HP. */
+export function applyPainSplit(a: Pokemon, b: Pokemon): void {
+  const avg = Math.floor((a.hp + b.hp) / 2);
+  a.hp = Math.min(a.maxHp, avg);
+  b.hp = Math.min(b.maxHp, avg);
+}
+
+/** Present: 40% power 40, 30% power 80, 10% power 120, 20% heals the target by 1/4. */
+export type PresentRoll = { kind: 'damage'; power: number } | { kind: 'heal' };
+export function rollPresent(random: () => number = Math.random): PresentRoll {
+  const r = random();
+  if (r < 0.2) return { kind: 'heal' };
+  if (r < 0.6) return { kind: 'damage', power: 40 };
+  if (r < 0.9) return { kind: 'damage', power: 80 };
+  return { kind: 'damage', power: 120 };
+}
+
+/** Punishment: 60 + 20 per stat stage the target has raised, up to 200. */
+export function getPunishmentPower(target: BattlePokemonRuntimeState): number {
+  const raised = Object.values(target.statModifiers).reduce(
+    (sum, mod) => sum + Math.max(0, Math.round(mod / BATTLE_STAT_PERCENT_STEP)),
+    0,
+  );
+  return Math.min(200, 60 + 20 * raised);
+}
+
+/** Electro Ball: the faster the user is than the target, the stronger (40–150). */
+export function getElectroBallPower(userSpeed: number, targetSpeed: number): number {
+  const ratio = userSpeed / Math.max(1, targetSpeed);
+  if (ratio >= 4) return 150;
+  if (ratio >= 3) return 120;
+  if (ratio >= 2) return 80;
+  if (ratio >= 1) return 60;
+  return 40;
+}
+
+/** Last Resort works only once the user has used every other move it knows since coming in. */
+export function canUseLastResort(
+  pokemon: Pick<Pokemon, 'moves'>,
+  runtimeState: BattlePokemonRuntimeState,
+  moveId: number,
+) {
+  const others = pokemon.moves.filter((m) => m.id !== moveId);
+  return others.length > 0 && others.every((m) => runtimeState.movesUsed.includes(m.id));
+}
+
+export type TurnEndMoveEvent =
+  | { kind: 'wish'; healed: number }
+  | { kind: 'aqua-ring'; healed: number }
+  | { kind: 'fell-asleep' };
+
+/** End of turn: Wish, Aqua Ring and Yawn. */
+export function applyTurnEndMoveEffects(
+  pokemon: Pokemon,
+  runtimeState: BattlePokemonRuntimeState,
+  random: () => number = Math.random,
+): TurnEndMoveEvent[] {
+  if (pokemon.hp <= 0) return [];
+  const events: TurnEndMoveEvent[] = [];
+  const heal = (amount: number) => {
+    const before = pokemon.hp;
+    pokemon.hp = Math.min(pokemon.maxHp, pokemon.hp + amount);
+    return pokemon.hp - before;
+  };
+  if (runtimeState.wishTurns > 0 && --runtimeState.wishTurns === 0) {
+    events.push({ kind: 'wish', healed: heal(runtimeState.wishHeal) });
+  }
+  if (runtimeState.aquaRing && pokemon.hp < pokemon.maxHp) {
+    events.push({ kind: 'aqua-ring', healed: heal(Math.max(1, Math.floor(pokemon.maxHp / 16))) });
+  }
+  if (runtimeState.drowsyTurns > 0 && --runtimeState.drowsyTurns === 0) {
+    const sleep = applyMajorStatus(pokemon, runtimeState, { status: 'sleep', chance: 100, target: 'target' }, random);
+    if (sleep.applied) events.push({ kind: 'fell-asleep' });
+  }
+  return events;
+}
+
+export const TRANSFORM_MOVE_PP = 5;
+
+/** Transform: copy the target's look, types, stats (not HP), stat stages and moves (5 PP each) for this battle. */
+export function applyTransform(
+  user: Pokemon,
+  userState: BattlePokemonRuntimeState,
+  target: Pokemon,
+  targetState: BattlePokemonRuntimeState,
+): boolean {
+  if (user.transform || target.transform || target.hp <= 0) return false;
+  const { types, attack, defense, specialAttack, specialDefense, speed, moves } = user;
+  user.transform = {
+    into: target.id,
+    original: { types: [...types], attack, defense, specialAttack, specialDefense, speed, moves },
+  };
+  user.types = [...target.types];
+  user.attack = target.attack;
+  user.defense = target.defense;
+  user.specialAttack = target.specialAttack;
+  user.specialDefense = target.specialDefense;
+  user.speed = target.speed;
+  user.moves = target.moves.map((m) => ({ ...m, pp: TRANSFORM_MOVE_PP, currentPp: TRANSFORM_MOVE_PP }));
+  userState.statModifiers = { ...targetState.statModifiers };
+  return true;
+}
+
+/** Moves Sketch can't copy (calling/copying moves and Struggle). */
+const SKETCH_FAILS_ON_TAGS = [
+  'sketch',
+  'metronome',
+  'mirror-move',
+  'copycat',
+  'assist',
+  'sleep-talk',
+  'mimic',
+] as const;
+
+/** Sketch: the move in the Sketch slot becomes the target's last move, for good (full PP). Returns its id. */
+export function applySketch(
+  user: Pokemon,
+  sketchMoveId: number,
+  targetState: BattlePokemonRuntimeState,
+): number | null {
+  const moveId = targetState.lastMoveUsedId;
+  if (moveId === null || moveId <= 0 || user.transform) return null;
+  if (user.moves.some((m) => m.id === moveId)) return null;
+  const tags = getMoveBattleData(moveId)?.behaviorTags ?? [];
+  if (tags.some((tag) => (SKETCH_FAILS_ON_TAGS as readonly string[]).includes(tag))) return null;
+  const slot = user.moves.findIndex((m) => m.id === sketchMoveId);
+  const move = getMove(moveId);
+  if (slot < 0 || !move) return null;
+  user.moves[slot] = {
+    id: move.id,
+    name: move.name.en,
+    type: move.type as PokemonType,
+    power: move.power ?? 0,
+    accuracy: move.accuracy ?? 0,
+    pp: move.pp,
+    currentPp: move.pp,
+  };
+  return moveId;
+}
+
 export const TAUNT_TURNS = 3;
 export const ENCORE_TURNS = 3;
 export const PERISH_SONG_TURNS = 3;
@@ -360,6 +507,7 @@ export function advanceTimedVolatiles(runtimeState: BattlePokemonRuntimeState): 
   }
   if (runtimeState.laserFocusTurns > 0) runtimeState.laserFocusTurns--;
   if (runtimeState.lockOnTurns > 0) runtimeState.lockOnTurns--;
+  if (runtimeState.waterSportTurns > 0) runtimeState.waterSportTurns--;
   return ended;
 }
 

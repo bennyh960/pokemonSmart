@@ -203,7 +203,7 @@ export function MiniGameShell({
         const stepIndex = board?.stepIndex ?? stepOfLevel(def.id, level.number);
         const bonus =
           dust === 'cleaned' && stepIndex >= 0
-            ? dustBonusPrize(stepIndex, countBadges(draft.badges), Math.random, board?.city)
+            ? dustBonusPrize(stepIndex, countBadges(draft.badges), Math.random, board?.city, ownedSpecies(draft))
             : null;
         if (bonus) rec.prizes = [...rec.prizes, bonus];
         if (dust !== 'clean') rec.dust = dust;

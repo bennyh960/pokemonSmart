@@ -73,6 +73,21 @@ export interface BattlePokemonRuntimeState {
   /** Laser Focus / Lock-On: the next attack (until the end of next turn) is a sure crit / sure hit. */
   laserFocusTurns: number;
   lockOnTurns: number;
+  /** Smack Down: knocked to the ground — Ground moves hit it even if it flies. */
+  grounded: boolean;
+  /** Charge: the next Electric move has double power. */
+  chargedUp: boolean;
+  /** Wish: heals `wishHeal` HP when the count reaches 0 (end of next turn). */
+  wishTurns: number;
+  wishHeal: number;
+  /** Aqua Ring: heals 1/16 max HP every turn end. */
+  aquaRing: boolean;
+  /** Yawn: falls asleep when the count reaches 0 (end of next turn). */
+  drowsyTurns: number;
+  /** Water Sport: Fire moves against / from this Pokémon do half damage. */
+  waterSportTurns: number;
+  /** Moves used since it came in (Last Resort). */
+  movesUsed: number[];
   uproarTurnsRemaining: number;
   statModifiers: BattleStatModifiers;
   isStruggleMode: boolean;
@@ -170,6 +185,14 @@ export function createBattlePokemonRuntimeState(pokemon: Pick<Pokemon, 'status'>
     encoreTurnsRemaining: 0,
     laserFocusTurns: 0,
     lockOnTurns: 0,
+    grounded: false,
+    chargedUp: false,
+    wishTurns: 0,
+    wishHeal: 0,
+    aquaRing: false,
+    drowsyTurns: 0,
+    waterSportTurns: 0,
+    movesUsed: [],
     uproarTurnsRemaining: 0,
     statModifiers: createEmptyBattleStatModifiers(),
     turnFlags: createBattleTurnFlags(),
@@ -242,6 +265,14 @@ export function setBattleSideEffectTurnsRemaining(
 
 export function normalizePersistentPokemonStatus(status: unknown): MajorStatusId | null {
   return typeof status === 'string' ? normalizeMajorStatusId(status) : null;
+}
+
+/** Undo a battle Transform: put the Pokémon's own types, stats and moves back. True if it was transformed. */
+export function revertTransform(pokemon: Pokemon | null | undefined): boolean {
+  if (!pokemon?.transform) return false;
+  Object.assign(pokemon, pokemon.transform.original);
+  delete pokemon.transform;
+  return true;
 }
 
 export function ensurePersistentBattleFields(pokemon: Record<string, any> | null | undefined): void {
