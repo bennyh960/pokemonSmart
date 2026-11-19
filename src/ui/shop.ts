@@ -44,6 +44,7 @@ const CATEGORIES: CategoryDef[] = [
   { id: 'battle', text: 'קרב', x: 38, w: 14, dotColor: '#f08030', dotX: 54 },
   { id: 'vitamin', text: 'ויטמינים', x: 4, w: 18, dotColor: '#a040a0', dotX: 24 },
   { id: 'held', text: 'אביזרי קרב', x: 0, w: 28, dotColor: '#4d40a0', dotX: 2 },
+  { id: 'machine', text: 'TM', x: 0, w: 28, dotColor: '#40a0c0', dotX: 2 },
 ];
 
 const getActualCategories = (categoriesToExclude: ItemCategory[]) => {
@@ -107,6 +108,8 @@ export interface ShopState {
 
   // exclude categroies
   categoriesToExclude: ItemCategory[];
+  /** Per category, only items with one of these tags (shopkeeper's `shopCategoryTags`). */
+  categoryTags: Partial<Record<ItemCategory, string[]>>;
 }
 
 export function createShopState(): ShopState {
@@ -126,6 +129,7 @@ export function createShopState(): ShopState {
     quizResult: null,
     quizResultTimer: 0,
     categoriesToExclude: [],
+    categoryTags: {},
   };
 }
 
@@ -136,7 +140,7 @@ export function openShop(shop: ShopState): void {
   shop.scrollOffset = 0;
   shop.message = null;
   shop.messageTimer = 0;
-  shop.items = getShopItemsForCategory(getActualCategories(shop.categoriesToExclude)[0]);
+  shop.items = getShopItemsForCategory(shop, getActualCategories(shop.categoriesToExclude)[0]);
   // אתחול מערכת ההנחות
   shop.sessionDiscount = rollSessionDiscount();
   shop.quizActive = false;
@@ -149,11 +153,18 @@ export function closeShop(shop: ShopState): void {
   shop.open = false;
 }
 
-function getShopItemsForCategory(cat: CategoryDef): ItemDef[] {
+function getShopItemsForCategory(shop: ShopState, cat: CategoryDef): ItemDef[] {
   const pd = getPlayerData();
   // Items need a trainer rank perk before shops sell them
   const sellable = (i: ItemDef) => i.price > 0 && i.category !== 'key' && isShopItemUnlocked(pd, i.id);
-  return [cat.id, ...(cat.extraCategories ?? [])].flatMap((c) => getItemsByCategory(c).filter(sellable));
+  // A shopkeeper may sell only tagged items of a category (e.g. the Percentile mart: shop TMs only)
+  const tagged = (i: ItemDef) => {
+    const tags = shop.categoryTags[i.category];
+    return !tags || (i.tags ?? []).some((tag) => tags.includes(tag));
+  };
+  return [cat.id, ...(cat.extraCategories ?? [])].flatMap((c) =>
+    getItemsByCategory(c).filter((i) => sellable(i) && tagged(i)),
+  );
 }
 
 // ─── Update ─────────────────────────────────────────────────────────
@@ -276,13 +287,13 @@ export function updateShop(shop: ShopState, input: InputManager, dt: number): bo
 
   if (input.isKeyPressed('ArrowLeft')) {
     shop.selectedCategory = (shop.selectedCategory + 1) % ACTUAL_CATEGORIES.length;
-    shop.items = getShopItemsForCategory(ACTUAL_CATEGORIES[shop.selectedCategory]);
+    shop.items = getShopItemsForCategory(shop, ACTUAL_CATEGORIES[shop.selectedCategory]);
     shop.selectedItem = 0;
     shop.scrollOffset = 0;
   }
   if (input.isKeyPressed('ArrowRight')) {
     shop.selectedCategory = (shop.selectedCategory - 1 + ACTUAL_CATEGORIES.length) % ACTUAL_CATEGORIES.length;
-    shop.items = getShopItemsForCategory(ACTUAL_CATEGORIES[shop.selectedCategory]);
+    shop.items = getShopItemsForCategory(shop, ACTUAL_CATEGORIES[shop.selectedCategory]);
     shop.selectedItem = 0;
     shop.scrollOffset = 0;
   }
@@ -445,12 +456,14 @@ export function renderShop(ctx: CanvasRenderingContext2D, shop: ShopState): void
   ctx.lineWidth = 1;
   strokeRoundRect(ctx, 4, 13, 232, 9, 2);
 
-  // גזירת הקטגוריות הקיימות - מקסימום 7 קטגוריות לתצוגה
-  const ACTUAL_CATEGORIES = getActualCategories(shop.categoriesToExclude).slice(0, 7);
+  const ACTUAL_CATEGORIES = getActualCategories(shop.categoriesToExclude);
 
-  // הגדרת רוחב קבוע ואחיד לכל טאב ומרווח ביניהם
-  const FIXED_TAB_W = 32;
-  const TAB_SPACING = 4;
+  // Tabs share the bar (x 4–236): up to 32px each, narrower when a shop has many categories
+  const TAB_SPACING = ACTUAL_CATEGORIES.length > 6 ? 2 : 4;
+  const FIXED_TAB_W = Math.min(
+    32,
+    Math.floor((232 - TAB_SPACING * (ACTUAL_CATEGORIES.length - 1)) / ACTUAL_CATEGORIES.length),
+  );
 
   // מתחילים מהקצה הימני של הבר (X=236) ונעים שמאלה
   let currentX = 236;

@@ -13,6 +13,7 @@ import type { BattlePokemonRuntimeState } from '../systems/battle-state.js';
 import type { Pokemon } from '../types/index.js';
 import { ITEM_GAME_DATA, ITEM_ID_TO_SLUG, type ItemCategory, type ItemEffect } from './item-defs.js';
 import itemsJson from './items.json';
+import { getMove } from '../services/pokemon-data';
 
 export type { ItemCategory, ItemEffect } from './item-defs.js';
 
@@ -45,6 +46,7 @@ export interface ItemDef {
   keyFlag?: string; // Flag auto-set when item is received
   usedFlag?: string; // Flag that marks item as delivered/used
   usedDescription?: { en: string; he: string }; // Shown in bag when usedFlag is true
+  tags?: string[]; // labels a shopkeeper can filter on (ItemGameDef.tags)
 }
 
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
@@ -76,7 +78,21 @@ function buildItems(): Record<string, ItemDef> {
       keyFlag: gameDef.keyFlag,
       usedFlag: gameDef.usedFlag,
       usedDescription: gameDef.usedDescription,
+      tags: gameDef.tags,
     };
+    // A TM without its own text describes its move — read lazily (move data loads after items)
+    const tm = gameDef.effect.type === 'tm' ? gameDef.effect : null;
+    if (tm && !gameDef.description && !raw?.description) {
+      Object.defineProperty(result[slug], 'description', {
+        enumerable: true,
+        get: () => {
+          const move = getMove(tm.moveId);
+          return move
+            ? { en: `Teaches ${move.name.en}`, he: `מלמד ${move.name.he}` }
+            : { en: 'Teaches a move', he: 'מלמד מתקפה' };
+        },
+      });
+    }
   }
 
   return result;

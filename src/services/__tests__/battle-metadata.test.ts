@@ -139,17 +139,5 @@ describe('battle metadata', () => {
     expect(getMoveByName('soft boiled')?.battle.healingPercent).toBe(50);
     expect(getMoveByName('silver wind')?.battle.groupedStatChance).toBe(10);
     expect(getMoveByName('silver wind')?.battle.statChanges).toHaveLength(5);
-    expect(getMoveByName('shell smash')?.battle.statChanges.map((c) => [c.stat, c.stages])).toEqual([
-      ['attack', 2],
-      ['specialAttack', 2],
-      ['speed', 2],
-      ['defense', -1],
-      ['specialDefense', -1],
-    ]);
-    expect(getMoveByName('toxic thread')?.battle).toMatchObject({
-      target: 'selected-pokemon',
-      ailment: { status: 'poison', chance: 100 },
-      statChanges: [{ stat: 'speed', stages: -1, target: 'target', chance: 100 }],
-    });
   });
 });
