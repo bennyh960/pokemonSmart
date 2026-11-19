@@ -67,7 +67,7 @@ Burning Chance (`act4/quest-percentile-burning-chance.ts`): city clues → lab (
 
 ## Mouse support (screen by screen)
 - [ ] Battle menu (2026-11-18, not playtested): click tabs (= keys 1–4), click a move to use it (from the tabs: opens the move list on it), hover moves the selection, ESC pill = run/back, wheel / page dots flip 8-move pages (`registerPointerRegions` in `ui/battle-menu.ts`, through `uiRegistry`). Next screens: switch grid, text boxes
-- [ ] Bag (2026-11-18, not playtested): click a category tab, click a row to select (hover only highlights), double-click or the Use button to use, wheel scrolls one item, TM warning Yes / No clickable. The list now scrolls only when the selection leaves the 5 visible rows (was: selection always pinned to the bottom row)
+- [ ] Bag + Shop are React now (2026-11-19, `src/scenesReact/bag/`, `src/scenesReact/shop/`, not playtested in the real game). Bag: potion → party → heal; TM (incl. the "learns it later" question and a full moveset → move-learning screen); evolution stone; held item; battle bag (ball / potion); sell at a mart. Shop: every mart's stock (Percentile TMs / held items), rank-locked items shown with their rank, discount challenge (wrong answer now asks before buying at full price — it used to buy automatically), admin N. Touch on a phone
 
 ## Moves calibration
 - [ ] `docs/moves-audit.md` (`npm run moves-audit`): every move → effect wired / missing, reachable or not, animation, learners. Calibrate only ❌ rows (reachable: level-up, a TM item in the game, or a trainer's moves). 💤 rows are only in PokeAPI's modern TM lists — skip unless a TM item is added

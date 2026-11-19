@@ -1,5 +1,5 @@
 import type { PartyMode } from '../..';
-import { setBagPendingItem } from '../../../../scenes/bag';
+import { setBagPendingItem } from '../../../bag/bag-mode';
 import type { PlayerData, Pokemon } from '../../../../types';
 import type { QuickActionItem } from './helpers';
 import { useI18n } from '../../../../ui-react/context/i18n-context';

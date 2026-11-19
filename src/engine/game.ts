@@ -19,7 +19,7 @@ import { createHeroSelectScene } from '../scenes/hero-select.js';
 import { createHeroNameSelectScene } from '../scenes/hero-name-select.js';
 // import { createPokedexScene } from '../scenes/pokedex';
 import { createEvolutionScene } from '../scenes/evolution.js';
-import { createBagScene } from '../scenes/bag.js';
+import { createBagReactScene } from '../scenesReact/bag/index.js';
 import { createPCReactScene } from '../scenesReact/pc/index.js';
 import { createWorldMapScene } from '../scenes/world-map.js';
 import { createGateScene } from '../scenes/gate-scene.js';
@@ -88,7 +88,7 @@ export function createGame(container: HTMLElement, reactOverlay: HTMLElement) {
   stateMachine.register('POKEDEX', createPokedexReactScene(stateMachine));
   stateMachine.register('TRAINER_DATA', createTrainerDataReactScene(stateMachine));
   stateMachine.register('EVOLUTION', createEvolutionScene(input, stateMachine, audio));
-  stateMachine.register('BAG', createBagScene(input, stateMachine));
+  stateMachine.register('BAG', createBagReactScene(stateMachine));
   stateMachine.register('PC', createPCReactScene(stateMachine));
   stateMachine.register('WORLD_MAP', createWorldMapScene(input, stateMachine));
   stateMachine.register('GATE', createGateScene(input, stateMachine));

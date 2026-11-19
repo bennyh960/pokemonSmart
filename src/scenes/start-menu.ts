@@ -9,7 +9,7 @@ import type { Locale } from '../i18n/i18n.js';
 import { getPlayerData, hasActiveGame, autoSave } from '../systems/game-state.js';
 import { applyDirectItemEffect, consumeItem } from '../systems/item-effects.js';
 import { getGlobalAudio } from '../audio/audio-manager.js';
-import { setBagMode } from './bag.js';
+import { setBagMode } from '../scenesReact/bag/bag-mode.js';
 import { openEnglishBoard, openMiniGamePicker } from '../minigames/launch.js';
 import { openSaveSlots } from './save-slots.js';
 import { scheduleFishing, toggleLegend, isLegendVisible, setupWorldMapFly } from './overworld.js';
